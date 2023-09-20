@@ -22,14 +22,14 @@ jobs:
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -48,7 +48,7 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=Ender_GD32_Default-NP-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=Ender_GD32_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -97,14 +97,14 @@ jobs:
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -172,14 +172,14 @@ jobs:
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -249,14 +249,14 @@ jobs:
   #     with:
   #       node-version: 16
   #   - name: Cache pip
-  #     uses: actions/cache@v3
+  #     uses: actions/cache@v3.3.2
   #     with:
   #       path: ~/.cache/pip
   #       key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
   #       restore-keys: |
   #         ${{ runner.os }}-pip-
   #   - name: Cache PlatformIO
-  #     uses: actions/cache@v3
+  #     uses: actions/cache@v3.3.2
   #     with:
   #       path: ~/.platformio
   #       key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -336,14 +336,14 @@ jobs:
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -412,14 +412,14 @@ jobs:
   #     with:
   #       node-version: 16
   #   - name: Cache pip
-  #     uses: actions/cache@v3
+  #     uses: actions/cache@v3.3.2
   #     with:
   #       path: ~/.cache/pip
   #       key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
   #       restore-keys: |
   #         ${{ runner.os }}-pip-
   #   - name: Cache PlatformIO
-  #     uses: actions/cache@v3
+  #     uses: actions/cache@v3.3.2
   #     with:
   #       path: ~/.platformio
   #       key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -490,14 +490,14 @@ jobs:
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -517,7 +517,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        echo "filename=Ender_${AVTMP}_Default-NP-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=Ender_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -570,14 +570,14 @@ jobs:
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -650,14 +650,14 @@ jobs:
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -730,14 +730,14 @@ jobs:
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}

@@ -57,7 +57,7 @@ void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2) {
   DWIN_UpdateLCD();
 }
 
-void Goto_Popup(void (*onPopupDraw)(), void (*onClickPopup)() /*= nullptr*/, void (*onPopupChange)(bool state) /*= nullptr*/) {
+void Goto_Popup(void (*onPopupDraw)(), void (*onClickPopup)()/*=nullptr*/, void (*onPopupChange)(bool state)/*=nullptr*/) {
   Draw_Popup = onPopupDraw;
   ClickPopup = onClickPopup;
   PopupChange = onPopupChange;

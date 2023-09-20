@@ -145,6 +145,7 @@ namespace LanguageNarrow_de {
   LSTR MSG_MESH_VIEWER                    = _UxGT("Netzbetrachter");
   LSTR MSG_EDIT_MESH                      = _UxGT("Netz bearbeiten");
   LSTR MSG_MESH_VIEW                      = _UxGT("Netz ansehen");
+  LSTR MSG_CHANGE_MESH                    = _UxGT("Normale Netzbetrachter");
   LSTR MSG_EDITING_STOPPED                = _UxGT("Netzbearb. angeh.");
   LSTR MSG_NO_VALID_MESH                  = _UxGT("Kein gültiges Netz");
   LSTR MSG_ACTIVATE_MESH                  = _UxGT("Nivellierung aktiv.");
@@ -176,7 +177,6 @@ namespace LanguageNarrow_de {
   LSTR MSG_HOTEND_OFFSET_A                = _UxGT("2. Düse @");
   LSTR MSG_UBL_DOING_G29                  = _UxGT("G29 ausführen");
   LSTR MSG_UBL_TOOLS                      = _UxGT("UBL-Werkzeuge");
-  LSTR MSG_UBL_LEVEL_BED                  = _UxGT("Unified Bed Leveling");
   LSTR MSG_LCD_TILTING_MESH               = _UxGT("Berührungspunkt");
   LSTR MSG_UBL_TILT_MESH                  = _UxGT("Tilt Mesh");
   LSTR MSG_UBL_TILTING_GRID               = _UxGT("Tilting Grid Size");
@@ -546,14 +546,11 @@ namespace LanguageNarrow_de {
   LSTR MSG_BABYSTEP_N                     = _UxGT("Babystep @");
   LSTR MSG_BABYSTEP_TOTAL                 = _UxGT("Total");
   LSTR MSG_ENDSTOP_ABORT                  = _UxGT("Abbr. mit Endstopp");
-  LSTR MSG_HEATING_FAILED_LCD             = _UxGT("HEIZEN ERFOLGLOS");
+  LSTR MSG_ERR_HEATING_FAILED             = _UxGT("HEIZEN ERFOLGLOS");
   LSTR MSG_ERR_REDUNDANT_TEMP             = _UxGT("REDUND. TEMP-ABWEI.");
-  LSTR MSG_THERMAL_RUNAWAY                = " " LCD_STR_THERMOMETER _UxGT(" NICHT ERREICHT");
-  LSTR MSG_TEMP_MALFUNCTION               = _UxGT("TEMP-FEHLER");
-  LSTR MSG_THERMAL_RUNAWAY_BED            = _UxGT("BETT") " " LCD_STR_THERMOMETER _UxGT(" NICHT ERREICHT");
-  LSTR MSG_THERMAL_RUNAWAY_CHAMBER        = _UxGT("GEH.") " " LCD_STR_THERMOMETER _UxGT(" NICHT ERREICHT");
-  LSTR MSG_THERMAL_RUNAWAY_COOLER         = _UxGT("Kühler Runaway");
-  LSTR MSG_COOLING_FAILED                 = _UxGT("Kühlung fehlgeschla.");
+  LSTR MSG_ERR_THERMAL_RUNAWAY            = " " LCD_STR_THERMOMETER _UxGT(" NICHT ERREICHT");
+  LSTR MSG_ERR_TEMP_MALFUNCTION           = _UxGT("TEMP-FEHLER");
+  LSTR MSG_ERR_COOLING_FAILED             = _UxGT("Kühlung fehlgeschla.");
   LSTR MSG_ERR_MAXTEMP                    = " " LCD_STR_THERMOMETER _UxGT(" ÜBERSCHRITTEN");
   LSTR MSG_ERR_MINTEMP                    = " " LCD_STR_THERMOMETER _UxGT(" UNTERSCHRITTEN");
   LSTR MSG_HALTED                         = _UxGT("DRUCKER GESTOPPT");

@@ -18,12 +18,12 @@ jobs:
 
     steps:
 
-    - name: Check out HC32-August
+    - name: Check out HC32-September
       uses: actions/checkout@v3
       with:
-        ref: HC32-August
+        ref: HC32-September
 
-    - name: Bump Date (HC32-August)
+    - name: Bump Date (HC32-September)
       run: |
         # Inline Bump Script
         if [[ ! "$( git log -1 --pretty=%B )" =~ ^\[cron\] ]]; then

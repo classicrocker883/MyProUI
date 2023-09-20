@@ -23,8 +23,8 @@
 ---
 
 ### - Please read this: -
-Many Updates have been included in the most recent MriscocProUI in the **2023-August** release.<br>
-H32->HC32 support is currently only in the branch **HC32-August-B**. You can find the original repo here [@shadow578/Marlin-H32](https://github.com/shadow578/Marlin-H32)<br>
+Many Updates have been included in the most recent MriscocProUI in the **2023-September** release.<br>
+H32->HC32 support is currently only in the branch **HC32-September**. You can find the original repo here [@shadow578/Marlin-H32](https://github.com/shadow578/Marlin-H32)<br>
 #### Important Info regarding HC32:
 * Not all features or options have been fully tested with this chip.  
 * * <ins>**FOREWARNING**</ins>: So far everything has been working great - as normal - except there are reports of it restarting after saving with no other negative effects. So far, that is the only issue. I just wanted to give advance notice and if there is anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues).
@@ -54,10 +54,15 @@ There is a *MarlinSimulator.exe* file provided to test out for yourself. It simu
 
 To create your own MarlinSimulator with you own build, start by changing in Configuration.h **MOTHERBOARD** to *BOARD_SIMULATED*, also disable `ENDSTOP_INTERRUPTS_FEATURE` and `PROUI_EX`, and then in platformio.ini **default_envs =** change to *simulator_windows*. The MarlinSimulator can only compile for Manual Mesh Bed Leveling for now, so make sure your configuration is set for `MESH_BED_LEVELING`.
 
-Then you have to extract **SDL2-devel-2.28.0-mingw.zip** from /**docs**. To install SDL, navigate to the SDL2 directory in *MSYS2 MINGW64* terminal and type
->make native
+Then you have to extract **SDL2-devel-2.28.0-mingw.zip** from /**docs**. To install SDL, navigate to the SDL2 directory in *MSYS2 MINGW64* terminal and type  
+>
+>     make native
+>
 
-64-bit files are in \x86_64-w64-mingw32. Then copy the contents of ~\SDL2-2.28.0\x86_64-w64-mingw32\include\SDL2\* into ~\.pio\libdeps\simulator_windows\imgui\misc
+64-bit files are in \x86_64-w64-mingw32. Then **copy** the contents of ~\SDL2-2.28.2\x86_64-w64-mingw32\include\SDL2\* into ~\.pio\libdeps\simulator_windows\imgui  
+-OR-  
+Copy the just folder ~\include\_SDL2_ into the directory ~\libdeps\*simulator_windows*  
+You may have to first Build so the directory can be created.
 
 Once all that is done, just build like you would normally and *MarlinSimulator.exe* will be created.
 

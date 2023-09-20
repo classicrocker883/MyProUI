@@ -133,23 +133,18 @@
 #define ICON_Info_0             90
 #define ICON_Info_1             91
 
-//changed Additional Icons
+// Additional Icons
+#define ICON_Printer_0          93
 #define ICON_Box               200
 #define ICON_Checkbox          201
 #define ICON_Fade              202
 #define ICON_Mesh              203
 #define ICON_Tilt              204
 #define ICON_Brightness        205
-
-#define ICON_Folder       ICON_More
-#define ICON_AdvSet       ICON_Language
-#define ICON_HomeOffset   ICON_AdvSet
-#define ICON_HomeOffsetX  ICON_StepX
-#define ICON_HomeOffsetY  ICON_StepY
-#define ICON_HomeOffsetZ  ICON_StepZ
-#define ICON_ProbeOffset  ICON_AdvSet
-#define ICON_ProbeOffsetX ICON_StepX
-#define ICON_ProbeOffsetY ICON_StepY
-#define ICON_ProbeOffsetZ ICON_StepZ
-#define ICON_PIDNozzle    ICON_SetEndTemp
-#define ICON_PIDbed       ICON_SetBedTemp
+#define ICON_Probe             206
+#define ICON_AxisD             249
+#define ICON_AxisBR            250
+#define ICON_AxisTR            251
+#define ICON_AxisBL            252
+#define ICON_AxisTL            253
+#define ICON_AxisC             254

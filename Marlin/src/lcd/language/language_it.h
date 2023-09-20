@@ -160,6 +160,7 @@ namespace LanguageNarrow_it {
   LSTR MSG_MESH_VIEWER                    = _UxGT("Visualiz. Mesh");
   LSTR MSG_EDIT_MESH                      = _UxGT("Modifica Mesh");
   LSTR MSG_MESH_VIEW                      = _UxGT("Visualizza Mesh");
+  LSTR MSG_CHANGE_MESH                    = _UxGT("Normale visualiz. Mesh");
   LSTR MSG_EDITING_STOPPED                = _UxGT("Modif. Mesh Fermata");
   LSTR MSG_NO_VALID_MESH                  = _UxGT("Mesh non valida");
   LSTR MSG_ACTIVATE_MESH                  = _UxGT("Attiva livellamento");
@@ -191,7 +192,6 @@ namespace LanguageNarrow_it {
   LSTR MSG_HOTEND_OFFSET_A                = _UxGT("2° ugello @");
   LSTR MSG_UBL_DOING_G29                  = _UxGT("G29 in corso");
   LSTR MSG_UBL_TOOLS                      = _UxGT("Strumenti UBL");
-  LSTR MSG_UBL_LEVEL_BED                  = _UxGT("Livel.letto unificato");
   LSTR MSG_LCD_TILTING_MESH               = _UxGT("Punto inclinaz.");
   LSTR MSG_UBL_TILT_MESH                  = _UxGT("Inclina Mesh");
   LSTR MSG_UBL_TILTING_GRID               = _UxGT("Dim.griglia inclin.");
@@ -591,14 +591,11 @@ namespace LanguageNarrow_it {
   LSTR MSG_BABYSTEP_N                     = _UxGT("Babystep @");
   LSTR MSG_BABYSTEP_TOTAL                 = _UxGT("Totali");
   LSTR MSG_ENDSTOP_ABORT                  = _UxGT("Interrompi se FC");
-  LSTR MSG_HEATING_FAILED_LCD             = _UxGT("Risc.Fallito"); // Max 12 characters
+  LSTR MSG_ERR_HEATING_FAILED             = _UxGT("Risc.Fallito"); // Max 12 characters
   LSTR MSG_ERR_REDUNDANT_TEMP             = _UxGT("Err: TEMP RIDONDANTE");
-  LSTR MSG_THERMAL_RUNAWAY                = _UxGT("TEMP FUORI CONTROLLO");
-  LSTR MSG_TEMP_MALFUNCTION               = _UxGT("MALFUNZIONAMENTO TEMP");
-  LSTR MSG_THERMAL_RUNAWAY_BED            = _UxGT("TEMP PIAT.FUORI CTRL");
-  LSTR MSG_THERMAL_RUNAWAY_CHAMBER        = _UxGT("T.CAMERA FUORI CTRL");
-  LSTR MSG_THERMAL_RUNAWAY_COOLER         = _UxGT("RAFFREDAM.FUORI CTRL");
-  LSTR MSG_COOLING_FAILED                 = _UxGT("Raffreddam. fallito");
+  LSTR MSG_ERR_THERMAL_RUNAWAY            = _UxGT("TEMP FUORI CONTROLLO");
+  LSTR MSG_ERR_TEMP_MALFUNCTION           = _UxGT("MALFUNZIONAMENTO TEMP");
+  LSTR MSG_ERR_COOLING_FAILED             = _UxGT("Raffreddam. fallito");
   LSTR MSG_ERR_MAXTEMP                    = _UxGT("Err: TEMP MASSIMA");
   LSTR MSG_ERR_MINTEMP                    = _UxGT("Err: TEMP MINIMA");
   LSTR MSG_HALTED                         = _UxGT("STAMPANTE FERMATA");

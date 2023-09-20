@@ -161,6 +161,7 @@ namespace LanguageNarrow_sk {
   LSTR MSG_MESH_VIEWER                    = _UxGT("Zobraz. sieťe bodov");
   LSTR MSG_EDIT_MESH                      = _UxGT("Upraviť sieť bodov");
   LSTR MSG_MESH_VIEW                      = _UxGT("Zobraz. sieť bodov");
+  LSTR MSG_CHANGE_MESH                    = _UxGT("Normálne zobraz. sieť");
   LSTR MSG_EDITING_STOPPED                = _UxGT("Koniec úprav siete");
   LSTR MSG_NO_VALID_MESH                  = _UxGT("Neplatná sieť bodov");
   LSTR MSG_ACTIVATE_MESH                  = _UxGT("Zapnúť vyrovnanie");
@@ -192,7 +193,6 @@ namespace LanguageNarrow_sk {
   LSTR MSG_HOTEND_OFFSET_A                = _UxGT("2. tryska @");
   LSTR MSG_UBL_DOING_G29                  = _UxGT("Vykonávam G29");
   LSTR MSG_UBL_TOOLS                      = _UxGT("Nástroje UBL");
-  LSTR MSG_UBL_LEVEL_BED                  = _UxGT("UBL rovnanie");
   LSTR MSG_LCD_TILTING_MESH               = _UxGT("Vyrovnávam bod");
   LSTR MSG_UBL_TILT_MESH                  = _UxGT("Nakloniť sieť");
   LSTR MSG_UBL_TILTING_GRID               = _UxGT("Veľkosť nakl. siete");
@@ -588,14 +588,11 @@ namespace LanguageNarrow_sk {
   LSTR MSG_BABYSTEP_N                     = _UxGT("Babystep @");
   LSTR MSG_BABYSTEP_TOTAL                 = _UxGT("Celkom");
   LSTR MSG_ENDSTOP_ABORT                  = _UxGT("Zastavenie Endstop");
-  LSTR MSG_HEATING_FAILED_LCD             = _UxGT("Chyba ohrevu");
+  LSTR MSG_ERR_HEATING_FAILED             = _UxGT("Chyba ohrevu");
   LSTR MSG_ERR_REDUNDANT_TEMP             = _UxGT("Chyba: REDUND. TEP.");
-  LSTR MSG_THERMAL_RUNAWAY                = _UxGT("TEPLOTNÝ SKOK");
-  LSTR MSG_TEMP_MALFUNCTION               = _UxGT("TEPLOTNÁ PORUCHA");
-  LSTR MSG_THERMAL_RUNAWAY_BED            = _UxGT("TEPLOTNÝ SKOK PODL.");
-  LSTR MSG_THERMAL_RUNAWAY_CHAMBER        = _UxGT("TEPLOTNÝ SKOK KOMO.");
-  LSTR MSG_THERMAL_RUNAWAY_COOLER         = _UxGT("TEPLOTNÝ SKOK CHLAD.");
-  LSTR MSG_COOLING_FAILED                 = _UxGT("Ochladz. zlyhalo");
+  LSTR MSG_ERR_THERMAL_RUNAWAY            = _UxGT("TEPLOTNÝ SKOK");
+  LSTR MSG_ERR_TEMP_MALFUNCTION           = _UxGT("TEPLOTNÁ PORUCHA");
+  LSTR MSG_ERR_COOLING_FAILED             = _UxGT("Ochladz. zlyhalo");
   LSTR MSG_ERR_MAXTEMP                    = _UxGT("Chyba: MAXTEMP");
   LSTR MSG_ERR_MINTEMP                    = _UxGT("Chyba: MINTEMP");
   LSTR MSG_HALTED                         = _UxGT("TLAČIAREŇ ZASTAVENÁ");

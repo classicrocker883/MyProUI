@@ -31,7 +31,7 @@ const TBItem_t TBItemA[] = {
   {ICON_Homing, GET_TEXT_F(MSG_AUTO_HOME), AutoHome},
   #if HAS_BED_PROBE
     #if ENABLED(TRAMWIZ_MENU_ITEM)
-      {ICON_BedTramming, GET_TEXT_F(MSG_TRAMMING_WIZARD), Trammingwizard},
+      {ICON_Tram, GET_TEXT_F(MSG_TRAMMING_WIZARD), Trammingwizard},
     #endif
     {ICON_SetZOffset, GET_TEXT_F(MSG_PROBE_WIZARD), Draw_ZOffsetWiz_Menu},
     {ICON_Level, GET_TEXT_F(MSG_AUTO_MESH), AutoLevStart},

@@ -29,7 +29,7 @@ void Draw_Select_Highlight(const bool sel, const uint16_t ypos);
 inline void Draw_Select_Highlight(const bool sel) { Draw_Select_Highlight(sel, 280); }
 void DWIN_Popup_Continue(const uint8_t icon, FSTR_P const fmsg1, FSTR_P const fmsg2);
 void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2);
-void Goto_Popup(void (*onPopupDraw)(), void (*onClickPopup)() = nullptr, void (*onPopupChange)(bool state) = nullptr);
+void Goto_Popup(void (*onPopupDraw)(), void (*onClickPopup)()=nullptr, void (*onPopupChange)(bool state)=nullptr);
 void HMI_Popup();
 
 inline void Draw_Popup_Bkgd() {
@@ -42,13 +42,13 @@ void DWIN_Draw_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8
   uint8_t xpos = 81;
   uint8_t ypos = 90;
   switch (icon) {
-    case 17 ... 24: xpos = 96; break; // Icon#:17-24; W:80px|H:100px
-    case 78 ... 81: xpos = 100; ypos = 107; break; // Icon#:78-81; W:73px|H:66px
-    default: xpos = 81; ypos = 90; break;
+    case 17 ... 24: xpos = 96; break;              // Icon#:17-24;           W: 80px|H:100px
+    case 78 ... 81: xpos = 100; ypos = 107; break; // Icon#:78-81;           W: 73px|H: 66px
+    default: xpos = 81; ypos = 90; break;          // Icon#:1-8,90-91,93-94; W:110px|H:100px
   }
   DWINUI::ClearMainArea();
   Draw_Popup_Bkgd();
-  if (icon) DWINUI::Draw_Icon(icon, xpos, ypos); // Icon#:1-8,90-91; W:110px|H:100px
+  if (icon) DWINUI::Draw_Icon(icon, xpos, ypos);
   if (amsg1) DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 210, amsg1);
   if (amsg2) DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 240, amsg2);
   if (button) DWINUI::Draw_Button(button, 86, 280, true);

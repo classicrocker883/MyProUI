@@ -27,6 +27,9 @@
 #include "../common/encoder.h"
 #include "../common/limits.h"
 #include "../../../libs/BL24CXX.h"
+#if ENABLED(LED_CONTROL_MENU)
+  #include "../../../feature/leds/leds.h"
+#endif
 
 #if HAS_CGCODE
   #include "custom_gcodes.h"
@@ -209,6 +212,7 @@ void DoCoolDown();
 #endif
 void ApplyExtMinT();
 void ParkHead();
+void RaiseHead();
 TERN(HAS_BED_PROBE, float, void) tram(uint8_t point, bool stow_probe = true);
 #if HAS_BED_PROBE && ENABLED(TRAMWIZ_MENU_ITEM)
   void Trammingwizard();
