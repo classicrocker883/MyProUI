@@ -1242,9 +1242,9 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
 
       #define PREPARE_BACK 0
       #define PREPARE_MOVE (PREPARE_BACK + 1)
-      #define PREPARE_DISABLE (PREPARE_MOVE + 1)
-      #define PREPARE_HOME (PREPARE_DISABLE + 1)
-      #define PREPARE_MANUALLEVEL (PREPARE_HOME + 1)
+      #define PREPARE_HOME (PREPARE_MOVE + 1)
+      #define PREPARE_DISABLE (PREPARE_HOME + 1)
+      #define PREPARE_MANUALLEVEL (PREPARE_DISABLE + 1)
       #define PREPARE_ZOFFSET (PREPARE_MANUALLEVEL + ENABLED(HAS_ZOFFSET_ITEM))
       #define PREPARE_PREHEAT (PREPARE_ZOFFSET + ENABLED(HAS_PREHEAT))
       #define PREPARE_COOLDOWN (PREPARE_PREHEAT + ANY(HAS_HOTEND, HAS_HEATED_BED))
@@ -1379,7 +1379,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
         #if ENABLED(FWRETRACT)
           case PREPARE_FWRETRACT:
             if (draw) 
-              drawMenuItem(row, ICON_SetHome, GET_TEXT_F(MSG_FWRETRACT), nullptr, true);
+              drawMenuItem(row, ICON_FWRetract, GET_TEXT_F(MSG_FWRETRACT), nullptr, true);
             else
               drawMenu(ID_FWMenu);
             break;
@@ -3353,7 +3353,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
               break;
             case PROBE_TEST:
               if (draw)
-                drawMenuItem(row, ICON_StepY, GET_TEXT_F(MSG_M48_TEST));
+                drawMenuItem(row, ICON_Zoffset, GET_TEXT_F(MSG_M48_TEST));
               else {
                 gcode.process_subcommands_now(
                   TS(F("G28O\nM48X") , p_float_t((X_BED_SIZE + X_MIN_POS) / 2.0f, 3), 'Y', p_float_t((Y_BED_SIZE + Y_MIN_POS) / 2.0f, 3), 'P', testcount)
@@ -3362,7 +3362,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
               break;
             case PROBE_TEST_COUNT:
               if (draw) {
-                drawMenuItem(row, ICON_StepY, F("Probe Test Count"));
+                drawMenuItem(row, ICON_AxisD, F("Probe Test Count"));
                 drawFloat(testcount, row, false, 1);
               }
               else
@@ -3486,7 +3486,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
 
             drawMenuItem(INFO_SIZE, ICON_PrintSize, F(MACHINE_SIZE), nullptr, false, true);
             drawMenuItem(INFO_VERSION, ICON_Version, F(SHORT_BUILD_VERSION), nullptr, false, true);
-            drawMenuItem(INFO_CONTACT, ICON_Contact, F(CORP_WEBSITE), nullptr, false, true);
+            drawMenuItem(INFO_CONTACT, ICON_Contact, F(WEBSITE_URL), nullptr, false, true);
           }
           else {
             if (menu == ID_Info)
@@ -3696,7 +3696,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
             break;
           case LEVELING_SAVE:
             if (draw)
-              drawMenuItem(row, ICON_WriteEEPROM, GET_TEXT_F(MSG_UBL_LOAD_MESH));
+              drawMenuItem(row, ICON_WriteEEPROM, GET_TEXT_F(MSG_UBL_SAVE_MESH));
             else {
               if (bedlevel.storage_slot < 0) {
                 popupHandler(Popup_MeshSlot);
@@ -4277,7 +4277,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
         #if ENABLED(FWRETRACT)
           case TUNE_FWRETRACT:
             if (draw) 
-              drawMenuItem(row, ICON_SetHome, GET_TEXT_F(MSG_FWRETRACT), nullptr, true);
+              drawMenuItem(row, ICON_FWRetract, GET_TEXT_F(MSG_FWRETRACT), nullptr, true);
             else
               drawMenu(ID_FWMenu);
             break;
@@ -4427,7 +4427,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
             break;
           case FWRETRACT_RETLEN:
             if (draw) {
-              drawMenuItem(row, ICON_FWRetLength, GET_TEXT_F(MSG_CONTROL_RETRACT));
+              drawMenuItem(row, ICON_FWRetract, GET_TEXT_F(MSG_CONTROL_RETRACT));
               drawFloat(fwretract.settings.retract_length, row, false, 10);
             }
             else
@@ -4435,7 +4435,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
             break;
           case FWRETRACT_RETSPD:
             if (draw) {
-              drawMenuItem(row, ICON_FWRetLength, GET_TEXT_F(MSG_SINGLENOZZLE_RETRACT_SPEED));
+              drawMenuItem(row, ICON_FWSpeed, GET_TEXT_F(MSG_SINGLENOZZLE_RETRACT_SPEED));
               drawFloat(fwretract.settings.retract_feedrate_mm_s, row, false, 1);
             }
             else
@@ -4443,7 +4443,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
             break;
           case FWRETRACT_RETZHOP:
             if (draw) {
-              drawMenuItem(row, ICON_FWRetLength, GET_TEXT_F(MSG_CONTROL_RETRACT_ZHOP));
+              drawMenuItem(row, ICON_FWZRaise, GET_TEXT_F(MSG_CONTROL_RETRACT_ZHOP));
               drawFloat(fwretract.settings.retract_zraise, row, false, 100);
             }
             else
@@ -4451,7 +4451,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
             break;
           case FWRETRACT_RECSPD:
             if (draw) {
-              drawMenuItem(row, ICON_FWRetLength, GET_TEXT_F(MSG_SINGLENOZZLE_UNRETRACT_SPEED));
+              drawMenuItem(row, ICON_FWSpeed, GET_TEXT_F(MSG_SINGLENOZZLE_UNRETRACT_SPEED));
               drawFloat(fwretract.settings.retract_recover_feedrate_mm_s, row, false, 1);
             }
             else
@@ -4459,7 +4459,7 @@ void JyersDWIN::menuItemHandler(const uint8_t menu, const uint8_t item, bool dra
             break;
           case FWRETRACT_RECLEN:
             if (draw) {
-              drawMenuItem(row, ICON_FWRetLength, GET_TEXT_F(MSG_CONTROL_RETRACT_RECOVER));
+              drawMenuItem(row, ICON_FWRetract, GET_TEXT_F(MSG_CONTROL_RETRACT_RECOVER));
               drawFloat(fwretract.settings.retract_recover_extra, row, false, 10);
             }
             else
