@@ -1885,18 +1885,12 @@ void DWIN_Print_Finished() {
 // Print was aborted
 void DWIN_Print_Aborted() {
   DEBUG_ECHOLNPGM("DWIN_Print_Aborted");
-    if (all_axes_homed()) {
-      char cmd[34] = "";
-      #if ENABLED(NOZZLE_PARK_FEATURE)
-        xyz_pos_t park = NOZZLE_PARK_POINT;
-      #endif
+    if (axis_is_trusted(Z_AXIS)) {
+      char cmd[20] = "";
       const int16_t zpos = current_position.z + TERN(NOZZLE_PARK_FEATURE,
       NOZZLE_PARK_Z_RAISE_MIN, Z_POST_CLEARANCE);
       _MIN(zpos, Z_MAX_POS);
-      const int16_t ypos = current_position.y + TERN(NOZZLE_PARK_FEATURE,
-      park.y, 200);
-      _MIN(ypos, Y_MAX_POS);
-      sprintf_P(cmd, PSTR("G0 F3000 Z%i\nG0 F3000 Y%i"), zpos, ypos);
+      sprintf_P(cmd, PSTR("G0 F3000 Z%i"), zpos);
       queue.inject(cmd);
     }
   #ifdef SD_FINISHED_RELEASECOMMAND
@@ -2236,7 +2230,7 @@ void DWIN_RedrawScreen() {
 
 #endif // ADVANCED_PAUSE_FEATURE
 
-#if HAS_MESH && USE_GRID_MESHVIEWER
+#if HAS_MESH
 
   void DWIN_MeshViewer() {
     if (!leveling_is_valid()) {
@@ -2719,7 +2713,7 @@ void SetFlow() { SetPIntOnClick(MIN_PRINT_FLOW, MAX_PRINT_FLOW, []{ planner.refr
       #if ENABLED(LCD_BED_TRAMMING)
         constexpr float bed_tramming_inset_lfbr[] = BED_TRAMMING_INSET_LFRB;
       #else  
-        const_float_t bed_tramming_inset_lfbr[] = {ui.screw_pos, ui.screw_pos, _MAX(((X_BED_SIZE - X_MAX_POS) - probe.offset.x), ui.screw_pos), ui.screw_pos};
+        const_float_t bed_tramming_inset_lfbr[] = {ui.screw_pos, ui.screw_pos, _MAX(((X_BED_SIZE - X_MAX_POS) - probe.offset.x), ui.screw_pos), _MAX(((Y_BED_SIZE - Y_MAX_POS) - probe.offset.y), ui.screw_pos)};
       #endif
       static bool inLev = false;
       if (inLev) return NAN;
@@ -2744,7 +2738,7 @@ void SetFlow() { SetPIntOnClick(MIN_PRINT_FLOW, MAX_PRINT_FLOW, []{ planner.refr
         LCD_MESSAGE(MSG_TRAM_FR);
         xpos = X_BED_SIZE - bed_tramming_inset_lfbr[2];
         ypos = bed_tramming_inset_lfbr[1];
-        break;  
+        break;
       case 2:
         LCD_MESSAGE(MSG_TRAM_BR);
         xpos = X_BED_SIZE - bed_tramming_inset_lfbr[2];
@@ -4423,8 +4417,8 @@ void Draw_AdvancedSettings_Menu() {
       #if ENABLED(MESH_EDIT_MENU)
         MENU_ITEM(ICON_UBLActive, MSG_EDIT_MESH, onDrawSubMenu, Draw_EditMesh_Menu);
       #endif
+      MENU_ITEM(ICON_MeshViewer, MSG_MESH_VIEW, onDrawSubMenu, DWIN_MeshViewer);
       #if ENABLED(USE_GRID_MESHVIEWER)
-        MENU_ITEM(ICON_MeshViewer, MSG_MESH_VIEW, onDrawSubMenu, DWIN_MeshViewer);
         EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
       #endif
       EDIT_ITEM(ICON_UBLSlot, MSG_UBL_STORAGE_SLOT, onDrawUBLSlot, SetUBLSlot, &bedlevel.storage_slot);
@@ -4452,8 +4446,8 @@ void Draw_AdvancedSettings_Menu() {
       #endif
       MENU_ITEM(ICON_PrintSize, MSG_MESH_LEVELING, onDrawSubMenu, Draw_MeshSet_Menu);
       MENU_ITEM(ICON_Level, MSG_AUTO_MESH, onDrawMenuItem, AutoLevStart);
+      MENU_ITEM(ICON_MeshViewer, MSG_MESH_VIEW, onDrawSubMenu, DWIN_MeshViewer);
       #if ENABLED(USE_GRID_MESHVIEWER)
-        MENU_ITEM(ICON_MeshViewer, MSG_MESH_VIEW, onDrawSubMenu, DWIN_MeshViewer);
         EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
       #endif
       #if ENABLED(MESH_EDIT_MENU)
@@ -4475,8 +4469,8 @@ void Draw_AdvancedSettings_Menu() {
     MMeshMoveZItem = EDIT_ITEM(ICON_Zoffset, MSG_MESH_EDIT_Z, onDrawPFloat2Menu, SetMMeshMoveZ, &current_position.z);
     MENU_ITEM(ICON_AxisD, MSG_LEVEL_BED_NEXT_POINT, onDrawMenuItem, ManualMeshContinue);
     MENU_ITEM(ICON_PrintSize, MSG_MESH_LEVELING, onDrawSubMenu, Draw_MeshSet_Menu);
+    MENU_ITEM(ICON_MeshViewer, MSG_MESH_VIEW, onDrawSubMenu, DWIN_MeshViewer);
     #if ENABLED(USE_GRID_MESHVIEWER)
-      MENU_ITEM(ICON_MeshViewer, MSG_MESH_VIEW, onDrawSubMenu, DWIN_MeshViewer);
       EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
     #endif
     #if ENABLED(MESH_EDIT_MENU)

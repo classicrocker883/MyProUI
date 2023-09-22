@@ -6,7 +6,6 @@
 [![Build Status](https://github.com/classicrocker883/MriscocProUI/workflows/CI/badge.svg)](https://github.com/classicrocker883/MriscocProUI/actions)
 [![Build Configs](https://github.com/classicrocker883/MriscocProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MriscocProUI/releases/latest)
 
-## Universal RET6/RCT6 chips: G32, N32, H32, Creality 4.2.7 and 4.2.2 boards
 #### Don't forget to checkout the [thingiverse](https://www.thingiverse.com/classicrocker883/designs) models I designed
 [Minimalist Dual Cooling Fan Shroud](https://www.thingiverse.com/thing:5263939) for Aquila / Ender 3 V2
 <img src="https://cdn.thingiverse.com/assets/1a/21/e9/e9/f5/card_preview_c60b15d6-69cf-469a-8641-40f6bef37992.png" style="float:left;width:40px;height:40px;" align="left"/>  
@@ -22,11 +21,21 @@
 
 ---
 
+## Universal RET6/RCT6 chips: G32, N32, H32, Creality 4.2.7 and 4.2.2 boards
+<br>
+
 ### - Please read this: -
-Many Updates have been included in the most recent MriscocProUI in the **2023-August** release.<br>
-H32->HC32 support is currently only in the branch **HC32-July**. You can find the original repo here [@shadow578/Marlin-H32](https://github.com/shadow578/Marlin-H32)<br>
+Many Updates have been included in the most recent MRiscoCProUI for the **2023-August** release.  
+The most recent release has many changes for the **UI**.  
+New ICON's have been added, and old ones enhanced. The issue being whoever edited them before saved as .*JPG* which in many editors lowers the quality of the image. I painstakingly remastered almost every single one.
+
+You must REFLASH the *LCD Display* with the new **DWIN_SET** which is located in /**Firmware Sets** in the `display assets/Aquila Display firmware` or `Creality Display firmware` or `Giadej compilation` folder.
+
+<br>
+
+H32->HC32 support is currently only in the branch **HC32-&lt;Month&gt;**. You can find the original repo here [@shadow578/Marlin-H32](https://github.com/shadow578/Marlin-H32)<br>
 #### Important Info regarding HC32:
-* Not all features or options have been fully tested with this chip.  
+* I have created a second build using the JyersUI as a workaround for the save/store settings issue with ProUI. However, that is also a work-in-progress. I will have both build types available.  
 * * <ins>**FOREWARNING**</ins>: So far everything has been working great - as normal - except there are reports of it restarting after saving with no other negative effects. So far, that is the only issue. I just wanted to give advance notice and if there is anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues).
 <br>
 
@@ -44,9 +53,9 @@ General information about the firmware and updates is located in the _Wiki_ page
      */
 If you start printing and it says `Advance Pause` while **Runout** is enabled, you may have to change state it triggers no filament to **HIGH**, or **LOW** (depending on what is already selected). This is found in the _Prepare_ menu/ _Filament Management_/ _Filament Settings_ -> _Runout Active_. <br>
 A small issue which may occur is if you are in the <i>Print</i> menu and you quickly select to print between several printable *Gcode* files in a short amount of time. The screen can freeze for a moment and the printer will restart - that is it.<br><br>
-If you encounter any issues please feel free to post it on the issues tab, or if anything is going well please leave a comment. 
+If you encounter any issues, suggestions, or feature requests please feel free to post it on the [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues), otherwise if everything is going well please leave a comment. 
 
-I will be working on more upgrades and features and tweaks along the way. Enjoy using this fork of Marlin as I intend it to be the best. It is easy to use and convenient. So far I really enjoy the new settings and toolbar for the main menu. There is a variety of parameters and options that can be changed without having to reflash the firmware.
+I will be working on more upgrades and features and tweaks along the way. Enjoy using this fork of Marlin as I intend it to be the best; easy to use and convenient. So far I really enjoy the new settings and toolbar for the main menu. There is a variety of parameters and options that can be changed without having to reflash the firmware - like with other versions.
 
 ### MarlinSimulator.exe Instructions
 
@@ -59,9 +68,9 @@ Then you have to extract **SDL2-devel-2.28.0-mingw.zip** from /**docs**. To inst
 >     make native
 >
 
-64-bit files are in \x86_64-w64-mingw32. Then **copy** the contents of ~\SDL2-2.28.2\x86_64-w64-mingw32\include\SDL2\* into ~\.pio\libdeps\simulator_windows\imgui  
+64-bit files are in \x86_64-w64-mingw32. Then **copy** the contents of ~\SDL2-2.28.2\x86_64-w64-mingw32\include\SDL2\\* into ~\.pio\libdeps\simulator_windows\\**imgui**  
 -OR-  
-Copy the just folder ~\include\_SDL2_ into the directory ~\libdeps\*simulator_windows*  
+Copy the just folder ~\SDL2-2.28.2\x86_64-w64-mingw32\include\\**SDL2** into the directory ~\libdeps\\*simulator_windows*  
 You may have to first Build so the directory can be created.
 
 Once all that is done, just build like you would normally and *MarlinSimulator.exe* will be created.
