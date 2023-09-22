@@ -2719,7 +2719,7 @@ void SetFlow() { SetPIntOnClick(MIN_PRINT_FLOW, MAX_PRINT_FLOW, []{ planner.refr
       #if ENABLED(LCD_BED_TRAMMING)
         constexpr float bed_tramming_inset_lfbr[] = BED_TRAMMING_INSET_LFRB;
       #else  
-        const_float_t bed_tramming_inset_lfbr[] = {ui.screw_pos, ui.screw_pos, _MAX(((X_BED_SIZE - X_MAX_POS) - probe.offset.x), ui.screw_pos), ui.screw_pos};
+        const_float_t bed_tramming_inset_lfbr[] = {ui.screw_pos, ui.screw_pos, _MAX(((X_BED_SIZE - X_MAX_POS) - probe.offset.x), ui.screw_pos), _MAX(((Y_BED_SIZE - Y_MAX_POS) - probe.offset.y), ui.screw_pos)};
       #endif
       static bool inLev = false;
       if (inLev) return NAN;
