@@ -22,7 +22,12 @@
 
 #pragma once
 
-void previewDrawFromSD();
-void previewInvalidate();
-bool previewValid();
-void previewShow();
+class GPreview {
+  public:
+    static bool isValid();
+    static void invalidate();
+    static void draw();
+    static void show();
+};
+
+extern GPreview gPreview;

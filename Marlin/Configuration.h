@@ -3408,6 +3408,7 @@
 // Ender-3 v2 OEM display. A DWIN display with Rotary Encoder.
 //
 // DWIN / DACAI LCD 4.3" 480x272
+//#define DWIN_CREALITY_LCD_JYERSUI   // Jyers UI by Jacob Myers
 
 #define DWIN_CREALITY_LCD_JYERSUI   // Jyers UI by Jacob Myers
 //#define HAS_GCODE_PREVIEW 1
@@ -3424,9 +3425,9 @@
     #define TRAMWIZ_MENU_ITEM   // Menu item: enable Tramming Wizard (2304 bytes of flash)
   #endif
   //#define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)
-  //#define HAS_ESDIAG 1          // View End-stop switch continuity (560 bytes of flash)
-  //#define HAS_CGCODE 1          // Extra Gcode options (3320 bytes of flash)
-  //#define HAS_LOCKSCREEN 1      // Simple lockscreen as to not accidentally change something (568 bytes of flash)
+  //#define HAS_ESDIAG 1        // View End-stop switch continuity (560 bytes of flash)
+  //#define HAS_CGCODE 1        // Extra Gcode options (3320 bytes of flash)
+  //#define HAS_LOCKSCREEN 1    // Simple lockscreen as to not accidentally change something (568 bytes of flash)
   #define HAS_SD_EXTENDER 1     // Enable to support SD card extender cables (48 bytes of flash)
   #define USE_GRID_MESHVIEWER 1 // Enable two mesh graph types : one (1728 bytes of flash)
   //#define HAS_CUSTOM_COLORS 1   // Able to change display colors (2040 bytes of flash)

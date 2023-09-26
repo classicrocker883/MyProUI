@@ -45,9 +45,9 @@ void dwinDrawPopup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8_t
   uint8_t xpos = 81;
   uint8_t ypos = 90;
   switch (icon) {
-    case 17 ... 24: xpos = 96; break; // Icon#:17-24; W:80px|H:100px
-    case 78 ... 81: xpos = 100; ypos = 107; break; // Icon#:78-81; W:73px|H:66px
-    default: xpos = 81; ypos = 90; break;
+    case 17 ... 24: xpos = 96; break;              // Icon#:17-24;     W: 80px|H:100px
+    case 78 ... 81: xpos = 100; ypos = 107; break; // Icon#:78-81;     W: 73px|H: 66px
+    default: xpos = 81; ypos = 90; break;          // Icon#:1-8,90-91; W:110px|H:100px
   }
   DWINUI::clearMainArea();
   drawPopupBkgd();
