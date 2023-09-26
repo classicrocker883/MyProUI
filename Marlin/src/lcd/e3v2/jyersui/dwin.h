@@ -35,7 +35,7 @@
 
 #include "../../../inc/MarlinConfigPre.h"
 
-#define DWIN_CREALITY_LCD_CUSTOM_ICONS
+//#define DWIN_CREALITY_LCD_CUSTOM_ICONS
 
 enum processID : uint8_t {
   Proc_Main, Proc_Print, Proc_Menu, Proc_Value, Proc_Option,
@@ -124,20 +124,21 @@ enum menuID : uint8_t {
 // Custom icons
 #if ENABLED(DWIN_CREALITY_LCD_CUSTOM_ICONS)
   // index of every custom icon should be >= CUSTOM_ICON_START
-  #define CUSTOM_ICON_START         ICON_Checkbox_F
-  #define ICON_Checkbox_F           200
-  #define ICON_Checkbox_T           201
+  #define CUSTOM_ICON_START         ICON_Box
+  #define ICON_Box                  200
+  #define ICON_Checkbox             201
   #define ICON_Fade                 202
   #define ICON_Mesh                 203
   #define ICON_Tilt                 204
   #define ICON_Brightness           205
+  #define ICON_Probe                206
   #define ICON_AxisD                249
   #define ICON_AxisBR               250
   #define ICON_AxisTR               251
   #define ICON_AxisBL               252
   #define ICON_AxisTL               253
   #define ICON_AxisC                254
-#else
+//#else
   #define ICON_Fade                 ICON_Version
   #define ICON_Mesh                 ICON_Version
   #define ICON_Tilt                 ICON_Version

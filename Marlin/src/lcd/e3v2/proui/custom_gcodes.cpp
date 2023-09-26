@@ -36,7 +36,7 @@
   #include "file_header.h"
 #endif
 
-#if ENABLED(LCD_BED_TRAMMING)
+#if ENABLED(TRAMWIZ_MENU_ITEM)
   #include "bed_tramming.h"
 #endif
 

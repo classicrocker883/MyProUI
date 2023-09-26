@@ -575,9 +575,9 @@ void drawPrintDone() {
   DWINUI::clearMainArea();
   dwinPrintHeader(nullptr);
   #if HAS_GCODE_PREVIEW
-    const bool haspreview = previewValid();
+    const bool haspreview = gPreview.isValid();
     if (haspreview) {
-      previewShow();
+      gPreview.show();
       DWINUI::drawButton(BTN_Continue, 86, 295);
     }
   #else
@@ -659,12 +659,12 @@ void _drawIconBlink(bool &flag, const bool sensor, const uint8_t icon1, const ui
     if (flag != sensor) {
       flag = sensor;
       if (!flag) {
-        dwinDrawBox(1, hmiData.colorBackground, x-1, y-1, 21, 21);
+        dwinDrawBox(1, hmiData.colorBackground, x-1, y-1, 22, 22);
         DWINUI::drawIcon(icon1, x, y);
       }
     }
     if (flag) {
-      dwinDrawBox(1, blink ? hmiData.colorSplitLine : hmiData.colorBackground, x-1, y-1, 21, 21);
+      dwinDrawBox(1, blink ? hmiData.colorSplitLine : hmiData.colorBackground, x-1, y-1, 22, 22);
       DWINUI::drawIcon(icon2, x, y);
     }
   #else
@@ -1457,7 +1457,7 @@ void dwinLevelingStart() {
     TERN_(PROUI_EX,hmiFlag.cancel_abl = 0);
     title.showCaption(GET_TEXT_F(MSG_BED_LEVELING));
     #if PROUI_EX
-      meshViewer.drawMeshGrid(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y);
+      meshViewer.drawBackground(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y);
       DWINUI::drawButton(BTN_Cancel, 86, 305);
     #else
       dwinShowPopup(ICON_AutoLeveling, GET_TEXT_F(MSG_BED_LEVELING), GET_TEXT_F(MSG_PLEASE_WAIT), TERN(PROUI_EX, BTN_Cancel, 0));
@@ -1666,7 +1666,7 @@ void dwinLevelingDone() {
 // Started a Print Job
 void dwinPrintStarted() {
   DEBUG_ECHOLNPGM("dwinPrintStarted: ", sdPrinting());
-  TERN_(HAS_GCODE_PREVIEW, if (hostPrinting()) previewInvalidate());
+  TERN_(HAS_GCODE_PREVIEW, if (hostPrinting()) gPreview.invalidate());
   TERN_(SET_PROGRESS_PERCENT, ui.progress_reset());
   TERN_(SET_REMAINING_TIME, ui.reset_remaining_time());
   hmiFlag.pause_flag = false;
@@ -1708,6 +1708,10 @@ void dwinPrintFinished() {
 // Print was aborted
 void dwinPrintAborted() {
   DEBUG_ECHOLNPGM("dwinPrintAborted");
+  #ifdef SD_FINISHED_RELEASECOMMAND
+    queue.inject(SD_FINISHED_RELEASECOMMAND);
+  #endif
+
   #if PROUI_EX
     if (all_axes_homed()) {
       const int16_t zpos = current_position.z + PRO_data.Park_point.z;
@@ -1716,6 +1720,7 @@ void dwinPrintAborted() {
       queue.inject(&cmd);
     }
   #endif
+
   hostui.notify("Print Aborted");
   dwinPrintFinished();
 }
@@ -1802,7 +1807,6 @@ void dwinSetDataDefaults() {
       PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
     #endif
     #if HAS_BED_PROBE
-      PRO_data.probezfix = DEF_PROBEZFIX;
       PRO_data.zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
       PRO_data.multiple_probing = MULTIPLE_PROBING;
     #endif
@@ -1984,7 +1988,7 @@ void dwinRedrawScreen() {
       dwinPopupContinue(ICON_BLTouch, GET_TEXT_F(MSG_MESH_VIEWER), GET_TEXT_F(MSG_NO_VALID_MESH));
     else {
       hmiSaveProcessID(ID_WaitResponse);
-      meshViewer.draw(false, true);
+      meshViewer.drawViewer(false, true);
     }
   }
 #endif // HAS_MESH
@@ -2056,7 +2060,7 @@ void gotoConfirmToPrint() {
       laserOn(false); // If it is not laser file turn off laser mode
   #endif
   #if HAS_GCODE_PREVIEW
-    if (hmiData.enablePreview) return gotoPopup(previewDrawFromSD, onClickConfirmToPrint);
+    if (hmiData.enablePreview) return gotoPopup(gPreview.draw, onClickConfirmToPrint);
   #endif
   #if ENABLED(ONE_CLICK_PRINT)
     return gotoPopup(confirmToPrintPopup, onClickConfirmToPrint);

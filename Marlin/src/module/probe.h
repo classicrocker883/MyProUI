@@ -363,6 +363,6 @@ private:
 
 extern Probe probe;
 
-#if ENABLED(PROUI_EX)
+#if ENABLED(DWIN_LCD_PROUI)
   float probe_at_point(const_float_t rx, const_float_t ry, const bool raise_after);
 #endif

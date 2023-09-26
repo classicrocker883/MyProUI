@@ -72,7 +72,6 @@ constexpr int16_t DEF_MESH_MAX_Y = MESH_MAX_Y;
 constexpr int16_t DEF_PROBING_MARGIN = PROBING_MARGIN;
 #define MIN_PROBE_MARGIN 0
 #define MAX_PROBE_MARGIN 60
-#define DEF_PROBEZFIX -0.00125  // 0.5*1/DEFAULT_AXIS_STEPS_PER_UNIT[Z_AXIS]
 constexpr int16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
 #ifndef MULTIPLE_PROBING
   #define MULTIPLE_PROBING 0
@@ -99,7 +98,6 @@ typedef struct {
   float mesh_max_x = DEF_MESH_MAX_X;
   float mesh_min_y = DEF_MESH_MIN_Y;
   float mesh_max_y = DEF_MESH_MAX_Y;
-  float probezfix = DEF_PROBEZFIX;
   uint16_t zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
   uint8_t multiple_probing = MULTIPLE_PROBING;
   bool Invert_E0 = DEF_INVERT_E0_DIR;

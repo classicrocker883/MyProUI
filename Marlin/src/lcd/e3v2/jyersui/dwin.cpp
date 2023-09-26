@@ -524,7 +524,7 @@ void JyersDWIN::drawMenuItem(const uint8_t row, const uint8_t icon/*=0*/, FSTR_P
 
 void JyersDWIN::drawCheckbox(const uint8_t row, const bool value) {
   #if ENABLED(DWIN_CREALITY_LCD_CUSTOM_ICONS)   // Draw appropriate checkbox icon
-    dwinIconShow(ICON, (value ? ICON_Checkbox_T : ICON_Checkbox_F), 226, MBASE(row) - 3);
+    dwinIconShow(ICON, (value ? ICON_Checkbox : ICON_Box), 226, MBASE(row) - 3);
   #else                                         // Draw a basic checkbox using rectangles and lines
     dwinDrawRectangle(1, COLOR_BG_BLACK, 226, MBASE(row) - 3, 226 + 20, MBASE(row) - 3 + 20);
     dwinDrawRectangle(0, COLOR_WHITE, 226, MBASE(row) - 3, 226 + 20, MBASE(row) - 3 + 20);

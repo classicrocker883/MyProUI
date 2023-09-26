@@ -305,10 +305,6 @@ void drawAdvancedSettingsMenu();
 void drawPrepareMenu();
 void drawMoveMenu();
 
-#if ENABLED(LCD_BED_TRAMMING)
-//void drawTrammingMenu();
-#endif
-
 #if HAS_HOME_OFFSET
   void drawHomeOffsetMenu();
 #endif
