@@ -222,10 +222,6 @@ void DWINUI::Draw_Button(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t 
   Draw_CenteredString(0, fontid, color, bcolor, x1, x2, (y2 + y1 - fontHeight())/2, caption);
 }
 
-void DWINUI::Draw_Button(uint8_t id, uint16_t x, uint16_t y) {
-  Draw_Button(id, x, y, false);
-}
-
 void DWINUI::Draw_Button(uint8_t id, uint16_t x, uint16_t y, bool sel) {
   if (sel) { Draw_Select_Box(x, y); }
   switch (id) {
@@ -237,6 +233,10 @@ void DWINUI::Draw_Button(uint8_t id, uint16_t x, uint16_t y, bool sel) {
     case BTN_Purge   : Draw_Button(GET_TEXT_F(MSG_BUTTON_PURGE), x, y); break;
     default: break;
   }
+}
+
+void DWINUI::Draw_Button(uint8_t id, uint16_t x, uint16_t y) {
+  Draw_Button(id, x, y, false);
 }
 
 // -------------------------- Extra -------------------------------//

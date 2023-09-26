@@ -170,7 +170,6 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
-        x3: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -202,28 +201,79 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if ($X3); then X3TMP=-X3; else X3TMP=; fi;
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        echo "filename=Aquila${X3TMP}_${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT        
+        echo "filename=Aquila_${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT        
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
-        if ($X3); then
-        cp configurations/Voxelab\ Aquila/X3/Configuration.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila/X3/Configuration_adv.h Marlin/Configuration_adv.h
-        cp configurations/Voxelab\ Aquila/X3/Version.h Marlin/Version.h
-        else
         cp configurations/Voxelab\ Aquila/UBL/ConfigurationPro.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/UBL/Configuration_advPro.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
-        fi;
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        X3: ${{ matrix.x3 }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@v1.1.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-UBL-ProUI-A-X3:            # UBL-Pro for Aquila
+    name: Build UBL Pro Files A
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' 
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        echo "filename=Aquila-X3_N32_UBL-ProUI.bin" >> $GITHUB_OUTPUT        
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Voxelab\ Aquila/X3/Configuration.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/X3/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/X3/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = N32G455RE_voxelab_maple/g" platformio.ini
+        pio run
+        mkdir temp
+        mv .pio/build/N32G455RE_voxelab_maple/*.bin temp/build.bin
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2

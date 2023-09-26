@@ -1885,18 +1885,12 @@ void DWIN_Print_Finished() {
 // Print was aborted
 void DWIN_Print_Aborted() {
   DEBUG_ECHOLNPGM("DWIN_Print_Aborted");
-    if (all_axes_homed()) {
-      char cmd[34] = "";
-      #if ENABLED(NOZZLE_PARK_FEATURE)
-        xyz_pos_t park = NOZZLE_PARK_POINT;
-      #endif
+    if (axis_is_trusted(Z_AXIS)) {
+      char cmd[20] = "";
       const int16_t zpos = current_position.z + TERN(NOZZLE_PARK_FEATURE,
       NOZZLE_PARK_Z_RAISE_MIN, Z_POST_CLEARANCE);
       _MIN(zpos, Z_MAX_POS);
-      const int16_t ypos = current_position.y + TERN(NOZZLE_PARK_FEATURE,
-      park.y, 200);
-      _MIN(ypos, Y_MAX_POS);
-      sprintf_P(cmd, PSTR("G0 F3000 Z%i\nG0 F3000 Y%i"), zpos, ypos);
+      sprintf_P(cmd, PSTR("G0 F3000 Z%i"), zpos);
       queue.inject(cmd);
     }
   #ifdef SD_FINISHED_RELEASECOMMAND
