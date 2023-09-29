@@ -31,7 +31,6 @@
 class BedLevelToolsClass {
 public:
   #if ENABLED(USE_GRID_MESHVIEWER)
-    static bool viewer_print_value;
     static bool view_mesh;
   #endif
   static bool goto_mesh_value;
