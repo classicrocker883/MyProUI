@@ -353,7 +353,6 @@ namespace LanguageNarrow_tr {
   LSTR MSG_SENSOR_RESPONSIVENESS_E        = _UxGT("Sensör çözünürlüğü *");
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_E       = _UxGT("Ortam h *");
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_FAN_E   = _UxGT("Amb. h fan *");
-  LSTR MSG_SELECT                         = _UxGT("Seç");
   LSTR MSG_SELECT_E                       = _UxGT("Seç *");
   LSTR MSG_ACC                            = _UxGT("İvme");
   LSTR MSG_JERK                           = _UxGT("Sarsma");

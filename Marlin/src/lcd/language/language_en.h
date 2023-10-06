@@ -396,7 +396,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_E       = _UxGT("Ambient Co. *");
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_FAN     = _UxGT("Fan coeff.");
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_FAN_E   = _UxGT("Fan coeff. *");
-  LSTR MSG_SELECT                         = _UxGT("Select");
   LSTR MSG_SELECT_E                       = _UxGT("Select *");
   LSTR MSG_ACC                            = _UxGT("Acceleration (mm/s2)");
   LSTR MSG_JERK                           = _UxGT("Jerk");
@@ -498,7 +497,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_BUTTON_INIT                    = _UxGT("Init");
   LSTR MSG_BUTTON_STOP                    = _UxGT("Stop");
   LSTR MSG_BUTTON_PRINT                   = _UxGT("Print");
-  LSTR MSG_BUTTON_MEDIA                   = _UxGT(MEDIA_TYPE_EN);
   LSTR MSG_BUTTON_RESET                   = _UxGT("Reset");
   LSTR MSG_BUTTON_IGNORE                  = _UxGT("Ignore");
   LSTR MSG_BUTTON_CANCEL                  = _UxGT("Cancel");
@@ -642,7 +640,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_ZPROBE_MULTIPLE                = _UxGT("Extra Probing");
   LSTR MSG_Z_FEED_RATE                    = _UxGT("Z Feed Rate");
   LSTR MSG_ENABLE_HS_MODE                 = _UxGT("Enable HS Mode");
-  LSTR MSG_MOVE_NOZZLE_TO_BED             = _UxGT("Center Nozzle");
+  LSTR MSG_MOVE_NOZZLE_TO_BED             = _UxGT("Center Nozzle on Bed");
   LSTR MSG_BABYSTEP_X                     = _UxGT("Babystep X");
   LSTR MSG_BABYSTEP_Y                     = _UxGT("Babystep Y");
   LSTR MSG_BABYSTEP_Z                     = _UxGT("Babystep Z");
