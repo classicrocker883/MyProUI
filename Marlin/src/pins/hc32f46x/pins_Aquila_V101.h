@@ -22,7 +22,7 @@
 #pragma once
 
 //
-// Voxelab Aquila V1.0.1 (HC32F460) as found in the Voxelab Aquila X2
+// Voxelab Aquila V1.0.1 and V1.0.2 (HC32F460) as found in the Voxelab Aquila X2
 //
 #include "env_validate.h"
 
@@ -35,6 +35,13 @@
 #endif
 #ifndef DEFAULT_MACHINE_NAME
   #define DEFAULT_MACHINE_NAME "Aquila"
+#endif
+
+//
+// on-board crystal oscillator
+//
+#ifndef BOARD_XTAL_FREQUENCY
+  #define BOARD_XTAL_FREQUENCY 8000000 // 8 MHz XTAL
 #endif
 
 //
@@ -167,79 +174,63 @@
 //
 // Screen Pins
 //
-// Screen Port Pinout:
-// TODO: check screen port pinout
-//    ------
-// ? | 1  2 | ?
-// ? | 3  4 | ?
-// ?   5  6 | ?
-// ? | 7  8 | ?
-// ? | 9 10 | ?
-//    ------
+//       ------
+// PC6  | 1  2 | PB2
+// PC0  | 3  4 | PC1
+// PB14   5  6 | PB13
+// PB12 | 7  8 | PB15
+// GND  | 9 10 | +5V
+//       ------
+#define EXP_01_PIN PC6
+#define EXP_02_PIN PB2
+#define EXP_03_PIN PC0
+#define EXP_04_PIN PC1
+#define EXP_05_PIN PB14
+#define EXP_06_PIN PB13
+#define EXP_07_PIN PB12
+#define EXP_08_PIN PB15
 
-
-//
-// DWIN Screen, Encoder and Beeper
-//
-//#undef LCD_SERIAL_PORT   //TODO: needs to be defined???
-//#define LCD_SERIAL_PORT 1
-
-#if ANY(RET6_12864_LCD, HAS_DWIN_E3V2, IS_DWIN_MARLINUI)
-
-  /**
-   *    RET6 12864 LCD
-   *        ------
-   *  PC6  | 1  2 | PB2
-   *  PB10 | 3  4 | PB11
-   *  PB14   5  6 | PB13
-   *  PB12 | 7  8 | PB15
-   *   GND | 9 10 | 5V
-   *        ------
-   */
-  #define EXP3_01_PIN                       PC6
-  #define EXP3_02_PIN                       PB2
-  #define EXP3_03_PIN                       PB10
-  #define EXP3_04_PIN                       PB11
-  #define EXP3_05_PIN                       PB14
-  #define EXP3_06_PIN                       PB13
-  #define EXP3_07_PIN                       PB12
-  #define EXP3_08_PIN                       PB15
-
-#endif
 #if ENABLED(CR10_STOCKDISPLAY)
 #undef LCD_SERIAL_PORT
 #define LCD_SERIAL_PORT 1
 
-  #define LCD_PINS_RS                EXP3_07_PIN
-  #define LCD_PINS_EN                EXP3_08_PIN
-  #define LCD_PINS_D4                EXP3_06_PIN
+  #define LCD_PINS_RS                EXP_07_PIN
+  #define LCD_PINS_EN                EXP_08_PIN
+  #define LCD_PINS_D4                EXP_06_PIN
 
-  #define BTN_ENC                    EXP3_02_PIN
-  #define BTN_EN1                    EXP3_03_PIN
-  #define BTN_EN2                    EXP3_05_PIN
+  #define BTN_ENC                    EXP_02_PIN
+  #define BTN_EN1                    EXP_03_PIN
+  #define BTN_EN2                    EXP_05_PIN
 
   #ifndef HAS_PIN_27_BOARD
-    #define BEEPER_PIN               EXP3_01_PIN
+    #define BEEPER_PIN               EXP_01_PIN
   #endif
 
-#elif ANY(HAS_DWIN_E3V2, IS_DWIN_MARLINUI, DWIN_VET6_CREALITY_LCD)
+#elif ANY(HAS_DWIN_E3V2, IS_DWIN_MARLINUI)
+  // screen pinout (screen side, so RX/TX are swapped)
+  //       ------
+  // NC   | 1  2 | NC
+  // RX   | 3  4 | TX
+  // EN     5  6 | BEEP
+  // B    | 7  8 | A
+  // GND  | 9 10 | +5V
+  //       ------
 
-  #define BTN_ENC                    EXP3_05_PIN // PB14 // SPI_MISO
-  #define BTN_EN1                    EXP3_08_PIN // PB15 // SPI3_MOSI
-  #define BTN_EN2                    EXP3_07_PIN // PB12 // SPI3_NSS
-
-  #ifndef BEEPER_PIN
-    #define BEEPER_PIN               EXP3_06_PIN // PB13 // SPI3_CLK
-  #endif
+  #define BTN_ENC EXP_05_PIN // EN
+  #define BTN_EN1 EXP_08_PIN // A
+  #define BTN_EN2 EXP_07_PIN // B
   
+  #ifndef BEEPER_PIN
+    #define BEEPER_PIN EXP_06_PIN // BEEP
+  #endif
+
+  #define BOARD_USART1_RX_PIN EXP_04_PIN // screen TX
+  #define BOARD_USART1_TX_PIN EXP_03_PIN // screen RX
 #endif
 
 //
-// Pins for documentation and sanity checks
-// Changing these will NOT change the pin they are on
-//
-
 // SDIO Pins
+//
 #define BOARD_SDIO_D0 PC8
 #define BOARD_SDIO_D1 PC9
 #define BOARD_SDIO_D2 PC10
@@ -248,15 +239,26 @@
 #define BOARD_SDIO_CMD PD2
 #define BOARD_SDIO_DET PA10
 
-// USARTS
-#define BOARD_USART1_TX_PIN PC0
-#define BOARD_USART1_RX_PIN PC1
+//
+// USART Pins
+//
+// Screen
+#ifndef BOARD_USART1_TX_PIN
+  #define BOARD_USART1_TX_PIN PC0
+#endif
+#ifndef BOARD_USART1_RX_PIN
+  #define BOARD_USART1_RX_PIN PC1
+#endif
 
+// Host
 #define BOARD_USART2_TX_PIN PA9
 #define BOARD_USART2_RX_PIN PA15
 
+// Unused / Debug
 #define BOARD_USART3_TX_PIN PE5
 #define BOARD_USART3_RX_PIN PE4
 
-// on-board LED (?)
-// #define LED PA3
+// on-board LED (HIGH = off, LOW = on)
+#ifndef LED_BUILTIN
+  #define LED_BUILTIN PA3
+#endif

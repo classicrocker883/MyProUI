@@ -9,7 +9,7 @@
  * This bitmap from the file 'voxelab-500.png'
  */
 #pragma once
-#include <Wire.h>
+//#include <Wire.h>
 
 #define CUSTOM_BOOTSCREEN_ANIMATED     // only Voxelab supported
 #define CUSTOM_BOOTSCREEN_FRAME_TIME 500  // (ms)
