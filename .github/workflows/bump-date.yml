@@ -29,7 +29,7 @@ jobs:
         if [[ ! "$( git log -1 --pretty=%B )" =~ ^\[cron\] ]]; then
           DIST=$( date +"%Y-%m-%d" )
           eval "sed -E -i 's/(#define +STRING_DISTRIBUTION_DATE) .*$/\1 \"$DIST\"/g' Marlin/src/inc/Version.h" && \
-          eval "sed -E -i 's/(#define +STRING_DISTRIBUTION_DATE) .*$/\1 \"$DIST\"/g' Marlin/Version.h" && \
+          eval "sed -E -i 's/(//#define +STRING_DISTRIBUTION_DATE) .*$/\1 \"$DIST\"/g' Marlin/Version.h" && \
           git config user.name "classicrocker883" && \
           git config user.email "andrewleduc88@yahoo.com" && \
           git add . && \
