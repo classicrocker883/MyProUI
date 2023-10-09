@@ -230,7 +230,7 @@ jobs:
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
   Build-UBL-ProUI-A-X3:            # UBL-Pro for Aquila
-    name: Build UBL Pro Files A
+    name: Build UBL Pro Files A X3
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
