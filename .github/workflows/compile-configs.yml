@@ -525,6 +525,159 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
+  Build-UBL-ProUI-A-SKR:            # UBL-Pro for Aquila, SKR Mini
+    name: Build UBL Pro Files A SKR
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [V3,V2]
+        temp: [true,false]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' 
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if [ "$SKR" = V3 ]; then AVTMP="V3"; else AVTMP="V2"; fi;
+        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT        
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        if ($SKR); then
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/ConfigurationUBL.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
+        else
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/ConfigurationUBL.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
+        fi;
+        if ($SKR); then STMP="STM32G0B1RE_btt"; else STMP="STM32F103RC_btt"; fi;
+        sed -i "s/default_envs =.*/default_envs = ${STMP}/g" platformio.ini
+        pio run
+        mkdir temp
+        mv .pio/build/${STMP}/*.bin temp/build.bin
+      env:
+        SKR: ${{ matrix.chip }}
+        TP: ${{ matrix.temp }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@v1.1.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-MM-ProUI-A-SKR:            # MM-Pro for Aquila, SKR Mini
+    name: Build MM Pro Files A SKR
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [V3,V2,V31]
+        temp: [true,false]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' 
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if [ "$SKR" = V3 ]; then AVTMP="V3"; fi; 
+        if [ "$SKR" = V2 ]; then AVTMP="V2"; fi;
+        if [ "$SKR" = V31 ]; then AVTMP="V3-1"; fi;
+        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT        
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        if [ "$SKR" = V3 ] || [ "$SKR" = V31 ]; then
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/ConfigurationMM.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
+        fi;
+        if [ "$SKR" = V2 ]; then
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/ConfigurationMM.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
+        fi;
+        if [ "$SKR" = V3 ]; then STMP="STM32G0B1RE_btt"; fi;
+        if [ "$SKR" = V31 ]; then STMP="STM32F401RC_btt"; fi;
+        if [ "$SKR" = V2 ]; then STMP="STM32F103RC_btt"; fi;
+        sed -i "s/default_envs =.*/default_envs = ${STMP}/g" platformio.ini
+        pio run
+        mkdir temp
+        mv .pio/build/${STMP}/*.bin temp/build.bin
+      env:
+        SKR: ${{ matrix.chip }}
+        TP: ${{ matrix.temp }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@v1.1.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
   Build-Default-A4:            # Default-NP for Aquila 427
     name: Build Default Files A4
     runs-on: ubuntu-latest

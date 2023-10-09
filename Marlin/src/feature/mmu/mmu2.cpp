@@ -46,10 +46,6 @@ MMU2 mmu2;
   #include "../../lcd/extui/ui_api.h"
 #endif
 
-#if PROUI_EX
-  #include "../../lcd/e3v2/proui/dwin_defines.h"
-#endif
-
 #define DEBUG_OUT ENABLED(MMU2_DEBUG)
 #include "../../core/debug_out.h"
 
@@ -140,7 +136,7 @@ void MMU2::reset() {
 int8_t MMU2::get_current_tool() { return extruder == MMU2_NO_TOOL ? -1 : extruder; }
 
 #if ANY(HAS_PRUSA_MMU2S, MMU_EXTRUDER_SENSOR)
-  #define FILAMENT_PRESENT() (READ(FIL_RUNOUT1_PIN) != TERN(PROUI_EX, PRO_data.Runout_active_state, FIL_RUNOUT1_STATE))
+  #define FILAMENT_PRESENT() (READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE)
 #else
   #define FILAMENT_PRESENT() true
 #endif
@@ -164,7 +160,7 @@ void MMU2::mmu_loop() {
         MMU2_SEND("S1");    // Read Version
         state = -2;
       }
-      else if (millis() > 30000) { // 30sec after reset disable MMU
+      else if (ELAPSED(millis(), prev_request + 30000)) { // 30sec after reset disable MMU
         SERIAL_ECHOLNPGM("MMU not responding - DISABLED");
         state = 0;
       }

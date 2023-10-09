@@ -25,7 +25,7 @@
 <br>
 
 ### - Please read this: -
-Many Updates have been included in the most recent MRiscoCProUI for the **2023-September** release.  
+Many Updates have been included in the most recent MRiscoCProUI for the **2023-October** release.  
 This release has many changes to the **UI**.  
 New ICON's have been added, and old ones enhanced. Whoever edited them before saved directly as .*JPG* which in many editors lowers the quality of the image. I painstakingly remastered almost every single one; preserving the original quality.
 

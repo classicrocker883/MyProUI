@@ -39,16 +39,15 @@ inline void Draw_Popup_Bkgd() {
 
 template<typename T, typename U>
 void DWIN_Draw_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8_t button=0) {
-  uint8_t xpos = 81;
-  uint8_t ypos = 90;
+  xy_uint8_t pos;
   switch (icon) {
-    case 17 ... 24: xpos = 96; break;              // Icon#:17-24;           W: 80px|H:100px
-    case 78 ... 81: xpos = 100; ypos = 107; break; // Icon#:78-81;           W: 73px|H: 66px
-    default: xpos = 81; ypos = 90; break;          // Icon#:1-8,90-91,93-94; W:110px|H:100px
+    default: pos.set(81, 90); break;               // Icon#:1-8,90-91,93-94; W:110px|H:100px
+    case 17 ... 24: pos.set(96, 90); break;        // Icon#:17-24;           W: 80px|H:100px
+    case 78 ... 81: pos.set(100, 107); break;      // Icon#:78-81;           W: 73px|H: 66px
   }
   DWINUI::ClearMainArea();
   Draw_Popup_Bkgd();
-  if (icon) DWINUI::Draw_Icon(icon, xpos, ypos);
+  if (icon) DWINUI::Draw_Icon(icon, pos.x, pos.y);
   if (amsg1) DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 210, amsg1);
   if (amsg2) DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 240, amsg2);
   if (button) DWINUI::Draw_Button(button, 86, 280, true);

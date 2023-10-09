@@ -458,8 +458,8 @@ public:
    * @param pgm   Program string flag. Only relevant on AVR.
    */
   static void _set_alert(const char * const ustr, int8_t level, const bool pgm=false);
+
   static void set_status(FSTR_P const, int8_t); // set_status undefined reference libproui.a PROUI_EX workaround 
-  
   static void set_status(const char * const cstr, const bool persist=false) { _set_status(cstr, persist, false); }
   static void set_status_P(PGM_P const pstr, const bool persist=false)      { _set_status(pstr, persist, true);  }
   static void set_status(FSTR_P const fstr, const bool persist=false)       { set_status_P(FTOP(fstr), persist); }
