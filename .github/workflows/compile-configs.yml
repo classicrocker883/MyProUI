@@ -230,7 +230,7 @@ jobs:
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
   Build-UBL-ProUI-A-X3:            # UBL-Pro for Aquila
-    name: Build UBL Pro Files A
+    name: Build UBL Pro Files A X3
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -530,7 +530,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chip: [V3,V2]
+        chip: [V3_0,V2_0,V3_0_1]
         temp: [true,false]
     steps:
     - uses: actions/checkout@v3
@@ -563,25 +563,32 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$SKR" = V3 ]; then AVTMP="V3"; else AVTMP="V2"; fi;
-        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT        
+        if [ "$SKR" = V3_0 ]; then AVTMP="V3"
+        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"
+        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"
+        fi;
+        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
-        if ($SKR); then
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/ConfigurationUBL.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
+        if [ "$SKR" = V3 ]; then
+        cp configurations/BTT-SKR_Mini_E3_V3/ConfigurationUBL.h Marlin/Configuration.h
+        cp configurations/BTT-SKR_Mini_E3_V3/Configuration_advUBL.h Marlin/Configuration_adv.h
+        cp configurations/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
         else
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/ConfigurationUBL.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Configuration_adv.h Marlin/Configuration_adv.h
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
+        cp configurations/BTT-SKR_Mini_E3_V2/ConfigurationUBL.h Marlin/Configuration.h
+        cp configurations/BTT-SKR_Mini_E3_V2/Configuration_advUBL.h Marlin/Configuration_adv.h
+        cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         fi;
-        if ($SKR); then STMP="STM32G0B1RE_btt"; else STMP="STM32F103RC_btt"; fi;
-        sed -i "s/default_envs =.*/default_envs = ${STMP}/g" platformio.ini
+        sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_$SKR/g" Marlin/Configuration.h
+        if [ "$SKR" = V3 ]; then STMP="STM32G0B1RE"
+        elif [ "$SKR" = V2 ]; then STMP="STM32F103RC"
+        elif [ "$SKR" = V31 ]; then STMP="STM32F401RC"
+        fi;
+        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
         pio run
         mkdir temp
-        mv .pio/build/${STMP}/*.bin temp/build.bin
+        mv .pio/build/${STMP}_btt/*.bin temp/build.bin
       env:
         SKR: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
@@ -604,7 +611,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chip: [V3,V2,V31]
+        chip: [V3_0,V2_0,V3_0_1]
         temp: [true,false]
     steps:
     - uses: actions/checkout@v3
@@ -637,30 +644,32 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$SKR" = V3 ]; then AVTMP="V3"; fi; 
-        if [ "$SKR" = V2 ]; then AVTMP="V2"; fi;
-        if [ "$SKR" = V31 ]; then AVTMP="V3-1"; fi;
-        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT        
+        if [ "$SKR" = V3_0 ]; then AVTMP="V3"
+        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"
+        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"
+        fi;
+        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
-        if [ "$SKR" = V3 ] || [ "$SKR" = V31 ]; then
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/ConfigurationMM.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
+        if [ "$SKR" = V3 ]; then
+        cp configurations/BTT-SKR_Mini_E3_V3/ConfigurationMM.h Marlin/Configuration.h
+        cp configurations/BTT-SKR_Mini_E3_V3/Configuration_advMM.h Marlin/Configuration_adv.h
+        cp configurations/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
+        else
+        cp configurations/BTT-SKR_Mini_E3_V2/ConfigurationMM.h Marlin/Configuration.h
+        cp configurations/BTT-SKR_Mini_E3_V2/Configuration_advMM.h Marlin/Configuration_adv.h
+        cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         fi;
-        if [ "$SKR" = V2 ]; then
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/ConfigurationMM.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Configuration_adv.h Marlin/Configuration_adv.h
-        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
+        sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_$SKR/g" Marlin/Configuration.h
+        if [ "$SKR" = V3 ]; then STMP="STM32G0B1RE"
+        elif [ "$SKR" = V2 ]; then STMP="STM32F103RC"
+        elif [ "$SKR" = V31 ]; then STMP="STM32F401RC"
         fi;
-        if [ "$SKR" = V3 ]; then STMP="STM32G0B1RE_btt"; fi;
-        if [ "$SKR" = V31 ]; then STMP="STM32F401RC_btt"; fi;
-        if [ "$SKR" = V2 ]; then STMP="STM32F103RC_btt"; fi;
-        sed -i "s/default_envs =.*/default_envs = ${STMP}/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
         pio run
         mkdir temp
-        mv .pio/build/${STMP}/*.bin temp/build.bin
+        mv .pio/build/${STMP}_btt/*.bin temp/build.bin
       env:
         SKR: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
@@ -678,6 +687,29 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
+
+#        if [ "$SKR" = V3 ]; then AVTMP="V3"; fi; 
+#        if [ "$SKR" = V2 ]; then AVTMP="V2"; fi;
+#        if [ "$SKR" = V31 ]; then AVTMP="V3-1"; fi;
+#        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT        
+#        > Marlin/Configuration.h
+#        > Marlin/Configuration_adv.h
+#        > Marlin/Version.h
+#        if [ "$SKR" = V3 ] || [ "$SKR" = V31 ]; then
+#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/ConfigurationMM.h Marlin/Configuration.h
+#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
+#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
+#        fi;
+#        if [ "$SKR" = V2 ]; then
+#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/ConfigurationMM.h Marlin/Configuration.h
+#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Configuration_adv.h Marlin/Configuration_adv.h
+#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
+#        fi;
+#        if [ "$SKR" = V3 ]; then STMP="STM32G0B1RE_btt"; fi;
+#        if [ "$SKR" = V31 ]; then STMP="STM32F401RC_btt"; fi;
+#        if [ "$SKR" = V2 ]; then STMP="STM32F103RC_btt"; fi;
+
+
   Build-Default-A4:            # Default-NP for Aquila 427
     name: Build Default Files A4
     runs-on: ubuntu-latest
