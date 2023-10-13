@@ -581,9 +581,9 @@ jobs:
         cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         fi;
         sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_$SKR/g" Marlin/Configuration.h
-        if [ "$SKR" = V3 ]; then STMP="STM32G0B1RE"
-        elif [ "$SKR" = V2 ]; then STMP="STM32F103RC"
-        elif [ "$SKR" = V31 ]; then STMP="STM32F401RC"
+        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE"
+        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC"
+        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC"
         fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
         pio run
@@ -662,9 +662,9 @@ jobs:
         cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         fi;
         sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_$SKR/g" Marlin/Configuration.h
-        if [ "$SKR" = V3 ]; then STMP="STM32G0B1RE"
-        elif [ "$SKR" = V2 ]; then STMP="STM32F103RC"
-        elif [ "$SKR" = V31 ]; then STMP="STM32F401RC"
+        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE"
+        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC"
+        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC"
         fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
         pio run

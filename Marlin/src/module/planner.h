@@ -437,7 +437,7 @@ class Planner {
     #endif
 
     #if HAS_EXTRUDERS
-      static int16_t flow_percentage[EXTRUDERS];   // Extrusion factor for each extruder
+      static int16_t flow_percentage[EXTRUDERS];    // Extrusion factor for each extruder
       static float e_factor[EXTRUDERS];             // The flow percentage and volumetric multiplier combine to scale E movement
     #endif
 
@@ -527,10 +527,6 @@ class Planner {
         xy_freq_limit_hz = constrain(hz, 0, 100);
         refresh_frequency_limit();
       }
-    #endif
-
-    #if ENABLED(FT_MOTION)
-      static bool fxdTiCtrl_busy;
     #endif
 
   private:

@@ -2267,6 +2267,8 @@
   #endif
 #endif
 
+// @section extruder
+
 /**
  * Linear Pressure Control v1.5
  *
