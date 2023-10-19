@@ -123,6 +123,10 @@
   #include "lockscreen.h"
 #endif
 
+#if HAS_SOUND
+  #include "../../../libs/buzzer.h"
+#endif
+
 //#define DEBUG_OUT ENABLED(DEBUG_DWIN)
 #include "../../../core/debug_out.h"
 
@@ -764,7 +768,7 @@ void _draw_feedrate() {
         DWINUI::Draw_String(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 116 + 4 * STAT_CHR_W + 2, 384, F(" %"));
       }
       else {
-        _value = CEIL(feedrate_mm_s * feedrate_percentage / 100);
+        _value = CEIL(MMS_SCALED(feedrate_mm_s));
         DWIN_Draw_Box(1, HMI_data.Background_Color, 116 + 4 * STAT_CHR_W + 2, 384, 30, 20);
       }
       DWINUI::Draw_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 116 + 2 * STAT_CHR_W, 384, _value);
@@ -1255,8 +1259,6 @@ void HMI_Printing() {
   }
   DWIN_UpdateLCD();
 }
-
-#include "../../../libs/buzzer.h"
 
 void Draw_Main_Area() {
   switch (checkkey) {

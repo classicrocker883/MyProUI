@@ -85,7 +85,7 @@
  *
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
-#define SERIAL_PORT 2  // BTT SKR MINI E3 TFT
+#define SERIAL_PORT -1  // BTT SKR MINI E3 TFT >> 2
 #define NO_AUTO_ASSIGN_WARNING  // Disable serial warnings
 
 /**
@@ -107,7 +107,7 @@
  * Currently Ethernet (-2) is only supported on Teensy 4.1 boards.
  * :[-2, -1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
-//#define SERIAL_PORT_2 -1
+//#define SERIAL_PORT_2 -1  // BTT SKR MINI E3 TFT
 //#define BAUDRATE_2 250000   // :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000] Enable to override BAUDRATE
 
 /**
@@ -1664,6 +1664,7 @@
 #define Z_CLEARANCE_DEPLOY_PROBE   10 // (mm) Z Clearance for Deploy/Stow
 #define Z_CLEARANCE_BETWEEN_PROBES  5 // (mm) Z Clearance between probe points
 #define Z_CLEARANCE_MULTI_PROBE     5 // (mm) Z Clearance between multiple probes
+#define Z_PROBE_ERROR_TOLERANCE     3 // (mm) Tolerance for early trigger (<= -probe.offset.z + ZPET)
 //#define Z_AFTER_PROBING           5 // (mm) Z position after probing is done
 
 #define Z_PROBE_LOW_POINT          -2 // (mm) Farthest distance below the trigger-point to go before stopping
@@ -3431,7 +3432,7 @@
     #define ACTIVATE_MESH_ITEM  // Active Mesh Leveling menu option (152 bytes of flash)
   #endif
   #if ENABLED(FILAMENT_RUNOUT_SENSOR) // (2528 bytes of flash)
-    #define RUNOUT_TUNE_ITEM    // Filament Runout option in Tune Menu 
+    #define RUNOUT_TUNE_ITEM    // Filament Runout option in Tune Menu
   #endif
   #if ENABLED(BLTOUCH)
     #define HS_MENU_ITEM        // BLTOUCH_HS_MODE menu option (56 bytes of flash)

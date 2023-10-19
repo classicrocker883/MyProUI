@@ -8,7 +8,7 @@ on:
 #     types: [prereleased]
 
 jobs:
-  Build-Default-E:            # Default-NP for Ender-3
+  Build-Default-E:            # Default NoPro for Ender-3
     name: Build Default Files E
     runs-on: ubuntu-latest
     strategy:
@@ -75,7 +75,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -83,7 +83,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-Manual-Mesh-E:        # Manual Mesh - MM for Ender-3
+  Build-Manual-Mesh-E:        # MM Pro for Ender-3
     name: Build Manual-Mesh Files E
     runs-on: ubuntu-latest
     strategy:
@@ -150,7 +150,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -158,7 +158,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-E:            # UBL-Pro for Ender-3
+  Build-UBL-ProUI-E:            # UBL Pro for Ender-3
     name: Build UBL Pro Files E
     runs-on: ubuntu-latest
     strategy:
@@ -225,7 +225,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -238,7 +238,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   strategy:
   #     matrix:
-    #     printer: [AQUILA,ENDER]
+  #       printer: [AQUILA,ENDER]
   #       grid: [3,5,7]
   #       temp: [true,false]
   #       inshape: [true,false]
@@ -304,7 +304,7 @@ jobs:
   #       mkdir temp
   #       mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
   #     env:
-    #     PR: ${{ matrix.printer}}
+  #       PR: ${{ matrix.printer}}
   #       GRID: ${{ matrix.grid }}
   #       TP: ${{ matrix.temp }}
   #       IS: ${{ matrix.inshape }}
@@ -314,7 +314,7 @@ jobs:
   #     env:
   #       GITHUB_TOKEN: ${{ github.token }}
   #   - name: Upload Release Asset
-  #     uses: tanyagray/action-upload-release-asset@v1.1.3
+  #     uses: tanyagray/action-upload-release-asset@main
   #     env:
   #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #     with:
@@ -322,6 +322,7 @@ jobs:
   #       asset_path: temp/build.bin
   #       asset_name: ${{ steps.build_configs.outputs.filename }}
   #       asset_content_type: application/x-binary
+
   Build-BLTouch-E:            # BLTouch Pro for Ender-3
     name: Build BLT Pro Files E
     runs-on: ubuntu-latest
@@ -389,7 +390,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -397,85 +398,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  # Build-BLTouch-NP-E:         # BLTouch NoPro for Ender-3
-  #   name: Build BLT NoPro Files E4
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       grid: [3,4,5]
-  #       temp: [true,false]
-  #       inshape: [true,false]
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Setup node
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       node-version: 16
-  #   - name: Cache pip
-  #     uses: actions/cache@v3.3.2
-  #     with:
-  #       path: ~/.cache/pip
-  #       key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-  #       restore-keys: |
-  #         ${{ runner.os }}-pip-
-  #   - name: Cache PlatformIO
-  #     uses: actions/cache@v3.3.2
-  #     with:
-  #       path: ~/.platformio
-  #       key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-  #   - name: Set up Python
-  #     uses: actions/setup-python@v4
-  #     with:
-  #       python-version: '3.10'
-  #   - name: Install PlatformIO
-  #     run: |
-  #       python3 -m pip install --upgrade pip
-  #       pip install --upgrade pip
-  #       pip install --upgrade wheel
-  #       pip install --upgrade platformio
-  #   - name: Run PlatformIO
-  #     id: build_configs
-  #     run: |
-  #       if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
-  #       if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-  #       echo "filename=Ender_GD32_BLT-${GRID}x${GRID}-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
-  #       > Marlin/Configuration.h
-  #       > Marlin/Configuration_adv.h
-  #       > Marlin/Version.h
-  #       cp configurations/Creality\ Ender/BLT/Configuration.h Marlin/Configuration.h
-  #       cp configurations/Creality\ Ender/BLT/Configuration_adv.h Marlin/Configuration_adv.h
-  #       cp configurations/Creality\ Ender/BLT/Version.h Marlin/Version.h
-  #       sed -i "s/default_envs =.*/default_envs = GD32F303RE_creality_maple/g" platformio.ini
-  #       sed -i "s/#define GRID_MAX_POINTS_X.*/#define GRID_MAX_POINTS_X $GRID/g" Marlin/Configuration.h
-  #       if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-  #       sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-  #       sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
-  #       if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-  #       sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
-  #       if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-  #       sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
-  #       pio run
-  #       mkdir temp
-  #       mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
-  #     env:
-  #       GRID: ${{ matrix.grid }}
-  #       TP: ${{ matrix.temp }}
-  #       IS: ${{ matrix.inshape }}
-  #   - name: Get release
-  #     id: get_release
-  #     uses: bruceadams/get-release@v1.3.2
-  #     env:
-  #       GITHUB_TOKEN: ${{ github.token }}
-  #   - name: Upload Release Asset
-  #     uses: tanyagray/action-upload-release-asset@v1.1.3
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     with:
-  #       upload_url: ${{ steps.get_release.outputs.upload_url }}
-  #       asset_path: temp/build.bin
-  #       asset_name: ${{ steps.build_configs.outputs.filename }}
-  #       asset_content_type: application/x-binary
-  Build-Default-E4:            # Default-NP for Ender-3
+  Build-Default-E4:            # Default NoPro for Ender-3
     name: Build Default Files Ender E4
     runs-on: ubuntu-latest
     strategy:
@@ -547,7 +470,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -555,7 +478,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-Manual-Mesh-E4:        # Manual Mesh - MM for Ender-3
+  Build-Manual-Mesh-E4:        # MM Pro for Ender-3
     name: Build Manual-Mesh Files E4
     runs-on: ubuntu-latest
     strategy:
@@ -627,7 +550,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -635,7 +558,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-E4:            # UBL-Pro for Ender-3
+  Build-UBL-ProUI-E4:            # UBL Pro for Ender-3
     name: Build UBL Pro Files E4
     runs-on: ubuntu-latest
     strategy:
@@ -707,7 +630,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -787,7 +710,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:

@@ -90,7 +90,6 @@
  */
 #define SERIAL_PORT 2
 #define NO_AUTO_ASSIGN_WARNING  // Disable serial warnings
-#define NO_MAPLE_WARNING        // Disable warning when using Maple env
 
 /**
  * Serial Port Baud Rate
@@ -851,8 +850,8 @@
   #define PID_FUNCTIONAL_RANGE 10 // If the temperature difference between the target temperature and the actual temperature
                                   // is more than PID_FUNCTIONAL_RANGE then the PID will be shut off and the heater will be set to min/max.
 
-  #define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of flash)
-  #define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of flash)
+  #define PID_EDIT_MENU           // Add PID editing to the "Advanced Settings" menu. (~700 bytes of flash)
+  #define PID_AUTOTUNE_MENU       // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of flash)
 #endif
 
 // @section safety
@@ -1668,6 +1667,7 @@
 #define Z_CLEARANCE_DEPLOY_PROBE   10 // (mm) Z Clearance for Deploy/Stow
 #define Z_CLEARANCE_BETWEEN_PROBES  5 // (mm) Z Clearance between probe points
 #define Z_CLEARANCE_MULTI_PROBE     5 // (mm) Z Clearance between multiple probes
+#define Z_PROBE_ERROR_TOLERANCE     3 // (mm) Tolerance for early trigger (<= -probe.offset.z + ZPET)
 //#define Z_AFTER_PROBING           5 // (mm) Z position after probing is done
 
 #define Z_PROBE_LOW_POINT          -2 // (mm) Farthest distance below the trigger-point to go before stopping
@@ -2055,7 +2055,7 @@
 /**
  * Auto-leveling needs preheating
  */
-//#define PREHEAT_BEFORE_LEVELING    // MRiscoC Heatting to compensate thermal expansions
+//#define PREHEAT_BEFORE_LEVELING
 #if ENABLED(PREHEAT_BEFORE_LEVELING)
   #define LEVELING_NOZZLE_TEMP 175   // (°C) Only applies to E0 at this time  // Preheat nozzle without oozing
   #define LEVELING_BED_TEMP     50
@@ -3451,7 +3451,7 @@
   #define TRAMWIZ_MENU_ITEM     // Menu item: enable Tramming Wizard (2304 bytes of flash)
   #define MEDIASORT_MENU_ITEM   // Menu item: enable/disable file list sorting (104 bytes of flash)
   //#define ENC_MENU_ITEM       // Menu item: faster/slower encoder rate (272 bytes of flash)
-  //#define SHOW_SPEED_IND      // Menu item: blink speed in mm/s along with speed percentage (296 bytes of flash)
+  #define SHOW_SPEED_IND        // Menu item: blink speed in mm/s along with speed percentage (296 bytes of flash)
   //#define NO_BLINK_IND        // Disables dashboard icon blink indicator highlighted background
 
 #endif

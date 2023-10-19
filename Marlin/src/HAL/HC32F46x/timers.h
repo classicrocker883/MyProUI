@@ -45,6 +45,11 @@ extern Timer0 step_timer;
 #define HAL_TIMER_RATE 50000000 // 50MHz
 // #define HAL_TIMER_RATE TIMER0_BASE_FREQUENCY
 
+// TODO: CYCLES_PER_MICROSECOND seems to be used by Marlin to calculate the number of cycles per microsecond in the timer ISRs
+//       by default, it uses F_CPU, but since that is not known at compile time for HC32, we overwrite it here
+#undef CYCLES_PER_MICROSECOND
+#define CYCLES_PER_MICROSECOND (HAL_TIMER_RATE / 1000000UL)
+
 // temperature timer
 #define TEMP_TIMER_NUM (&temp_timer)
 #define TEMP_TIMER_PRIORITY DDL_IRQ_PRIORITY_02

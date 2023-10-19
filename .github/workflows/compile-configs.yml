@@ -8,7 +8,7 @@ on:
 #     types: [released]
 
 jobs:
-  Build-Default-A:            # Default-NP for Aquila
+  Build-Default-A:            # Default NoPro for Aquila
     name: Build Default Files A
     runs-on: ubuntu-latest
     strategy:
@@ -78,7 +78,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -86,7 +86,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-Manual-Mesh-A:        # Manual Mesh - MM for Aquila
+  Build-Manual-Mesh-A:        # MM Pro for Aquila
     name: Build Manual-Mesh Files A
     runs-on: ubuntu-latest
     strategy:
@@ -156,7 +156,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -164,7 +164,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-A:            # UBL-Pro for Aquila
+  Build-UBL-ProUI-A:            # UBL Pro for Aquila
     name: Build UBL Pro Files A
     runs-on: ubuntu-latest
     strategy:
@@ -221,7 +221,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -229,7 +229,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-A-X3:            # UBL-Pro for Aquila
+  Build-UBL-ProUI-A-X3:            # UBL Pro for Aquila X3
     name: Build UBL Pro Files A X3
     runs-on: ubuntu-latest
     steps:
@@ -280,7 +280,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -363,7 +363,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -436,7 +436,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -517,7 +517,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -525,13 +525,13 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-A-SKR:            # UBL-Pro for Aquila, SKR Mini
+  Build-UBL-ProUI-A-SKR:            # UBL Pro for Aquila, SKR Mini
     name: Build UBL Pro Files A SKR
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chip: [V3_0,V2_0,V3_0_1]
-        temp: [true,false]
+        #ubl: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -563,17 +563,17 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$SKR" = V3_0 ]; then AVTMP="V3"
-        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"
-        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"
+        if [ "$SKR" = V3_0 ]; then AVTMP="V3";
+        elif [ "$SKR" = V2_0 ]; then AVTMP="V2";
+        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1";
         fi;
-        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
+        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
-        if [ "$SKR" = V3 ]; then
+        if [ "$SKR" = V3_0 ]; then
         cp configurations/BTT-SKR_Mini_E3_V3/ConfigurationUBL.h Marlin/Configuration.h
-        cp configurations/BTT-SKR_Mini_E3_V3/Configuration_advUBL.h Marlin/Configuration_adv.h
+        cp configurations/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
         else
         cp configurations/BTT-SKR_Mini_E3_V2/ConfigurationUBL.h Marlin/Configuration.h
@@ -581,9 +581,9 @@ jobs:
         cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         fi;
         sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_$SKR/g" Marlin/Configuration.h
-        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE"
-        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC"
-        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC"
+        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE";
+        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC";
+        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC";
         fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
         pio run
@@ -591,14 +591,14 @@ jobs:
         mv .pio/build/${STMP}_btt/*.bin temp/build.bin
       env:
         SKR: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
+        #UBL: ${{ matrix.ubl }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -606,13 +606,13 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-MM-ProUI-A-SKR:            # MM-Pro for Aquila, SKR Mini
+  Build-MM-ProUI-A-SKR:            # MM Pro for Aquila, SKR Mini
     name: Build MM Pro Files A SKR
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chip: [V3_0,V2_0,V3_0_1]
-        temp: [true,false]
+        #ubl: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -644,17 +644,17 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$SKR" = V3_0 ]; then AVTMP="V3"
-        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"
-        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"
+        if [ "$SKR" = V3_0 ]; then AVTMP="V3";
+        elif [ "$SKR" = V2_0 ]; then AVTMP="V2";
+        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1";
         fi;
         echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
-        if [ "$SKR" = V3 ]; then
+        if [ "$SKR" = V3_0 ]; then
         cp configurations/BTT-SKR_Mini_E3_V3/ConfigurationMM.h Marlin/Configuration.h
-        cp configurations/BTT-SKR_Mini_E3_V3/Configuration_advMM.h Marlin/Configuration_adv.h
+        cp configurations/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
         else
         cp configurations/BTT-SKR_Mini_E3_V2/ConfigurationMM.h Marlin/Configuration.h
@@ -662,9 +662,9 @@ jobs:
         cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         fi;
         sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_$SKR/g" Marlin/Configuration.h
-        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE"
-        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC"
-        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC"
+        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE";
+        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC";
+        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC";
         fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
         pio run
@@ -672,14 +672,14 @@ jobs:
         mv .pio/build/${STMP}_btt/*.bin temp/build.bin
       env:
         SKR: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
+        #UBL: ${{ matrix.ubl }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -687,30 +687,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-
-#        if [ "$SKR" = V3 ]; then AVTMP="V3"; fi; 
-#        if [ "$SKR" = V2 ]; then AVTMP="V2"; fi;
-#        if [ "$SKR" = V31 ]; then AVTMP="V3-1"; fi;
-#        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT        
-#        > Marlin/Configuration.h
-#        > Marlin/Configuration_adv.h
-#        > Marlin/Version.h
-#        if [ "$SKR" = V3 ] || [ "$SKR" = V31 ]; then
-#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/ConfigurationMM.h Marlin/Configuration.h
-#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
-#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
-#        fi;
-#        if [ "$SKR" = V2 ]; then
-#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/ConfigurationMM.h Marlin/Configuration.h
-#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Configuration_adv.h Marlin/Configuration_adv.h
-#        cp configurations/Voxelab\ Aquila/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
-#        fi;
-#        if [ "$SKR" = V3 ]; then STMP="STM32G0B1RE_btt"; fi;
-#        if [ "$SKR" = V31 ]; then STMP="STM32F401RC_btt"; fi;
-#        if [ "$SKR" = V2 ]; then STMP="STM32F103RC_btt"; fi;
-
-
-  Build-Default-A4:            # Default-NP for Aquila 427
+  Build-Default-A4:            # Default NoPro for Aquila 427
     name: Build Default Files A4
     runs-on: ubuntu-latest
     strategy:
@@ -782,7 +759,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -790,7 +767,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-Manual-Mesh-A4:        # Manual Mesh - MM for Aquila 427
+  Build-Manual-Mesh-A4:        # MM Pro for Aquila 427
     name: Build Manual-Mesh Files A4
     runs-on: ubuntu-latest
     strategy:
@@ -862,7 +839,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -870,7 +847,7 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-A4:            # UBL-Pro for Aquila 427
+  Build-UBL-ProUI-A4:            # UBL Pro for Aquila 427
     name: Build UBL Pro Files A4
     runs-on: ubuntu-latest
     strategy:
@@ -942,7 +919,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1022,7 +999,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@v1.1.3
+      uses: tanyagray/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
