@@ -52,3 +52,13 @@
 #if ENABLED(EMERGENCY_PARSER) && ((SERIAL_PORT == -1 && !defined(SERIAL_PORT_2)) || (SERIAL_PORT_2 == -1 && !defined(SERIAL_PORT)))
 #error "EMERGENCY_PARSER is only supported by HardwareSerial on HC32F46x."
 #endif
+
+#if TEMP_SENSOR_SOC
+#if !defined(TEMP_SOC_PIN)
+#error "TEMP_SOC_PIN must be defined to use TEMP_SENSOR_SOC."
+#endif
+
+#if defined(TEMP_SOC_PIN) && IS_GPIO_PIN(TEMP_SOC_PIN)
+#error "TEMP_SOC_PIN must not be a valid GPIO pin to avoid conflicts."
+#endif
+#endif

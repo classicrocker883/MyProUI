@@ -5,7 +5,11 @@
 
 #include "HAL.h"
 #include <IWatchdog.h>
+
+#if TEMP_SENSOR_SOC
 #include <OnChipTemperature.h>
+#endif
+
 #include <AsyncAnalogRead.h>
 #include "../../inc/MarlinConfig.h"
 
@@ -104,6 +108,10 @@ inline void HAL_clock_frequencies_dump()
 
 pin_t MarlinHAL::last_adc_pin;
 
+#if TEMP_SENSOR_SOC
+float MarlinHAL::soc_temp = 0;
+#endif
+
 MarlinHAL::MarlinHAL() {}
 
 void MarlinHAL::watchdog_init()
@@ -127,10 +135,6 @@ void MarlinHAL::init()
 
     // print clock frequencies to host serial
     HAL_clock_frequencies_dump();
-
-    // start OTS, min. 1s between reads
-    ChipTemperature.begin();
-    ChipTemperature.setMinimumReadDeltaMillis(1000);
 }
 
 void MarlinHAL::init_board() {}
@@ -163,36 +167,6 @@ void MarlinHAL::delay_ms(const int ms)
 void MarlinHAL::idletask()
 {
     MarlinHAL::watchdog_refresh();
-
-    // monitor SOC temperature
-    // #define HAL_ALWAYS_PRINT_SOC_TEMP
-    float temp;
-    if (ChipTemperature.read(temp))
-    {
-#ifdef HAL_ALWAYS_PRINT_SOC_TEMP
-        // print SoC temperature on every read
-        char tempStr[10];
-        dtostrf(temp, 8, 1, tempStr);
-        printf("SoC temperature is %sC\n", tempStr);
-#endif
-
-        // warn after reaching 60C
-        if (temp > 60)
-        {
-#ifndef HAL_ALWAYS_PRINT_SOC_TEMP
-            char tempStr[10];
-            dtostrf(temp, 8, 1, tempStr);
-#endif
-            printf("SoC temperature %s is above 60C\n", tempStr);
-        }
-
-        // panic after reaching 80C
-        if (temp > 80)
-        {
-            printf("SoC overheat! temperature is > 80C\n");
-            MarlinHAL::reboot();
-        }
-    }
 }
 
 uint8_t MarlinHAL::get_reset_source()
@@ -256,20 +230,51 @@ void MarlinHAL::adc_init() {}
 
 void MarlinHAL::adc_enable(const pin_t pin)
 {
+    #if TEMP_SENSOR_SOC
+    if (pin == TEMP_SOC_PIN)
+    {
+        // start OTS, min. 1s between reads
+        ChipTemperature.begin();
+        ChipTemperature.setMinimumReadDeltaMillis(1000);
+        return;
+    }
+    #endif
+
     // just set pin mode to analog
     pinMode(pin, INPUT_ANALOG);
 }
 
 void MarlinHAL::adc_start(const pin_t pin)
 {
-    CORE_ASSERT(IS_GPIO_PIN(pin), "adc_start: invalid pin")
     MarlinHAL::last_adc_pin = pin;
+
+    #if TEMP_SENSOR_SOC
+    if (pin == TEMP_SOC_PIN)
+    {
+        // read OTS
+        float temp;
+        if(ChipTemperature.read(temp))
+        {
+            MarlinHAL::soc_temp = temp;
+        }
+        return;
+    }
+    #endif
+
+    CORE_ASSERT(IS_GPIO_PIN(pin), "adc_start: invalid pin")
 
     analogReadAsync(pin);
 }
 
 bool MarlinHAL::adc_ready()
 {
+    #if TEMP_SENSOR_SOC
+    if (MarlinHAL::last_adc_pin == TEMP_SOC_PIN)
+    {
+        return true;
+    }
+    #endif
+
     CORE_ASSERT(IS_GPIO_PIN(MarlinHAL::last_adc_pin), "adc_ready: invalid pin")
 
     return getAnalogReadComplete(MarlinHAL::last_adc_pin);
@@ -277,6 +282,13 @@ bool MarlinHAL::adc_ready()
 
 uint16_t MarlinHAL::adc_value()
 {
+    #if TEMP_SENSOR_SOC
+    if (MarlinHAL::last_adc_pin == TEMP_SOC_PIN)
+    {
+        return OTS_FLOAT_TO_ADC_READING(MarlinHAL::soc_temp);
+    }
+    #endif
+
     // read conversion result
     CORE_ASSERT(IS_GPIO_PIN(MarlinHAL::last_adc_pin), "adc_value: invalid pin")
 

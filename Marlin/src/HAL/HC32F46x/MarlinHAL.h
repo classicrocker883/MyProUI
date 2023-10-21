@@ -4,6 +4,27 @@
 
 typedef gpio_pin_t pin_t;
 
+#if TEMP_SENSOR_SOC
+/**
+ * convert ots measurement float to uint16_t for adc_value()
+ *
+ * @note returns float as integer in degrees C * 10, if T > 0
+ */
+#define OTS_FLOAT_TO_ADC_READING(T) ((T) > 0 ? ((uint16_t)((T)*10.0f)) : 0)
+
+/**
+ * convert adc_value() uint16_t to ots measurement float
+ *
+ * @note see OTS_FLOAT_TO_ADC_READING for inverse
+ * 
+ * @note RAW is oversampled by OVERSAMPLENR, so we need to divide first
+ */
+#define TEMP_SOC_SENSOR(RAW) ((float)(((RAW) / OVERSAMPLENR) / 10))
+#endif
+
+/**
+ * HAL class for Marlin on HC32F46x
+ */
 class MarlinHAL
 {
 public:
@@ -73,6 +94,13 @@ private:
      * pin number of the last pin that was used with adc_start()
      */
     static pin_t last_adc_pin;
+
+    #if TEMP_SENSOR_SOC
+    /**
+     * on-chip temperature sensor value
+     */
+    static float soc_temp;
+    #endif
 };
 
 // M997: trigger firmware update from sd card (after upload)

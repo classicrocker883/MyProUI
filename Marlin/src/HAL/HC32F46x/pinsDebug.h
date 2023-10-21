@@ -31,6 +31,9 @@
 #define NUM_DIGITAL_PINS BOARD_NR_GPIO_PINS
 #define NUMBER_PINS_TOTAL BOARD_NR_GPIO_PINS
 #define VALID_PIN(pin) IS_GPIO_PIN(pin)
+
+// Note: pin_array is defined in `Marlin/src/pins/pinsDebug.h`, and since this file is included
+// after it, it is available in this file as well.
 #define GET_ARRAY_PIN(p) pin_t(pin_array[p].pin)
 #define digitalRead_mod(p) extDigitalRead(p)
 #define PRINT_PIN(p)                                  \
