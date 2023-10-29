@@ -424,5 +424,5 @@ void LCD_IO_WaitSequence_Async()
 
 #endif // LCD_USE_DMA_FSMC
 
-#endif // HAS_GRAPHICAL_LCD
+#endif // HAS_MARLINUI_U8GLIB
 #endif // TARGET_HC32F46x && FSMC_CS_PIN

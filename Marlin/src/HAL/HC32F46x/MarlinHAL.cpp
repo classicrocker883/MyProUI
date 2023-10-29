@@ -21,6 +21,7 @@ void HAL_wdt_callback()
     NVIC_SystemReset();
 }
 
+#if ENABLED(MARLIN_DEV_MODE)
 inline void HAL_clock_frequencies_dump()
 {
     // 1. dump all clock frequencies
@@ -101,6 +102,7 @@ inline void HAL_clock_frequencies_dump()
     // done
     SERIAL_ECHOPGM("\n--\n");
 }
+#endif // MARLIN_DEV_MODE
 
 //
 // MarlinHAL class implementation
@@ -134,7 +136,7 @@ void MarlinHAL::init()
     NVIC_SetPriorityGrouping(0x3);
 
     // print clock frequencies to host serial
-    HAL_clock_frequencies_dump();
+    TERN_(MARLIN_DEV_MODE, HAL_clock_frequencies_dump());
 }
 
 void MarlinHAL::init_board() {}
@@ -177,13 +179,13 @@ uint8_t MarlinHAL::get_reset_source()
 
     // map reset cause code to those expected by Marlin
     // - reset causes are flags, so multiple can be set
-    printf("-- Reset Cause -- \n");
+    TERN_(MARLIN_DEV_MODE, printf("-- Reset Cause -- \n"));
     uint8_t cause = 0;
-#define MAP_CAUSE(from, to)                 \
-    if (rstCause.from == Set)               \
-    {                                       \
-        printf(" - " STRINGIFY(from) "\n"); \
-        cause |= to;                        \
+#define MAP_CAUSE(from, to)                                         \
+    if (rstCause.from == Set)                                       \
+    {                                                               \
+        TERN_(MARLIN_DEV_MODE, printf(" - " STRINGIFY(from) "\n")); \
+        cause |= to;                                                \
     }
 
     // power on
