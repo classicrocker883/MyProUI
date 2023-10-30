@@ -121,6 +121,10 @@
   #include "lockscreen.h"
 #endif
 
+#if HAS_SOUND
+  #include "../../../libs/buzzer.h"
+#endif
+
 //#define DEBUG_OUT ENABLED(DEBUG_DWIN)
 #include "../../../core/debug_out.h"
 
@@ -756,7 +760,7 @@ void _draw_feedrate() {
         DWINUI::Draw_String(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 116 + 4 * STAT_CHR_W + 2, 384, F(" %"));
       }
       else {
-        _value = CEIL(feedrate_mm_s * feedrate_percentage / 100);
+        _value = CEIL(MMS_SCALED(feedrate_mm_s));
         DWIN_Draw_Box(1, HMI_data.Background_Color, 116 + 4 * STAT_CHR_W + 2, 384, 30, 20);
       }
       DWINUI::Draw_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 116 + 2 * STAT_CHR_W, 384, _value);
@@ -790,8 +794,8 @@ void _draw_xyz_position(const bool force) {
 }
 
 void update_variable() {
-  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH-6*DWINUI::fontWidth(), 6, checkkey);)
-  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH-3*DWINUI::fontWidth(), 6, last_checkkey);)
+  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH - 6 * DWINUI::fontWidth(), 6, checkkey);)
+  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH - 3 * DWINUI::fontWidth(), 6, last_checkkey);)
 
   _draw_xyz_position(false);
 
@@ -1248,8 +1252,6 @@ void HMI_Printing() {
   DWIN_UpdateLCD();
 }
 
-#include "../../../libs/buzzer.h"
-
 void Draw_Main_Area() {
   switch (checkkey) {
     case MainMenu:               Draw_Main_Menu(); break;
@@ -1572,7 +1574,7 @@ void DWIN_HomingStart() {
   HMI_flag.home_flag = true;
   HMI_SaveProcessID(Homing);
   Title.ShowCaption(GET_TEXT_F(MSG_HOMING));
-  DWIN_Show_Popup(ICON_Printer_0, GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
+  DWIN_Show_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
 }
 
 void DWIN_HomingDone() {
@@ -1898,7 +1900,7 @@ void DWIN_Print_Aborted() {
   DWIN_Print_Finished();
 }
 
-#if (ALT_COLOR_MENU == 1)
+#if (ALT_COLOR_MENU == 1) // 1 = Alternate Aquila
   void DWIN_SetColorDefaults() {
     HMI_data.Background_Color = Def_Background_Color;
     HMI_data.Cursor_Color     = Def_Cursor_Color;
@@ -1920,7 +1922,7 @@ void DWIN_Print_Aborted() {
     HMI_data.Coordinate_Color = Def_Coordinate_Color;
     HMI_data.Bottom_Color     = Def_Bottom_Color;
   }
-#elif (ALT_COLOR_MENU == 2) 
+#elif (ALT_COLOR_MENU == 2) // 2 = Ender3V2 Default
   void DWIN_SetColorDefaults() {
     #undef Def_Background_Color
     #undef Def_Text_Color
@@ -1948,7 +1950,7 @@ void DWIN_Print_Aborted() {
     HMI_data.Coordinate_Color = Color_White;
     HMI_data.Bottom_Color     = RGB( 0, 23, 16);
   }
-#else
+#else // 0 = Voxelab Default
   void DWIN_SetColorDefaults() {
     HMI_data.Background_Color = Def_Background_Color;
     HMI_data.Cursor_Color     = Def_Text_Color;
@@ -2153,7 +2155,7 @@ void MarlinUI::refresh() { /* Nothing to see here */ }
 #endif
 
 void MarlinUI::kill_screen(FSTR_P const lcd_error, FSTR_P const) {
-  DWIN_Draw_Popup(ICON_Printer_0, GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
+  DWIN_Draw_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
   DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 270, GET_TEXT_F(MSG_TURN_OFF));
   DWIN_UpdateLCD();
 }
@@ -2595,7 +2597,8 @@ void ApplyMove() {
 #endif
 
 #if LCD_BACKLIGHT_TIMEOUT_MINS
-  void SetTimer() { SetPIntOnClick(ui.backlight_timeout_min, ui.backlight_timeout_max); }
+  void ApplyTimer() { ui.backlight_timeout_minutes = MenuData.Value; }
+  void SetTimer() { SetIntOnClick(ui.backlight_timeout_min, ui.backlight_timeout_max, ui.backlight_timeout_minutes, ApplyTimer); }
 #endif
 
 #if PROUI_EX && ENABLED(NOZZLE_PARK_FEATURE)
@@ -3090,7 +3093,7 @@ void onDrawGetColorItem(MenuItemClass* menuitem, int8_t line) {
 
 #if HAS_BED_PROBE && ENABLED(TRAMWIZ_MENU_ITEM)
   // Trammingwizard Popup
-  void PopUp_StartTramwiz() { DWIN_Popup_ConfirmCancel(ICON_Printer_0, F("Start Tramming Wizard?")); }
+  void PopUp_StartTramwiz() { DWIN_Popup_ConfirmCancel(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), F("Start Tramming Wizard?")); }
   void onClick_StartTramwiz() {
     if (HMI_flag.select_flag) {
       if (HMI_data.FullManualTramming) {
@@ -3476,7 +3479,7 @@ void Draw_Tune_Menu() {
       EDIT_ITEM(ICON_MaxAccelerated, MSG_ADVANCE_K, onDrawPFloat3Menu, SetLA_K, &planner.extruder_advance_K[0]);
     #endif
     #if LCD_BACKLIGHT_TIMEOUT_MINS
-      EDIT_ITEM(ICON_Box, MSG_SCREEN_TIMEOUT, onDrawPIntMenu, SetTimer, &ui.backlight_timeout_minutes);
+      EDIT_ITEM(ICON_Box, MSG_SCREEN_TIMEOUT, onDrawPInt8Menu, SetTimer, &ui.backlight_timeout_minutes);
     #endif
     #if HAS_LCD_BRIGHTNESS
       EDIT_ITEM(ICON_Brightness, MSG_BRIGHTNESS, onDrawPInt8Menu, SetBrightness, &ui.brightness);
@@ -4491,7 +4494,7 @@ void Draw_AdvancedSettings_Menu() {
       EDIT_ITEM(ICON_Brightness, MSG_BRIGHTNESS, onDrawPInt8Menu, SetBrightness, &ui.brightness);
     #endif
     #if LCD_BACKLIGHT_TIMEOUT_MINS
-      EDIT_ITEM(ICON_Box, MSG_SCREEN_TIMEOUT, onDrawPIntMenu, SetTimer, &ui.backlight_timeout_minutes);
+      EDIT_ITEM(ICON_Box, MSG_SCREEN_TIMEOUT, onDrawPInt8Menu, SetTimer, &ui.backlight_timeout_minutes);
     #endif
     #if BED_SCREW_INSET
       EDIT_ITEM_F(ICON_ProbeMargin, "Bed Screw Inset", onDrawPFloatMenu, SetRetractSpeed, &ui.screw_pos);
@@ -4546,7 +4549,7 @@ void Draw_Advanced_Menu() { // From Control_Menu (Control) || Default-NP Advance
       EDIT_ITEM(ICON_Brightness, MSG_BRIGHTNESS, onDrawPInt8Menu, SetBrightness, &ui.brightness);
     #endif
     #if LCD_BACKLIGHT_TIMEOUT_MINS
-      EDIT_ITEM(ICON_Box, MSG_SCREEN_TIMEOUT, onDrawPIntMenu, SetTimer, &ui.backlight_timeout_minutes);
+      EDIT_ITEM(ICON_Box, MSG_SCREEN_TIMEOUT, onDrawPInt8Menu, SetTimer, &ui.backlight_timeout_minutes);
     #endif
     #if BED_SCREW_INSET
       EDIT_ITEM_F(ICON_ProbeMargin, "Bed Screw Inset", onDrawPFloatMenu, SetRetractSpeed, &ui.screw_pos);
