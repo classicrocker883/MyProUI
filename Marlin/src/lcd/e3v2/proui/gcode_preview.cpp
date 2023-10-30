@@ -29,14 +29,13 @@
 
 #include "../../../inc/MarlinConfigPre.h"
 
-#if ALL(DWIN_LCD_PROUI, HAS_GCODE_PREVIEW_NOPRO)
+#if ALL(DWIN_LCD_PROUI, HAS_GCODE_PREVIEW)
 
-#include "gcode_preview_nopro.h"
+#include "gcode_preview.h"
 
 #include "../../../core/types.h"
 #include "../../marlinui.h"
 #include "../../../sd/cardreader.h"
-#include "../../../MarlinCore.h" // for wait_for_user
 #include "dwin.h"
 #include "dwin_popup.h"
 #include "base64.h"
@@ -75,7 +74,7 @@ typedef struct {
 
 } fileprop_t;
 
-fileprop_t fileprop;
+fileprop_t fileprop_nopro;
 
 void getValue(const char * const buf, PGM_P const key, float &value) {
   if (value != 0.0f) return;
@@ -102,34 +101,34 @@ bool Preview::hasPreview() {
   uint32_t indx = 0;
   float tmp = 0;
 
-  fileprop.clear();
-  fileprop.setname(card.filename);
+  fileprop_nopro.clear();
+  fileprop_nopro.setname(card.filename);
 
-  card.openFileRead(fileprop.name);
+  card.openFileRead(fileprop_nopro.name);
 
   char buf[256];
   uint8_t nbyte = 1;
-  while (!fileprop.thumbstart && nbyte > 0 && indx < 4 * sizeof(buf)) {
+  while (!fileprop_nopro.thumbstart && nbyte > 0 && indx < 4 * sizeof(buf)) {
     nbyte = card.read(buf, sizeof(buf) - 1);
     if (nbyte > 0) {
       buf[nbyte] = '\0';
-      getValue(buf, PSTR(";TIME:"), fileprop.time);
-      getValue(buf, PSTR(";Filament used:"), fileprop.filament);
-      getValue(buf, PSTR(";Layer height:"), fileprop.layer);
+      getValue(buf, PSTR(";TIME:"), fileprop_nopro.time);
+      getValue(buf, PSTR(";Filament used:"), fileprop_nopro.filament);
+      getValue(buf, PSTR(";Layer height:"), fileprop_nopro.layer);
       getValue(buf, PSTR(";MINX:"), tmp);
-      getValue(buf, PSTR(";MAXX:"), fileprop.width);
-      fileprop.width -= tmp;
+      getValue(buf, PSTR(";MAXX:"), fileprop_nopro.width);
+      fileprop_nopro.width -= tmp;
       tmp = 0;
       getValue(buf, PSTR(";MINY:"), tmp);
-      getValue(buf, PSTR(";MAXY:"), fileprop.length);
-      fileprop.length -= tmp;
+      getValue(buf, PSTR(";MAXY:"), fileprop_nopro.length);
+      fileprop_nopro.length -= tmp;
       tmp = 0;
       getValue(buf, PSTR(";MINZ:"), tmp);
-      getValue(buf, PSTR(";MAXZ:"), fileprop.height);
-      fileprop.height -= tmp;
+      getValue(buf, PSTR(";MAXZ:"), fileprop_nopro.height);
+      fileprop_nopro.height -= tmp;
       posptr = strstr_P(buf, tbstart);
       if (posptr != nullptr) {
-        fileprop.thumbstart = indx + (posptr - &buf[0]);
+        fileprop_nopro.thumbstart = indx + (posptr - &buf[0]);
       }
       else {
         indx += _MAX(10, nbyte - (signed)strlen_P(tbstart));
@@ -138,31 +137,31 @@ bool Preview::hasPreview() {
     }
   }
 
-  if (!fileprop.thumbstart) {
+  if (!fileprop_nopro.thumbstart) {
     card.closefile();
     LCD_MESSAGE_F("Thumbnail not found");
     return false;
   }
 
   // Get the size of the thumbnail
-  card.setIndex(fileprop.thumbstart + strlen_P(tbstart));
+  card.setIndex(fileprop_nopro.thumbstart + strlen_P(tbstart));
   for (uint8_t i = 0; i < 16; i++) {
     const char c = card.get();
     if (ISEOL(c)) { buf[i] = '\0'; break; }
     buf[i] = c;
   }
-  fileprop.thumbsize = atoi(buf);
+  fileprop_nopro.thumbsize = atoi(buf);
 
   // Exit if there isn't a thumbnail
-  if (!fileprop.thumbsize) {
+  if (!fileprop_nopro.thumbsize) {
     card.closefile();
     LCD_MESSAGE_F("Invalid Thumbnail Size");
     return false;
   }
 
-  uint8_t buf64[fileprop.thumbsize + 1];
+  uint8_t buf64[fileprop_nopro.thumbsize + 1];
   uint16_t nread = 0;
-  while (nread < fileprop.thumbsize) {
+  while (nread < fileprop_nopro.thumbsize) {
     const uint8_t c = card.get();
     if (!ISEOL(c) && c != ';' && c != ' ')
       buf64[nread++] = c;
@@ -170,59 +169,63 @@ bool Preview::hasPreview() {
   card.closefile();
   buf64[nread] = '\0';
 
-  uint8_t thumbdata[3 + 3 * (fileprop.thumbsize / 4)];  // Reserve space for the JPEG thumbnail
-  fileprop.thumbsize = decode_base64(buf64, thumbdata);
-  DWINUI::WriteToSRAM(0x00, fileprop.thumbsize, thumbdata);
+  uint8_t thumbdata[3 + 3 * (fileprop_nopro.thumbsize / 4)];  // Reserve space for the JPEG thumbnail
+  fileprop_nopro.thumbsize = decode_base64(buf64, thumbdata);
+  DWINUI::WriteToSRAM(0x00, fileprop_nopro.thumbsize, thumbdata);
 
-  fileprop.thumbwidth = THUMBWIDTH;
-  fileprop.thumbheight = THUMBHEIGHT;
+  fileprop_nopro.thumbwidth = THUMBWIDTH;
+  fileprop_nopro.thumbheight = THUMBHEIGHT;
 
   return true;
 }
 
 void Preview::drawFromSD() {
-  if (!hasPreview()) {
-    HMI_flag.select_flag = 1;
-    wait_for_user = false;
-    return;
-  }
+  hasPreview();
 
   MString<45> buf;
   DWIN_Draw_Rectangle(1, HMI_data.Background_Color, 0, 0, DWIN_WIDTH, STATUS_Y - 1);
-  if (fileprop.time) {
-    buf.setf(F("Estimated time: %i:%02i"), (uint16_t)fileprop.time / 3600, ((uint16_t)fileprop.time % 3600) / 60);
+  if (fileprop_nopro.time) {
+    buf.setf(F("Estimated time: %i:%02i"), (uint16_t)fileprop_nopro.time / 3600, ((uint16_t)fileprop_nopro.time % 3600) / 60);
     DWINUI::Draw_String(20, 10, &buf);
   }
-  if (fileprop.filament) {
-    buf.set(F("Filament used: "), p_float_t(fileprop.filament, 2), F(" m"));
+  if (fileprop_nopro.filament) {
+    buf.set(F("Filament used: "), p_float_t(fileprop_nopro.filament, 2), F(" m"));
     DWINUI::Draw_String(20, 30, &buf);
   }
-  if (fileprop.layer) {
-    buf.set(F("Layer height: "), p_float_t(fileprop.layer, 2), F(" mm"));
+  if (fileprop_nopro.layer) {
+    buf.set(F("Layer height: "), p_float_t(fileprop_nopro.layer, 2), F(" mm"));
     DWINUI::Draw_String(20, 50, &buf);
   }
-  if (fileprop.width) {
-    buf.set(F("Volume: "), p_float_t(fileprop.width, 1), 'x', p_float_t(fileprop.length, 1), 'x', p_float_t(fileprop.height, 1), F(" mm"));
+  if (fileprop_nopro.width) {
+    buf.set(F("Volume: "), p_float_t(fileprop_nopro.width, 1), 'x', p_float_t(fileprop_nopro.length, 1), 'x', p_float_t(fileprop_nopro.height, 1), F(" mm"));
     DWINUI::Draw_String(20, 70, &buf);
+  }
+  
+  if (!fileprop_nopro.thumbsize) {
+    const uint8_t xpos = ((DWIN_WIDTH)  / 2) - 55,  // 55 = iconW/2
+                  ypos = ((DWIN_HEIGHT)  / 2) - 125;
+    DWINUI::Draw_Icon(ICON_Info_0, xpos, ypos);
+    buf.set(PSTR("No " STRINGIFY(THUMBWIDTH) "x" STRINGIFY(THUMBHEIGHT) " Thumbnail"));
+    DWINUI::Draw_CenteredString(false, (DWINUI::fontid*3), DWINUI::textcolor, DWINUI::backcolor, 0, DWIN_WIDTH, (DWIN_HEIGHT / 2), &buf);
   }
   DWINUI::Draw_Button(BTN_Print, 26, 290);
   DWINUI::Draw_Button(BTN_Cancel, 146, 290);
-  show();
-  Draw_Select_Highlight(true, 290);
+  if (fileprop_nopro.thumbsize) show();
+  Draw_Select_Highlight(false, 290);
   DWIN_UpdateLCD();
 }
 
 void Preview::invalidate() {
-  fileprop.thumbsize = 0;
+  fileprop_nopro.thumbsize = 0;
 }
 
 bool Preview::valid() {
-  return !!fileprop.thumbsize;
+  return !!fileprop_nopro.thumbsize;
 }
 
 void Preview::show() {
-  const uint8_t xpos = ((DWIN_WIDTH) - fileprop.thumbwidth) / 2,
-                ypos = (205 - fileprop.thumbheight) / 2 + 87;
+  const uint8_t xpos = ((DWIN_WIDTH) - fileprop_nopro.thumbwidth) / 2,
+                ypos = (205 - fileprop_nopro.thumbheight) / 2 + 87;
   DWIN_ICON_Show(xpos, ypos, 0x00);
 }
 
