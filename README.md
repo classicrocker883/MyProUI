@@ -25,20 +25,27 @@
 <br>
 
 ### - Please read this: -
+> [!NOTE]
 Many Updates have been included in the most recent MRiscoCProUI for the **2023-October** release.  
 This release has many changes to the **UI**.  
 New ICON's have been added, and old ones enhanced. Whoever edited them before saved directly as .*JPG* which in many editors lowers the quality of the image. I painstakingly remastered almost every single one; preserving the original quality.
-
-You must [REFLASH](https://github.com/classicrocker883/MRiscoCProUI/wiki/HOW-TO-UPDATE-THE-DISPLAY) the *LCD Display* with the new **DWIN_SET**; which is located in the `display assets` folder.
+   
+> You must [REFLASH](https://github.com/classicrocker883/MRiscoCProUI/wiki/HOW-TO-UPDATE-THE-DISPLAY) the *LCD Display* with the new **DWIN_SET**; which is located in the `display assets` folder.
 
 <br>
 
-H32->HC32 support is currently only in the branch **HC32-&lt;Month&gt;**. You can find the original repo here [@shadow578/Marlin-H32](https://github.com/shadow578/Marlin-H32)<br>
 #### Important Info regarding HC32:
+* H32->HC32 support is currently only in the branch **HC32-&lt;Month&gt;**. You can find the original repo here [@shadow578/Marlin-H32](https://github.com/shadow578/Marlin-H32)
 * I have created a second build using the JyersUI as a workaround for the save/store settings issue with ProUI. However, that is also a work-in-progress. I will have both build types available.  
-* * <ins>**FOREWARNING**</ins>: So far everything has been working great - as normal - except there are reports of it restarting after saving with no other negative effects. So far, that is the only issue. I just wanted to give advance notice and if there is anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues).
+* * > [!NOTE]
+    > <ins>**FOREWARNING**</ins>: So far everything has been working great - as normal - except there are reports of it restarting after saving with no other negative effects. So far, that is the only issue. I just wanted to give advance notice and if there is anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues).
+  * > Previous Issue of it restarting when saving/store settings has been fixed in the more recent ProUI version (October Rev.1). HOWEVER, now there is a current Issue to be addressed:<br>
+The screen <b>freezes and restarts</b> when SD card is inserted. This means that everything <i>so far</i> seems to work correctly as it should, except for when an <b>SD card is inserted</b>, so printing may not be possible <i>unless</i> you use USB serial interface to upload the file (through a slicer or something like Pronterface).  
+    > This issue is now the main focus to be fixed.  
+    > If this is an inconvenience then you can use an earlier version which can allow the **SD Card** to be used.
 <br>
 
+#### Other Information:
 General information about the firmware and updates is located in the _Wiki_ page [What's New In This Release](https://github.com/classicrocker883/MriscocProUI/wiki/What's-New-in-this-Release). <br> Other changes and updates are [addressed here](https://github.com/classicrocker883/MriscocProUI/releases/latest) and are [addressed here](https://github.com/mriscoc/Ender3V2S1/releases/latest).
 
 #### One important change to note is the `Mesh Inset` now saves upon restart -- it is working as normal.
@@ -63,7 +70,7 @@ There is a *MarlinSimulator.exe* file provided to test out for yourself. It simu
 
 To create your own MarlinSimulator with you own build, start by changing in Configuration.h **MOTHERBOARD** to *BOARD_SIMULATED*, also disable `ENDSTOP_INTERRUPTS_FEATURE` and `PROUI_EX`, and then in platformio.ini **default_envs =** change to *simulator_windows*. The MarlinSimulator can only compile for Manual Mesh Bed Leveling for now, so make sure your configuration is set for `MESH_BED_LEVELING`.
 
-Then you have to extract **SDL2-devel-2.28.0-mingw.zip** from /**docs**. To install SDL, navigate to the SDL2 directory in *MSYS2 MINGW64* terminal and type  
+Then you have to extract **SDL2-devel-2.28.2-mingw.zip** from /**docs**. To install SDL, navigate to the SDL2 directory in *MSYS2 MINGW64* terminal and type  
 >
 >     make native
 >

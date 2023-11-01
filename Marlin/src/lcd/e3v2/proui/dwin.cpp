@@ -802,8 +802,8 @@ void _draw_xyz_position(const bool force) {
 }
 
 void update_variable() {
-  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH-6*DWINUI::fontWidth(), 6, checkkey);)
-  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH-3*DWINUI::fontWidth(), 6, last_checkkey);)
+  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH - 6 * DWINUI::fontWidth(), 6, checkkey);)
+  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH - 3 * DWINUI::fontWidth(), 6, last_checkkey);)
 
   _draw_xyz_position(false);
 
@@ -1582,7 +1582,7 @@ void DWIN_HomingStart() {
   HMI_flag.home_flag = true;
   HMI_SaveProcessID(Homing);
   Title.ShowCaption(GET_TEXT_F(MSG_HOMING));
-  DWIN_Show_Popup(ICON_Printer_0, GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
+  DWIN_Show_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
 }
 
 void DWIN_HomingDone() {
@@ -1909,7 +1909,7 @@ void DWIN_Print_Aborted() {
   DWIN_Print_Finished();
 }
 
-#if (ALT_COLOR_MENU == 1)
+#if (ALT_COLOR_MENU == 1) // 1 = Alternate Aquila
   void DWIN_SetColorDefaults() {
     HMI_data.Background_Color = Def_Background_Color;
     HMI_data.Cursor_Color     = Def_Cursor_Color;
@@ -1931,7 +1931,7 @@ void DWIN_Print_Aborted() {
     HMI_data.Coordinate_Color = Def_Coordinate_Color;
     HMI_data.Bottom_Color     = Def_Bottom_Color;
   }
-#elif (ALT_COLOR_MENU == 2) 
+#elif (ALT_COLOR_MENU == 2) // 2 = Ender3V2 Default
   void DWIN_SetColorDefaults() {
     #undef Def_Background_Color
     #undef Def_Text_Color
@@ -1959,7 +1959,7 @@ void DWIN_Print_Aborted() {
     HMI_data.Coordinate_Color = Color_White;
     HMI_data.Bottom_Color     = RGB( 0, 23, 16);
   }
-#else
+#else // 0 = Voxelab Default
   void DWIN_SetColorDefaults() {
     HMI_data.Background_Color = Def_Background_Color;
     HMI_data.Cursor_Color     = Def_Text_Color;
@@ -2164,7 +2164,7 @@ void MarlinUI::refresh() { /* Nothing to see here */ }
 #endif
 
 void MarlinUI::kill_screen(FSTR_P const lcd_error, FSTR_P const) {
-  DWIN_Draw_Popup(ICON_Printer_0, GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
+  DWIN_Draw_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
   DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 270, GET_TEXT_F(MSG_TURN_OFF));
   DWIN_UpdateLCD();
 }
@@ -3104,7 +3104,7 @@ void onDrawGetColorItem(MenuItemClass* menuitem, int8_t line) {
 
 #if HAS_BED_PROBE && ENABLED(TRAMWIZ_MENU_ITEM)
   // Trammingwizard Popup
-  void PopUp_StartTramwiz() { DWIN_Popup_ConfirmCancel(ICON_Printer_0, F("Start Tramming Wizard?")); }
+  void PopUp_StartTramwiz() { DWIN_Popup_ConfirmCancel(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), F("Start Tramming Wizard?")); }
   void onClick_StartTramwiz() {
     if (HMI_flag.select_flag) {
       if (HMI_data.FullManualTramming) {

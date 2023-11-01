@@ -15,6 +15,7 @@ jobs:
       matrix:
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -48,7 +49,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=Ender_GD32_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Ender${DTMP}_GD32_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -63,12 +65,15 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
       env:
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -90,6 +95,7 @@ jobs:
       matrix:
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -123,7 +129,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=Ender_GD32_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Ender${DTMP}_GD32_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -138,12 +145,15 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
       env:
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -165,6 +175,7 @@ jobs:
       matrix:
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -198,7 +209,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=Ender_GD32_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT        
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Ender${DTMP}_GD32_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT        
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -213,12 +225,15 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
       env:
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -330,6 +345,7 @@ jobs:
       matrix:
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -363,7 +379,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=Ender_GD32_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Ender${DTMP}_GD32_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -378,12 +395,15 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
       env:
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -406,6 +426,7 @@ jobs:
         chip: [427,422]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -440,7 +461,8 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        echo "filename=Ender_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Ender${DTMP}_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -457,6 +479,8 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -464,6 +488,7 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -486,6 +511,7 @@ jobs:
         chip: [427,422]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -520,7 +546,8 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        echo "filename=Ender_${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Ender${DTMP}_${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -537,6 +564,8 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -544,6 +573,7 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -566,6 +596,7 @@ jobs:
         chip: [427,422]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -600,7 +631,8 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        echo "filename=Ender_${AVTMP}_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Ender${DTMP}_${AVTMP}_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -617,6 +649,8 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -624,6 +658,7 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -646,6 +681,7 @@ jobs:
         chip: [427,422]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -680,7 +716,8 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        echo "filename=Ender_${AVTMP}_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Ender${DTMP}_${AVTMP}_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -697,6 +734,8 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -704,6 +743,7 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2

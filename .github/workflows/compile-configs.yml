@@ -16,6 +16,7 @@ jobs:
         chip: [GD32,N32]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -50,7 +51,8 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        echo "filename=Aquila_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Aquila${DTMP}_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -65,6 +67,9 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -72,6 +77,7 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -94,6 +100,7 @@ jobs:
         chip: [GD32,N32]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -128,7 +135,8 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        echo "filename=Aquila_${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Aquila${DTMP}_${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -143,6 +151,9 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -150,6 +161,7 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -170,6 +182,7 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -202,19 +215,24 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        echo "filename=Aquila_${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT        
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Aquila${DTMP}_${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT        
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         cp configurations/Voxelab\ Aquila/UBL/ConfigurationPro.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/UBL/Configuration_advPro.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -378,6 +396,7 @@ jobs:
       matrix:
         chip: [GD32,N32]
         temp: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -411,7 +430,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        echo "filename=Aquila_${AVTMP}_BLT-ProUI${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
+        echo "filename=Aquila${DTMP}_${AVTMP}_BLT-ProUI${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -424,12 +444,16 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         sed -i "s/[^ ]*#define NOZZLE_CLEAN_FEATURE/$PTEMP#define NOZZLE_CLEAN_FEATURE/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2

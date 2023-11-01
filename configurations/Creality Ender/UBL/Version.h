@@ -28,7 +28,7 @@
 /**
  * Marlin release version identifier
  */
-#define SHORT_BUILD_VERSION "2.1.3 MRiscoC"
+#define SHORT_BUILD_VERSION "2.1.3e MRiscoC"
 
 /**
  * Verbose version identifier which should contain a reference to the location
@@ -49,7 +49,7 @@
 /**
  * Defines a generic printer name to be output to the LCD after booting Marlin.
  */
-#define BOOT_MACHINE_NAME "Ender-3"
+#define MACHINE_NAME "Ender-3"
 
 /**
  * The SOURCE_CODE_URL is the location where users will find the Marlin Source
