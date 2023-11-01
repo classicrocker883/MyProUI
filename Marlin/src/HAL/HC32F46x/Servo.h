@@ -1,3 +1,4 @@
+#pragma once
 #include "../platforms.h"
 
 #ifdef TARGET_HC32F46x

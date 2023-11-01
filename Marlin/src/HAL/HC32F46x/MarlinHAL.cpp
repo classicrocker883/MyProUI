@@ -15,11 +15,10 @@
 
 extern "C" char *_sbrk(int incr);
 
-void HAL_wdt_callback()
-{
-    panic("WDT timeout");
-    NVIC_SystemReset();
-}
+#if ENABLED(POSTMORTEM_DEBUGGING)
+  // from MinSerial.cpp
+  extern void install_min_serial();
+#endif
 
 #if ENABLED(MARLIN_DEV_MODE)
 inline void HAL_clock_frequencies_dump()
@@ -119,8 +118,8 @@ MarlinHAL::MarlinHAL() {}
 void MarlinHAL::watchdog_init()
 {
 #if ENABLED(USE_WATCHDOG)
-    // 5s timeout, panic on timeout
-    WDT.begin(5000, &HAL_wdt_callback);
+    // 5s timeout, reset on timeout
+    WDT.begin(5000);
 #endif
 }
 
@@ -137,6 +136,9 @@ void MarlinHAL::init()
 
     // print clock frequencies to host serial
     TERN_(MARLIN_DEV_MODE, HAL_clock_frequencies_dump());
+
+    // register min serial
+    TERN_(POSTMORTEM_DEBUGGING, install_min_serial());
 }
 
 void MarlinHAL::init_board() {}
