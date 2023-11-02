@@ -195,7 +195,7 @@ public:
   MarlinUI() {
     TERN_(HAS_MARLINUI_MENU, currentScreen = status_screen);
   }
-  
+
   #ifdef BED_SCREW_INSET
     static float screw_pos; // bed corner screw inset
   #endif
@@ -205,7 +205,7 @@ public:
     static float mesh_inset_max_x;
     static float mesh_inset_min_y;
     static float mesh_inset_max_y;
-  #endif 
+  #endif
 
   #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
     static int enc_rateA;
@@ -459,7 +459,7 @@ public:
    */
   static void _set_alert(const char * const ustr, int8_t level, const bool pgm=false);
 
-  static void set_status(FSTR_P const, int8_t); // set_status undefined reference libproui.a PROUI_EX workaround 
+  static void set_status(FSTR_P const, int8_t); // set_status undefined reference libproui.a PROUI_EX workaround
   static void set_status(const char * const cstr, const bool persist=false) { _set_status(cstr, persist, false); }
   static void set_status_P(PGM_P const pstr, const bool persist=false)      { _set_status(pstr, persist, true);  }
   static void set_status(FSTR_P const fstr, const bool persist=false)       { set_status_P(FTOP(fstr), persist); }

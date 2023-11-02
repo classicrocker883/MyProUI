@@ -106,7 +106,7 @@ constexpr xyze_float_t min_steps_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_STEPS_ED
                            default_steps * float(DEFAULT_MAX_MULTIPLIER)
                          #endif
                        ;
-                       
+
 //
 // Old Values
 //

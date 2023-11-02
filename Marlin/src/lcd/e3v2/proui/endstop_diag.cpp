@@ -83,7 +83,7 @@ void ESDiag::draw() {
   #if USE_Z_MIN_PROBE
     draw_es_label(F(STR_Z_PROBE));
   #endif
-  //TERN_(USE_Z_MIN_PROBE, ES_LABEL(Z_PROBE)); 
+  //TERN_(USE_Z_MIN_PROBE, ES_LABEL(Z_PROBE));
 /*/
   TERN_(USE_X_MIN, ES_LABEL(X_MIN);) TERN_(USE_X_MAX, ES_LABEL(X_MAX);)
   TERN_(USE_Y_MIN, ES_LABEL(Y_MIN);) TERN_(USE_Y_MAX, ES_LABEL(Y_MAX);)
@@ -116,6 +116,7 @@ void ESDiag::update() {
     #if PROUI_EX
       draw_es_state(!FilamentSensorDevice::poll_runout_state(0));
     #else
+      //draw_es_state(!FilamentSensorSwitch::poll_runout_states());
       draw_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE);
     #endif
   #endif
@@ -131,6 +132,7 @@ void ESDiag::update() {
     #if PROUI_EX
       draw_es_state(!FilamentSensorDevice::poll_runout_state(0));
     #else
+      //draw_es_state(!FilamentSensorSwitch::poll_runout_states());
       draw_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE);
     #endif
   #endif

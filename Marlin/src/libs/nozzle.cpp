@@ -276,7 +276,7 @@ Nozzle nozzle;
         case 2: // Raise by Z-park height
           do_blocking_move_to_z(_MIN(current_position.z + park.z, Z_MAX_POS), fr_z);
           break;
-        
+
         case 3: {// Raise by NOZZLE_PARK_Z_RAISE_MIN, bypass XY-park position
           do_blocking_move_to_z(park_mode_0_height(0), fr_z);
           goto EXIT_PARK;

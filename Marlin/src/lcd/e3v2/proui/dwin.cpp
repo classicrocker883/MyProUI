@@ -224,7 +224,7 @@ char DateTime[16+1] =
   // Second month letter
   (__DATE__[0] == 'J') ? ( (__DATE__[1] == 'a') ? '1' :       // Jan, Jun or Jul
                           ((__DATE__[2] == 'n') ? '6' : '7') ) :
-  (__DATE__[0] == 'F') ? '2' :                                // Feb 
+  (__DATE__[0] == 'F') ? '2' :                                // Feb
   (__DATE__[0] == 'M') ? (__DATE__[2] == 'r') ? '3' : '5' :   // Mar or May
   (__DATE__[0] == 'A') ? (__DATE__[1] == 'p') ? '4' : '8' :   // Apr or Aug
   (__DATE__[0] == 'S') ? '9' :                                // Sep
@@ -765,7 +765,7 @@ void _draw_feedrate() {
       }
       DWINUI::Draw_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 116 + 2 * STAT_CHR_W, 384, _value);
       _should_redraw = true;
-    } 
+    }
     else {
       static int16_t _feedrate = 100;
       if (blink && _should_redraw == true) {
@@ -920,7 +920,7 @@ void make_name_without_ext(char *dst, char *src, size_t maxlen=MENU_CHAR_LIMIT) 
   if (!card.flag.filenameIsDir) {
     while (pos && src[pos] != '.') pos--; // find last '.' (stop at 0)
   }
-  
+
   if (!pos) { pos = strlen(src); }  // pos = 0 ('.' not found) restore pos
 
   size_t len = pos;   // nul or '.'
@@ -1353,7 +1353,7 @@ void EachMomentUpdate() {
       }
     #endif
   }
-  
+
   if (checkkey == PlotProcess) {
     if (HMI_flag.pause_flag || print_job_timer.isPaused()) {
       HMI_ReturnScreen();
@@ -1665,7 +1665,7 @@ void DWIN_LevelingDone() {
           break;
       #endif
       #if ENABLED(PIDTEMP)
-        case PID_EXTR_START:          
+        case PID_EXTR_START:
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_PID_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, F("PID target:     Celsius"));
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, F("for NOZZLE"));
@@ -1797,7 +1797,7 @@ void DWIN_LevelingDone() {
           HMI_SaveProcessID(MPCProcess);
       #elif ENABLED(PIDTEMP)
         case PID_EXTR_START:
-          HMI_SaveProcessID(PlotProcess); 
+          HMI_SaveProcessID(PlotProcess);
       #endif
           DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, F("Nozzle Temperature"));
           _maxtemp = thermalManager.hotend_max_target(0);
@@ -1814,7 +1814,7 @@ void DWIN_LevelingDone() {
       default:
         break;
     }
-    
+
     DWIN_Draw_String(false, 2, HMI_data.PopupTxt_Color, HMI_data.PopupBg_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, F("Target:     Celsius"));
     plot.draw(gfrm, _maxtemp, _target);
     DWINUI::Draw_Int(false, 2, HMI_data.StatusTxt_Color, HMI_data.PopupBg_Color, 3, gfrm.x + 80, gfrm.y - DWINUI::fontHeight() - 4, _target);
@@ -2133,7 +2133,7 @@ void DWIN_InitScreen() {
   #if PROUI_EX && HAS_MESH
     SetMeshArea();
   #endif
-  Goto_Main_Menu();  
+  Goto_Main_Menu();
   #if ENABLED(AUTO_BED_LEVELING_UBL)
     UBLMeshLoad();
   #elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
@@ -2210,7 +2210,7 @@ void DWIN_RedrawScreen() {
     DWINUI::Draw_Button(BTN_Purge, 26, 280);
     DWINUI::Draw_Button(BTN_Continue, 146, 280);
     Draw_Select_Highlight(true);
-  } 
+  }
 
   void onClick_FilamentPurge() {
     if (HMI_flag.select_flag) {
@@ -2281,7 +2281,7 @@ void DWIN_RedrawScreen() {
       return card.openAndPrintFile(card.filename);
     }
     else {
-      HMI_ReturnScreen(); 
+      HMI_ReturnScreen();
     }
   }
 
@@ -2298,9 +2298,9 @@ void Goto_ConfirmToPrint() {
   #endif
   #if ENABLED(CV_LASER_MODULE)
     if (fileprop.isLaser) {
-      if (laser_device.is_laser_device()) 
-        return Draw_LaserPrint_Menu(); 
-      else 
+      if (laser_device.is_laser_device())
+        return Draw_LaserPrint_Menu();
+      else
         return Draw_LaserSettings_Menu();
     }
     else
@@ -2710,7 +2710,7 @@ void SetFlow() { SetPIntOnClick(MIN_PRINT_FLOW, MAX_PRINT_FLOW, []{ planner.refr
     #if HAS_BED_PROBE
       #if ENABLED(LCD_BED_TRAMMING)
         constexpr float bed_tramming_inset_lfbr[] = BED_TRAMMING_INSET_LFRB;
-      #else  
+      #else
         const_float_t bed_tramming_inset_lfbr[] = {ui.screw_pos, ui.screw_pos, _MAX(((X_BED_SIZE - X_MAX_POS) - probe.offset.x), ui.screw_pos), _MAX(((Y_BED_SIZE - Y_MAX_POS) - probe.offset.y), ui.screw_pos)};
       #endif
       static bool inLev = false;
@@ -2782,7 +2782,7 @@ void SetFlow() { SetPIntOnClick(MIN_PRINT_FLOW, MAX_PRINT_FLOW, []{ planner.refr
       return zval;
 
     #else // !HAS_BED_PROBE
-    
+
       queue.inject(MString<100>(
         #if ENABLED(LCD_BED_TRAMMING)
           F("M420S0\nG28O\nG90\nG0F300Z" STRINGIFY(BED_TRAMMING_Z_HOP) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z" STRINGIFY(BED_TRAMMING_HEIGHT))
@@ -2800,7 +2800,7 @@ void SetFlow() { SetPIntOnClick(MIN_PRINT_FLOW, MAX_PRINT_FLOW, []{ planner.refr
       if (HMI_data.FullManualTramming) {
         LCD_MESSAGE_F("Disable manual tramming");
         return;
-      } 
+      }
       else LCD_MESSAGE_F("Bed Tramming Wizard Start");
       DWINUI::ClearMainArea();
       MeshViewer.DrawMeshGrid(2, 2);
@@ -4530,7 +4530,7 @@ void Draw_AdvancedSettings_Menu() {
     #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
       EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 100x", onDrawPIntMenu, SetEncRateA, &ui.enc_rateA);
       EDIT_ITEM_F(ICON_Motion, "Enc steps/sec 10x", onDrawPIntMenu, SetEncRateB, &ui.enc_rateB);
-    #endif 
+    #endif
   }
   ui.reset_status(true);
   UpdateMenu(AdvancedSettings);

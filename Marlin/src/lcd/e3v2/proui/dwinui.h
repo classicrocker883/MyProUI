@@ -577,7 +577,7 @@ namespace DWINUI {
   uint16_t ColorInt(int16_t val, int16_t minv, int16_t maxv, uint16_t color1, uint16_t color2);
 
   // ------------------------- Buttons ------------------------------//
-  
+
   void Draw_Select_Box(uint16_t xpos, uint16_t ypos);
 
   void Draw_Button(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, const char * const caption);
