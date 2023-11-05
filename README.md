@@ -70,14 +70,22 @@ There is a *MarlinSimulator.exe* file provided to test out for yourself. It simu
 
 To create your own MarlinSimulator with you own build, start by changing in Configuration.h **MOTHERBOARD** to *BOARD_SIMULATED*, also disable `ENDSTOP_INTERRUPTS_FEATURE` and `PROUI_EX`, and then in platformio.ini **default_envs =** change to *simulator_windows*. The MarlinSimulator can only compile for Manual Mesh Bed Leveling for now, so make sure your configuration is set for `MESH_BED_LEVELING`.
 
-Then you have to extract **SDL2-devel-2.28.0-mingw.zip** from /**docs**. To install SDL, navigate to the SDL2 directory in *MSYS2 MINGW64* terminal and type  
+Then you have to extract **SDL2-devel-2.28.4-mingw.zip** from /**docs**. To install SDL, navigate to the SDL2 directory in *MSYS2 MINGW64* terminal (Run as Administrator)ls and type:  
+>
+>     make cross
+>
+If you receive an error, then try the following:  
+>
+>     make install-package arch=x86_64-w64-mingw32 prefix=/usr
+>
+You can use instead a 32-bit version by passing:  
 >
 >     make native
 >
 
-64-bit files are in \x86_64-w64-mingw32. Then **copy** the contents of ~\SDL2-2.28.2\x86_64-w64-mingw32\include\SDL2\\* into ~\.pio\libdeps\simulator_windows\\**imgui**  
+32-bit files are in \i686-w64-mingw32 if you use `make native`. Then **copy** the contents of ~\SDL2-2.28.4\x86_64-w64-mingw32\include\SDL2\\* into ~\.pio\libdeps\simulator_windows\\**imgui**  
 -OR-  
-Copy the just folder ~\SDL2-2.28.2\x86_64-w64-mingw32\include\\**SDL2** into the directory ~\libdeps\\*simulator_windows*  
+Copy the just folder ~\SDL2-2.28.4\x86_64-w64-mingw32\include\\**SDL2** into the directory ~\libdeps\\*simulator_windows*  
 You may have to first Build so the directory can be created.
 
 Once all that is done, just build like you would normally and *MarlinSimulator.exe* will be created.
