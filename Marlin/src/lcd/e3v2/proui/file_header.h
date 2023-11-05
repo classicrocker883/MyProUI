@@ -20,7 +20,7 @@
  * For commercial applications additional licenses can be requested
  */
 
-#pragma once
+//#pragma once
 
 typedef struct {
   char name[13];      //8.3
