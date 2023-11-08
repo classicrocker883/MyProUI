@@ -37,5 +37,31 @@ public:
 private:
   static bool hasPreview();
 };
-
 extern Preview preview;
+
+typedef struct {
+  bool isConfig;
+  bool isLaser;
+  char name[13] = "";   // 8.3 + null
+  uint32_t thumbstart;
+  int thumbsize, thumbheight, thumbwidth;
+  float time,
+  filament,
+  layer,
+  width, height, length,
+  minx,
+  maxx,
+  miny,
+  maxy;
+
+  void setnames(const char * const fn);
+  void clears(); 
+
+} fileprop_t;
+
+extern fileprop_t fileprop;
+
+// These can be enabled, but function use is unknown
+//void getLine(char *buf, const uint8_t bufsize);
+//bool //void getValue(const char *buf, const char * const key, float &value);
+//void getFileHeader();

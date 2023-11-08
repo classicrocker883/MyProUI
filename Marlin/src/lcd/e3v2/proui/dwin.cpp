@@ -59,7 +59,7 @@
   #include "../../../feature/host_actions.h"
 #endif
 
-#if HAS_MESH || HAS_BED_PROBE
+#if ANY(HAS_MESH, HAS_BED_PROBE)
   #include "../../../feature/bedlevel/bedlevel.h"
   #include "bedlevel_tools.h"
 #endif
@@ -96,8 +96,7 @@
   #include "../../../feature/tmc_util.h"
 #endif
 
-#if HAS_GCODE_PREVIEW
-  #include "file_header.h"
+#if ANY(HAS_GCODE_PREVIEW, CV_LASER_MODULE)
   #include "gcode_preview.h"
 #endif
 
@@ -2289,10 +2288,10 @@ void DWIN_RedrawScreen() {
 
 void Goto_ConfirmToPrint() {
   #if PROUI_EX && HAS_GCODE_PREVIEW
-    fileprop.clear();
-    fileprop.setname(card.filename);
+    fileprop.clears();
+    fileprop.setnames(card.filename);
     card.openFileRead(fileprop.name, 100);
-    getFileHeader();
+    //getFileHeader(); // no idea what this does
     card.closefile();
     if (fileprop.isConfig) return card.openAndPrintFile(card.filename);
   #endif

@@ -33,7 +33,7 @@
 #include "custom_gcodes.h"
 
 #if ALL(PROUI_EX, HAS_MEDIA)
-  #include "file_header.h"
+  #include "gcode_preview.h"
 #endif
 
 //=============================================================================
