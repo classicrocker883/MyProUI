@@ -33,11 +33,11 @@
 #include "custom_gcodes.h"
 
 #if ALL(PROUI_EX, HAS_MEDIA)
-  #include "file_header.h"
+  #include "gcode_preview.h"
 #endif
 
 //=============================================================================
-// Extended G-CODES 
+// Extended G-CODES
 //=============================================================================
 
 void CError() {
@@ -84,7 +84,7 @@ void C108() {
 }
 
 // Enable or disable preview screen
-#if HAS_GCODE_PREVIEW || HAS_GCODE_PREVIEW_NOPRO
+#if HAS_GCODE_PREVIEW
 void C250() {
   if (parser.seenval('P')) {
     HMI_data.EnablePreview = !!parser.value_byte();
@@ -120,7 +120,7 @@ void custom_gcode(const int16_t codenum) {
       case 35: C35(); break;            // Launch bed tramming wizard
     #endif
     case 108: C108(); break;            // Cancel a Wait for User without an Emergecy Parser
-    #if HAS_GCODE_PREVIEW || HAS_GCODE_PREVIEW_NOPRO
+    #if HAS_GCODE_PREVIEW
       case 250: C250(); break;          // Enable or disable preview screen
     #endif
     #if HAS_LOCKSCREEN

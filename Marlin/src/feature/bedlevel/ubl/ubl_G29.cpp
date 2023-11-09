@@ -787,7 +787,7 @@ void unified_bed_leveling::shift_mesh_height() {
       #endif
 
       #ifndef HUGE_VALF
-        #define HUGE_VALF (10e100F)
+        #define HUGE_VALF __FLT_MAX__
       #endif
 
       TERN_(PROUI_EX, if (ProEx.QuitLeveling()) return DWIN_LevelingDone(););

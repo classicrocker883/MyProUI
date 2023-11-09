@@ -87,7 +87,7 @@ void MeshViewerClass::DrawMeshPoint(const uint8_t x, const uint8_t y, const floa
   else {
     char msg[9]; msg[0] = '\0';
     switch (v) {
-      case -999 ... -100:  // -9.99 .. -1.00 || 1.00 .. 9.99 
+      case -999 ... -100:  // -9.99 .. -1.00 || 1.00 .. 9.99
       case  100 ...  999: DWINUI::Draw_Signed_Float(meshfont, 1, 1, px(x) - 3 * fs, fy, z); break;
       case  -99 ...   -1: sprintf_P(msg, PSTR("-.%2i"), -v); break; // -0.99 .. -0.01 mm
       case    1 ...   99: sprintf_P(msg, PSTR( ".%2i"),  v); break; //  0.01 ..  0.99 mm
@@ -110,7 +110,7 @@ void MeshViewerClass::DrawMesh(const bed_mesh_t zval, const uint8_t csizex, cons
 
 void MeshViewerClass::Draw(const bool withsave/*=false*/, const bool redraw/*=true*/) {
   Title.ShowCaption(GET_TEXT_F(MSG_MESH_VIEWER));
-  
+
   const bool see_mesh = TERN0(USE_GRID_MESHVIEWER, bedLevelTools.view_mesh);
   if (see_mesh) {
     #if USE_GRID_MESHVIEWER

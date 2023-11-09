@@ -47,11 +47,12 @@ void draw_es_label(FSTR_P const flabel=nullptr) {
   DWINUI::MoveBy(0, 25);
 }
 
-void draw_es_state(const bool is_hit) {
+void draw_es_state(const bool is_hit, const bool is_fil) {
   const uint8_t LM = 130;
   DWINUI::cursor.x = LM;
   DWIN_Draw_Rectangle(1, HMI_data.PopupBg_Color, LM, DWINUI::cursor.y, LM + 100, DWINUI::cursor.y + 20);
-  is_hit ? DWINUI::Draw_String(RGB(31,31,16), F(STR_ENDSTOP_HIT)) : DWINUI::Draw_String(RGB(16,63,16), F(STR_ENDSTOP_OPEN));
+  is_fil ? (is_hit ? DWINUI::Draw_String(RGB(16,63,16), F("PRESENT")) : DWINUI::Draw_String(RGB(31,31,16), F("Runout Detected"))) :
+  (is_hit ? DWINUI::Draw_String(RGB(31,31,16), F(STR_ENDSTOP_HIT)) : DWINUI::Draw_String(RGB(16,63,16), F(STR_ENDSTOP_OPEN)));
   DWINUI::MoveBy(0, 25);
 }
 
@@ -83,7 +84,7 @@ void ESDiag::draw() {
   #if USE_Z_MIN_PROBE
     draw_es_label(F(STR_Z_PROBE));
   #endif
-  //TERN_(USE_Z_MIN_PROBE, ES_LABEL(Z_PROBE)); 
+  //TERN_(USE_Z_MIN_PROBE, ES_LABEL(Z_PROBE));
 /*/
   TERN_(USE_X_MIN, ES_LABEL(X_MIN);) TERN_(USE_X_MAX, ES_LABEL(X_MAX);)
   TERN_(USE_Y_MIN, ES_LABEL(Y_MIN);) TERN_(USE_Y_MAX, ES_LABEL(Y_MAX);)
@@ -96,7 +97,7 @@ void ESDiag::draw() {
 
 void ESDiag::update() {
   DWINUI::cursor.y = 80;
-  #define ES_REPORT(S) draw_es_state(READ(S##_PIN) == S##_ENDSTOP_HIT_STATE)
+  #define ES_REPORT(S) draw_es_state(READ(S##_PIN) == S##_ENDSTOP_HIT_STATE, false)
 /*
   #if USE_X_MIN
     ES_REPORT(X_MIN);
@@ -116,6 +117,7 @@ void ESDiag::update() {
     #if PROUI_EX
       draw_es_state(!FilamentSensorDevice::poll_runout_state(0));
     #else
+      //draw_es_state(!FilamentSensorSwitch::poll_runout_states());
       draw_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE);
     #endif
   #endif
@@ -129,9 +131,10 @@ void ESDiag::update() {
   IF_DISABLED(USE_Z_MIN_PROBE, TERN_(USE_Z_MIN, ES_REPORT(Z_MIN);) TERN_(USE_Z_MAX, ES_REPORT(Z_MAX);))
   #if HAS_FILAMENT_SENSOR
     #if PROUI_EX
-      draw_es_state(!FilamentSensorDevice::poll_runout_state(0));
+      draw_es_state(!FilamentSensorDevice::poll_runout_state(0), true);
     #else
-      draw_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE);
+      //draw_es_state(!FilamentSensorSwitch::poll_runout_states());
+      draw_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE, true);
     #endif
   #endif
   //TERN_(USE_Z_MIN_PROBE, draw_es_state(!Z_MIN_PROBE_ENDSTOP_HIT_STATE);

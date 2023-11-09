@@ -34,7 +34,7 @@
 #include "../../../inc/MarlinConfig.h"
 
 #if HAS_MEDIA
-  #include "file_header.h"
+  #include "gcode_preview.h"
   #define LASER_XMIN fileprop.minx
   #define LASER_XMAX fileprop.maxx
   #define LASER_YMIN fileprop.miny

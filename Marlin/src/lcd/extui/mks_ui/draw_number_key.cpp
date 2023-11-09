@@ -371,7 +371,7 @@ static void set_value_confirm() {
       } break;
       case z_offset: {
         const float z = atof(key_value);
-        if (WITHIN(z, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX))
+        if (WITHIN(z, PROBE_OFFSET_ZMIN, PROBE_OFFSET_ZMAX))
           probe.offset.z = z;
       } break;
     #endif
