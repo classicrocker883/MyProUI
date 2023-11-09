@@ -2136,7 +2136,8 @@ void DWIN_InitScreen() {
   #if ENABLED(AUTO_BED_LEVELING_UBL)
     UBLMeshLoad();
   #elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
-  bedLevelTools.mesh_reset();
+  //bedLevelTools.mesh_reset();
+  (void)settings.load();
   #endif
   TERN_(LASER_SYNCHRONOUS_M106_M107, thermalManager.set_fan_speed(0, 0);
   planner.buffer_sync_block(BLOCK_BIT_SYNC_FANS);)
