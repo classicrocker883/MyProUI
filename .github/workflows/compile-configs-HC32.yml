@@ -178,6 +178,7 @@ jobs:
       matrix:
         chip: [HC32]
         temp: [true,false]
+        inshape: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -209,8 +210,10 @@ jobs:
       id: build_configs
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($IS); then TP = false; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}_UBL-ProUI${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}_UBL-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -218,6 +221,9 @@ jobs:
         cp configurations/Voxelab\ Aquila/HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = HC32F460xCxx_AQUILA_V101/g" platformio.ini
+        if ($IS); then TEMP=; else TEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
+        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
@@ -228,6 +234,7 @@ jobs:
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
+        IS: ${{ matrix.inshape }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -321,6 +328,7 @@ jobs:
     strategy:
       matrix:
         chip: [HC32]
+        inshape: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -351,19 +359,24 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}_BLT-ProUI.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}_BLT-ProUI${ISTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         cp configurations/Voxelab\ Aquila/HC32/ConfigurationBLT.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/HC32/Configuration_advBLT.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
+        if ($IS); then TEMP=; else TEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
+        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         pio run
         mkdir temp
         mv .pio/build/HC32F460xCxx_AQUILA_V101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        IS: ${{ matrix.inshape }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
