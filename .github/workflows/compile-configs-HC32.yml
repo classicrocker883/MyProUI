@@ -208,10 +208,10 @@ jobs:
         pip install --upgrade platformio
     - name: Run PlatformIO
       id: build_configs
+      if: ${{ !env.IS && !env.TP }}
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if ($IS); then $TP = false; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
         echo "filename=${AVTMP}_UBL-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
