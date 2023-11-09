@@ -211,7 +211,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}_UBL-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}_UBL-NoPro${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
