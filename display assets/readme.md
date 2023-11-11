@@ -2,19 +2,19 @@
 
 Some features, such as G-code preview, need updated firmware to work on some DACAI and TJC displays. Custom icon assets such as Giadej icon set are only supported by DWIN and DACAI displays.
 
-If you have the stock icon set, in principle you **do not need to update the display to use this firmware**, only some TJC display units need a [firmware update](https://github.com/classicrocker883/MRiscoCProUI/blob/2023-October/display%20assets/tjc_update.zip?raw=true) to boot properly. Creality currently provides several types of display units with its Ender-3 V2/S1/Neo printers:
+If you have the stock icon set, in principle you **do not need to update the display to use this firmware**, only some TJC display units need a [firmware update](https://github.com/classicrocker883/MRiscoCProUI/blob/2023-November/display%20assets/tjc_update.zip?raw=true) to boot properly. Creality currently provides several types of display units with its Ender-3 V2/S1/Neo printers:
 
 **DWIN display**, the original display unit, it supports all firmware functions.  
 [![Ender3v2-DWIN](https://user-images.githubusercontent.com/2745567/156829365-a58a3afc-77e3-40b9-9e16-5edfe3073de8.jpg)](https://raw.githubusercontent.com/MRiscoC/Ender3V2S1/Ender3V2S1-Released/display%20assets/displays/DWIN.jpg)
 
-**DACAI display**, some versions need [updated firmware to enable G-code preview](https://github.com/classicrocker883/MRiscoCProUI/blob/2023-October/display%20assets/dacai_update.zip?raw=true)  
+**DACAI display**, some versions need [updated firmware to enable G-code preview](https://github.com/classicrocker883/MRiscoCProUI/blob/2023-November/display%20assets/dacai_update.zip?raw=true)  
 [![Ender3S1-DACAI](https://user-images.githubusercontent.com/2745567/156829472-2c38a4ab-bdde-4c21-b78f-a30692c96500.jpg)](https://raw.githubusercontent.com/MRiscoC/Ender3V2S1/Ender3V2S1-Released/display%20assets/displays/DACAI.jpg)
   
 **SYNWIT (VIEWE) display**, initially unsupported due to incompatibilities with QR-codes (removed in latest firmware version) some users [report problems](https://github.com/MRiscoC/Ender3V2S1/issues/323) with this screen, but now seems that it is working without issues.   
 [![VIEWE](https://user-images.githubusercontent.com/2745567/163235004-1d3f1ed4-e149-4ca8-ae60-438df5f0b70a.png)](https://raw.githubusercontent.com/MRiscoC/Ender3V2S1/Ender3V2S1-Released/display%20assets/displays/SYNWIT1.jpg)
 [![SYNWIT2R](https://user-images.githubusercontent.com/2745567/209407402-25053f01-6a5d-4c76-90c8-da5aec43100c.png)](https://raw.githubusercontent.com/MRiscoC/Ender3V2S1/Ender3V2S1-Released/display%20assets/displays/SYNWIT2.jpg)
 
-**TJC display**, currently this display needs a [special compile](https://github.com/MRiscoC/Special_Configurations/releases/tag/tjc) to show leveling numeric data in the mesh viewer and some displays need [updated firmware](https://github.com/classicrocker883/MRiscoCProUI/blob/2023-October/display%20assets/tjc_update.zip?raw=true) to enable G-code preview and boot properly, 
+**TJC display**, currently this display needs a [special compile](https://github.com/MRiscoC/Special_Configurations/releases/tag/tjc) to show leveling numeric data in the mesh viewer and some displays need [updated firmware](https://github.com/classicrocker883/MRiscoCProUI/blob/2023-November/display%20assets/tjc_update.zip?raw=true) to enable G-code preview and boot properly, 
 more info: [TJC issues](https://github.com/MRiscoC/Ender3V2S1/issues/542).  
 [![TJC](https://user-images.githubusercontent.com/2745567/206931166-24185525-e377-472e-9bed-37a39aab24fb.jpg)](https://raw.githubusercontent.com/MRiscoC/Ender3V2S1/Ender3V2S1-Released/display%20assets/displays/TJC.jpg)
 
@@ -39,28 +39,28 @@ The display assets compilations in this page are compatible with [Professional f
 If you weren't able to update the display, verify the format of the SD Card
 (MBR, FAT32 and allocation unit of 4096 bytes) and the CRC of the files.  
 
-<img src="https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/2023-October/display%20assets/DWIN_SET-folder.jpg" height="350" />  
+<img src="https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/2023-November/display%20assets/DWIN_SET-folder.jpg" height="350" />  
 
 Be sure to leave **only** the `DWIN_SET` or `private` folder at the root of the card.  
 
 ### DACAI firmware update
 In order to use all the features of this firmware with DACAI screens it has to be updated.
-If you can't see preview images with this [g-code test file](https://github.com/classicrocker883/MRiscoCProUI/raw/2023-October/slicer%20scripts/cura/SimpleCuraTest.gcode) update your [DACAI screen firmware](dacai_update.zip).
+If you can't see preview images with this [g-code test file](https://github.com/classicrocker883/MRiscoCProUI/raw/2023-November/slicer%20scripts/cura/SimpleCuraTest.gcode) update your [DACAI screen firmware](dacai_update.zip).
 <br>
   
 ---
 
-## [Go to Stock display firmware](https://github.com/classicrocker883/MRiscoCProUI/tree/2023-October/display%20assets/stock)  
+## [Go to Stock display firmware](https://github.com/classicrocker883/MRiscoCProUI/tree/2023-November/display%20assets/stock)  
 
-<a href=https://github.com/classicrocker883/MRiscoCProUI/tree/2023-October/display%20assets/stock><img src="https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/2023-October/display%20assets/stock/preview1.jpg" height="400" /></a>  
+<a href=https://github.com/classicrocker883/MRiscoCProUI/tree/2023-November/display%20assets/stock><img src="https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/2023-November/display%20assets/stock/preview1.jpg" height="400" /></a>  
   
 <br>
   
 ---
 
-## [Go to Giadej compilation](https://github.com/classicrocker883/MRiscoCProUI/tree/2023-October/display%20assets/Giadej%20compilation)
+## [Go to Giadej compilation](https://github.com/classicrocker883/MRiscoCProUI/tree/2023-November/display%20assets/Giadej%20compilation)
 
-<a href=https://github.com/classicrocker883/MRiscoCProUI/tree/2023-October/display%20assets/Giadej%20compilation><img src="https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/2023-October/display%20assets/Giadej%20compilation/preview1.jpg"  height="400" /></a>  
+<a href=https://github.com/classicrocker883/MRiscoCProUI/tree/2023-November/display%20assets/Giadej%20compilation><img src="https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/2023-November/display%20assets/Giadej%20compilation/preview1.jpg"  height="400" /></a>  
   
 <br>
   
