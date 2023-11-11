@@ -269,24 +269,23 @@ Nozzle nozzle;
       constexpr feedRate_t fr_xy = NOZZLE_PARK_XY_FEEDRATE;
 
       switch (z_action) {
-        case 1: // Go to Z-park height
+        case 1:   // Go to Z-park height
           do_blocking_move_to_z(park.z, fr_z);
           break;
 
-        case 2: // Raise by Z-park height
+        case 2:   // Raise by Z-park height
           do_blocking_move_to_z(_MIN(current_position.z + park.z, Z_MAX_POS), fr_z);
           break;
 
-        case 3: {// Raise by NOZZLE_PARK_Z_RAISE_MIN, bypass XY-park position
+        case 3: { // Raise by NOZZLE_PARK_Z_RAISE_MIN, bypass XY-park position
           do_blocking_move_to_z(park_mode_0_height(0), fr_z);
-          goto EXIT_PARK;
-          }
+          goto SKIP_XY_MOVE;
+        } break;
+
+        case 4:   // Skip Z raise, go to XY position
           break;
 
-        case 4: // Skip raise Z, go to XY position
-          break;
-
-        default: // Raise by NOZZLE_PARK_Z_RAISE_MIN, use park.z as a minimum height
+        default:  // Raise by NOZZLE_PARK_Z_RAISE_MIN, use park.z as a minimum height
           do_blocking_move_to_z(park_mode_0_height(park.z), fr_z);
           break;
       }
@@ -306,7 +305,7 @@ Nozzle nozzle;
               do_blocking_move_to_x(park.x, fr_xy); break;
     }
 
-    EXIT_PARK:
+    SKIP_XY_MOVE:
     report_current_position();
   }
 
