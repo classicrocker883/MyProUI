@@ -1775,7 +1775,7 @@ void DWIN_LevelingDone() {
 #endif // MPCTEMP
 
 //Temperature (PID Tuning Graph) Plot During Printing
-#if ENABLED(PROUI_TUNING_GRAPH) && ENABLED(PLOT_TUNE_ITEM) && (HAS_TEMP_SENSOR || HAS_HEATED_BED)
+#if ALL(PROUI_TUNING_GRAPH, PLOT_TUNE_ITEM) && ANY(HAS_TEMP_SENSOR, HAS_HEATED_BED)
 
   void dwinDrawPlot(tempcontrol_t result) {
     HMI_value.tempControl = result;

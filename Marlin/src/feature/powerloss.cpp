@@ -70,7 +70,6 @@ uint32_t PrintJobRecovery::cmd_sdpos, // = 0
 #include "../core/debug_out.h"
 
 #if ENABLED(DWIN_LCD_PROUI)
-  #include "../lcd/e3v2/proui/dwin.h"
   #include "../lcd/e3v2/proui/dwin_popup.h"
 #endif
 

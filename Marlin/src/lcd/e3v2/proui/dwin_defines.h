@@ -25,6 +25,11 @@
 
 // #define DEBUG_DWIN 1
 
+#if ENABLED(MESH_EDIT_MENU)
+  #define Z_OFFSET_MIN -3.0
+  #define Z_OFFSET_MAX  3.0
+#endif
+
 #if defined(__STM32F1__) || defined(STM32F1) || defined(ARDUINO_ARCH_HC32)//#if MB(CREALITY_V24S1_301, CREALITY_V24S1_301F4, BOARD_AQUILA_V101)
   #define DASH_REDRAW 1
 #endif
