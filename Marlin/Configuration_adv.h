@@ -1608,7 +1608,7 @@
   //#define SHOW_TEMPERATURE_BELOW_ZERO
 
   // Change Title Menu Text to Centered
-  #define TITLE_CENTERED 
+  #define TITLE_CENTERED
 
   /**
    * LED Control Menu
@@ -2249,7 +2249,7 @@
  */
 #define BABYSTEPPING  // Ender Configs
 #if ENABLED(BABYSTEPPING)
-  //#define EP_BABYSTEPPING                 // M293/M294 babystepping with EMERGENCY_PARSER support  
+  //#define EP_BABYSTEPPING                 // M293/M294 babystepping with EMERGENCY_PARSER support
   #define BABYSTEP_WITHOUT_HOMING           // MRiscoC Enabled BbS without home
   #define BABYSTEP_ALWAYS_AVAILABLE         // Allow babystepping at all times (not just during movement)  // MRiscoC Active BbS always
   //#define BABYSTEP_XY                     // Also enable X/Y Babystepping. Not supported on DELTA!

@@ -124,7 +124,7 @@ jobs:
       id: build_configs
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
-        if ($IS); then ISTMP=-IS; else ISTMP=; fi;        
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
         echo "filename=${AVTMP}-MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
@@ -171,13 +171,14 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-NP:
-    name: Build UBL NoPro Files
+  Build-UBL-Pro-NP:
+    name: Build UBL ProUI/NoPro Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chip: [HC32]
         temp: [true,false]
+        pro: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -209,25 +210,36 @@ jobs:
       id: build_configs
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($PRO); then PRTMP=-ProUI; else PRTMP=-NoPro; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}_UBL-NoPro${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}_UBL${PRTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
+        if ($PRO); then
+        cp configurations/Voxelab\ Aquila/HC32/ConfigurationPro.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/HC32/Configuration_advPro.h Marlin/Configuration_adv.h
+        else
         cp configurations/Voxelab\ Aquila/HC32/ConfigurationUBL.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
+        fi;
         cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = HC32F460xCxx_AQUILA_V101/g" platformio.ini
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if [[ ($PRO) && ($TP) ]]; then RTEMP='\/\/'; else RTEMP=; fi;
+        sed -i "s/[^ ]*#define PRINTCOUNTER/$RTEMP#define PRINTCOUNTER/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define EEPROM_CHITCHAT/$RTEMP#define EEPROM_CHITCHAT/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define USE_GRID_MESHVIEWER 1/$RTEMP#define USE_GRID_MESHVIEWER 1/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/HC32F460xCxx_AQUILA_V101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
+        PRO: ${{ matrix.pro }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -243,7 +255,7 @@ jobs:
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
   Build-UBL-NP-IS:
-    name: Build UBL NoPro Files
+    name: Build UBL NoPro IS Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
