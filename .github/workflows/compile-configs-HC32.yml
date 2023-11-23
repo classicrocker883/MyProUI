@@ -56,7 +56,7 @@ jobs:
         cp configurations/Voxelab\ Aquila/HC32/ConfigurationDNP.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/HC32/Configuration_advDNP.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = HC32F460xCxx_AQUILA_V101/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_AQUILA_V101/g" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
@@ -66,7 +66,7 @@ jobs:
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         pio run
         mkdir temp
-        mv .pio/build/HC32F460xCxx_AQUILA_V101/*.bin temp/build.bin
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
@@ -133,7 +133,7 @@ jobs:
         cp configurations/Voxelab\ Aquila/HC32/ConfigurationMM.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/HC32/Configuration_advMM.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = HC32F460xCxx_AQUILA_V101/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_AQUILA_V101/g" platformio.ini
         if ($IS); then STEMP=; else STEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$STEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$STEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
@@ -152,7 +152,7 @@ jobs:
         sed -i "s/[^ ]*#define FILAMENT_RUNOUT_SENSOR/$ETEMP#define FILAMENT_RUNOUT_SENSOR/g" Marlin/Configuration.h
         pio run
         mkdir temp
-        mv .pio/build/HC32F460xCxx_AQUILA_V101/*.bin temp/build.bin
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
@@ -224,7 +224,7 @@ jobs:
         cp configurations/Voxelab\ Aquila/HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
         fi;
         cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = HC32F460xCxx_AQUILA_V101/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_AQUILA_V101/g" platformio.ini
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
@@ -235,7 +235,7 @@ jobs:
         sed -i "s/[^ ]*#define USE_GRID_MESHVIEWER 1/$RTEMP#define USE_GRID_MESHVIEWER 1/g" Marlin/Configuration.h
         pio run
         mkdir temp
-        mv .pio/build/HC32F460xCxx_AQUILA_V101/*.bin temp/build.bin
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
@@ -300,13 +300,13 @@ jobs:
         cp configurations/Voxelab\ Aquila/HC32/ConfigurationUBL.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = HC32F460xCxx_AQUILA_V101/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_AQUILA_V101/g" platformio.ini
         if ($IS); then TEMP=; fi;
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         pio run
         mkdir temp
-        mv .pio/build/HC32F460xCxx_AQUILA_V101/*.bin temp/build.bin
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
         IS: ${{ matrix.inshape }}
@@ -375,7 +375,7 @@ jobs:
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         pio run
         mkdir temp
-        mv .pio/build/HC32F460xCxx_AQUILA_V101/*.bin temp/build.bin
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
         IS: ${{ matrix.inshape }}
