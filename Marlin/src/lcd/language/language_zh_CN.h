@@ -33,7 +33,7 @@ namespace LanguageNarrow_zh_CN {
   constexpr uint8_t CHARSIZE              = 3;
   LSTR LANGUAGE                           = _UxGT("Simplified Chinese");
 
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT("已就绪"); // " ready."
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT("已就绪"); // " ready."
   LSTR MSG_MARLIN                         = _UxGT("马林");
   LSTR MSG_YES                            = _UxGT("是");
   LSTR MSG_NO                             = _UxGT("否");
@@ -122,7 +122,7 @@ namespace LanguageNarrow_zh_CN {
   LSTR MSG_CUSTOM_COMMANDS                = _UxGT("定制命令"); // "Custom Commands"
   LSTR MSG_M48_TEST                       = _UxGT("M48探测");
   LSTR MSG_M48_POINT                      = _UxGT("M48点");
-  LSTR MSG_M48_OUT_OF_BOUNDS              = _UxGT("探测器越界");
+  LSTR MSG_M48_OUT_OF_BOUNDS              = _UxGT("探针测试越界");
   LSTR MSG_M48_DEVIATION                  = _UxGT("M48偏差");
   LSTR MSG_IDEX_MENU                      = _UxGT("IDEX模式");
   LSTR MSG_OFFSETS_MENU                   = _UxGT("工具偏移量");
@@ -240,11 +240,9 @@ namespace LanguageNarrow_zh_CN {
   LSTR MSG_MOVE_E                         = _UxGT("挤出机"); // "Extruder"
   LSTR MSG_MOVE_EN                        = _UxGT("挤出机 *"); // "Extruder"
   LSTR MSG_HOTEND_TOO_COLD                = _UxGT("热端太冷");
-  LSTR MSG_MOVE_N_MM                      = _UxGT("移动 $ mm"); // "Move 0.025mm"
-  LSTR MSG_MOVE_01MM                      = _UxGT("移动 0.1 mm"); // "Move 0.1mm"
-  LSTR MSG_MOVE_1MM                       = _UxGT("移动 1 mm"); // "Move 1mm"
-  LSTR MSG_MOVE_10MM                      = _UxGT("移动 10 mm"); // "Move 10mm"
-  LSTR MSG_MOVE_100MM                     = _UxGT("移动 100 mm"); // "Move 100mm"
+  LSTR MSG_MOVE_N_MM                      = _UxGT("移动 $mm"); // "Move $mm"
+  LSTR MSG_MOVE_N_IN                      = _UxGT("移动 $in"); // "Move $in"
+  LSTR MSG_MOVE_N_DEG                     = _UxGT("移动 $") LCD_STR_DEGREE; // "Move $°"
   LSTR MSG_SPEED                          = _UxGT("速率"); // "Speed"
   LSTR MSG_MESH_Z_OFFSET                  = _UxGT("热床Z"); // "Bed Z"
   LSTR MSG_NOZZLE                         = _UxGT("喷嘴"); // "Nozzle" 噴嘴
@@ -443,11 +441,9 @@ namespace LanguageNarrow_zh_CN {
   LSTR MSG_BABYSTEP_Z                     = _UxGT("微量调整Z轴"); // "Babystep Z"
   LSTR MSG_BABYSTEP_TOTAL                 = _UxGT("总计");
   LSTR MSG_ENDSTOP_ABORT                  = _UxGT("挡块终止"); // "Endstop abort"
-  LSTR MSG_HEATING_FAILED_LCD             = _UxGT("加热失败"); // "Heating failed"
+  LSTR MSG_ERR_HEATING_FAILED             = _UxGT("加热失败"); // "Heating failed"
   LSTR MSG_ERR_REDUNDANT_TEMP             = _UxGT("错误：冗余温度"); // "Err: REDUNDANT TEMP"
-  LSTR MSG_THERMAL_RUNAWAY                = _UxGT("温控失控"); // "THERMAL RUNAWAY"
-  LSTR MSG_THERMAL_RUNAWAY_BED            = _UxGT("热床热量失控");
-  LSTR MSG_THERMAL_RUNAWAY_CHAMBER        = _UxGT("机箱热量失控");
+  LSTR MSG_ERR_THERMAL_RUNAWAY            = _UxGT("温控失控"); // "THERMAL RUNAWAY"
   LSTR MSG_ERR_MAXTEMP                    = _UxGT("错误：最高温度"); // "Err: MAXTEMP"
   LSTR MSG_ERR_MINTEMP                    = _UxGT("错误：最低温度"); // "Err: MINTEMP"
   LSTR MSG_HALTED                         = _UxGT("打印停机"); // "PRINTER HALTED"

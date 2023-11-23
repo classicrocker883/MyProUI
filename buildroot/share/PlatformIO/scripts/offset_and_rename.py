@@ -72,3 +72,5 @@ if pioutil.is_pio_build():
             print("FIRMWARE BIN: %s" % BIN_NAME)
 
         marlin.add_post_action(rename_target)
+        import open_explorer
+        open_explorer.open_file_explorer()

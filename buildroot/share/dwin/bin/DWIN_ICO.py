@@ -88,9 +88,9 @@ class DWIN_ICO_File():
             entry.parseRawData(rawBytes)
             # check that it is valid: is offset nonzero?
             # Special case: treat 39 as valid
-            if (entry.offset > 0) or (count == 39):
-                validEntries += 1
-                self.entries.append(entry)
+            #if (entry.offset > 0) or (count == 39):
+            validEntries += 1
+            self.entries.append(entry)
             count += 1
         return
 
@@ -114,7 +114,7 @@ class DWIN_ICO_File():
             print('%02d: offset: 0x%06x len: 0x%04x width: %d height: %d' %
                   (count, entry.offset, entry.length, entry.width, entry.height))
             outfilename = os.path.join(outDir,
-                                       '%03d-%s.jpg' % (count, _iconNames[count]))
+                                       '%03d-%s.jpg' % (count, _iconNames.get(count, "UNKNOWN")))
             with open(outfilename, 'wb') as outfile:
                 infile.seek(entry.offset)
                 blob = infile.read(entry.length)
@@ -144,7 +144,7 @@ class DWIN_ICO_File():
             # process each file:
             try:
                 index = int(dirEntry.name[0:3])
-                if not (0 <= index <= 255):
+                if (index < 0) or (index > 255):
                     print('...Ignoring invalid index on', dirEntry.path)
                     continue
                 #dirEntry.path is iconDir/name
@@ -339,18 +339,19 @@ _iconNames = {
     89 : 'ICON_Confirm_E',
     90 : 'ICON_Info_0',
     91 : 'ICON_Info_1',
-    # Additional Icons
-    200 : "ICON_Box",
-    201 : "ICON_Checkbox",          
-    202 : "ICON_Fade",              
-    203 : "ICON_Mesh",              
-    204 : "ICON_Tilt",              
-    205 : 'ICON_Brightness',
-    206 : 'ICON_Probe',
-    249 : 'ICON_AxisD',
-    250 : 'ICON_AxisBR',
-    251 : 'ICON_AxisTR',
-    252 : 'ICON_AxisBL',
-    253 : 'ICON_AxisTL',
-    254 : 'ICON_AxisC'   
+    93 : 'ICON_Printer_0',
+    # 94 : 'ICON_Printer_1',
+   200 : 'ICON_Checkbox_F',
+   201 : 'ICON_Checkbox_T',
+   202 : 'ICON_Fade',
+   203 : 'ICON_Mesh',
+   204 : 'ICON_Tilt',
+   205 : 'ICON_Brightness',
+   206 : 'ICON_Probe',
+   249 : 'ICON_AxisD',
+   250 : 'ICON_AxisBR',
+   251 : 'ICON_AxisTR',
+   252 : 'ICON_AxisBL',
+   253 : 'ICON_AxisTL',
+   254 : 'ICON_AxisC'
     }

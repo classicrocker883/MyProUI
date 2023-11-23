@@ -35,7 +35,7 @@ namespace LanguageNarrow_ro {
   constexpr uint8_t CHARSIZE              = 2;
   LSTR LANGUAGE                           = _UxGT("Romanian");
 
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT(" Pregatit.");
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" Pregatit");
   LSTR MSG_YES                            = _UxGT("DA");
   LSTR MSG_NO                             = _UxGT("NU");
   LSTR MSG_BACK                           = _UxGT("Inapoi");
@@ -224,10 +224,8 @@ namespace LanguageNarrow_ro {
   LSTR MSG_MOVE_EN                        = _UxGT("Extruder *");
   LSTR MSG_HOTEND_TOO_COLD                = _UxGT("Capat Prea Rece");
   LSTR MSG_MOVE_N_MM                      = _UxGT("Move $mm");
-  LSTR MSG_MOVE_01MM                      = _UxGT("Move 0.1mm");
-  LSTR MSG_MOVE_1MM                       = _UxGT("Move 1mm");
-  LSTR MSG_MOVE_10MM                      = _UxGT("Move 10mm");
-  LSTR MSG_MOVE_100MM                     = _UxGT("Move 100mm");
+  LSTR MSG_MOVE_N_IN                      = _UxGT("Move $in");
+  LSTR MSG_MOVE_N_DEG                     = _UxGT("Move $") LCD_STR_DEGREE;
   LSTR MSG_SPEED                          = _UxGT("Speed");
   LSTR MSG_MESH_Z_OFFSET                  = _UxGT("Bed Z");
   LSTR MSG_NOZZLE                         = _UxGT("Nozzle");
@@ -427,11 +425,9 @@ namespace LanguageNarrow_ro {
   LSTR MSG_BABYSTEP_N                     = _UxGT("Babystep @");
   LSTR MSG_BABYSTEP_TOTAL                 = _UxGT("Total");
   LSTR MSG_ENDSTOP_ABORT                  = _UxGT("Endstop Abort");
-  LSTR MSG_HEATING_FAILED_LCD             = _UxGT("Heating Failed");
+  LSTR MSG_ERR_HEATING_FAILED             = _UxGT("Heating Failed");
   LSTR MSG_ERR_REDUNDANT_TEMP             = _UxGT("Err: REDUNDANT TEMP");
-  LSTR MSG_THERMAL_RUNAWAY                = _UxGT("THERMAL RUNAWAY");
-  LSTR MSG_THERMAL_RUNAWAY_BED            = _UxGT("BED THERMAL RUNAWAY");
-  LSTR MSG_THERMAL_RUNAWAY_CHAMBER        = _UxGT("CHAMBER T. RUNAWAY");
+  LSTR MSG_ERR_THERMAL_RUNAWAY            = _UxGT("THERMAL RUNAWAY");
   LSTR MSG_ERR_MAXTEMP                    = _UxGT("Err: MAXTEMP");
   LSTR MSG_ERR_MINTEMP                    = _UxGT("Err: MINTEMP");
   LSTR MSG_HALTED                         = _UxGT("PRINTER HALTED");

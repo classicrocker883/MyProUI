@@ -34,7 +34,7 @@ namespace LanguageNarrow_pt_br {
   constexpr uint8_t CHARSIZE              = 2;
   LSTR LANGUAGE                           = _UxGT("Portuguese (BR)");
 
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT(" pronto.");
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" pronto");
   LSTR MSG_YES                            = _UxGT("SIM");
   LSTR MSG_NO                             = _UxGT("NÃO");
   LSTR MSG_BACK                           = _UxGT("Voltar");
@@ -211,10 +211,8 @@ namespace LanguageNarrow_pt_br {
   LSTR MSG_MOVE_EN                        = _UxGT("Mover Extrusor *");
   LSTR MSG_HOTEND_TOO_COLD                = _UxGT("Extrus. mto fria");
   LSTR MSG_MOVE_N_MM                      = _UxGT("Mover $mm");
-  LSTR MSG_MOVE_01MM                      = _UxGT("Mover 0.1mm");
-  LSTR MSG_MOVE_1MM                       = _UxGT("Mover 1mm");
-  LSTR MSG_MOVE_10MM                      = _UxGT("Mover 10mm");
-  LSTR MSG_MOVE_100MM                     = _UxGT("Mover 100mm");
+  LSTR MSG_MOVE_N_IN                      = _UxGT("Mover $in");
+  LSTR MSG_MOVE_N_DEG                     = _UxGT("Mover $") LCD_STR_DEGREE;
   LSTR MSG_SPEED                          = _UxGT("Velocidade");
   LSTR MSG_MESH_Z_OFFSET                  = _UxGT("Base Z");
   LSTR MSG_NOZZLE                         = _UxGT("Bocal");
@@ -348,11 +346,9 @@ namespace LanguageNarrow_pt_br {
   LSTR MSG_BABYSTEP_N                     = _UxGT("Passinho @");
   LSTR MSG_BABYSTEP_TOTAL                 = _UxGT("Total");
   LSTR MSG_ENDSTOP_ABORT                  = _UxGT("Abortar Fim de Curso");
-  LSTR MSG_HEATING_FAILED_LCD             = _UxGT("Aquecimento falhou");
+  LSTR MSG_ERR_HEATING_FAILED             = _UxGT("Aquecimento falhou");
   LSTR MSG_ERR_REDUNDANT_TEMP             = _UxGT("Erro:Temp Redundante");
-  LSTR MSG_THERMAL_RUNAWAY                = _UxGT("ESCAPE TÉRMICO");
-  LSTR MSG_THERMAL_RUNAWAY_BED            = _UxGT("ESCAPE TÉRMICO MESA");
-  LSTR MSG_THERMAL_RUNAWAY_CHAMBER        = _UxGT("ESCAPE TÉRMICO CAMARA");
+  LSTR MSG_ERR_THERMAL_RUNAWAY            = _UxGT("ESCAPE TÉRMICO");
   LSTR MSG_ERR_MAXTEMP                    = _UxGT("Erro:Temp Máxima");
   LSTR MSG_ERR_MINTEMP                    = _UxGT("Erro:Temp Mínima");
   LSTR MSG_HALTED                         = _UxGT("IMPRESSORA PAROU");

@@ -137,12 +137,25 @@ extern HMI_data_t HMI_data;
 static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) + TERN0(PROUI_EX, sizeof(PRO_data_t));
 
 typedef struct {
-  int8_t Color[3];                    // Color components
+  int8_t r, g, b;
+  void set(int8_t _r, int8_t _g, int8_t _b) { r = _r; g = _g; b = _b; }
+  int8_t& operator[](const int i) {
+    switch (i) {
+      default:
+      case 0: return r;
+      case 1: return g;
+      case 2: return b;
+    }
+  }
+} rgb_t;
+
+typedef struct {
+  rgb_t Color;                        // Color
   #if ANY(PROUI_PID_TUNE, MPCTEMP)
     tempcontrol_t tempControl = AUTOTUNE_DONE;
   #endif
-  uint8_t Select          = 0;        // Auxiliary selector variable
-  AxisEnum axis           = X_AXIS;   // Axis Select
+  uint8_t Select = 0;                 // Auxiliary selector variable
+  AxisEnum axis = X_AXIS;             // Axis Select
 } HMI_value_t;
 
 extern HMI_value_t HMI_value;

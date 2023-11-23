@@ -21,7 +21,6 @@
 #pragma once
 
 #include "dwin.h"
-#include "dwinui.h"
 
 extern void (*Draw_Popup)();
 

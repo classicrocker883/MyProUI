@@ -25,11 +25,9 @@
 
 #include "printstats.h"
 
-#include "../../../core/types.h"
 #include "../../../MarlinCore.h"
 #include "../../marlinui.h"
 #include "../../../module/printcounter.h"
-#include "dwin.h"
 #include "dwin_popup.h"
 
 PrintStats printStats;

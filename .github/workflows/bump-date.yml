@@ -25,12 +25,11 @@ jobs:
 
     - name: Bump Date (HC32-November)
       run: |
-        # Inline Bump Script
         if [[ ! "$( git log -1 --pretty=%B )" =~ ^\[cron\] ]]; then
           DIST=$( date +"%Y-%m-%d" )
           eval "sed -E -i 's/(#define +STRING_DISTRIBUTION_DATE) .*$/\1 \"$DIST\"/g' Marlin/src/inc/Version.h" && \
-          eval "sed -E -i 's/(//#define +STRING_DISTRIBUTION_DATE) .*$/\1 \"$DIST\"/g' Marlin/Version.h" && \
-          git config user.name "${GITHUB_ACTOR}" && \
+          eval "sed -E -i 's/(\/\/#define +STRING_DISTRIBUTION_DATE) .*$/\1 \"$DIST\"/g' Marlin/Version.h" && \
+          git config user.name "Andrew" && \
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com" && \
           git add . && \
           git commit -m "[cron] Bump distribution date ($DIST)" && \

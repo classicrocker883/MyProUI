@@ -24,9 +24,8 @@
 
 #if ALL(DWIN_LCD_PROUI, PROUI_TUNING_GRAPH)
 
-#include "dwin.h"
-#include "../../../core/types.h"
 #include "../../marlinui.h"
+#include "dwin.h"
 #include "plot.h"
 
 #define Plot_Bg_Color RGB( 1, 12,  8)

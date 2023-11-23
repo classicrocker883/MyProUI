@@ -24,7 +24,6 @@
 #if ALL(DWIN_LCD_PROUI, HAS_CGCODE)
 
 #include "../../../MarlinCore.h" // for wait_for_user
-#include "../../../core/types.h"
 #include "../../../gcode/gcode.h"
 #include "../../../libs/buzzer.h"
 #include "../../marlinui.h"
@@ -50,9 +49,9 @@ void CError() {
   void C11() {
     const int16_t E = parser.seenval('E') ? parser.value_byte() : 0; // UI element
     if (E) {
-      HMI_value.Color[0] = parser.seenval('R') ? parser.value_byte() : 0;
-      HMI_value.Color[1] = parser.seenval('G') ? parser.value_byte() : 0;
-      HMI_value.Color[2] = parser.seenval('B') ? parser.value_byte() : 0;
+      HMI_value.Color.r = parser.seenval('R') ? parser.value_byte() : 0;
+      HMI_value.Color.g = parser.seenval('G') ? parser.value_byte() : 0;
+      HMI_value.Color.b = parser.seenval('B') ? parser.value_byte() : 0;
       DWIN_ApplyColor(E);
     } else DWIN_RedrawScreen();
   }

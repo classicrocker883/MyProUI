@@ -14,4 +14,6 @@ if pioutil.is_pio_build():
         print("FIRMWARE ELF: %s.elf" % env['PROGNAME'])
         print("FIRMWARE BIN: %s.bin" % env['PROGNAME'])
     import marlin
+    import open_explorer
+    open_explorer.open_file_explorer()
     marlin.add_post_action(name_target)

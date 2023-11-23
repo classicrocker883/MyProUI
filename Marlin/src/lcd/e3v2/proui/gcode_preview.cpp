@@ -33,10 +33,8 @@
 
 #include "gcode_preview.h"
 
-#include "../../../core/types.h"
 #include "../../marlinui.h"
 #include "../../../sd/cardreader.h"
-#include "dwin.h"
 #include "dwin_popup.h"
 #include "base64.h"
 
@@ -189,7 +187,7 @@ void Preview::drawFromSD() {
     buf.set(F("Volume: "), p_float_t(fileprop.width, 1), 'x', p_float_t(fileprop.length, 1), 'x', p_float_t(fileprop.height, 1), F(" mm"));
     DWINUI::Draw_String(20, 70, &buf);
   }
-  
+
   if (!fileprop.thumbsize) {
     const uint8_t xpos = ((DWIN_WIDTH)  / 2) - 55,  // 55 = iconW/2
                   ypos = ((DWIN_HEIGHT)  / 2) - 125;

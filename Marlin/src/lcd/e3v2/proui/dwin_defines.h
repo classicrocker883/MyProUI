@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../../../inc/MarlinConfigPre.h"
+
 // #define DEBUG_DWIN 1
 
 #if defined(__STM32F1__) || defined(STM32F1) || defined(ARDUINO_ARCH_HC32)//#if MB(CREALITY_V24S1_301, CREALITY_V24S1_301F4, BOARD_AQUILA_V101)

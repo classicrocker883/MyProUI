@@ -23,8 +23,6 @@
 
 #if ALL(DWIN_LCD_PROUI, HAS_LOCKSCREEN)
 
-#include "dwin_defines.h"
-#include "dwinui.h"
 #include "dwin.h"
 #include "lockscreen.h"
 

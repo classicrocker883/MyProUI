@@ -23,8 +23,6 @@
 #if ENABLED(DWIN_LCD_PROUI)
 
 #include "../../../MarlinCore.h" // for wait_for_user
-#include "dwin.h"
-#include "dwinui.h"
 #include "dwin_popup.h"
 
 void (*ClickPopup)()=nullptr;

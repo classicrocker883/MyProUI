@@ -358,14 +358,14 @@ static void set_value_confirm() {
       case x_offset: {
         #if HAS_PROBE_XY_OFFSET
           const float x = atof(key_value);
-          if (WITHIN(x, -(X_BED_SIZE), X_BED_SIZE))
+          if (WITHIN(x, PROBE_OFFSET_XMIN, PROBE_OFFSET_XMAX))
             probe.offset.x = x;
         #endif
       } break;
       case y_offset: {
         #if HAS_PROBE_XY_OFFSET
           const float y = atof(key_value);
-          if (WITHIN(y, -(Y_BED_SIZE), Y_BED_SIZE))
+          if (WITHIN(y, PROBE_OFFSET_YMIN, PROBE_OFFSET_YMAX))
             probe.offset.y = y;
         #endif
       } break;

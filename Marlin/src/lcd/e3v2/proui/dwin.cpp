@@ -23,7 +23,6 @@
 
 #if ENABLED(DWIN_LCD_PROUI)
 
-#include "dwin.h"
 #include "dwin_popup.h"
 #include "menus.h"
 #include "../../utf8.h"
@@ -903,9 +902,7 @@ bool DWIN_lcd_sd_status = false;
   }
 #endif
 
-#if ENABLED(HAS_SD_EXTENDER)
-  void SetMediaAutoMount() { Toggle_Chkb_Line(HMI_data.MediaAutoMount); }
-#endif
+void SetMediaAutoMount() { Toggle_Chkb_Line(HMI_data.MediaAutoMount); }
 
 inline uint16_t nr_sd_menu_items() {
   return _MIN(card.get_num_items() + !card.flag.workDirIsRoot, MENU_MAX_ITEMS);
@@ -1071,9 +1068,7 @@ void HMI_SDCardUpdate() {
  */
 
 void DWIN_Draw_Dashboard() {
-
   DWIN_Draw_Rectangle(1, HMI_data.Background_Color, 0, STATUS_Y + 21, DWIN_WIDTH, DWIN_HEIGHT - 1);
-
   DWIN_Draw_Rectangle(1, HMI_data.Bottom_Color, 0, 449, DWIN_WIDTH, 450);
 
   DWINUI::Draw_Icon(ICON_MaxSpeedX,  10, 454);
@@ -1183,12 +1178,10 @@ void HMI_MainMenu() {
   else if (encoder_diffState == ENCODER_DIFF_ENTER) {
     switch (select_page.now) {
       case PAGE_PRINT:
-      #ifdef HAS_SD_EXTENDER
         if (HMI_data.MediaAutoMount) {
           card.mount();
           safe_delay(800);
         }
-      #endif
         Draw_Print_File_Menu();
         break;
       case PAGE_PREPARE: Draw_Prepare_Menu(); break;
@@ -2007,7 +2000,7 @@ void DWIN_SetDataDefaults() {
     HMI_data.MediaSort = true;
     card.setSortOn(TERN(SDSORT_REVERSE, AS_REV, AS_FWD));
   #endif
-  TERN_(HAS_SD_EXTENDER, HMI_data.MediaAutoMount = TERN(PROUI_EX, false, true);)
+  HMI_data.MediaAutoMount = TERN(PROUI_EX, false, true);
   #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
     HMI_data.z_after_homing = DEF_Z_AFTER_HOMING;
   #endif
@@ -3788,15 +3781,15 @@ void Draw_Steps_Menu() {
 
 void SelColor() {
   MenuData.P_Int = (int16_t*)static_cast<MenuItemPtrClass*>(CurrentMenu->SelectedItem())->value;
-  HMI_value.Color[0] = GetRColor(*MenuData.P_Int);  // Red
-  HMI_value.Color[1] = GetGColor(*MenuData.P_Int);  // Green
-  HMI_value.Color[2] = GetBColor(*MenuData.P_Int);  // Blue
+  HMI_value.Color.r = GetRColor(*MenuData.P_Int);  // Red
+  HMI_value.Color.g = GetGColor(*MenuData.P_Int);  // Green
+  HMI_value.Color.b = GetBColor(*MenuData.P_Int);  // Blue
   Draw_GetColor_Menu();
 }
 
 void LiveRGBColor() {
     HMI_value.Color[CurrentMenu->line() - 2] = MenuData.Value;
-    uint16_t color = RGB(HMI_value.Color[0], HMI_value.Color[1], HMI_value.Color[2]);
+    const uint16_t color = RGB(HMI_value.Color.r, HMI_value.Color.g, HMI_value.Color.b);
     DWIN_Draw_Rectangle(1, color, 20, 315, DWIN_WIDTH - 20, 335);
 }
 void SetRGBColor() {
@@ -3805,7 +3798,7 @@ void SetRGBColor() {
 }
 
 void DWIN_ApplyColor() {
-  *MenuData.P_Int = RGB(HMI_value.Color[0], HMI_value.Color[1], HMI_value.Color[2]);
+  *MenuData.P_Int = RGB(HMI_value.Color.r, HMI_value.Color.g, HMI_value.Color.b);
   DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
   Draw_SelectColors_Menu();
   hash_changed = true;
@@ -3814,7 +3807,7 @@ void DWIN_ApplyColor() {
 }
 
 void DWIN_ApplyColor(const int8_t element, const bool ldef/*=false*/) {
-  const uint16_t color = RGB(HMI_value.Color[0], HMI_value.Color[1], HMI_value.Color[2]);
+  const uint16_t color = RGB(HMI_value.Color.r, HMI_value.Color.g, HMI_value.Color.b);
   switch (element) {
     case  2: HMI_data.Background_Color = ldef ? Def_Background_Color : color; DWINUI::SetBackgroundColor(HMI_data.Background_Color); break;
     case  3: HMI_data.Cursor_Color     = ldef ? Def_Cursor_Color     : color; break;
@@ -4170,8 +4163,6 @@ void Draw_GetColor_Menu() {
 
   #if ENABLED(MESH_EDIT_MENU)
     bool AutoMovToMesh = false;
-    #define Z_OFFSET_MIN -3
-    #define Z_OFFSET_MAX  3
 
     void manualResetValue() {
       gcode.process_subcommands_now(
@@ -4520,9 +4511,7 @@ void Draw_AdvancedSettings_Menu() {
     #if ENABLED(MEDIASORT_MENU_ITEM)
       EDIT_ITEM(ICON_File, MSG_MEDIA_SORT, onDrawChkbMenu, SetMediaSort, &HMI_data.MediaSort);
     #endif
-    #if HAS_SD_EXTENDER
-      EDIT_ITEM(ICON_File, MSG_MEDIA_UPDATE, onDrawChkbMenu, SetMediaAutoMount, &HMI_data.MediaAutoMount);
-    #endif
+    EDIT_ITEM(ICON_File, MSG_MEDIA_UPDATE, onDrawChkbMenu, SetMediaAutoMount, &HMI_data.MediaAutoMount);
     #if HAS_TRINAMIC_CONFIG
       MENU_ITEM(ICON_TMCSet, MSG_TMC_DRIVERS, onDrawSubMenu, Draw_TrinamicConfig_menu);
     #endif
@@ -4575,9 +4564,7 @@ void Draw_Advanced_Menu() { // From Control_Menu (Control) || Default-NP Advance
     #if ENABLED(MEDIASORT_MENU_ITEM)
       EDIT_ITEM(ICON_File, MSG_MEDIA_SORT, onDrawChkbMenu, SetMediaSort, &HMI_data.MediaSort);
     #endif
-    #if HAS_SD_EXTENDER
-      EDIT_ITEM(ICON_File, MSG_MEDIA_UPDATE, onDrawChkbMenu, SetMediaAutoMount, &HMI_data.MediaAutoMount);
-    #endif
+    EDIT_ITEM(ICON_File, MSG_MEDIA_UPDATE, onDrawChkbMenu, SetMediaAutoMount, &HMI_data.MediaAutoMount);
     #if HAS_TRINAMIC_CONFIG
       MENU_ITEM(ICON_TMCSet, MSG_TMC_DRIVERS, onDrawSubMenu, Draw_TrinamicConfig_menu);
     #endif

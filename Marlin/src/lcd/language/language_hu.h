@@ -39,7 +39,7 @@ namespace LanguageNarrow_hu {
   constexpr uint8_t CHARSIZE              = 2;
   LSTR LANGUAGE                           = _UxGT("Magyar");
 
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT(" Kész.");
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" Kész");
   LSTR MSG_YES                            = _UxGT("IGEN");
   LSTR MSG_NO                             = _UxGT("NEM");
   LSTR MSG_BACK                           = _UxGT("Vissza");
@@ -260,16 +260,8 @@ namespace LanguageNarrow_hu {
   LSTR MSG_MOVE_EN                        = _UxGT("Adagoló *");
   LSTR MSG_HOTEND_TOO_COLD                = _UxGT("A fej túl hideg");
   LSTR MSG_MOVE_N_MM                      = _UxGT("Mozgás $mm");
-  LSTR MSG_MOVE_01MM                      = _UxGT("Mozgás 0.1mm");
-  LSTR MSG_MOVE_1MM                       = _UxGT("Mozgás 1mm");
-  LSTR MSG_MOVE_10MM                      = _UxGT("Mozgás 10mm");
-  LSTR MSG_MOVE_50MM                      = _UxGT("Mozgás 50mm");
-  LSTR MSG_MOVE_100MM                     = _UxGT("Mozgás 100mm");
-  LSTR MSG_MOVE_0001IN                    = _UxGT("Mozgás 0.025mm");
-  LSTR MSG_MOVE_001IN                     = _UxGT("Mozgás 0.254mm");
-  LSTR MSG_MOVE_01IN                      = _UxGT("Mozgás 2.54mm");
-  LSTR MSG_MOVE_05IN                      = _UxGT("Mozgás 12.7mm");
-  LSTR MSG_MOVE_1IN                       = _UxGT("Mozgáá 25.4mm");
+  LSTR MSG_MOVE_N_IN                      = _UxGT("Mozgás $in");
+  LSTR MSG_MOVE_N_DEG                     = _UxGT("Mozgás $") LCD_STR_DEGREE;
   LSTR MSG_SPEED                          = _UxGT("Sebesség");
   LSTR MSG_MESH_Z_OFFSET                  = _UxGT("Z ágy");
   LSTR MSG_NOZZLE                         = _UxGT("Fej");
@@ -478,13 +470,10 @@ namespace LanguageNarrow_hu {
   LSTR MSG_BABYSTEP_N                     = _UxGT("Mikrolépés @");
   LSTR MSG_BABYSTEP_TOTAL                 = _UxGT("Teljes");
   LSTR MSG_ENDSTOP_ABORT                  = _UxGT("Végállás megszakítva!");
-  LSTR MSG_HEATING_FAILED_LCD             = _UxGT("Fütés hiba!");
+  LSTR MSG_ERR_HEATING_FAILED             = _UxGT("Fütés hiba!");
   LSTR MSG_ERR_REDUNDANT_TEMP             = _UxGT("Hiba: SZÜKSÉGTELEN HÖFOK");
-  LSTR MSG_THERMAL_RUNAWAY                = _UxGT("FÜTÉS KIMARADÁS");
-  LSTR MSG_THERMAL_RUNAWAY_BED            = _UxGT("ÁGY FÜTÉS KIMARADÁS");
-  LSTR MSG_THERMAL_RUNAWAY_CHAMBER        = _UxGT("KAMRA FÜTÉS KIMARADÁS");
-  LSTR MSG_THERMAL_RUNAWAY_COOLER         = _UxGT("Hütés kimaradás");
-  LSTR MSG_COOLING_FAILED                 = _UxGT("Hütés sikertelen");
+  LSTR MSG_ERR_THERMAL_RUNAWAY            = _UxGT("FÜTÉS KIMARADÁS");
+  LSTR MSG_ERR_COOLING_FAILED             = _UxGT("Hütés sikertelen");
   LSTR MSG_ERR_MAXTEMP                    = _UxGT("Hiba: MAX höfok");
   LSTR MSG_ERR_MINTEMP                    = _UxGT("Hiba: MIN höfok");
   LSTR MSG_HALTED                         = _UxGT("A NYOMTATÓ LEÁLLT");

@@ -37,7 +37,7 @@ namespace LanguageNarrow_tr {
   LSTR LANGUAGE                           = _UxGT("Turkish");
 
   // These strings should be translated
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT(" hazır.");
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" hazır");
   LSTR MSG_YES                            = _UxGT("EVET");
   LSTR MSG_NO                             = _UxGT("HAYIR");
   LSTR MSG_HIGH                           = _UxGT("YÜKSEK");
@@ -292,16 +292,8 @@ namespace LanguageNarrow_tr {
   LSTR MSG_MOVE_EN                        = _UxGT("Ekstruder *");
   LSTR MSG_HOTEND_TOO_COLD                = _UxGT("Nozul Çok Soğuk");
   LSTR MSG_MOVE_N_MM                      = _UxGT("$mm");
-  LSTR MSG_MOVE_01MM                      = _UxGT("0.1mm");
-  LSTR MSG_MOVE_1MM                       = _UxGT("1mm");
-  LSTR MSG_MOVE_10MM                      = _UxGT("10mm");
-  LSTR MSG_MOVE_50MM                      = _UxGT("50mm");
-  LSTR MSG_MOVE_100MM                     = _UxGT("100mm");
-  LSTR MSG_MOVE_0001IN                    = _UxGT("0.001in");
-  LSTR MSG_MOVE_001IN                     = _UxGT("0.01in");
-  LSTR MSG_MOVE_01IN                      = _UxGT("0.1in");
-  LSTR MSG_MOVE_05IN                      = _UxGT("0.5in");
-  LSTR MSG_MOVE_1IN                       = _UxGT("1.0in");
+  LSTR MSG_MOVE_N_IN                      = _UxGT("$in");
+  LSTR MSG_MOVE_N_DEG                     = _UxGT("$") LCD_STR_DEGREE;
   LSTR MSG_SPEED                          = _UxGT("Hız");
   LSTR MSG_BED_Z                          = _UxGT("Z Mesafesi");
   LSTR MSG_NOZZLE                         = _UxGT("Nozul");

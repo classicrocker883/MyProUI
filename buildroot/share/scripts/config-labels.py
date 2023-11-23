@@ -119,6 +119,7 @@ def process_file(subdir: str, filename: str):
         if outline is not None:
             outlines.append(outline)
     # end for
+    # endregion
 
     #-------------------------
     #     Output file
