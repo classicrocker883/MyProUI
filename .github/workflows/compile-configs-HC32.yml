@@ -1,0 +1,395 @@
+name: HC32 Build Configs
+
+######################### Aquila HC32 #########################
+
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+
+jobs:
+  Build-Default:
+    name: Build Default Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [HC32]
+        temp: [true,false]
+        inshape: [true,false]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
+        echo "filename=${AVTMP}_Default-NP-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Voxelab\ Aquila/HC32/ConfigurationDNP.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/HC32/Configuration_advDNP.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_AQUILA_V101/g" platformio.ini
+        if ($IS); then TEMP=; else TEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
+        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
+        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        pio run
+        mkdir temp
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
+      env:
+        AQUILA_VER: ${{ matrix.chip }}
+        TP: ${{ matrix.temp }}
+        IS: ${{ matrix.inshape }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-Manual-Mesh:
+    name: Build Manual-Mesh Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [HC32]
+        temp: [true,false]
+        inshape: [true,false]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
+        echo "filename=${AVTMP}-MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Voxelab\ Aquila/HC32/ConfigurationMM.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/HC32/Configuration_advMM.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_AQUILA_V101/g" platformio.ini
+        if ($IS); then STEMP=; else STEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$STEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
+        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$STEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
+        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define USE_GRID_MESHVIEWER/$PTEMP#define USE_GRID_MESHVIEWER/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define HAS_CUSTOM_COLORS/$PTEMP#define HAS_CUSTOM_COLORS/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define HAS_LOCKSCREEN/$PTEMP#define HAS_LOCKSCREEN/g" Marlin/Configuration.h
+        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($IS); then ITEMP='\/\/'; else ITEMP=; fi;
+        sed -i "s/[^ ]*#define EXTENDED_CAPABILITIES_REPORT/$ITEMP#define EXTENDED_CAPABILITIES_REPORT/g" Marlin/Configuration_adv.h
+        sed -i "s/[^ ]*#define HAS_LOCKSCREEN/$ITEMP#define HAS_LOCKSCREEN/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define AUTO_REPORT_POSITION/$ITEMP#define AUTO_REPORT_POSITION/g" Marlin/Configuration_adv.h
+        if [[ ($IS) && ($TP) ]]; then ETEMP='\/\/'; else ETEMP=; fi;
+        sed -i "s/[^ ]*#define FILAMENT_RUNOUT_SENSOR/$ETEMP#define FILAMENT_RUNOUT_SENSOR/g" Marlin/Configuration.h
+        pio run
+        mkdir temp
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
+      env:
+        AQUILA_VER: ${{ matrix.chip }}
+        TP: ${{ matrix.temp }}
+        IS: ${{ matrix.inshape }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-UBL-Pro-NP:
+    name: Build UBL ProUI/NoPro Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [HC32]
+        temp: [true,false]
+        pro: [true,false]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($PRO); then PRTMP=-ProUI; else PRTMP=-NoPro; fi;
+        if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
+        echo "filename=${AVTMP}_UBL${PRTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        if ($PRO); then
+        cp configurations/Voxelab\ Aquila/HC32/ConfigurationPro.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/HC32/Configuration_advPro.h Marlin/Configuration_adv.h
+        else
+        cp configurations/Voxelab\ Aquila/HC32/ConfigurationUBL.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
+        fi;
+        cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_AQUILA_V101/g" platformio.ini
+        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
+        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if [[ ($PRO) && ($TP) ]]; then RTEMP='\/\/'; else RTEMP=; fi;
+        sed -i "s/[^ ]*#define PRINTCOUNTER/$RTEMP#define PRINTCOUNTER/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define EEPROM_CHITCHAT/$RTEMP#define EEPROM_CHITCHAT/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define USE_GRID_MESHVIEWER 1/$RTEMP#define USE_GRID_MESHVIEWER 1/g" Marlin/Configuration.h
+        pio run
+        mkdir temp
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
+      env:
+        AQUILA_VER: ${{ matrix.chip }}
+        TP: ${{ matrix.temp }}
+        PRO: ${{ matrix.pro }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-UBL-NP-IS:
+    name: Build UBL NoPro IS Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [HC32]
+        inshape: [true]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if ($IS); then ISTMP=-IS; fi;
+        if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
+        echo "filename=${AVTMP}_UBL-NoPro${ISTMP}.bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Voxelab\ Aquila/HC32/ConfigurationUBL.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_AQUILA_V101/g" platformio.ini
+        if ($IS); then TEMP=; fi;
+        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
+        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
+        pio run
+        mkdir temp
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
+      env:
+        AQUILA_VER: ${{ matrix.chip }}
+        IS: ${{ matrix.inshape }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-BLTouch-ProUI:
+    name: Build BL-Touch ProUI Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [HC32]
+        inshape: [true,false]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
+        echo "filename=${AVTMP}_BLT-ProUI${ISTMP}.bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Voxelab\ Aquila/HC32/ConfigurationBLT.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/HC32/Configuration_advBLT.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/HC32/Version.h Marlin/Version.h
+        if ($IS); then TEMP=; else TEMP='\/\/'; fi;
+        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
+        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
+        pio run
+        mkdir temp
+        mv .pio/build/HC32F460C_AQUILA_V101/*.bin temp/build.bin
+      env:
+        AQUILA_VER: ${{ matrix.chip }}
+        IS: ${{ matrix.inshape }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary

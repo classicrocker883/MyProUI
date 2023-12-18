@@ -4,8 +4,8 @@ name: Ender-3V2 Build Configs
 
 on:
   workflow_dispatch:
-  release:
-    types: [prereleased]
+#   release:
+#     types: [prereleased]
 
 jobs:
   Build-Default-E:            # Default NoPro for Ender-3
@@ -210,7 +210,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Ender${DTMP}_GD32_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT        
+        echo "filename=Ender${DTMP}_GD32_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -313,8 +313,8 @@ jobs:
   #      #define HAS_DACAI 1
   #      #define DWIN_LCD_PROUI
   #      #define REVERSE_ENCODER_DIRECTION
-  #      #define TITLE_CENTERED 
-  
+  #      #define TITLE_CENTERED
+
   #       pio run
   #       mkdir temp
   #       mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin

@@ -28,13 +28,13 @@
 /**
  * Marlin release version identifier
  */
-#define SHORT_BUILD_VERSION "2.1.3e MRiscoC"
+#define SHORT_BUILD_VERSION "2.1.3 MRiscoC"
 
 /**
  * Verbose version identifier which should contain a reference to the location
  * from where the binary was downloaded or the source code was compiled.
  */
-#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION "Aquila-X2 (HC32)"
+#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " Aquila-NP"
 
 /**
  * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
@@ -49,7 +49,7 @@
 /**
  * Defines a generic printer name to be output to the LCD after booting Marlin.
  */
-#define MACHINE_NAME "Aquila"
+#define BOOT_MACHINE_NAME "Aquila"
 
 /**
  * The SOURCE_CODE_URL is the location where users will find the Marlin Source
