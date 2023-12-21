@@ -4,8 +4,8 @@ name: Aquila Build Configs
 
 on:
   workflow_dispatch:
-  release:
-    types: [released]
+#   release:
+#     types: [released]
 
 jobs:
   Build-Default-A:            # Default NoPro for Aquila
@@ -216,7 +216,7 @@ jobs:
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
         if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Aquila${DTMP}_${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT        
+        echo "filename=Aquila${DTMP}_${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -281,7 +281,7 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        echo "filename=Aquila-X3_N32_UBL-ProUI.bin" >> $GITHUB_OUTPUT        
+        echo "filename=Aquila-X3_N32_UBL-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
