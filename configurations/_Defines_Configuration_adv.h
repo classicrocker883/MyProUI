@@ -333,16 +333,26 @@
 // #define FTM_SHAPING_DEFAULT_Y_FREQ 37.0f
 // #define FTM_LINEAR_ADV_DEFAULT_ENA false
 // #define FTM_LINEAR_ADV_DEFAULT_K    0.0f
-// #define FTM_SHAPING_ZETA            0.1f
-// #define FTM_SHAPING_V_TOL           0.05f
-// #define FTM_BATCH_SIZE            100
+// #define FTM_SHAPING_ZETA_X          0.1f
+// #define FTM_SHAPING_ZETA_Y          0.1f
+// #define FTM_SHAPING_V_TOL_X         0.05f
+// #define FTM_SHAPING_V_TOL_Y         0.05f
+// #define FTM_UNIFIED_BWS
+// #define FTM_BW_SIZE               100
 // #define FTM_WINDOW_SIZE           200
+// #define FTM_BATCH_SIZE            100
 // #define FTM_FS                   1000
 // #define FTM_TS                      0.001f
+// #define FTM_STEPS_PER_LOOP         60
+// #define FTM_POINTS_PER_LOOP       100
 // #define FTM_STEPPER_FS          20000
+// #define FTM_STEPPERCMD_BUFF_SIZE 3000
+// #define FTM_STEPS_PER_UNIT_TIME (FTM_STEPPER_FS / FTM_FS)
+// #define FTM_CTS_COMPARE_VAL (FTM_STEPS_PER_UNIT_TIME / 2)
 // #define FTM_MIN_TICKS ((STEPPER_TIMER_RATE) / (FTM_STEPPER_FS))
 // #define FTM_MIN_SHAPE_FREQ         10
-// #define FTM_ZMAX                  100
+// #define FTM_RATIO (FTM_FS / FTM_MIN_SHAPE_FREQ)
+// #define FTM_ZMAX (FTM_RATIO * 2)
 // #define FTM_STEPS_PER_UNIT_TIME    20
 // #define FTM_CTS_COMPARE_VAL        10
 // #define FTM_STEPS_PER_LOOP         60

@@ -32,38 +32,40 @@
 
 Plot plot;
 
+Plot::PlotData Plot::data;
+
 void Plot::draw(const frame_rect_t &frame, const_celsius_float_t max, const_celsius_float_t ref/*=0*/) {
-  plot.graphframe = frame;
-  plot.graphpoints = 0;
-  plot.scale = frame.h / max;
-  plot.x2 = frame.x + frame.w - 1;
-  plot.y2 = frame.y + frame.h - 1;
-  plot.r = LROUND((plot.y2) - ref * plot.scale);
+  data.graphframe = frame;
+  data.graphpoints = 0;
+  data.scale = frame.h / max;
+  data.x2 = frame.x + frame.w - 1;
+  data.y2 = frame.y + frame.h - 1;
+  data.r = LROUND((data.y2) - ref * data.scale);
   DWINUI::Draw_Box(1, Plot_Bg_Color, frame);
   for (uint8_t i = 1; i < 4; i++) if (i * 60 < frame.w) DWIN_Draw_VLine(Line_Color, i * 60 + frame.x, frame.y, frame.h);
   DWINUI::Draw_Box(0, Color_White, DWINUI::ExtendFrame(frame, 1));
-  DWIN_Draw_HLine(Color_Red, frame.x, plot.r, frame.w);
+  DWIN_Draw_HLine(Color_Red, frame.x, data.r, frame.w);
 }
 
 void Plot::update(const_celsius_float_t value) {
-  if (!plot.scale) { return; }
-  const uint16_t y = LROUND((plot.y2) - value * plot.scale);
-  if (plot.graphpoints < plot.graphframe.w) {
-    if (plot.graphpoints < 1) {
-      DWIN_Draw_Point(Color_Yellow, 1, 1, plot.graphframe.x, y);
+  if (!data.scale) { return; }
+  const uint16_t y = LROUND((data.y2) - value * data.scale);
+  if (data.graphpoints < data.graphframe.w) {
+    if (data.graphpoints < 1) {
+      DWIN_Draw_Point(Color_Yellow, 1, 1, data.graphframe.x, y);
     }
     else {
-      DWIN_Draw_Line(Color_Yellow, plot.graphpoints + plot.graphframe.x - 1, plot.yP, plot.graphpoints + plot.graphframe.x, y);
+      DWIN_Draw_Line(Color_Yellow, data.graphpoints + data.graphframe.x - 1, data.yP, data.graphpoints + data.graphframe.x, y);
     }
   }
   else {
-    DWIN_Frame_AreaMove(1, 0, 1, Plot_Bg_Color, plot.graphframe.x, plot.graphframe.y, plot.x2, plot.y2);
-    if ((plot.graphpoints % 60) == 0) DWIN_Draw_VLine(Line_Color, plot.x2 - 1, plot.graphframe.y + 1, plot.graphframe.h - 2);
-    DWIN_Draw_Point(Color_Red, 1, 1, plot.x2 - 1, plot.r);
-    DWIN_Draw_Line(Color_Yellow, plot.x2 - 2, plot.yP, plot.x2 - 1, y);
+    DWIN_Frame_AreaMove(1, 0, 1, Plot_Bg_Color, data.graphframe.x, data.graphframe.y, data.x2, data.y2);
+    if ((data.graphpoints % 60) == 0) DWIN_Draw_VLine(Line_Color, data.x2 - 1, data.graphframe.y + 1, data.graphframe.h - 2);
+    DWIN_Draw_Point(Color_Red, 1, 1, data.x2 - 1, data.r);
+    DWIN_Draw_Line(Color_Yellow, data.x2 - 2, data.yP, data.x2 - 1, y);
   }
-  plot.yP = y;
-  plot.graphpoints++;
+  data.yP = y;
+  data.graphpoints++;
   TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
 }
 

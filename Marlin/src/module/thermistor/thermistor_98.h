@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2023 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -24,6 +24,7 @@
 // R25 = 100 kOhm, beta25 = 4092 K, 4.7 kOhm pull-up, bed thermistor
 constexpr temp_entry_t temptable_98[] PROGMEM = {
 
+// Changes made by ClassicRocker883
 // Extended table from SteinhartHart curvefit
   { OV( 13.55), 340 },
   { OV( 14.29), 335 },

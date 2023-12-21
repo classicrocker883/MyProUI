@@ -191,21 +191,30 @@ uint32_t GetHash(char * str);
     void SaveMesh();
   #endif
 #endif
-void dwinDrawPlot(tempcontrol_t result);
+#if ALL(PROUI_PID_TUNE, PLOT_TUNE_ITEM)
+  void dwinDrawPlot(tempcontrol_t result);
+#endif
+#if ENABLED(ENC_MENU_ITEM)
+  void SetEncRateA();
+  void SetEncRateB();
+#endif
+#if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
+  void SetHSMode();
+#endif
+#if PROUI_EX
+  void SetMeshPoints();
+  void SetMeshInset();
+  void MaxMeshArea();
+  void CenterMeshArea();
+#endif
+#if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
+  void SetMeshFadeHeight();
+#endif
 void AutoLev();
 void RebootPrinter();
 void DisableMotors();
-void AutoLevStart();
 void AutoHome();
 void AutoLevStart();
-void SetMeshPoints();
-void SetMeshInset();
-void MaxMeshArea();
-void CenterMeshArea();
-void SetMeshFadeHeight();
-void SetEncRateA();
-void SetEncRateB();
-void SetHSMode();
 void PopUp_StartAutoLev();
 void onClick_StartAutoLev();
 void SetRetractSpeed();

@@ -57,8 +57,8 @@ extern MenuData_t MenuData;
 class CustomMenuItemClass;
 class MenuItemClass;
 
-typedef void (*OnDrawCustomItem)(CustomMenuItemClass*  menuitem, int8_t line);
-typedef void (*OnDrawItem)(MenuItemClass*  menuitem, int8_t line);
+typedef void (*OnDrawCustomItem)(CustomMenuItemClass* menuitem, int8_t line);
+typedef void (*OnDrawItem)(MenuItemClass* menuitem, int8_t line);
 typedef void (*OnClickItem)();
 
 class CustomMenuItemClass {
