@@ -985,7 +985,7 @@
 // #undef MKS_WIFI_MODULE
 // #undef TFT_ROTATION
 // #undef DWIN_LCD_PROUI
-// #undef HAS_DACAI
+// #undef DACAI_DISPLAY
 // #undef TJC_DISPLAY
 // #undef PROUI_EX
 // #undef HAS_TOOLBAR

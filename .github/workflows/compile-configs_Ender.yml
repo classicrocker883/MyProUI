@@ -310,7 +310,7 @@ jobs:
   #      if [ "$PR" = AQUILA ]; then PTYPE="\/\/"; else PTYPE=; fi;
   #      if ($PR); then PTYPE=; else PTYPE='\/\/'; fi;
   #      #define ALT_COLOR_MENU 2
-  #      #define HAS_DACAI 1
+  #      #define DACAI_DISPLAY
   #      #define DWIN_LCD_PROUI
   #      #define REVERSE_ENCODER_DIRECTION
   #      #define TITLE_CENTERED

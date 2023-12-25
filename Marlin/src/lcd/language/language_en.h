@@ -987,8 +987,8 @@ namespace LanguageNarrow_en {
   LSTR MSG_SCREW_INSET                    = _UxGT("Bed Screw Inset");
   LSTR MSG_SPEED_IND                      = _UxGT("Speed Indicator");
   LSTR MSG_ZERO_MESH                      = _UxGT("Zero Current Mesh");
-  LSTR MSG_HOTEND_GRAPH                   = _UxGT("Hotend Temp Graph");
-  LSTR MSG_BED_GRAPH                      = _UxGT("Bed Temp Graph");
+  LSTR MSG_HOTEND_TEMP_GRAPH              = _UxGT("Hotend Temp Graph");
+  LSTR MSG_BED_TEMP_GRAPH                 = _UxGT("Bed Temp Graph");
   LSTR MSG_EXIT_MENU                      = _UxGT("Exit to Main Menu");
   LSTR MSG_TRAMWIZ_CALC                   = _UxGT("Calculate Average");
   LSTR MSG_TRAMWIZ_LOWER                  = _UxGT("Lower");

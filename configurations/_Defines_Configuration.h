@@ -985,7 +985,7 @@
 // #define MKS_WIFI_MODULE
 // #define TFT_ROTATION TFT_NO_ROTATION
 // #define DWIN_LCD_PROUI
-// #define HAS_DACAI 1
+// #define DACAI_DISPLAY
 // #define TJC_DISPLAY
 // #define PROUI_EX 1
 // #define HAS_TOOLBAR 1

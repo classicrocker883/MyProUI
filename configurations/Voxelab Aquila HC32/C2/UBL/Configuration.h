@@ -3433,7 +3433,7 @@
 // DWIN / DACAI LCD 4.3" 480x272
 
 #define DWIN_LCD_PROUI          // Pro UI by MRiscoC
-//#define HAS_DACAI 1
+//#define DACAI_DISPLAY
 //#define TJC_DISPLAY
 
 #if ENABLED(DWIN_LCD_PROUI)

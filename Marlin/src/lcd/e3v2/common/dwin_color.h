@@ -27,6 +27,7 @@
 #define GetGColor(color) ((color >>  5) & 0x3F)
 #define GetBColor(color) ((color >>  0) & 0x1F)
 
+// RGB565 colors: https://rgbcolorpicker.com/565
 #define Color_Voxelab_Red   0xA804 //0xF00F
 #define Color_Cyan          0x07FF
 #define Color_White         0xFFFF
@@ -45,4 +46,3 @@
 #define Percent_Color       Color_White // Percentage color 0xFE29
 #define BarFill_Color       0x10E4 // Fill color of progress bar
 #define Select_Color        0x8430 // Selected color 0x33BB
-

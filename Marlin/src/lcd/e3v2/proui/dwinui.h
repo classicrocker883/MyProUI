@@ -30,16 +30,16 @@
 #define ICON_AdvSet            ICON_Language
 #define ICON_BedSize           ICON_PrintSize
 #define ICON_Binary            ICON_Contact
-#define ICON_BltouchReset      ICON_ResumeEEPROM
+#define ICON_BLtouchReset      ICON_ResetEEPROM
 #define ICON_Cancel            ICON_StockConfiguration
 #define ICON_CustomPreheat     ICON_BedTemp
 #define ICON_Error             ICON_TempTooHigh
 #define ICON_ESDiag            ICON_Info
 #define ICON_ExtrudeMinT       ICON_HotendTemp
 #define ICON_FilLoad           ICON_WriteEEPROM
-#define ICON_FilMan            ICON_ResumeEEPROM
+#define ICON_FilMan            ICON_ResetEEPROM
 #define ICON_FilRunOut         ICON_MaxAccE
-#define ICON_FilSet            ICON_ResumeEEPROM
+#define ICON_FilSet            ICON_ResetEEPROM
 #define ICON_FilUnload         ICON_ReadEEPROM
 #define ICON_Flow              ICON_StepE
 #define ICON_Folder            ICON_More
@@ -82,7 +82,7 @@
 #define ICON_PhySet            ICON_PrintSize
 #define ICON_PIDNozzle         ICON_HotendTemp
 #define ICON_PIDBed            ICON_BedTemp
-#define ICON_PIDCycles         ICON_ResumeEEPROM
+#define ICON_PIDCycles         ICON_ResetEEPROM
 #define ICON_PIDValue          ICON_Contact
 #define ICON_PrintStats        ICON_PrintTime
 #define ICON_Preheat1          ICON_PLAPreheat
@@ -107,7 +107,7 @@
 #define ICON_ProbeTest         ICON_Zoffset
 #define ICON_ProbeZSpeed       ICON_MaxSpeedZ
 #define ICON_Pwrlossr          ICON_Motion
-#define ICON_Reboot            ICON_ResumeEEPROM
+#define ICON_Reboot            ICON_ResetEEPROM
 #define ICON_Runout            ICON_MaxAccE
 #define ICON_Scolor            ICON_MaxSpeed
 #define ICON_SetBaudRate       ICON_Setspeed
@@ -133,7 +133,7 @@
 #define ICON_TMCESet           ICON_Extruder
 #define ICON_Tram              ICON_Step
 #define ICON_UBLActive         ICON_Fade
-#define ICON_UBLSlot           ICON_ResumeEEPROM
+#define ICON_UBLSlot           ICON_ResetEEPROM
 #define ICON_UBLSaveMesh       ICON_WriteEEPROM
 #define ICON_UBLLoadMesh       ICON_ReadEEPROM
 #define ICON_UBLSmartFill      ICON_StockConfiguration
@@ -185,9 +185,9 @@
 #define Color_Grey            0x18E3
 
 // UI element defines and constants
-#define DWIN_FONT_MENU font8x16
-#define DWIN_FONT_STAT font10x20
-#define DWIN_FONT_HEAD font10x20
+#define DWIN_FONT_MENU  font8x16
+#define DWIN_FONT_STAT  font10x20
+#define DWIN_FONT_HEAD  font10x20
 #define DWIN_FONT_ALERT font10x20
 #define STATUS_Y 354
 #define LCD_WIDTH (DWIN_WIDTH / 8)  // only if the default fontid is font8x16

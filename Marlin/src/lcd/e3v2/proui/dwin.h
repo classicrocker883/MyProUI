@@ -51,21 +51,20 @@ enum processID : uint8_t {
   MainMenu,
   Menu,
   SetInt,
-  SetPInt,
-  SetIntNoDraw,
   SetFloat,
+  SetPInt,
   SetPFloat,
+  SetIntNoDraw,
   PrintProcess,
   Popup,
   Leveling,
   Locked,
-  Reboot,
   PrintDone,
   ESDiagProcess,
+  PlotProcess,
   WaitResponse,
   Homing,
   PidProcess,
-  PlotProcess,
   MPCProcess,
   NothingToDo
 };
@@ -87,9 +86,6 @@ enum processID : uint8_t {
     AUTOTUNE_DONE
   };
 #endif
-
-#define DWIN_CHINESE 123
-#define DWIN_ENGLISH 0
 
 typedef struct {
   uint16_t Background_Color;
