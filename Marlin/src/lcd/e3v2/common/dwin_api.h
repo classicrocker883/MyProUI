@@ -107,19 +107,6 @@ void DWIN_UpdateLCD();
 //  color: Clear screen color
 void DWIN_Frame_Clear(const uint16_t color);
 
-// Draw a point
-//  color: point color
-//  width: point width   0x01-0x0F
-//  height: point height 0x01-0x0F
-//  x,y: upper left point
-#if ENABLED(TJC_DISPLAY)
-  inline void DWIN_Draw_Point(uint16_t color, uint8_t width, uint8_t height, uint16_t x, uint16_t y) {
-    DWIN_Draw_Box(1, color, x, y, 1, 1);
-  }
-#else
-  void DWIN_Draw_Point(uint16_t color, uint8_t width, uint8_t height, uint16_t x, uint16_t y);
-#endif
-
 // Draw a line
 //  color: Line segment color
 //  xStart/yStart: Start point
@@ -157,6 +144,19 @@ void DWIN_Draw_Rectangle(uint8_t mode, uint16_t color, uint16_t xStart, uint16_t
 inline void DWIN_Draw_Box(uint8_t mode, uint16_t color, uint16_t xStart, uint16_t yStart, uint16_t xSize, uint16_t ySize) {
   DWIN_Draw_Rectangle(mode, color, xStart, yStart, xStart + xSize - 1, yStart + ySize - 1);
 }
+
+// Draw a point
+//  color: point color
+//  width: point width   0x01-0x0F
+//  height: point height 0x01-0x0F
+//  x,y: upper left point
+#if ENABLED(TJC_DISPLAY)
+  inline void DWIN_Draw_Point(uint16_t color, uint8_t width, uint8_t height, uint16_t x, uint16_t y) {
+    DWIN_Draw_Box(1, color, x, y, 1, 1);
+  }
+#else
+  void DWIN_Draw_Point(uint16_t color, uint8_t width, uint8_t height, uint16_t x, uint16_t y);
+#endif
 
 // Move a screen area
 //  mode: 0, circle shift; 1, translation
@@ -201,12 +201,6 @@ inline void DWIN_Draw_String(bool bShow, uint8_t size, uint16_t color, uint16_t 
 // Draw JPG and cached in #0 virtual display area
 //  id: Picture ID
 void DWIN_JPG_ShowAndCache(const uint8_t id);
-
-// Draw an Icon
-//  libID: Icon library ID
-//  picID: Icon ID
-//  x/y: Upper-left point
-void DWIN_ICON_Show(uint8_t libID, uint8_t picID, uint16_t x, uint16_t y);
 
 // Draw an Icon
 //  IBD: The icon background display: 0=Background filtering is not displayed, 1=Background display \\When setting the background filtering not to display, the background must be pure black
