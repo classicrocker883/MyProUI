@@ -251,8 +251,8 @@ bool BedLevelToolsClass::meshValidate() {
     if (rmin > 3e+10f) { rmin = 0.0000001f; }
     ui.set_status(
       &MString<47>(
-        F("Green "), p_float_t(-rmax, 3),
-        F("..0.."),  p_float_t(rmin, 3),
+        F("Green "), p_float_t(-rmin, 3),
+        F("..0.."),  p_float_t(rmax, 3),
         F("+ Red")
       )
     );

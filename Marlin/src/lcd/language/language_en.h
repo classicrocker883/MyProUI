@@ -986,7 +986,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_250K_BAUD                      = _UxGT("250K baud");
   LSTR MSG_SCREW_INSET                    = _UxGT("Bed Screw Inset");
   LSTR MSG_SPEED_IND                      = _UxGT("Speed Indicator");
-  LSTR MSG_ZERO_MESH                      = _UxGT("Zero Current Mesh");
+  LSTR MSG_ZERO_MESH                      = _UxGT("Zero Current Point");
   LSTR MSG_HOTEND_TEMP_GRAPH              = _UxGT("Hotend Temp Graph");
   LSTR MSG_BED_TEMP_GRAPH                 = _UxGT("Bed Temp Graph");
   LSTR MSG_EXIT_MENU                      = _UxGT("Exit to Main Menu");
