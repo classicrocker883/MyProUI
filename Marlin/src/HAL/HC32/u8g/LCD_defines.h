@@ -21,6 +21,9 @@
  */
 #pragma once
 
-#if ALL(HAS_MARLINUI_U8GLIB, FORCE_SOFT_SPI)
-  #define U8G_SW_SPI_HC32 1
-#endif
+/**
+ * HC32 LCD-specific defines
+ */
+
+uint8_t u8g_com_HAL_HC32_sw_spi_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, void *arg_ptr);
+#define U8G_COM_HAL_SW_SPI_FN     u8g_com_HAL_HC32_sw_spi_fn
