@@ -184,6 +184,7 @@ uint32_t GetHash(char * str);
   void ReadEeprom();
   void ResetEeprom();
   #if HAS_MESH
+    void ManualMeshSave();
     void SaveMesh();
   #endif
 #endif

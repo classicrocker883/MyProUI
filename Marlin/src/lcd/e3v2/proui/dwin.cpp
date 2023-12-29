@@ -4156,7 +4156,7 @@ void Draw_GetColor_Menu() {
     void ApplyEditMeshX() { bedLevelTools.mesh_x = MenuData.Value; if (AutoMovToMesh) { bedLevelTools.MoveToXY(); } }
     void ApplyEditMeshY() { bedLevelTools.mesh_y = MenuData.Value; if (AutoMovToMesh) { bedLevelTools.MoveToXY(); } }
     void ZeroMesh() { manualResetValue(); EditZValueItem->redraw(); LCD_MESSAGE(MSG_ZERO_MESH); }
-    void MeshReset() { bedLevelTools.mesh_reset(); LCD_MESSAGE(MSG_MESH_RESET); }
+    void ZeroPoint() { bedLevelTools.mesh_reset(); LCD_MESSAGE(MSG_MESH_RESET); }
     void SetEditMeshX() { HMI_value.Select = 0; SetIntOnClick(0, GRID_MAX_POINTS_X - 1, bedLevelTools.mesh_x, ApplyEditMeshX, LiveEditMesh); }
     void SetEditMeshY() { HMI_value.Select = 1; SetIntOnClick(0, GRID_MAX_POINTS_Y - 1, bedLevelTools.mesh_y, ApplyEditMeshY, LiveEditMesh); }
     void SetEditZValue() { SetPFloatOnClick(Z_OFFSET_MIN, Z_OFFSET_MAX, 3, nullptr, LiveEditMeshZ); if (AutoMovToMesh) { bedLevelTools.MoveToXYZ(); } }
@@ -4169,7 +4169,7 @@ void Draw_GetColor_Menu() {
   void OnClick_ResetMesh() {
     if (HMI_flag.select_flag) {
       HMI_ReturnScreen();
-      MeshReset();
+      ZeroPoint();
       DONE_BUZZ(true);
     }
     else { HMI_ReturnScreen(); }
