@@ -17,6 +17,7 @@ PA_6_ALT1  = PA_6  | ALT1,
 PA_7_ALT1  = PA_7  | ALT1,
 PA_7_ALT2  = PA_7  | ALT2,
 PA_7_ALT3  = PA_7  | ALT3,
+PA_8_ALT1  = PA_8  | ALT1,
 PA_9_ALT1  = PA_9  | ALT1,
 PA_10_ALT1 = PA_10 | ALT1,
 PA_11_ALT1 = PA_11 | ALT1,
@@ -61,22 +62,22 @@ PC_11_ALT1 = PC_11 | ALT1,
 
 /* SYS_WKUP */
 #ifdef PWR_WAKEUP_PIN1
-  SYS_WKUP1 = PA_0, /* SYS_WKUP0 */
+  SYS_WKUP1 = PA_0,
 #endif
 #ifdef PWR_WAKEUP_PIN2
-  SYS_WKUP2 = PA_2, /* SYS_WKUP1 */
+  SYS_WKUP2 = PA_2,
 #endif
 #ifdef PWR_WAKEUP_PIN3
-  SYS_WKUP3 = PC_13, /* SYS_WKUP2 */
+  SYS_WKUP3 = NC,
 #endif
 #ifdef PWR_WAKEUP_PIN4
-  SYS_WKUP4 = NC,
+  SYS_WKUP4 = PC_13,
 #endif
 #ifdef PWR_WAKEUP_PIN5
   SYS_WKUP5 = NC,
 #endif
 #ifdef PWR_WAKEUP_PIN6
-  SYS_WKUP6 = PC_1, /* SYS_WKUP5 */
+  SYS_WKUP6 = PC_1,
 #endif
 #ifdef PWR_WAKEUP_PIN7
   SYS_WKUP7 = NC,
@@ -87,15 +88,10 @@ PC_11_ALT1 = PC_11 | ALT1,
 
 /* USB */
 #ifdef USBCON
-  USB_OTG_FS_DM       = PA_11,
-  USB_OTG_FS_DP       = PA_12,
-  USB_OTG_FS_ID       = PA_10,
-  USB_OTG_FS_SOF      = PA_8,
-  USB_OTG_FS_VBUS     = PA_9,
-  USB_OTG_HS_DM       = PB_14,
-  USB_OTG_HS_DP       = PB_15,
-  USB_OTG_HS_ID       = PB_12,
-  USB_OTG_HS_SOF      = PA_4,
+  USB_OTG_HS_DM       = PA_11,
+  USB_OTG_HS_DP       = PA_12,
+  USB_OTG_HS_ID       = PA_10,
+  USB_OTG_HS_SOF      = PA_8,
   USB_OTG_HS_ULPI_CK  = PA_5,
   USB_OTG_HS_ULPI_D0  = PA_3,
   USB_OTG_HS_ULPI_D1  = PB_0,
@@ -108,5 +104,5 @@ PC_11_ALT1 = PC_11 | ALT1,
   USB_OTG_HS_ULPI_DIR = PC_2_C,
   USB_OTG_HS_ULPI_NXT = PC_3_C,
   USB_OTG_HS_ULPI_STP = PC_0,
-  USB_OTG_HS_VBUS     = PB_13,
+  USB_OTG_HS_VBUS     = PA_9,
 #endif
