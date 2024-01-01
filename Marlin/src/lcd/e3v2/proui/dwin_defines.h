@@ -73,6 +73,7 @@
 #define DEF_HOTENDPIDT PREHEAT_1_TEMP_HOTEND
 #define DEF_BEDPIDT PREHEAT_1_TEMP_BED
 #define DEF_PIDCYCLES 5
+#define EXT active_extruder
 
 //=============================================================================
 // Only for Professional Firmware UI extensions

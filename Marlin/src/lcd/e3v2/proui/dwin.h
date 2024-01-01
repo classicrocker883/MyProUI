@@ -124,6 +124,7 @@ typedef struct {
   bool AdaptiveStepSmoothing;
   bool EnablePreview;
 } HMI_data_t;
+
 extern HMI_data_t HMI_data;
 
 static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) + TERN0(PROUI_EX, sizeof(PRO_data_t));
@@ -149,6 +150,7 @@ typedef struct {
   uint8_t Select = 0;                 // Auxiliary selector variable
   AxisEnum axis = X_AXIS;             // Axis Select
 } HMI_value_t;
+
 extern HMI_value_t HMI_value;
 
 typedef struct {
@@ -162,6 +164,7 @@ typedef struct {
     bool cancel_abl:1;  // cancel current abl
   #endif
 } HMI_flag_t;
+
 extern HMI_flag_t HMI_flag;
 extern uint8_t checkkey;
 

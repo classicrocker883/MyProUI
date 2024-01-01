@@ -37,6 +37,7 @@ typedef struct {
   FSTR_P caption = nullptr;
   void (*onClick)() = nullptr;
 } TBItem_t;
+
 extern const TBItem_t *TBItem;
 extern const TBItem_t TBItemA[];
 
@@ -47,6 +48,7 @@ public:
   void (*onExit)() = nullptr;
   uint8_t OptCount();
 };
+
 extern ToolBarClass ToolBar;
 
 void onDrawTBItem(MenuItemClass* menuitem, int8_t line);

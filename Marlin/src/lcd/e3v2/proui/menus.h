@@ -38,6 +38,7 @@ typedef struct {
   void (*Apply)()      = nullptr;  // Auxiliar apply function
   void (*LiveUpdate)() = nullptr;  // Auxiliar live update function
 } MenuData_t;
+
 extern MenuData_t MenuData;
 
 // Auxiliary Macros ===========================================================
@@ -107,6 +108,7 @@ public:
   CustomMenuItemClass* SelectedItem();
   static CustomMenuItemClass** Items();
 };
+
 extern MenuClass *CurrentMenu;
 extern MenuClass *PreviousMenu;
 

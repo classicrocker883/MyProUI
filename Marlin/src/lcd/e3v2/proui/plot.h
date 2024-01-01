@@ -35,4 +35,5 @@ private:
     float scale = 0;
   } data;
 };
+
 extern Plot plot;

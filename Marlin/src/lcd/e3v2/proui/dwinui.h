@@ -242,6 +242,7 @@ public:
   void ShowCaption(const char * const title);
   inline void ShowCaption(FSTR_P title) { ShowCaption((char *)title); }
 };
+
 extern TitleClass Title;
 
 namespace DWINUI {

@@ -824,8 +824,8 @@ void update_variable() {
   #endif
   #if HAS_FAN
     static uint8_t _fanspeed = 0;
-    const bool _new_fanspeed = _fanspeed != thermalManager.fan_speed[0];
-    if (_new_fanspeed) { _fanspeed = thermalManager.fan_speed[0]; }
+    const bool _new_fanspeed = _fanspeed != thermalManager.fan_speed[EXT];
+    if (_new_fanspeed) { _fanspeed = thermalManager.fan_speed[EXT]; }
   #endif
 
   if (IsMenu(TuneMenu) || IsMenu(TemperatureMenu)) {
@@ -843,9 +843,9 @@ void update_variable() {
     if (_new_hotend_target)
       { DWINUI::Draw_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 25 + 4 * STAT_CHR_W + 6, 384, _hotendtarget); }
 
-    static int16_t _flow = planner.flow_percentage[active_extruder];
-    if (_flow != planner.flow_percentage[active_extruder]) {
-      _flow = planner.flow_percentage[active_extruder];
+    static int16_t _flow = planner.flow_percentage[EXT];
+    if (_flow != planner.flow_percentage[EXT]) {
+      _flow = planner.flow_percentage[EXT];
       DWINUI::Draw_Signed_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 116 + 2 * STAT_CHR_W, 417, _flow);
     }
   #endif
@@ -1077,7 +1077,7 @@ void DWIN_Draw_Dashboard() {
     DWIN_Draw_DegreeSymbol(HMI_data.Indicator_Color, 25 + 4 * STAT_CHR_W + 39, 384);
 
     DWINUI::Draw_Icon(ICON_StepE, 113, 416);
-    DWINUI::Draw_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 116 + 2 * STAT_CHR_W, 417, planner.flow_percentage[active_extruder]);
+    DWINUI::Draw_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 116 + 2 * STAT_CHR_W, 417, planner.flow_percentage[EXT]);
     DWINUI::Draw_String(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 116 + 5 * STAT_CHR_W + 2, 417, F("%"));
   #endif
 
@@ -1099,7 +1099,7 @@ void DWIN_Draw_Dashboard() {
 
   #if HAS_FAN
     DWINUI::Draw_Icon(ICON_FanSpeed, 187, 383);
-    DWINUI::Draw_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 195 + 2 * STAT_CHR_W, 384, thermalManager.fan_speed[0]);
+    DWINUI::Draw_Int(DWIN_FONT_STAT, HMI_data.Indicator_Color, HMI_data.Background_Color, 3, 195 + 2 * STAT_CHR_W, 384, thermalManager.fan_speed[EXT]);
   #endif
 
   #if HAS_ZOFFSET_ITEM
@@ -2075,7 +2075,7 @@ void DWIN_CopySettingsFrom(const char * const buff) {
   DEBUG_ECHOLNPGM("DWIN_CopySettingsFrom");
   memcpy(&HMI_data, buff, sizeof(HMI_data_t));
   #if PROUI_EX
-    memcpy(&PRO_data, buff + sizeof(HMI_data_t), sizeof(PRO_data));
+    memcpy(&PRO_data, buff + sizeof(HMI_data_t), sizeof(PRO_data_t));
     ProEx.LoadSettings();
   #endif
   DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
@@ -2182,7 +2182,7 @@ void DWIN_RedrawScreen() {
     DWIN_Show_Popup(ICON_Pause_1, GET_TEXT_F(MSG_ADVANCED_PAUSE), fmsg, button);
   }
 
-  void MarlinUI::pause_show_message(const PauseMessage message, const PauseMode mode/*=PAUSE_MODE_SAME*/, const uint8_t extruder/*=active_extruder*/) {
+  void MarlinUI::pause_show_message(const PauseMessage message, const PauseMode mode/*=PAUSE_MODE_SAME*/, const uint8_t extruder/*=EXT*/) {
     pause_mode = mode;
     switch (message) {
       case PAUSE_MESSAGE_PARKING:  DWIN_Popup_Pause(GET_TEXT_F(MSG_PAUSE_PRINT_PARKING));    break;                // M125
@@ -2647,7 +2647,7 @@ void SetSpeed() { SetPIntOnClick(SPEED_EDIT_MIN, SPEED_EDIT_MAX); }
 
 #if HAS_FAN
   void ApplyFanSpeed() { thermalManager.set_fan_speed(0, MenuData.Value); TERN_(LASER_SYNCHRONOUS_M106_M107, planner.buffer_sync_block(BLOCK_BIT_SYNC_FANS));}
-  void SetFanSpeed() { SetIntOnClick(0, 255, thermalManager.fan_speed[0], ApplyFanSpeed); }
+  void SetFanSpeed() { SetIntOnClick(0, 255, thermalManager.fan_speed[EXT], ApplyFanSpeed); }
 #endif
 
 #if ENABLED(NOZZLE_PARK_FEATURE)
@@ -2693,7 +2693,7 @@ void SetSpeed() { SetPIntOnClick(SPEED_EDIT_MIN, SPEED_EDIT_MAX); }
 
 #endif // ADVANCED_PAUSE_FEATURE
 
-void SetFlow() { SetPIntOnClick(FLOW_EDIT_MIN, FLOW_EDIT_MAX, []{ planner.refresh_e_factor(active_extruder); }); }
+void SetFlow() { SetPIntOnClick(FLOW_EDIT_MIN, FLOW_EDIT_MAX, []{ planner.refresh_e_factor(EXT); }); }
 
 #if ENABLED(SHOW_SPEED_IND)
   void SetSpdInd() { Toggle_Chkb_Line(HMI_data.SpdInd); }
@@ -3304,8 +3304,8 @@ void Draw_FilSet_Menu() {
       #endif
     #endif
     #if ENABLED(ADVANCED_PAUSE_FEATURE)
-      EDIT_ITEM(ICON_FilLoad, MSG_FILAMENT_LOAD, onDrawPFloatMenu, SetFilLoad, &fc_settings[0].load_length);
-      EDIT_ITEM(ICON_FilUnload, MSG_FILAMENT_UNLOAD, onDrawPFloatMenu, SetFilUnload, &fc_settings[0].unload_length);
+      EDIT_ITEM(ICON_FilLoad, MSG_FILAMENT_LOAD, onDrawPFloatMenu, SetFilLoad, &fc_settings[EXT].load_length);
+      EDIT_ITEM(ICON_FilUnload, MSG_FILAMENT_UNLOAD, onDrawPFloatMenu, SetFilUnload, &fc_settings[EXT].unload_length);
     #endif
     #if HAS_FILAMENT_RUNOUT_DISTANCE
       EDIT_ITEM(ICON_Runout, MSG_RUNOUT_DISTANCE_MM, onDrawPFloatMenu, SetRunoutDistance, &runout.runout_distance());
@@ -3410,15 +3410,15 @@ void Draw_Tune_Menu() {
       MENU_ITEM(ICON_Box, MSG_BRIGHTNESS_OFF, onDrawMenuItem, TurnOffBacklight);
     #endif
     EDIT_ITEM(ICON_Speed, MSG_SPEED, onDrawPIntMenu, SetSpeed, &feedrate_percentage);
-    EDIT_ITEM(ICON_Flow, MSG_FLOW, onDrawPIntMenu, SetFlow, &planner.flow_percentage[active_extruder]);
+    EDIT_ITEM(ICON_Flow, MSG_FLOW, onDrawPIntMenu, SetFlow, &planner.flow_percentage[EXT]);
     #if HAS_HOTEND
-      HotendTargetItem = EDIT_ITEM(ICON_HotendTemp, MSG_UBL_SET_TEMP_HOTEND, onDrawPIntMenu, SetHotendTemp, &thermalManager.temp_hotend[0].target);
+      HotendTargetItem = EDIT_ITEM(ICON_HotendTemp, MSG_UBL_SET_TEMP_HOTEND, onDrawPIntMenu, SetHotendTemp, &thermalManager.temp_hotend[EXT].target);
     #endif
     #if HAS_HEATED_BED
       BedTargetItem = EDIT_ITEM(ICON_BedTemp, MSG_UBL_SET_TEMP_BED, onDrawPIntMenu, SetBedTemp, &thermalManager.temp_bed.target);
     #endif
     #if HAS_FAN
-      FanSpeedItem = EDIT_ITEM(ICON_FanSpeed, MSG_FAN_SPEED, onDrawPInt8Menu, SetFanSpeed, &thermalManager.fan_speed[0]);
+      FanSpeedItem = EDIT_ITEM(ICON_FanSpeed, MSG_FAN_SPEED, onDrawPInt8Menu, SetFanSpeed, &thermalManager.fan_speed[EXT]);
     #endif
     #if HAS_ZOFFSET_ITEM && ANY(BABYSTEP_ZPROBE_OFFSET, JUST_BABYSTEP)
     EDIT_ITEM(ICON_Zoffset, MSG_ZPROBE_ZOFFSET, onDrawPFloat2Menu, SetZOffset, &BABY_Z_VAR);
@@ -3449,7 +3449,7 @@ void Draw_Tune_Menu() {
       EDIT_ITEM(ICON_JDmm, MSG_JUNCTION_DEVIATION, onDrawPFloat3Menu, SetJDmm, &planner.junction_deviation_mm);
     #endif
     #if ALL(ADVK_TUNE_ITEM, LIN_ADVANCE)
-      EDIT_ITEM(ICON_MaxAccelerated, MSG_ADVANCE_K, onDrawPFloat3Menu, SetLA_K, &planner.extruder_advance_K[0]);
+      EDIT_ITEM(ICON_MaxAccelerated, MSG_ADVANCE_K, onDrawPFloat3Menu, SetLA_K, &planner.extruder_advance_K[EXT]);
     #endif
     #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
       EDIT_ITEM(ICON_RemainTime, MSG_SCREEN_TIMEOUT, onDrawPInt8Menu, SetTimer, &ui.backlight_timeout_minutes);
@@ -3570,7 +3570,7 @@ void Draw_Motion_Menu() {
       MENU_ITEM(ICON_InputShaping, MSG_INPUT_SHAPING, onDrawSubMenu, Draw_InputShaping_Menu);
     #endif
     #if ENABLED(LIN_ADVANCE)
-      EDIT_ITEM(ICON_MaxAccelerated, MSG_ADVANCE_K, onDrawPFloat3Menu, SetLA_K, &planner.extruder_advance_K[0]);
+      EDIT_ITEM(ICON_MaxAccelerated, MSG_ADVANCE_K, onDrawPFloat3Menu, SetLA_K, &planner.extruder_advance_K[EXT]);
     #endif
     #if ENABLED(ADAPTIVE_STEP_SMOOTHING)
       EDIT_ITEM(ICON_CloseMotor, MSG_STEP_SMOOTHING, onDrawChkbMenu, SetAdaptiveStepSmoothing, &HMI_data.AdaptiveStepSmoothing);
@@ -3588,7 +3588,7 @@ void Draw_FilamentMan_Menu() {
       MENU_ITEM(ICON_FWRetract, MSG_FWRETRACT, onDrawSubMenu, Draw_FWRetract_Menu);
     #endif
     EDIT_ITEM(ICON_Speed, MSG_SPEED, onDrawPIntMenu, SetSpeed, &feedrate_percentage);
-    EDIT_ITEM(ICON_Flow, MSG_FLOW, onDrawPIntMenu, SetFlow, &planner.flow_percentage[active_extruder]);
+    EDIT_ITEM(ICON_Flow, MSG_FLOW, onDrawPIntMenu, SetFlow, &planner.flow_percentage[EXT]);
     #if ENABLED(ADVANCED_PAUSE_FEATURE)
       MENU_ITEM(ICON_FilMan, MSG_FILAMENTCHANGE, onDrawMenuItem, ChangeFilament);
     #endif
@@ -3636,13 +3636,13 @@ void Draw_Temperature_Menu() {
   if (SET_MENU(TemperatureMenu, MSG_TEMPERATURE, 7 + PREHEAT_COUNT)) {
     BACK_ITEM(Draw_Control_Menu);
     #if HAS_HOTEND
-      HotendTargetItem = EDIT_ITEM(ICON_HotendTemp, MSG_UBL_SET_TEMP_HOTEND, onDrawPIntMenu, SetHotendTemp, &thermalManager.temp_hotend[0].target);
+      HotendTargetItem = EDIT_ITEM(ICON_HotendTemp, MSG_UBL_SET_TEMP_HOTEND, onDrawPIntMenu, SetHotendTemp, &thermalManager.temp_hotend[EXT].target);
     #endif
     #if HAS_HEATED_BED
       BedTargetItem = EDIT_ITEM(ICON_BedTemp, MSG_UBL_SET_TEMP_BED, onDrawPIntMenu, SetBedTemp, &thermalManager.temp_bed.target);
     #endif
     #if HAS_FAN
-      FanSpeedItem = EDIT_ITEM(ICON_FanSpeed, MSG_FAN_SPEED, onDrawPInt8Menu, SetFanSpeed, &thermalManager.fan_speed[0]);
+      FanSpeedItem = EDIT_ITEM(ICON_FanSpeed, MSG_FAN_SPEED, onDrawPInt8Menu, SetFanSpeed, &thermalManager.fan_speed[EXT]);
     #endif
     #if ENABLED(PIDTEMPBED) && ANY(PIDTEMP, MPCTEMP) // w/ Bed + Hotend (PID/MPC)
       MENU_ITEM(ICON_Temperature, MSG_PID_SETTINGS, onDrawSubMenu, Draw_PID_Menu);
@@ -3889,19 +3889,19 @@ void Draw_GetColor_Menu() {
     void SetSensorResponse() { SetPFloatOnClick(0, 1, 4); }
     void SetAmbientXfer() { SetPFloatOnClick(0, 1, 4); }
     #if ENABLED(MPC_INCLUDE_FAN)
-      void onDrawFanAdj(MenuItemClass* menuitem, int8_t line) { onDrawFloatMenu(menuitem, line, 4, thermalManager.temp_hotend[0].fanCoefficient()); }
-      void ApplyFanAdj() { thermalManager.temp_hotend[0].applyFanAdjustment(MenuData.Value / POW(10, 4)); }
-      void SetFanAdj() { SetFloatOnClick(0, 1, 4, thermalManager.temp_hotend[0].fanCoefficient(), ApplyFanAdj); }
+      void onDrawFanAdj(MenuItemClass* menuitem, int8_t line) { onDrawFloatMenu(menuitem, line, 4, thermalManager.temp_hotend[EXT].fanCoefficient()); }
+      void ApplyFanAdj() { thermalManager.temp_hotend[EXT].applyFanAdjustment(MenuData.Value / POW(10, 4)); }
+      void SetFanAdj() { SetFloatOnClick(0, 1, 4, thermalManager.temp_hotend[EXT].fanCoefficient(), ApplyFanAdj); }
     #endif
   #endif
 
   void Draw_HotendMPC_Menu() {
     checkkey = Menu;
     if (SET_MENU(HotendMPCMenu, MSG_MPC_SETTINGS, 7)) {
-      MPC_t &mpc = thermalManager.temp_hotend[0].mpc;
+      MPC_t &mpc = thermalManager.temp_hotend[EXT].mpc;
       BACK_ITEM(Draw_Temperature_Menu);
       #if ENABLED(MPC_AUTOTUNE_MENU)
-        MENU_ITEM(ICON_MPCNozzle, MSG_MPC_AUTOTUNE, onDrawMenuItem, []{ thermalManager.MPC_autotune(active_extruder, Temperature::MPCTuningType::AUTO); });
+        MENU_ITEM(ICON_MPCNozzle, MSG_MPC_AUTOTUNE, onDrawMenuItem, []{ thermalManager.MPC_autotune(EXT, Temperature::MPCTuningType::AUTO); });
       #endif
       #if ENABLED(MPC_EDIT_MENU)
         EDIT_ITEM(ICON_MPCHeater, MSG_MPC_POWER, onDrawPFloatMenu, SetHeaterPower, &mpc.heater_power);
@@ -3969,9 +3969,9 @@ void Draw_GetColor_Menu() {
         EDIT_ITEM(ICON_PIDCycles, MSG_PID_CYCLE, onDrawPIntMenu, SetPidCycles, &HMI_data.PidCycles);
       #endif
       #if ENABLED(PID_EDIT_MENU)
-        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KP, onDrawPFloat2Menu, SetKp, &thermalManager.temp_hotend[0].pid.Kp);
-        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KI, onDrawPIDi, SetKi, &thermalManager.temp_hotend[0].pid.Ki);
-        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KD, onDrawPIDd, SetKd, &thermalManager.temp_hotend[0].pid.Kd);
+        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KP, onDrawPFloat2Menu, SetKp, &thermalManager.temp_hotend[EXT].pid.Kp);
+        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KI, onDrawPIDi, SetKi, &thermalManager.temp_hotend[EXT].pid.Ki);
+        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KD, onDrawPIDd, SetKd, &thermalManager.temp_hotend[EXT].pid.Kd);
       #endif
     }
     UpdateMenu(HotendPIDMenu);

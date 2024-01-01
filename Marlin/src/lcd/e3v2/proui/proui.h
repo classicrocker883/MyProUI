@@ -106,6 +106,7 @@ typedef struct {
     uint8_t TBopt[TBMaxOpt] = DEF_TBOPT;
   #endif
 } PRO_data_t;
+
 extern PRO_data_t PRO_data;
 
 class ProUIClass {
