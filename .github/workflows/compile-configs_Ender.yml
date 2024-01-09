@@ -49,8 +49,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Ender${DTMP}_GD32_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Ender_GD32_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -129,8 +129,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Ender${DTMP}_GD32_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Ender_GD32_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -176,6 +176,7 @@ jobs:
         temp: [true,false]
         inshape: [true,false]
         tjc: [true,false]
+        t13: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -209,8 +210,9 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Ender${DTMP}_GD32_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi
+        echo "filename=${DTMP}Ender${TTMP}_GD32_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -227,6 +229,8 @@ jobs:
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        if ($T13); then THMP="13"; else THMP="1"; fi;
+        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 $THMP/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
@@ -234,6 +238,7 @@ jobs:
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
+        T13: ${{ matrix.t13 }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -379,8 +384,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Ender${DTMP}_GD32_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Ender_GD32_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -460,9 +465,9 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Ender${DTMP}_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; else EVTMP="422"; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Ender_${EVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -470,7 +475,7 @@ jobs:
         cp configurations/Creality\ Ender/Default-NP/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Creality\ Ender/Default-NP/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/g" platformio.ini
-        if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
+        if [ "$ENDER_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
         sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/g" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
@@ -485,7 +490,7 @@ jobs:
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
       env:
-        AQUILA_VER: ${{ matrix.chip }}
+        ENDER_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
@@ -545,9 +550,9 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Ender${DTMP}_${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; else EVTMP="422"; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Ender_${EVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -555,7 +560,7 @@ jobs:
         cp configurations/Creality\ Ender/MM/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Creality\ Ender/MM/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/g" platformio.ini
-        if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
+        if [ "$ENDER_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
         sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/g" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
@@ -570,7 +575,7 @@ jobs:
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
       env:
-        AQUILA_VER: ${{ matrix.chip }}
+        ENDER_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
@@ -597,6 +602,7 @@ jobs:
         temp: [true,false]
         inshape: [true,false]
         tjc: [true,false]
+        t13: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -630,9 +636,10 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Ender${DTMP}_${AVTMP}_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; else EVTMP="422"; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi
+        echo "filename=${DTMP}Ender${TTMP}_${EVTMP}_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -640,7 +647,7 @@ jobs:
         cp configurations/Creality\ Ender/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Creality\ Ender/UBL/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/g" platformio.ini
-        if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
+        if [ "$ENDER_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
         sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/g" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
@@ -651,14 +658,17 @@ jobs:
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        if ($T13); then THMP="13"; else THMP="1"; fi;
+        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 $THMP/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
       env:
-        AQUILA_VER: ${{ matrix.chip }}
+        ENDER_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
+        T13: ${{ matrix.t13 }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -715,9 +725,9 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Ender${DTMP}_${AVTMP}_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; else EVTMP="422"; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Ender_${EVTMP}_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -725,7 +735,7 @@ jobs:
         cp configurations/Creality\ Ender/BLT/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Creality\ Ender/BLT/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/g" platformio.ini
-        if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
+        if [ "$ENDER_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
         sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/g" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
@@ -740,7 +750,7 @@ jobs:
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
       env:
-        AQUILA_VER: ${{ matrix.chip }}
+        ENDER_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}

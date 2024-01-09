@@ -51,8 +51,8 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Aquila${DTMP}_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Aquila_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -135,8 +135,8 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Aquila${DTMP}_${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Aquila_${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -183,6 +183,8 @@ jobs:
       matrix:
         chip: [GD32,N32]
         tjc: [true,false]
+        pwr: [true,false]
+        t13: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -215,8 +217,10 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Aquila${DTMP}_${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        if ($PWR); then PLTMP=-PWRLOSS; else PLTMP=; fi;
+        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi
+        echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI${PLTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -226,6 +230,11 @@ jobs:
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
         sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
+        if ($PWR); then PLMP='\/\/'; else PLMP=; fi;
+        sed -i "s/[^ ]*#define HAS_CUSTOM_COLORS 1/$PLMP#define HAS_CUSTOM_COLORS 1/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REPORT_CAPABILITIES_GCODE/$PLMP#define REPORT_CAPABILITIES_GCODE/g" Marlin/Configuration.h
+        if ($T13); then THMP="13"; else THMP="1"; fi;
+        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 $THMP/g" Marlin/Configuration.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
         pio run
         mkdir temp
@@ -233,6 +242,8 @@ jobs:
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TJC: ${{ matrix.tjc }}
+        PWR: ${{ matrix.pwr }}
+        T13: ${{ matrix.t13 }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -250,6 +261,9 @@ jobs:
   Build-UBL-ProUI-A-X3:            # UBL Pro for Aquila X3
     name: Build UBL Pro Files A X3
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pwr: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -281,17 +295,23 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        echo "filename=Aquila-X3_N32_UBL-ProUI.bin" >> $GITHUB_OUTPUT
+        if ($PWR); then PLTMP=-PWRLOSS; else PLTMP=; fi;
+        echo "filename=Aquila_X3_N32_UBL-ProUI${PLTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         cp configurations/Voxelab\ Aquila/X3/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/X3/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/X3/Version.h Marlin/Version.h
+        if ($PWR); then PLMP='\/\/'; else PLMP=; fi;
+        sed -i "s/[^ ]*#define HAS_CUSTOM_COLORS 1/$PLMP#define HAS_CUSTOM_COLORS 1/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REPORT_CAPABILITIES_GCODE/$PLMP#define REPORT_CAPABILITIES_GCODE/g" Marlin/Configuration.h
         sed -i "s/default_envs =.*/default_envs = N32G455RE_voxelab_maple/g" platformio.ini
         pio run
         mkdir temp
         mv .pio/build/N32G455RE_voxelab_maple/*.bin temp/build.bin
+      env:
+        PWR: ${{ matrix.pwr }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -366,7 +386,7 @@ jobs:
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if [[ $IS && $TP ]]; then ETEMP='\/\/'; else ETEMP=; fi;
-        sed -i "s/[^ ]*#define EXTENDED_CAPABILITIES_REPORT/$ETEMP#define EXTENDED_CAPABILITIES_REPORT/g" Marlin/Configuration_adv.h
+        sed -i "s/[^ ]*#define REPORT_CAPABILITIES_GCODE/$ETEMP#define REPORT_CAPABILITIES_GCODE/g" Marlin/Configuration_adv.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -430,8 +450,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        if ($TJC); then DTMP=-TJC; else DTMP=; fi;
-        echo "filename=Aquila${DTMP}_${AVTMP}_BLT-ProUI${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Aquila_${AVTMP}_BLT-ProUI${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -555,7 +575,7 @@ jobs:
     strategy:
       matrix:
         chip: [V3_0,V2_0,V3_0_1]
-        #ubl: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -591,7 +611,8 @@ jobs:
         elif [ "$SKR" = V2_0 ]; then AVTMP="V2";
         elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1";
         fi;
-        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Aquila_SKR-Mini-E3-${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -609,13 +630,16 @@ jobs:
         elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC";
         elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC";
         fi;
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
         pio run
         mkdir temp
         mv .pio/build/${STMP}_btt/*.bin temp/build.bin
       env:
         SKR: ${{ matrix.chip }}
-        #UBL: ${{ matrix.ubl }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -636,7 +660,7 @@ jobs:
     strategy:
       matrix:
         chip: [V3_0,V2_0,V3_0_1]
-        #ubl: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -672,7 +696,8 @@ jobs:
         elif [ "$SKR" = V2_0 ]; then AVTMP="V2";
         elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1";
         fi;
-        echo "filename=Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -690,13 +715,16 @@ jobs:
         elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC";
         elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC";
         fi;
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
         pio run
         mkdir temp
         mv .pio/build/${STMP}_btt/*.bin temp/build.bin
       env:
         SKR: ${{ matrix.chip }}
-        #UBL: ${{ matrix.ubl }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -719,6 +747,7 @@ jobs:
         chip: [427,422]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -752,8 +781,9 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        echo "filename=Aquila_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_${AVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -770,6 +800,9 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -777,6 +810,7 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -799,6 +833,7 @@ jobs:
         chip: [427,422]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -832,8 +867,9 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        echo "filename=Aquila_${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -850,6 +886,9 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -857,6 +896,7 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -879,6 +919,8 @@ jobs:
         chip: [427,422]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
+        t13: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -912,8 +954,10 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        echo "filename=Aquila_${AVTMP}_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -930,6 +974,11 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
+        if ($T13); then THMP="13"; else THMP="1"; fi;
+        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 $THMP/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -937,6 +986,8 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
+        T13: ${{ matrix.t13 }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -959,6 +1010,7 @@ jobs:
         chip: [427,422]
         temp: [true,false]
         inshape: [true,false]
+        tjc: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -992,8 +1044,9 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
-        echo "filename=Aquila_${AVTMP}_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_${AVTMP}_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -1010,6 +1063,9 @@ jobs:
         sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
+        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -1017,6 +1073,7 @@ jobs:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2

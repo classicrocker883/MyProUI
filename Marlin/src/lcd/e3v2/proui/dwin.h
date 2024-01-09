@@ -191,8 +191,10 @@ uint32_t GetHash(char * str);
     void SaveMesh();
   #endif
 #endif
-#if ALL(PROUI_PID_TUNE, PLOT_TUNE_ITEM)
+#if ALL(PROUI_PID_TUNE, PROUI_ITEM_PLOT)
   void dwinDrawPlot(tempcontrol_t result);
+  void drawHPlot();
+  void drawBPlot();
 #endif
 #if ENABLED(ENC_MENU_ITEM)
   void SetEncRateA();
@@ -234,7 +236,7 @@ void ApplyExtMinT();
 void ParkHead();
 void RaiseHead();
 TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool stow_probe=true));
-#if HAS_BED_PROBE && ENABLED(TRAMWIZ_MENU_ITEM)
+#if HAS_BED_PROBE && ENABLED(PROUI_ITEM_TRAM)
   void Trammingwizard();
   void TramwizStart();
   void onClick_StartTramwiz();

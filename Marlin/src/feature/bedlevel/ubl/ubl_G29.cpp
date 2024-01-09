@@ -37,10 +37,6 @@
 #include "../../../gcode/gcode.h"
 #include "../../../libs/least_squares_fit.h"
 
-#if HAS_MULTI_HOTEND
-  #include "../../../module/tool_change.h"
-#endif
-
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
 #include "../../../core/debug_out.h"
 
@@ -685,11 +681,11 @@ void unified_bed_leveling::G29() {
     ui.release();
   #endif
 
-  #ifdef Z_PROBE_END_SCRIPT
-    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Z Probe End Script: ", Z_PROBE_END_SCRIPT);
+  #ifdef EVENT_GCODE_AFTER_G29
+    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Z Probe End Script: ", EVENT_GCODE_AFTER_G29);
     if (probe_deployed) {
       planner.synchronize();
-      gcode.process_subcommands_now(F(Z_PROBE_END_SCRIPT));
+      gcode.process_subcommands_now(F(EVENT_GCODE_AFTER_G29));
     }
   #else
     UNUSED(probe_deployed);
@@ -792,7 +788,7 @@ void unified_bed_leveling::shift_mesh_height() {
         #define HUGE_VALF __FLT_MAX__
       #endif
 
-      TERN_(PROUI_EX, if (ProEx.QuitLeveling()) return DWIN_LevelingDone(););
+      TERN_(PROUI_EX, if (ProEx.QuitLeveling()) return ProEx.LevelingDone();)
 
       best = do_furthest // Points with valid data or HUGE_VALF are skipped
         ? find_furthest_invalid_mesh_point()
@@ -1196,13 +1192,13 @@ bool unified_bed_leveling::G29_parse_parameters() {
   }
 
   #if PROUI_EX // Always start from the center of the bed
-    float sx = X_CENTER - TERN0(HAS_BED_PROBE, probe.offset.x);
-    float sy = Y_CENTER - TERN0(HAS_BED_PROBE, probe.offset.y);
+    float sx = TERN(UBL_HILBERT_CURVE, 0, X_CENTER - TERN0(HAS_BED_PROBE, probe.offset.x));
+    float sy = TERN(UBL_HILBERT_CURVE, 0, Y_CENTER - TERN0(HAS_BED_PROBE, probe.offset.y));
   #else
     param.XY_seen.x = parser.seenval('X');
-    float sx = param.XY_seen.x ? parser.value_float() : current_position.x;
+    float sx = param.XY_seen.x ? parser.value_float() : TERN(UBL_HILBERT_CURVE, 0, X_CENTER - TERN0(HAS_BED_PROBE, probe.offset.x));
     param.XY_seen.y = parser.seenval('Y');
-    float sy = param.XY_seen.y ? parser.value_float() : current_position.y;
+    float sy = param.XY_seen.y ? parser.value_float() : TERN(UBL_HILBERT_CURVE, 0, Y_CENTER - TERN0(HAS_BED_PROBE, probe.offset.y));
 
     if (param.XY_seen.x != param.XY_seen.y) {
       SERIAL_ECHOLNPGM("Both X & Y locations must be specified.\n");

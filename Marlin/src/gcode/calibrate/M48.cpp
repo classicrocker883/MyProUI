@@ -58,18 +58,18 @@
 
 void GcodeSuite::M48() {
 
-#if ENABLED(BLTOUCH)
-  // Store the original value of bltouch.high_speed_mode
-  const bool prev_high_speed_mode = bltouch.high_speed_mode;
-  // Set bltouch.high_speed_mode to 0
-  bltouch.high_speed_mode = false;
-#endif
-#if ENABLED(DWIN_LCD_PROUI)
-  DWIN_Popup_Pause(GET_TEXT_F(MSG_M48_TEST));
-  HMI_SaveProcessID(NothingToDo);
-#endif
+  #if ENABLED(BLTOUCH)
+    // Store the original value of bltouch.high_speed_mode
+    const bool prev_high_speed_mode = bltouch.high_speed_mode;
+    // Set bltouch.high_speed_mode to 0
+    bltouch.high_speed_mode = false;
+  #endif
+  #if ENABLED(DWIN_LCD_PROUI)
+    TERN_(ADVANCED_PAUSE_FEATURE, DWIN_Popup_Pause(GET_TEXT_F(MSG_M48_TEST));)
+    HMI_SaveProcessID(NothingToDo);
+  #endif
 
-  if (homing_needed_error()) return;
+  if (homing_needed_error()) TERN(DWIN_LCD_PROUI, return HMI_ReturnScreen(), return);
 
   const int8_t verbose_level = parser.byteval('V', 1);
   if (!WITHIN(verbose_level, 0, 4)) {

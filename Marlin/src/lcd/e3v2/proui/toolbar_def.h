@@ -31,7 +31,7 @@ const TBItem_t TBItemA[] = {
   TB_ITEM(0, MSG_OPTION_DISABLED, nullptr),
   TB_ITEM(ICON_Homing, MSG_AUTO_HOME, AutoHome),
   #if HAS_BED_PROBE
-    #if ENABLED(TRAMWIZ_MENU_ITEM)
+    #if ENABLED(PROUI_ITEM_TRAM)
       TB_ITEM(ICON_Tram, MSG_TRAMMING_WIZARD, Trammingwizard),
     #endif
     TB_ITEM(ICON_SetZOffset, MSG_PROBE_WIZARD, Draw_ZOffsetWiz_Menu),
