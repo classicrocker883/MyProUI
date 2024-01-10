@@ -715,10 +715,6 @@ void CardReader::openFileRead(const char * const path, const uint8_t subcall_typ
         break;
 
     #endif
-
-    #if PROUI_EX
-       case 100: break;  // Reserved for read file header.
-    #endif
   }
 
   abortFilePrintNow();

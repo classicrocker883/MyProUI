@@ -212,13 +212,15 @@ uint32_t GetHash(char * str);
 #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
   void SetMeshFadeHeight();
 #endif
-void AutoLev();
+#if HAS_BED_PROBE
+  void AutoLev();
+  void AutoLevStart();
+  void PopUp_StartAutoLev();
+  void onClick_StartAutoLev();
+#endif
 void RebootPrinter();
 void DisableMotors();
 void AutoHome();
-void AutoLevStart();
-void PopUp_StartAutoLev();
-void onClick_StartAutoLev();
 void SetRetractSpeed();
 #if HAS_PREHEAT
   #define _DOPREHEAT(N) void DoPreheat##N();
@@ -313,8 +315,11 @@ void DWIN_RebootScreen();
   void DWIN_UnLockScreen();
   void HMI_LockScreen();
 #endif
-#if HAS_MESH && USE_GRID_MESHVIEWER
+#if HAS_MESH
   void DWIN_MeshViewer();
+  #if USE_GRID_MESHVIEWER
+    void SetViewMesh();
+  #endif
 #endif
 #if HAS_ESDIAG
   void Draw_EndStopDiag();
