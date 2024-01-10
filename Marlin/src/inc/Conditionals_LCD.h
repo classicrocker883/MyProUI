@@ -263,10 +263,13 @@
 #endif
 #if NUM_AXES >= 1
   #define HAS_X_AXIS 1
+  #define HAS_A_AXIS 1
   #if NUM_AXES >= XY
     #define HAS_Y_AXIS 1
+    #define HAS_B_AXIS 1
     #if NUM_AXES >= XYZ
       #define HAS_Z_AXIS 1
+      #define HAS_C_AXIS 1
       #if NUM_AXES >= 4
         #define HAS_I_AXIS 1
         #if NUM_AXES >= 5
@@ -1083,6 +1086,10 @@
    *  - draw_status_message
    */
   #define HAS_DISPLAY 1
+#endif
+
+#if ANY(HAS_DISPLAY, DWIN_LCD_PROUI)
+  #define HAS_UI_UPDATE 1
 #endif
 
 #if HAS_WIRED_LCD && !HAS_GRAPHICAL_TFT && !IS_DWIN_MARLINUI

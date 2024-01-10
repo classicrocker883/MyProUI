@@ -62,7 +62,7 @@ jobs:
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
@@ -142,7 +142,7 @@ jobs:
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
@@ -224,7 +224,7 @@ jobs:
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
@@ -308,7 +308,7 @@ jobs:
   #       sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
   #       sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
   #       if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-  #       sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+  #       sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
   #       if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
   #       sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
 
@@ -397,7 +397,7 @@ jobs:
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
@@ -481,7 +481,7 @@ jobs:
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
@@ -566,7 +566,7 @@ jobs:
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
@@ -653,7 +653,7 @@ jobs:
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
@@ -741,7 +741,7 @@ jobs:
         sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
         sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;

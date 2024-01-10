@@ -191,7 +191,7 @@ uint32_t GetHash(char * str);
     void SaveMesh();
   #endif
 #endif
-#if ALL(PROUI_PID_TUNE, PROUI_ITEM_PLOT)
+#if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
   void dwinDrawPlot(tempcontrol_t result);
   void drawHPlot();
   void drawBPlot();
@@ -357,7 +357,9 @@ void Draw_MaxAccel_Menu();
 #if ENABLED(CLASSIC_JERK)
   void Draw_MaxJerk_Menu();
 #endif
-void Draw_Steps_Menu();
+#if ENABLED(EDITABLE_STEPS_PER_UNIT)
+  void Draw_Steps_Menu();
+#endif
 #if ANY(HAS_BED_PROBE, BABYSTEPPING)
   void Draw_ZOffsetWiz_Menu();
 #endif
@@ -387,7 +389,7 @@ void Draw_Steps_Menu();
 #endif
 
 // PID
-#if HAS_PID_HEATING //#if PROUI_PID_TUNE
+#if PROUI_PID_TUNE
   #include "../../../module/temperature.h"
   void DWIN_M303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp);
   void DWIN_PidTuning(tempcontrol_t result);

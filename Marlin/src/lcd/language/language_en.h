@@ -512,6 +512,7 @@ namespace LanguageNarrow_en {
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
     LSTR MSG_HOST_START_PRINT             = _UxGT("Host Start Print");
     LSTR MSG_PRINTING_OBJECT              = _UxGT("Printing Object");
+    LSTR MSG_RESUME_BED_TEMP              = _UxGT("Resume Bed Temp");
     LSTR MSG_CANCEL_OBJECT                = _UxGT("Cancel Object");
     LSTR MSG_CANCEL_OBJECT_N              = _UxGT("Cancel Object {");
     LSTR MSG_CONTINUE_PRINT_JOB           = _UxGT("Continue Print");

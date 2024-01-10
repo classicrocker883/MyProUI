@@ -3943,7 +3943,7 @@
   // Include capabilities in M115 output
   #define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
   #if ENABLED(EXTENDED_CAPABILITIES_REPORT)
-    #define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
+    //#define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
   #endif
 #endif
 
