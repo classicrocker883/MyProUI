@@ -509,18 +509,16 @@ void Draw_Print_ProgressBar() {
 
 duration_t _printtime = print_job_timer.duration();
 void Draw_Print_ProgressElapsed() {
-  MString<12> buf;
-  //duration_t elapsed = print_job_timer.duration(); // Print timer
-  buf.setf(F("%02i:%02i "), uint16_t(_printtime.value / 3600), (uint16_t(_printtime.value) % 3600) / 60);
+  MString<14> buf;
+  buf.setf(F("%02i:%02i "), uint16_t(_printtime.hour()), uint16_t(_printtime.minute()));
   DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 47, 192, buf);
 }
 
-static uint32_t _remain_time = 0;
+duration_t _remain_time = 0;
 #if ENABLED(SHOW_REMAINING_TIME)
   void Draw_Print_ProgressRemain() {
-    uint32_t remain_time = _remain_time;
-    MString<12> buf;
-    buf.setf(F("%02i:%02i "), remain_time / 3600, (remain_time % 3600) / 60);
+    MString<14> buf;
+    buf.setf(F("%02i:%02i "), uint16_t(_remain_time.hour()), uint16_t(_remain_time.minute()));
     DWINUI::Draw_String(HMI_data.Text_Color, HMI_data.Background_Color, 181, 192, buf);
   }
 #endif
