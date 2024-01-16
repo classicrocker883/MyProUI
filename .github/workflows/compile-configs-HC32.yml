@@ -56,14 +56,14 @@ jobs:
         cp configurations/Voxelab\ Aquila\ HC32/ConfigurationDNP.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advDNP.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
@@ -133,23 +133,23 @@ jobs:
         cp configurations/Voxelab\ Aquila\ HC32/ConfigurationMM.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advMM.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
         if ($IS); then STEMP=; else STEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$STEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$STEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define USE_GRID_MESHVIEWER/$PTEMP#define USE_GRID_MESHVIEWER/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define HAS_CUSTOM_COLORS/$PTEMP#define HAS_CUSTOM_COLORS/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define HAS_LOCKSCREEN/$PTEMP#define HAS_LOCKSCREEN/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define USE_GRID_MESHVIEWER/${PTEMP}#define USE_GRID_MESHVIEWER/" Marlin/Configuration.h
+        sed -i "s/.*#define HAS_CUSTOM_COLORS/${PTEMP}#define HAS_CUSTOM_COLORS/" Marlin/Configuration.h
+        sed -i "s/.*#define HAS_LOCKSCREEN/${PTEMP}#define HAS_LOCKSCREEN/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($IS); then ITEMP='\/\/'; else ITEMP=; fi;
-        sed -i "s/[^ ]*#define EXTENDED_CAPABILITIES_REPORT/$ITEMP#define EXTENDED_CAPABILITIES_REPORT/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define HAS_LOCKSCREEN/$ITEMP#define HAS_LOCKSCREEN/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define AUTO_REPORT_POSITION/$ITEMP#define AUTO_REPORT_POSITION/g" Marlin/Configuration_adv.h
-        if [[ ($IS) && ($TP) ]]; then ETEMP='\/\/'; else ETEMP=; fi;
-        sed -i "s/[^ ]*#define FILAMENT_RUNOUT_SENSOR/$ETEMP#define FILAMENT_RUNOUT_SENSOR/g" Marlin/Configuration.h
+        sed -i "s/.*#define CAPABILITIES_REPORT/${ITEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define HAS_LOCKSCREEN/${ITEMP}#define HAS_LOCKSCREEN/" Marlin/Configuration.h
+        if [ "$IS" = true ] && [ "$TP" = true ]; then
+        sed -i "s/.*#define FILAMENT_RUNOUT_SENSOR/\/\/#define FILAMENT_RUNOUT_SENSOR/" Marlin/Configuration.h
+        fi;
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
@@ -224,15 +224,16 @@ jobs:
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
         fi;
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/g" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
-        if [[ ($PRO) && ($TP) ]]; then RTEMP='\/\/'; else RTEMP=; fi;
-        sed -i "s/[^ ]*#define PRINTCOUNTER/$RTEMP#define PRINTCOUNTER/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define EEPROM_CHITCHAT/$RTEMP#define EEPROM_CHITCHAT/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define USE_GRID_MESHVIEWER 1/$RTEMP#define USE_GRID_MESHVIEWER 1/g" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        if [ "$PRO" = true ] && [ "$TP" = true ]; then
+        sed -i "s/.*#define PRINTCOUNTER/\/\/#define PRINTCOUNTER/" Marlin/Configuration.h
+        sed -i "s/.*#define EEPROM_CHITCHAT/\/\/#define EEPROM_CHITCHAT/" Marlin/Configuration.h
+        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/\/\/#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
+        fi;
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
@@ -300,10 +301,10 @@ jobs:
         cp configurations/Voxelab\ Aquila\ HC32/ConfigurationUBL.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
         if ($IS); then TEMP=; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
@@ -371,8 +372,8 @@ jobs:
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advBLT.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
