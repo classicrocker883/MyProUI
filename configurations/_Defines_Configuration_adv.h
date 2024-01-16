@@ -1,0 +1,1513 @@
+/*Configuration_adv.h Defines*/
+
+// #define CONFIGURATION_ADV_H_VERSION 02010300
+// #define CONFIG_EXPORT 2
+// #define THERMOCOUPLE_MAX_ERRORS 15
+// #define HOTEND0_PULLUP_RESISTOR_OHMS    4700
+// #define HOTEND0_RESISTANCE_25C_OHMS   100000
+// #define HOTEND0_BETA                    3950
+// #define HOTEND0_SH_C_COEFF                 0
+// #define HOTEND1_PULLUP_RESISTOR_OHMS    4700
+// #define HOTEND1_RESISTANCE_25C_OHMS   100000
+// #define HOTEND1_BETA                    3950
+// #define HOTEND1_SH_C_COEFF                 0
+// #define HOTEND2_PULLUP_RESISTOR_OHMS    4700
+// #define HOTEND2_RESISTANCE_25C_OHMS   100000
+// #define HOTEND2_BETA                    3950
+// #define HOTEND2_SH_C_COEFF                 0
+// #define HOTEND3_PULLUP_RESISTOR_OHMS    4700
+// #define HOTEND3_RESISTANCE_25C_OHMS   100000
+// #define HOTEND3_BETA                    3950
+// #define HOTEND3_SH_C_COEFF                 0
+// #define HOTEND4_PULLUP_RESISTOR_OHMS    4700
+// #define HOTEND4_RESISTANCE_25C_OHMS   100000
+// #define HOTEND4_BETA                    3950
+// #define HOTEND4_SH_C_COEFF                 0
+// #define HOTEND5_PULLUP_RESISTOR_OHMS    4700
+// #define HOTEND5_RESISTANCE_25C_OHMS   100000
+// #define HOTEND5_BETA                    3950
+// #define HOTEND5_SH_C_COEFF                 0
+// #define HOTEND6_PULLUP_RESISTOR_OHMS    4700
+// #define HOTEND6_RESISTANCE_25C_OHMS   100000
+// #define HOTEND6_BETA                    3950
+// #define HOTEND6_SH_C_COEFF                 0
+// #define HOTEND7_PULLUP_RESISTOR_OHMS    4700
+// #define HOTEND7_RESISTANCE_25C_OHMS   100000
+// #define HOTEND7_BETA                    3950
+// #define HOTEND7_SH_C_COEFF                 0
+// #define BED_PULLUP_RESISTOR_OHMS        4700
+// #define BED_RESISTANCE_25C_OHMS       100000
+// #define BED_BETA                        3950
+// #define BED_SH_C_COEFF                     0
+// #define CHAMBER_PULLUP_RESISTOR_OHMS    4700
+// #define CHAMBER_RESISTANCE_25C_OHMS   100000
+// #define CHAMBER_BETA                    3950
+// #define CHAMBER_SH_C_COEFF                 0
+// #define COOLER_PULLUP_RESISTOR_OHMS     4700
+// #define COOLER_RESISTANCE_25C_OHMS    100000
+// #define COOLER_BETA                     3950
+// #define COOLER_SH_C_COEFF                  0
+// #define PROBE_PULLUP_RESISTOR_OHMS      4700
+// #define PROBE_RESISTANCE_25C_OHMS     100000
+// #define PROBE_BETA                      3950
+// #define PROBE_SH_C_COEFF                   0
+// #define BOARD_PULLUP_RESISTOR_OHMS      4700
+// #define BOARD_RESISTANCE_25C_OHMS     100000
+// #define BOARD_BETA                      3950
+// #define BOARD_SH_C_COEFF                   0
+// #define REDUNDANT_PULLUP_RESISTOR_OHMS  4700
+// #define REDUNDANT_RESISTANCE_25C_OHMS 100000
+// #define REDUNDANT_BETA                  3950
+// #define REDUNDANT_SH_C_COEFF               0
+// #define TEMP_SENSOR_FORCE_HW_SPI
+// #define MAX31865_SENSOR_WIRES_0 2
+// #define MAX31865_SENSOR_WIRES_1 2
+// #define MAX31865_SENSOR_WIRES_2 2
+// #define MAX31865_50HZ_FILTER
+// #define MAX31865_USE_READ_ERROR_DETECTION
+// #define MAX31865_USE_AUTO_MODE
+// #define MAX31865_MIN_SAMPLING_TIME_MSEC     100
+// #define MAX31865_IGNORE_INITIAL_FAULTY_READS 10
+// #define MAX31865_WIRE_OHMS_0              0.95f
+// #define MAX31865_WIRE_OHMS_1              0.0f
+// #define MAX31865_WIRE_OHMS_2              0.0f
+// #define HEPHESTOS2_HEATED_BED_KIT
+// #define HEATER_BED_INVERTING true
+// #define BED_CHECK_INTERVAL 5000
+// #define BED_HYSTERESIS 2
+// #define CHAMBER_CHECK_INTERVAL 5000
+// #define CHAMBER_HYSTERESIS 2
+// #define HEATER_CHAMBER_PIN      P2_04
+// #define HEATER_CHAMBER_INVERTING false
+// #define FAN1_PIN                   -1
+// #define CHAMBER_FAN
+// #define CHAMBER_FAN_INDEX   2
+// #define CHAMBER_FAN_MODE      2
+// #define CHAMBER_FAN_BASE  255
+// #define CHAMBER_FAN_BASE  128
+// #define CHAMBER_FAN_FACTOR 25
+// #define CHAMBER_FAN_BASE  128
+// #define CHAMBER_FAN_FACTOR 25
+// #define CHAMBER_FAN_BASE  128
+// #define CHAMBER_FAN_FACTOR 25
+// #define CHAMBER_VENT
+// #define CHAMBER_VENT_SERVO_NR  1
+// #define HIGH_EXCESS_HEAT_LIMIT 5
+// #define LOW_EXCESS_HEAT_LIMIT  3
+// #define MIN_COOLING_SLOPE_TIME_CHAMBER_VENT 20
+// #define MIN_COOLING_SLOPE_DEG_CHAMBER_VENT 1.5
+// #define COOLER_MINTEMP           8
+// #define COOLER_MAXTEMP          26
+// #define COOLER_DEFAULT_TEMP     16
+// #define TEMP_COOLER_HYSTERESIS   1
+// #define COOLER_PIN               8
+// #define COOLER_INVERTING     false
+// #define TEMP_COOLER_PIN         15
+// #define COOLER_FAN
+// #define COOLER_FAN_INDEX         0
+// #define COOLER_FAN_BASE      100
+// #define COOLER_FAN_FACTOR     25
+// #define THERMAL_PROTECTION_BOARD
+// #define BOARD_MINTEMP           8
+// #define BOARD_MAXTEMP          70
+// #define TEMP_BOARD_PIN -1
+// #define THERMAL_PROTECTION_SOC
+// #define SOC_MAXTEMP            85
+// #define THERMAL_PROTECTION_PERIOD 40
+// #define THERMAL_PROTECTION_HYSTERESIS 4
+// #define ADAPTIVE_FAN_SLOWING
+// #define REPORT_ADAPTIVE_FAN_SLOWING
+// #define TEMP_TUNING_MAINTAIN_FAN
+// #define WATCH_TEMP_PERIOD  40
+// #define WATCH_TEMP_INCREASE 2
+// #define THERMAL_PROTECTION_BED_PERIOD        60
+// #define THERMAL_PROTECTION_BED_HYSTERESIS     2
+// #define WATCH_BED_TEMP_PERIOD                60
+// #define WATCH_BED_TEMP_INCREASE               2
+// #define THERMAL_PROTECTION_CHAMBER_PERIOD    20
+// #define THERMAL_PROTECTION_CHAMBER_HYSTERESIS 2
+// #define WATCH_CHAMBER_TEMP_PERIOD            60
+// #define WATCH_CHAMBER_TEMP_INCREASE           2
+// #define THERMAL_PROTECTION_COOLER_PERIOD     10
+// #define THERMAL_PROTECTION_COOLER_HYSTERESIS  3
+// #define WATCH_COOLER_TEMP_PERIOD             60
+// #define WATCH_COOLER_TEMP_INCREASE            3
+// #define THERMAL_PROTECTION_VARIANCE_MONITOR
+// #define THERMAL_PROTECTION_VARIANCE_MONITOR_PERIOD 30
+// #define PID_EXTRUSION_SCALING
+// #define DEFAULT_Kc (100)
+// #define LPQ_MAX_LEN 50
+// #define PID_FAN_SCALING
+// #define PID_FAN_SCALING_ALTERNATIVE_DEFINITION
+// #define PID_FAN_SCALING_AT_FULL_SPEED 13.0
+// #define PID_FAN_SCALING_AT_MIN_SPEED   6.0
+// #define PID_FAN_SCALING_MIN_SPEED     10.0
+// #define DEFAULT_Kf (255.0*PID_FAN_SCALING_AT_MIN_SPEED-PID_FAN_SCALING_AT_FULL_SPEED*PID_FAN_SCALING_MIN_SPEED)/(255.0-PID_FAN_SCALING_MIN_SPEED)
+// #define PID_FAN_SCALING_LIN_FACTOR (PID_FAN_SCALING_AT_FULL_SPEED-DEFAULT_Kf)/255.0
+// #define PID_FAN_SCALING_LIN_FACTOR (0)
+// #define DEFAULT_Kf 10
+// #define PID_FAN_SCALING_MIN_SPEED 10
+// #define AUTOTEMP
+// #define AUTOTEMP_OLDWEIGHT    0.98
+// #define AUTOTEMP_MIN          210
+// #define AUTOTEMP_MAX          250
+// #define AUTOTEMP_FACTOR       0.1f
+// #define AUTOTEMP_PROPORTIONAL
+// #define AUTOTEMP_MIN_P      0
+// #define AUTOTEMP_MAX_P      5
+// #define AUTOTEMP_FACTOR_P   1
+// #define SHOW_TEMP_ADC_VALUES
+// #define MAX_CONSECUTIVE_LOW_TEMPERATURE_ERROR_ALLOWED 0
+// #define PREHEAT_TIME_HOTEND_MS 0
+// #define PREHEAT_TIME_BED_MS 0
+// #define EXTRUDER_RUNOUT_PREVENT
+// #define EXTRUDER_RUNOUT_MINTEMP 190
+// #define EXTRUDER_RUNOUT_SECONDS 30
+// #define EXTRUDER_RUNOUT_SPEED 1500
+// #define EXTRUDER_RUNOUT_EXTRUDE 5
+// #define HOTEND_IDLE_TIMEOUT
+// #define HOTEND_IDLE_TIMEOUT_SEC (6*60)
+// #define HOTEND_IDLE_MIN_TRIGGER   180
+// #define HOTEND_IDLE_NOZZLE_TARGET   0
+// #define HOTEND_IDLE_BED_TARGET      0
+// #define TEMP_SENSOR_AD595_OFFSET  0.0
+// #define TEMP_SENSOR_AD595_GAIN    1.0
+// #define TEMP_SENSOR_AD8495_OFFSET 0.0
+// #define TEMP_SENSOR_AD8495_GAIN   1.0
+// #define USE_CONTROLLER_FAN
+// #define CONTROLLER_FAN_PIN -1
+// #define CONTROLLER_FAN2_PIN -1
+// #define CONTROLLER_FAN_USE_Z_ONLY
+// #define CONTROLLER_FAN_IGNORE_Z
+// #define CONTROLLERFAN_SPEED_MIN         0
+// #define CONTROLLERFAN_SPEED_ACTIVE    255
+// #define CONTROLLERFAN_SPEED_IDLE        0
+// #define CONTROLLERFAN_IDLE_TIME        60
+// #define CONTROLLER_FAN_MIN_BOARD_TEMP 40
+// #define CONTROLLER_FAN_MIN_SOC_TEMP 40
+// #define CONTROLLER_FAN_EDITABLE
+// #define CONTROLLER_FAN_MENU
+// #define FAN_KICKSTART_TIME  100
+// #define FAN_KICKSTART_POWER 180
+// #define FAN_OFF_PWM  1
+// #define FAN_MIN_PWM 50
+// #define FAN_MAX_PWM 128
+// #define FAST_PWM_FAN
+// #define FAST_PWM_FAN_FREQUENCY 31400
+// #define USE_OCR2A_AS_TOP
+// #define FAST_PWM_FAN_FREQUENCY ((F_CPU) / (2 * 255 * 1))
+// #define FAST_PWM_FAN_FREQUENCY 1000U
+// #define REDUNDANT_PART_COOLING_FAN 1
+// #define NUM_REDUNDANT_FANS 1
+// #define E0_AUTO_FAN_PIN -1
+// #define E1_AUTO_FAN_PIN -1
+// #define E2_AUTO_FAN_PIN -1
+// #define E3_AUTO_FAN_PIN -1
+// #define E4_AUTO_FAN_PIN -1
+// #define E5_AUTO_FAN_PIN -1
+// #define E6_AUTO_FAN_PIN -1
+// #define E7_AUTO_FAN_PIN -1
+// #define CHAMBER_AUTO_FAN_PIN -1
+// #define COOLER_AUTO_FAN_PIN -1
+// #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
+// #define EXTRUDER_AUTO_FAN_SPEED 255
+// #define CHAMBER_AUTO_FAN_TEMPERATURE 30
+// #define CHAMBER_AUTO_FAN_SPEED 255
+// #define COOLER_AUTO_FAN_TEMPERATURE 18
+// #define COOLER_AUTO_FAN_SPEED 255
+// #define FOURWIRES_FANS
+// #define E0_FAN_TACHO_PIN -1
+// #define E0_FAN_TACHO_PULLUP
+// #define E0_FAN_TACHO_PULLDOWN
+// #define E1_FAN_TACHO_PIN -1
+// #define E1_FAN_TACHO_PULLUP
+// #define E1_FAN_TACHO_PULLDOWN
+// #define E2_FAN_TACHO_PIN -1
+// #define E2_FAN_TACHO_PULLUP
+// #define E2_FAN_TACHO_PULLDOWN
+// #define E3_FAN_TACHO_PIN -1
+// #define E3_FAN_TACHO_PULLUP
+// #define E3_FAN_TACHO_PULLDOWN
+// #define E4_FAN_TACHO_PIN -1
+// #define E4_FAN_TACHO_PULLUP
+// #define E4_FAN_TACHO_PULLDOWN
+// #define E5_FAN_TACHO_PIN -1
+// #define E5_FAN_TACHO_PULLUP
+// #define E5_FAN_TACHO_PULLDOWN
+// #define E6_FAN_TACHO_PIN -1
+// #define E6_FAN_TACHO_PULLUP
+// #define E6_FAN_TACHO_PULLDOWN
+// #define E7_FAN_TACHO_PIN -1
+// #define E7_FAN_TACHO_PULLUP
+// #define E7_FAN_TACHO_PULLDOWN
+// #define FANMUX0_PIN -1
+// #define FANMUX1_PIN -1
+// #define FANMUX2_PIN -1
+// #define CASE_LIGHT_ENABLE
+// #define CASE_LIGHT_PIN 4
+// #define INVERT_CASE_LIGHT false
+// #define CASE_LIGHT_DEFAULT_ON true
+// #define CASE_LIGHT_DEFAULT_BRIGHTNESS 105
+// #define CASE_LIGHT_NO_BRIGHTNESS
+// #define CASE_LIGHT_MAX_PWM 128
+// #define CASE_LIGHT_MENU
+// #define CASE_LIGHT_USE_NEOPIXEL
+// #define CASE_LIGHT_USE_RGB_LED
+// #define CASE_LIGHT_DEFAULT_COLOR { 255, 255, 255, 255 }
+// #define ENDSTOPS_ALWAYS_ON_DEFAULT
+// #define Z_LATE_ENABLE
+// #define EXTERNAL_CLOSED_LOOP_CONTROLLER
+// #define CLOSED_LOOP_ENABLE_PIN        -1
+// #define CLOSED_LOOP_MOVE_COMPLETE_PIN -1
+// #define DUAL_X_CARRIAGE
+// #define X1_MIN_POS X_MIN_POS
+// #define X1_MAX_POS X_BED_SIZE
+// #define X2_MIN_POS    80
+// #define X2_MAX_POS   353
+// #define X2_HOME_POS X2_MAX_POS
+// #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_AUTO_PARK_MODE
+// #define DEFAULT_DUPLICATION_X_OFFSET 100
+// #define EVENT_GCODE_IDEX_AFTER_MODECHANGE "G28X"
+// #define INVERT_X2_VS_X_DIR
+// #define X_DUAL_ENDSTOPS
+// #define X2_STOP_PIN X_MAX_PIN
+// #define X2_ENDSTOP_ADJUSTMENT  0
+// #define INVERT_Y2_VS_Y_DIR
+// #define Y_DUAL_ENDSTOPS
+// #define Y2_STOP_PIN Y_MAX_PIN
+// #define Y2_ENDSTOP_ADJUSTMENT  0
+// #define INVERT_Z2_VS_Z_DIR
+// #define Z_MULTI_ENDSTOPS
+// #define Z2_STOP_PIN X_MAX_PIN
+// #define Z2_ENDSTOP_ADJUSTMENT 0
+// #define INVERT_Z3_VS_Z_DIR
+// #define Z3_STOP_PIN Y_MAX_PIN
+// #define Z3_ENDSTOP_ADJUSTMENT 0
+// #define INVERT_Z4_VS_Z_DIR
+// #define Z4_STOP_PIN Z_MAX_PIN
+// #define Z4_ENDSTOP_ADJUSTMENT 0
+// #define E_DUAL_STEPPER_DRIVERS
+// #define INVERT_E1_VS_E0_DIR
+// #define EXT_SOLENOID
+// #define SENSORLESS_BACKOFF_MM  { 2, 2, 0 }
+// #define HOMING_BUMP_MM      { 5, 5, 2 }
+// #define HOMING_BUMP_DIVISOR { 2, 2, 4 }
+// #define HOMING_BACKOFF_POST_MM { 2, 2, 2 }
+// #define XY_COUNTERPART_BACKOFF_MM 0
+// #define QUICK_HOME
+// #define HOME_Y_BEFORE_X
+// #define HOME_Z_FIRST
+// #define CODEPENDENT_XY_HOMING
+// #define BLTOUCH_DELAY 200
+// #define BLTOUCH_FORCE_SW_MODE
+// #define BLTOUCH_SET_5V_MODE
+// #define BLTOUCH_LCD_VOLTAGE_MENU
+// #define BLTOUCH_FORCE_MODE_SET
+// #define BLTOUCH_HS_MODE true
+// #define BLTOUCH_HS_EXTRA_CLEARANCE    7
+// #define Z_STEPPER_AUTO_ALIGN
+// #define Z_STEPPER_ALIGN_XY { {  10, 190 }, { 100,  10 }, { 190, 190 } }
+// #define Z_STEPPERS_ORIENTATION 0
+// #define Z_STEPPER_ALIGN_STEPPER_XY { { 210.7, 102.5 }, { 152.6, 220.0 }, { 94.5, 102.5 } }
+// #define Z_STEPPER_ALIGN_AMP 1.0
+// #define G34_MAX_GRADE              5
+// #define Z_STEPPER_ALIGN_ITERATIONS 5
+// #define Z_STEPPER_ALIGN_ACC        0.02
+// #define RESTORE_LEVELING_AFTER_G34
+// #define HOME_AFTER_G34
+// #define ASSISTED_TRAMMING
+// #define TRAMMING_POINT_XY { { 29, 29 }, { 199, 29 }, { 199, 199 }, { 29, 199 } }
+// #define TRAMMING_POINT_NAME_1 "Front-Left"
+// #define TRAMMING_POINT_NAME_2 "Front-Right"
+// #define TRAMMING_POINT_NAME_3 "Back-Right"
+// #define TRAMMING_POINT_NAME_4 "Back-Left"
+// #define RESTORE_LEVELING_AFTER_G35
+// #define REPORT_TRAMMING_MM
+// #define ASSISTED_TRAMMING_WIZARD
+// #define ASSISTED_TRAMMING_WAIT_POSITION { X_CENTER, Y_CENTER, 30 }
+// #define TRAMMING_SCREW_THREAD 40
+// #define FT_MOTION
+// #define FTM_DEFAULT_MODE        ftMotionMode_DISABLED
+// #define FTM_DEFAULT_DYNFREQ_MODE dynFreqMode_DISABLED
+// #define FTM_SHAPING_DEFAULT_X_FREQ 37.0f
+// #define FTM_SHAPING_DEFAULT_Y_FREQ 37.0f
+// #define FTM_LINEAR_ADV_DEFAULT_ENA false
+// #define FTM_LINEAR_ADV_DEFAULT_K    0.0f
+// #define FTM_SHAPING_ZETA_X          0.1f
+// #define FTM_SHAPING_ZETA_Y          0.1f
+// #define FTM_SHAPING_V_TOL_X         0.05f
+// #define FTM_SHAPING_V_TOL_Y         0.05f
+// #define FTM_UNIFIED_BWS
+// #define FTM_BW_SIZE               100
+// #define FTM_WINDOW_SIZE           200
+// #define FTM_BATCH_SIZE            100
+// #define FTM_FS                   1000
+// #define FTM_TS                      0.001f
+// #define FTM_STEPS_PER_LOOP         60
+// #define FTM_POINTS_PER_LOOP       100
+// #define FTM_STEPPER_FS          20000
+// #define FTM_STEPPERCMD_BUFF_SIZE 3000
+// #define FTM_STEPS_PER_UNIT_TIME (FTM_STEPPER_FS / FTM_FS)
+// #define FTM_CTS_COMPARE_VAL (FTM_STEPS_PER_UNIT_TIME / 2)
+// #define FTM_MIN_TICKS ((STEPPER_TIMER_RATE) / (FTM_STEPPER_FS))
+// #define FTM_MIN_SHAPE_FREQ         10
+// #define FTM_RATIO (FTM_FS / FTM_MIN_SHAPE_FREQ)
+// #define FTM_ZMAX (FTM_RATIO * 2)
+// #define FTM_STEPS_PER_UNIT_TIME    20
+// #define FTM_CTS_COMPARE_VAL        10
+// #define FTM_STEPS_PER_LOOP         60
+// #define FTM_POINTS_PER_LOOP       100
+// #define FTM_STEPPERCMD_BUFF_SIZE 1000
+// #define FT_MOTION_MENU
+// #define INPUT_SHAPING_X
+// #define INPUT_SHAPING_Y
+// #define SHAPING_FREQ_X  40
+// #define SHAPING_ZETA_X  0.15f
+// #define SHAPING_FREQ_Y  40
+// #define SHAPING_ZETA_Y  0.15f
+// #define SHAPING_MIN_FREQ  20
+// #define SHAPING_MAX_STEPRATE 10000
+// #define SHAPING_MENU
+// #define AXIS_RELATIVE_MODES { false, false, false, false }
+// #define MULTI_NOZZLE_DUPLICATION
+// #define STEP_STATE_X HIGH
+// #define STEP_STATE_Y HIGH
+// #define STEP_STATE_Z HIGH
+// #define STEP_STATE_I HIGH
+// #define STEP_STATE_J HIGH
+// #define STEP_STATE_K HIGH
+// #define STEP_STATE_U HIGH
+// #define STEP_STATE_V HIGH
+// #define STEP_STATE_W HIGH
+// #define STEP_STATE_E HIGH
+// #define DEFAULT_STEPPER_TIMEOUT_SEC 360
+// #define DISABLE_IDLE_X
+// #define DISABLE_IDLE_Y
+// #define DISABLE_IDLE_Z
+// #define DISABLE_IDLE_I
+// #define DISABLE_IDLE_J
+// #define DISABLE_IDLE_K
+// #define DISABLE_IDLE_U
+// #define DISABLE_IDLE_V
+// #define DISABLE_IDLE_W
+// #define DISABLE_IDLE_E
+// #define DEFAULT_MINIMUMFEEDRATE             0.0
+// #define DEFAULT_MINTRAVELFEEDRATE           0.0
+// #define DEFAULT_ANGULAR_MINIMUMFEEDRATE   0.0
+// #define DEFAULT_ANGULAR_MINTRAVELFEEDRATE 0.0
+// #define DEFAULT_MINSEGMENTTIME        50000
+// #define SLOWDOWN
+// #define SLOWDOWN_DIVISOR 4
+// #define XY_FREQUENCY_LIMIT      10
+// #define XY_FREQUENCY_MIN_PERCENT 5
+// #define BACKLASH_COMPENSATION
+// #define BACKLASH_DISTANCE_MM { 0, 0, 0 }
+// #define BACKLASH_CORRECTION    0.0
+// #define CORE_BACKLASH
+// #define BACKLASH_SMOOTHING_MM 3
+// #define BACKLASH_GCODE
+// #define MEASURE_BACKLASH_WHEN_PROBING
+// #define BACKLASH_MEASUREMENT_LIMIT       0.5
+// #define BACKLASH_MEASUREMENT_RESOLUTION  0.005
+// #define BACKLASH_MEASUREMENT_FEEDRATE    Z_PROBE_FEEDRATE_SLOW
+// #define CALIBRATION_GCODE
+// #define CALIBRATION_SCRIPT_PRE  "M117 Starting Auto-Calibration\nT0\nG28\nG12\nM117 Calibrating..."
+// #define CALIBRATION_SCRIPT_POST "M500\nM117 Calibration data saved"
+// #define CALIBRATION_MEASUREMENT_RESOLUTION     0.01
+// #define CALIBRATION_FEEDRATE_SLOW             60
+// #define CALIBRATION_FEEDRATE_FAST           1200
+// #define CALIBRATION_FEEDRATE_TRAVEL         3000
+// #define CALIBRATION_NOZZLE_TIP_HEIGHT          1.0
+// #define CALIBRATION_NOZZLE_OUTER_DIAMETER      2.0
+// #define CALIBRATION_REPORTING
+// #define CALIBRATION_OBJECT_CENTER     { 264.0, -22.0,  -2.0 }
+// #define CALIBRATION_OBJECT_DIMENSIONS {  10.0,  10.0,  10.0 }
+// #define CALIBRATION_MEASURE_RIGHT
+// #define CALIBRATION_MEASURE_FRONT
+// #define CALIBRATION_MEASURE_LEFT
+// #define CALIBRATION_MEASURE_BACK
+// #define CALIBRATION_MEASURE_IMIN
+// #define CALIBRATION_MEASURE_IMAX
+// #define CALIBRATION_MEASURE_JMIN
+// #define CALIBRATION_MEASURE_JMAX
+// #define CALIBRATION_MEASURE_KMIN
+// #define CALIBRATION_MEASURE_KMAX
+// #define CALIBRATION_MEASURE_UMIN
+// #define CALIBRATION_MEASURE_UMAX
+// #define CALIBRATION_MEASURE_VMIN
+// #define CALIBRATION_MEASURE_VMAX
+// #define CALIBRATION_MEASURE_WMIN
+// #define CALIBRATION_MEASURE_WMAX
+// #define CALIBRATION_MEASURE_AT_TOP_EDGES
+// #define CALIBRATION_PIN -1
+// #define CALIBRATION_PIN_INVERTING false
+// #define CALIBRATION_PIN_PULLDOWN
+// #define CALIBRATION_PIN_PULLUP
+// #define MULTISTEPPING_LIMIT   16
+// #define OLD_ADAPTIVE_MULTISTEPPING 1
+// #define ADAPTIVE_STEP_SMOOTHING
+// #define MICROSTEP1 LOW,LOW,LOW
+// #define MICROSTEP2 HIGH,LOW,LOW
+// #define MICROSTEP4 LOW,HIGH,LOW
+// #define MICROSTEP8 HIGH,HIGH,LOW
+// #define MICROSTEP16 LOW,LOW,HIGH
+// #define MICROSTEP32 HIGH,LOW,HIGH
+// #define MICROSTEP_MODES { 16, 16, 16, 16, 16, 16 }
+// #define PWM_MOTOR_CURRENT { 1300, 1300, 1250 }
+// #define DIGIPOT_MOTOR_CURRENT { 135,135,135,135,135 }
+// #define DAC_MOTOR_CURRENT_DEFAULT { 70, 80, 90, 80 }
+// #define DIGIPOT_MCP4018
+// #define DIGIPOT_MCP4451
+// #define DIGIPOT_I2C_NUM_CHANNELS 8
+// #define DIGIPOT_I2C_MOTOR_CURRENTS { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 }
+// #define DIGIPOT_USE_RAW_VALUES
+// #define DIGIPOT_I2C_ADDRESS_A 0x2C
+// #define DIGIPOT_I2C_ADDRESS_B 0x2D
+// #define MANUAL_FEEDRATE { 60*60, 60*60, 8*60, 2*60 }
+// #define FINE_MANUAL_MOVE 0.025
+// #define MANUAL_E_MOVES_RELATIVE
+// #define ULTIPANEL_FEEDMULTIPLY
+// #define ENCODER_RATE_MULTIPLIER
+// #define ENCODER_5X_STEPS_PER_SEC    40
+// #define ENCODER_10X_STEPS_PER_SEC   70
+// #define ENCODER_100X_STEPS_PER_SEC 110
+// #define BEEP_ON_FEEDRATE_CHANGE
+// #define FEEDRATE_CHANGE_BEEP_DURATION   10
+// #define FEEDRATE_CHANGE_BEEP_FREQUENCY 440
+// #define PROBE_OFFSET_WIZARD
+// #define PROBE_OFFSET_WIZARD_START_Z -4.0
+// #define PROBE_OFFSET_WIZARD_XY_POS { X_CENTER, Y_CENTER }
+// #define X_AXIS_TWIST_COMPENSATION
+// #define XATC_START_Z 0.0
+// #define XATC_MAX_POINTS 3
+// #define XATC_Y_POSITION Y_CENTER
+// #define XATC_Z_OFFSETS { 0, 0, 0 }
+// #define PROBE_DEPLOY_STOW_MENU
+// #define LCD_INFO_MENU
+// #define LCD_PRINTER_INFO_IS_BOOTSCREEN
+// #define MANUAL_MOVE_DISTANCE_MM                    10, 1.0, 0.1
+// #define MANUAL_MOVE_DISTANCE_MM         100, 50, 10, 1.0, 0.1
+// #define MANUAL_MOVE_DISTANCE_MM    500, 100, 50, 10, 1.0, 0.1
+// #define MANUAL_MOVE_DISTANCE_IN                          0.100, 0.010, 0.001
+// #define MANUAL_MOVE_DISTANCE_IN          1.000, 0.500, 0.100, 0.010, 0.001
+// #define MANUAL_MOVE_DISTANCE_IN   5.000, 1.000, 0.500, 0.100, 0.010, 0.001
+// #define MANUAL_MOVE_DISTANCE_DEG             90, 45, 22.5, 5, 1
+// #define TURBO_BACK_MENU_ITEM
+// #define PREHEAT_SHORTCUT_MENU_ITEM
+// #define LCD_ENDSTOP_TEST
+// #define SHOW_BOOTSCREEN
+// #define BOOTSCREEN_TIMEOUT 1100
+// #define BOOT_MARLIN_LOGO_SMALL
+// #define BOOT_MARLIN_LOGO_ANIMATED
+// #define SHOW_CUSTOM_BOOTSCREEN
+// #define CUSTOM_STATUS_SCREEN_IMAGE
+// #define SOUND_MENU_ITEM
+// #define SOUND_ON_DEFAULT
+// #define TICK_ON_DEFAULT
+// #define DOUBLE_LCD_FRAMERATE
+// #define LCD_TIMEOUT_TO_STATUS 15000
+// #define STATUS_MESSAGE_SCROLLING
+// #define STATUS_MESSAGE_TIMEOUT_SEC 45
+// #define LCD_DECIMAL_SMALL_XY
+// #define LCD_SHOW_E_TOTAL
+// #define SHOW_TEMPERATURE_BELOW_ZERO
+// #define TITLE_CENTERED
+// #define LED_CONTROL_MENU
+// #define LED_COLOR_PRESETS
+// #define NEO2_COLOR_PRESETS
+// #define LED_USER_PRESET_RED        255
+// #define LED_USER_PRESET_GREEN      128
+// #define LED_USER_PRESET_BLUE         0
+// #define LED_USER_PRESET_WHITE      255
+// #define LED_USER_PRESET_BRIGHTNESS 255
+// #define LED_USER_PRESET_STARTUP
+// #define NEO2_USER_PRESET_RED        255
+// #define NEO2_USER_PRESET_GREEN      128
+// #define NEO2_USER_PRESET_BLUE         0
+// #define NEO2_USER_PRESET_WHITE      255
+// #define NEO2_USER_PRESET_BRIGHTNESS 255
+// #define NEO2_USER_PRESET_STARTUP
+// #define SPEED_EDIT_MIN    10
+// #define SPEED_EDIT_MAX   999
+// #define FLOW_EDIT_MIN     10
+// #define FLOW_EDIT_MAX    999
+// #define SET_PROGRESS_MANUALLY
+// #define SET_PROGRESS_PERCENT
+// #define SET_REMAINING_TIME
+// #define SET_INTERACTION_TIME
+// #define M73_REPORT
+// #define M73_REPORT_SD_ONLY
+// #define SHOW_PROGRESS_PERCENT
+// #define SHOW_ELAPSED_TIME
+// #define SHOW_REMAINING_TIME
+// #define SHOW_INTERACTION_TIME
+// #define PRINT_PROGRESS_SHOW_DECIMALS
+// #define LCD_PROGRESS_BAR
+// #define PROGRESS_BAR_BAR_TIME 2000
+// #define PROGRESS_BAR_MSG_TIME 3000
+// #define PROGRESS_MSG_EXPIRE      0
+// #define PROGRESS_MSG_ONCE
+// #define LCD_PROGRESS_BAR_TEST
+// #define SD_SPI_SPEED SPI_HALF_SPEED
+// #define SD_DETECT_STATE HIGH
+// #define SD_IGNORE_AT_STARTUP
+// #define SDCARD_READONLY
+// #define GCODE_REPEAT_MARKERS
+// #define SD_PROCEDURE_DEPTH 1
+// #define SD_FINISHED_STEPPERRELEASE true
+// #define SD_FINISHED_RELEASECOMMAND "G27 P2"
+// #define SDCARD_RATHERRECENTFIRST
+// #define SD_MENU_CONFIRM_START
+// #define NO_SD_AUTOSTART
+// #define MENU_ADDAUTOSTART
+// #define ONE_CLICK_PRINT
+// #define BROWSE_MEDIA_ON_INSERT
+// #define MEDIA_MENU_AT_TOP
+// #define EVENT_GCODE_SD_ABORT "M84XYE"
+// #define PE_LEDS_COMPLETED_TIME  (30*60)
+// #define POWER_LOSS_RECOVERY
+// #define PLR_ENABLED_DEFAULT   false
+// #define BACKUP_POWER_SUPPLY
+// #define POWER_LOSS_ZRAISE       2
+// #define POWER_LOSS_PIN         44
+// #define POWER_LOSS_STATE     HIGH
+// #define POWER_LOSS_PULLUP
+// #define POWER_LOSS_PULLDOWN
+// #define POWER_LOSS_PURGE_LEN   20
+// #define POWER_LOSS_RETRACT_LEN 10
+// #define POWER_LOSS_MIN_Z_CHANGE 0.05
+// #define POWER_LOSS_RECOVER_ZHOME
+// #define POWER_LOSS_ZHOME_POS { 0, 0 }
+// #define SDCARD_SORT_ALPHA
+// #define SDSORT_REVERSE     false
+// #define SDSORT_LIMIT       80
+// #define SDSORT_FOLDERS     -1
+// #define SDSORT_GCODE       true
+// #define SDSORT_USES_RAM    true
+// #define SDSORT_USES_STACK  false
+// #define SDSORT_CACHE_NAMES true
+// #define SDSORT_DYNAMIC_RAM true
+// #define SDSORT_CACHE_VFATS 2
+// #define UTF_FILENAME_SUPPORT
+// #define LONG_FILENAME_HOST_SUPPORT
+// #define LONG_FILENAME_WRITE_SUPPORT
+// #define M20_TIMESTAMP_SUPPORT
+// #define SCROLL_LONG_FILENAMES
+// #define SD_ABORT_NO_COOLDOWN
+// #define SD_ABORT_ON_ENDSTOP_HIT
+// #define SD_ABORT_ON_ENDSTOP_HIT_GCODE "G28XY"
+// #define SD_REPRINT_LAST_SELECTED_FILE
+// #define AUTO_REPORT_SD_STATUS
+// #define USB_FLASH_DRIVE_SUPPORT
+// #define USE_UHS2_USB
+// #define USE_UHS3_USB
+// #define DISABLE_DUE_SD_MMC
+// #define USE_OTG_USB_HOST
+// #define USB_CS_PIN    SDSS
+// #define USB_INTR_PIN  SD_DETECT_PIN
+// #define SD_FIRMWARE_UPDATE
+// #define SD_FIRMWARE_UPDATE_EEPROM_ADDR    0x1FF
+// #define SD_FIRMWARE_UPDATE_ACTIVE_VALUE   0xF0
+// #define SD_FIRMWARE_UPDATE_INACTIVE_VALUE 0xFF
+// #define CONFIGURATION_EMBEDDING
+// #define BINARY_FILE_TRANSFER
+// #define CUSTOM_FIRMWARE_UPLOAD
+// #define SDCARD_CONNECTION LCD
+// #define NO_SD_DETECT
+// #define MULTI_VOLUME
+// #define VOLUME_SD_ONBOARD
+// #define VOLUME_USB_FLASH_DRIVE
+// #define DEFAULT_VOLUME SV_SD_ONBOARD
+// #define DEFAULT_SHARED_VOLUME SV_USB_FLASH_DRIVE
+// #define NO_SD_HOST_DRIVE
+// #define DISKIO_HOST_DRIVE
+// #define XYZ_NO_FRAME
+// #define XYZ_HOLLOW_FRAME
+// #define USE_BIG_EDIT_FONT
+// #define USE_SMALL_INFOFONT
+// #define DISPLAY_SLEEP_MINUTES 2
+// #define DOGM_SPI_DELAY_US 5
+// #define LIGHTWEIGHT_UI
+// #define STATUS_EXPIRE_SECONDS 20
+// #define STATUS_COMBINE_HEATERS
+// #define STATUS_HOTEND_NUMBERLESS
+// #define STATUS_HOTEND_INVERTED
+// #define STATUS_HOTEND_ANIM
+// #define STATUS_BED_ANIM
+// #define STATUS_CHAMBER_ANIM
+// #define STATUS_CUTTER_ANIM
+// #define STATUS_COOLER_ANIM
+// #define STATUS_FLOWMETER_ANIM
+// #define STATUS_ALT_BED_BITMAP
+// #define STATUS_ALT_FAN_BITMAP
+// #define STATUS_FAN_FRAMES 3
+// #define STATUS_HEAT_PERCENT
+// #define STATUS_HEAT_POWER
+// #define MARLIN_BRICKOUT
+// #define MARLIN_INVADERS
+// #define MARLIN_SNAKE
+// #define GAMES_EASTER_EGG
+// #define MENU_HOLLOW_FRAME
+// #define OVERLAY_GFX_REVERSE
+// #define LCD_BAUDRATE 115200
+// #define DGUS_RX_BUFFER_SIZE 128
+// #define DGUS_TX_BUFFER_SIZE 48
+// #define SERIAL_STATS_RX_BUFFER_OVERRUNS
+// #define DGUS_UPDATE_INTERVAL_MS  500
+// #define DGUS_PRINT_FILENAME
+// #define DGUS_PREHEAT_UI
+// #define DGUS_UI_MOVE_DIS_OPTION
+// #define DGUS_UI_MOVE_DIS_OPTION
+// #define DGUS_FILAMENT_LOADUNLOAD
+// #define DGUS_FILAMENT_PURGE_LENGTH 10
+// #define DGUS_FILAMENT_LOAD_LENGTH_PER_TIME 0.5
+// #define DGUS_UI_WAITING
+// #define DGUS_UI_WAITING_STATUS 10
+// #define DGUS_UI_WAITING_STATUS_PERIOD 8
+// #define DGUS_SOFTWARE_AUTOSCROLL
+// #define DGUS_AUTOSCROLL_START_CYCLES 1
+// #define DGUS_AUTOSCROLL_END_CYCLES 1
+// #define DGUS_ADVANCED_SDCARD
+// #define DGUS_USERCONFIRM
+// #define CHIRON_TFT_STANDARD
+// #define CHIRON_TFT_NEW
+// #define AC_DEFAULT_STARTUP_TUNE
+// #define AC_SD_FOLDER_VIEW
+// #define LCD_LANGUAGE_2 fr
+// #define LCD_LANGUAGE_3 de
+// #define LCD_LANGUAGE_4 es
+// #define LCD_LANGUAGE_5 it
+// #define LCD_LANGUAGE_AUTO_SAVE
+// #define LCD_FTDI_VM800B35A
+// #define LCD_4DSYSTEMS_4DLCD_FT843
+// #define LCD_HAOYU_FT800CB
+// #define LCD_HAOYU_FT810CB
+// #define LCD_LULZBOT_CLCD_UI
+// #define LCD_FYSETC_TFT81050
+// #define LCD_EVE3_50G
+// #define LCD_EVE2_50G
+// #define TOUCH_UI_320x240
+// #define TOUCH_UI_480x272
+// #define TOUCH_UI_800x480
+// #define AO_EXP1_PINMAP
+// #define AO_EXP2_PINMAP
+// #define CR10_TFT_PINMAP
+// #define S6_TFT_PINMAP
+// #define F6_TFT_PINMAP
+// #define OTHER_PIN_LAYOUT
+// #define CLCD_MOD_RESET  9
+// #define CLCD_SPI_CS    10
+// #define CLCD_USE_SOFT_SPI
+// #define CLCD_SOFT_SPI_MOSI 11
+// #define CLCD_SOFT_SPI_MISO 12
+// #define CLCD_SOFT_SPI_SCLK 13
+// #define TOUCH_UI_INVERTED
+// #define TOUCH_UI_PORTRAIT
+// #define TOUCH_UI_MIRRORED
+// #define TOUCH_UI_USE_UTF8
+// #define TOUCH_UI_UTF8_WESTERN_CHARSET
+// #define TOUCH_UI_UTF8_SUPERSCRIPTS
+// #define TOUCH_UI_UTF8_COPYRIGHT
+// #define TOUCH_UI_UTF8_GERMANIC
+// #define TOUCH_UI_UTF8_SCANDINAVIAN
+// #define TOUCH_UI_UTF8_PUNCTUATION
+// #define TOUCH_UI_UTF8_CURRENCY
+// #define TOUCH_UI_UTF8_ORDINALS
+// #define TOUCH_UI_UTF8_MATHEMATICS
+// #define TOUCH_UI_UTF8_FRACTIONS
+// #define TOUCH_UI_UTF8_SYMBOLS
+// #define TOUCH_UI_UTF8_CYRILLIC_CHARSET
+// #define TOUCH_UI_FIT_TEXT
+// #define TOUCH_UI_PASSCODE
+// #define TOUCH_UI_DEBUG
+// #define TOUCH_UI_DEVELOPER_MENU
+// #define TFT_MARLINUI_COLOR 0xFFFF
+// #define TFT_MARLINBG_COLOR 0x0000
+// #define TFT_DISABLED_COLOR 0x0003
+// #define TFT_BTCANCEL_COLOR 0xF800
+// #define TFT_BTARROWS_COLOR 0xDEE6
+// #define TFT_BTOKMENU_COLOR 0x145F
+// #define LCD_BACKLIGHT_TIMEOUT_MINS 10
+// #define EDITABLE_DISPLAY_TIMEOUT
+// #define ADC_BUTTON_DEBOUNCE_DELAY 16
+// #define USE_WATCHDOG
+// #define WATCHDOG_RESET_MANUAL
+// #define BABYSTEPPING
+// #define EP_BABYSTEPPING
+// #define BABYSTEP_WITHOUT_HOMING
+// #define BABYSTEP_ALWAYS_AVAILABLE
+// #define BABYSTEP_XY
+// #define BABYSTEP_INVERT_Z
+// #define BABYSTEP_MILLIMETER_UNITS
+// #define BABYSTEP_MULTIPLICATOR_Z  1
+// #define BABYSTEP_MULTIPLICATOR_XY 1
+// #define DOUBLECLICK_FOR_Z_BABYSTEPPING
+// #define DOUBLECLICK_MAX_INTERVAL 1250
+// #define MOVE_Z_WHEN_IDLE
+// #define MOVE_Z_IDLE_MULTIPLICATOR 1
+// #define BABYSTEP_DISPLAY_TOTAL
+// #define BABYSTEP_ZPROBE_OFFSET
+// #define BABYSTEP_HOTEND_Z_OFFSET
+// #define BABYSTEP_GFX_OVERLAY
+// #define LIN_ADVANCE
+// #define ADVANCE_K { 0.00 }
+// #define ADVANCE_K 0.00
+// #define ADVANCE_K_EXTRA
+// #define LA_DEBUG
+// #define ALLOW_LOW_EJERK
+// #define EXPERIMENTAL_I2S_LA
+// #define NONLINEAR_EXTRUSION
+// #define SAFE_BED_LEVELING_START_X 0.0
+// #define SAFE_BED_LEVELING_START_Y 0.0
+// #define SAFE_BED_LEVELING_START_Z 0.0
+// #define SAFE_BED_LEVELING_START_I 0.0
+// #define SAFE_BED_LEVELING_START_J 0.0
+// #define SAFE_BED_LEVELING_START_K 0.0
+// #define SAFE_BED_LEVELING_START_U 0.0
+// #define SAFE_BED_LEVELING_START_V 0.0
+// #define SAFE_BED_LEVELING_START_W 0.0
+// #define PROBE_PT_1 {  15, 180 }
+// #define PROBE_PT_2 {  15,  20 }
+// #define PROBE_PT_3 { 170,  20 }
+// #define PROBING_MARGIN_LEFT PROBING_MARGIN
+// #define PROBING_MARGIN_RIGHT PROBING_MARGIN
+// #define PROBING_MARGIN_FRONT PROBING_MARGIN
+// #define PROBING_MARGIN_BACK PROBING_MARGIN
+// #define MESH_MIN_X MESH_INSET
+// #define MESH_MIN_Y MESH_INSET
+// #define MESH_MAX_X X_BED_SIZE - (MESH_INSET)
+// #define MESH_MAX_Y Y_BED_SIZE - (MESH_INSET)
+// #define OPTIMIZED_MESH_STORAGE
+// #define G29_RETRY_AND_RECOVER
+// #define G29_MAX_RETRIES 3
+// #define G29_HALT_ON_FAILURE
+// #define G29_SUCCESS_COMMANDS "M117 Bed leveling done."
+// #define G29_RECOVER_COMMANDS "M117 Probe failed. Rewiping.\nG28\nG12 P0 S12 T0"
+// #define G29_FAILURE_COMMANDS "M117 Bed leveling failed.\nG0 Z10\nM300 P25 S880\nM300 P50 S0\nM300 P25 S880\nM300 P50 S0\nM300 P25 S880\nM300 P50 S0\nG4 S1"
+// #define PTC_PROBE
+// #define PTC_BED
+// #define PTC_HOTEND
+// #define PTC_LINEAR_EXTRAPOLATION 4
+// #define PTC_PROBE_START   30
+// #define PTC_PROBE_RES      5
+// #define PTC_PROBE_COUNT   10
+// #define PTC_PROBE_ZOFFS   { 0 }
+// #define PTC_BED_START     60
+// #define PTC_BED_RES        5
+// #define PTC_BED_COUNT     10
+// #define PTC_BED_ZOFFS     { 0 }
+// #define PTC_HOTEND_START 180
+// #define PTC_HOTEND_RES     5
+// #define PTC_HOTEND_COUNT  20
+// #define PTC_HOTEND_ZOFFS  { 0 }
+// #define PTC_PARK_POS   { 0, 0, 100 }
+// #define PTC_PROBE_POS  { 12.0f, 7.3f }
+// #define PTC_PROBE_POS  { 90, 100 }
+// #define PTC_PROBE_TEMP    30
+// #define PTC_PROBE_HEATING_OFFSET 0.5
+// #define SAVED_POSITIONS 1
+// #define ARC_SUPPORT
+// #define MIN_ARC_SEGMENT_MM      0.1
+// #define MAX_ARC_SEGMENT_MM      1.0
+// #define MIN_CIRCLE_SEGMENTS    72
+// #define ARC_SEGMENTS_PER_SEC 50
+// #define N_ARC_CORRECTION       25
+// #define ARC_P_CIRCLES
+// #define SF_ARC_FIX
+// #define BEZIER_CURVE_SUPPORT
+// #define CNC_WORKSPACE_PLANES
+// #define DIRECT_STEPPING
+// #define G38_PROBE_TARGET
+// #define G38_PROBE_AWAY
+// #define G38_MINIMUM_MOVE 0.0275
+// #define MIN_STEPS_PER_SEGMENT 4
+// #define MINIMUM_STEPPER_POST_DIR_DELAY 650
+// #define MINIMUM_STEPPER_PRE_DIR_DELAY 650
+// #define MINIMUM_STEPPER_PULSE 2
+// #define MAXIMUM_STEPPER_RATE 250000
+// #define HEATERS_PARALLEL
+// #define BLOCK_BUFFER_SIZE  32
+// #define BLOCK_BUFFER_SIZE 32
+// #define BLOCK_BUFFER_SIZE 32
+// #define MAX_CMD_SIZE 96
+// #define BUFSIZE 32
+// #define TX_BUFFER_SIZE 64
+// #define RX_BUFFER_SIZE 1024
+// #define SERIAL_XON_XOFF
+// #define SERIAL_STATS_MAX_RX_QUEUED
+// #define SERIAL_STATS_DROPPED_RX
+// #define RX_BUFFER_MONITOR
+// #define EMERGENCY_PARSER
+// #define REALTIME_REPORTING_COMMANDS
+// #define FULL_REPORT_TO_HOST_FEATURE
+// #define NO_TIMEOUTS 1000
+// #define ADVANCED_OK
+// #define SERIAL_OVERRUN_PROTECTION
+// #define SERIAL_FLOAT_PRECISION 4
+// #define SERIAL_DMA
+// #define PROPORTIONAL_FONT_RATIO 1.0
+// #define EXTRA_FAN_SPEED
+// #define FWRETRACT
+// #define FWRETRACT_AUTORETRACT
+// #define MIN_AUTORETRACT             0.1
+// #define MAX_AUTORETRACT            10.0
+// #define RETRACT_LENGTH                5
+// #define RETRACT_LENGTH_SWAP          13
+// #define RETRACT_FEEDRATE             40
+// #define RETRACT_ZRAISE              0.2
+// #define RETRACT_RECOVER_LENGTH        0
+// #define RETRACT_RECOVER_LENGTH_SWAP   0
+// #define RETRACT_RECOVER_FEEDRATE     40
+// #define RETRACT_RECOVER_FEEDRATE_SWAP 8
+// #define RETRACT_SYNC_MIXING
+// #define TOOLCHANGE_ZRAISE                 2
+// #define TOOLCHANGE_ZRAISE_BEFORE_RETRACT
+// #define TOOLCHANGE_NO_RETURN
+// #define EVENT_GCODE_AFTER_TOOLCHANGE "G12X"
+// #define EVENT_GCODE_TOOLCHANGE_T0 "G28 A\nG1 A0"
+// #define EVENT_GCODE_TOOLCHANGE_T1 "G1 A10"
+// #define EVENT_GCODE_TOOLCHANGE_ALWAYS_RUN
+// #define TC_GCODE_USE_GLOBAL_X
+// #define TC_GCODE_USE_GLOBAL_Y
+// #define TC_GCODE_USE_GLOBAL_Z
+// #define TOOL_SENSOR
+// #define TOOLCHANGE_FILAMENT_SWAP
+// #define TOOLCHANGE_FS_LENGTH              12
+// #define TOOLCHANGE_FS_EXTRA_RESUME_LENGTH  0
+// #define TOOLCHANGE_FS_RETRACT_SPEED   (50*60)
+// #define TOOLCHANGE_FS_UNRETRACT_SPEED (25*60)
+// #define TOOLCHANGE_FS_EXTRA_PRIME          0
+// #define TOOLCHANGE_FS_PRIME_SPEED    (4.6*60)
+// #define TOOLCHANGE_FS_WIPE_RETRACT         0
+// #define TOOLCHANGE_FS_FAN                 -1
+// #define TOOLCHANGE_FS_FAN_SPEED          255
+// #define TOOLCHANGE_FS_FAN_TIME            10
+// #define TOOLCHANGE_FS_SLOW_FIRST_PRIME
+// #define TOOLCHANGE_FS_PRIME_FIRST_USED
+// #define TOOLCHANGE_MIGRATION_FEATURE
+// #define MIGRATION_ZRAISE            0
+// #define MIGRATION_FS_EXTRA_PRIME    0
+// #define MIGRATION_FS_WIPE_RETRACT   0
+// #define MIGRATION_FS_FAN_SPEED    255
+// #define MIGRATION_FS_FAN_TIME       0
+// #define TOOLCHANGE_PARK
+// #define TOOLCHANGE_PARK_XY    { X_MIN_POS + 10, Y_MIN_POS + 10 }
+// #define TOOLCHANGE_PARK_XY_FEEDRATE 6000
+// #define TOOLCHANGE_PARK_X_ONLY
+// #define TOOLCHANGE_PARK_Y_ONLY
+// #define TOOLCHANGE_MIGRATION_DO_PARK
+// #define ADVANCED_PAUSE_FEATURE
+// #define PAUSE_PARK_RETRACT_FEEDRATE         60
+// #define PAUSE_PARK_RETRACT_LENGTH            2
+// #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     20
+// #define FILAMENT_CHANGE_UNLOAD_ACCEL        25
+// #define FILAMENT_CHANGE_UNLOAD_LENGTH      120
+// #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE   6
+// #define FILAMENT_CHANGE_SLOW_LOAD_LENGTH    50
+// #define FILAMENT_CHANGE_FAST_LOAD_FEEDRATE  12
+// #define FILAMENT_CHANGE_FAST_LOAD_ACCEL     25
+// #define FILAMENT_CHANGE_FAST_LOAD_LENGTH    10
+// #define ADVANCED_PAUSE_CONTINUOUS_PURGE
+// #define ADVANCED_PAUSE_PURGE_FEEDRATE        3
+// #define ADVANCED_PAUSE_PURGE_LENGTH         50
+// #define ADVANCED_PAUSE_RESUME_PRIME          0
+// #define ADVANCED_PAUSE_FANS_PAUSE
+// #define FILAMENT_UNLOAD_PURGE_RETRACT       13
+// #define FILAMENT_UNLOAD_PURGE_DELAY       5000
+// #define FILAMENT_UNLOAD_PURGE_LENGTH         8
+// #define FILAMENT_UNLOAD_PURGE_FEEDRATE      25
+// #define PAUSE_PARK_NOZZLE_TIMEOUT          180
+// #define FILAMENT_CHANGE_ALERT_BEEPS          5
+// #define PAUSE_PARK_NO_STEPPER_TIMEOUT
+// #define FILAMENT_CHANGE_RESUME_ON_INSERT
+// #define PAUSE_REHEAT_FAST_RESUME
+// #define PARK_HEAD_ON_PAUSE
+// #define HOME_BEFORE_FILAMENT_CHANGE
+// #define FILAMENT_LOAD_UNLOAD_GCODES
+// #define FILAMENT_UNLOAD_ALL_EXTRUDERS
+// #define CONFIGURE_FILAMENT_CHANGE
+// #define HOLD_MULTIPLIER    0.5
+// #define INTERPOLATE      true
+// #define X_CURRENT       800
+// #define X_CURRENT_HOME  X_CURRENT
+// #define X_MICROSTEPS     16
+// #define X_RSENSE          0.11
+// #define X_CHAIN_POS      -1
+// #define X_INTERPOLATE  true
+// #define X_HOLD_MULTIPLIER 0.5
+// #define X2_CURRENT      X_CURRENT
+// #define X2_CURRENT_HOME X_CURRENT_HOME
+// #define X2_MICROSTEPS   X_MICROSTEPS
+// #define X2_RSENSE       X_RSENSE
+// #define X2_CHAIN_POS     -1
+// #define X2_INTERPOLATE true
+// #define X2_HOLD_MULTIPLIER 0.5
+// #define Y_CURRENT       800
+// #define Y_CURRENT_HOME  Y_CURRENT
+// #define Y_MICROSTEPS     16
+// #define Y_RSENSE          0.11
+// #define Y_CHAIN_POS      -1
+// #define Y_INTERPOLATE  true
+// #define Y_HOLD_MULTIPLIER 0.5
+// #define Y2_CURRENT      Y_CURRENT
+// #define Y2_CURRENT_HOME Y_CURRENT_HOME
+// #define Y2_MICROSTEPS   Y_MICROSTEPS
+// #define Y2_RSENSE       Y_RSENSE
+// #define Y2_CHAIN_POS     -1
+// #define Y2_INTERPOLATE true
+// #define Y2_HOLD_MULTIPLIER 0.5
+// #define Z_CURRENT       800
+// #define Z_CURRENT_HOME  Z_CURRENT
+// #define Z_MICROSTEPS     16
+// #define Z_RSENSE          0.11
+// #define Z_CHAIN_POS      -1
+// #define Z_INTERPOLATE  true
+// #define Z_HOLD_MULTIPLIER 0.5
+// #define Z2_CURRENT      Z_CURRENT
+// #define Z2_CURRENT_HOME Z_CURRENT_HOME
+// #define Z2_MICROSTEPS   Z_MICROSTEPS
+// #define Z2_RSENSE       Z_RSENSE
+// #define Z2_CHAIN_POS     -1
+// #define Z2_INTERPOLATE true
+// #define Z2_HOLD_MULTIPLIER 0.5
+// #define Z3_CURRENT      Z_CURRENT
+// #define Z3_CURRENT_HOME Z_CURRENT_HOME
+// #define Z3_MICROSTEPS   Z_MICROSTEPS
+// #define Z3_RSENSE       Z_RSENSE
+// #define Z3_CHAIN_POS     -1
+// #define Z3_INTERPOLATE true
+// #define Z3_HOLD_MULTIPLIER 0.5
+// #define Z4_CURRENT      Z_CURRENT
+// #define Z4_CURRENT_HOME Z_CURRENT_HOME
+// #define Z4_MICROSTEPS   Z_MICROSTEPS
+// #define Z4_RSENSE       Z_RSENSE
+// #define Z4_CHAIN_POS     -1
+// #define Z4_INTERPOLATE true
+// #define Z4_HOLD_MULTIPLIER 0.5
+// #define I_CURRENT      800
+// #define I_CURRENT_HOME I_CURRENT
+// #define I_MICROSTEPS    16
+// #define I_RSENSE         0.11
+// #define I_CHAIN_POS     -1
+// #define I_INTERPOLATE  true
+// #define I_HOLD_MULTIPLIER 0.5
+// #define J_CURRENT      800
+// #define J_CURRENT_HOME J_CURRENT
+// #define J_MICROSTEPS    16
+// #define J_RSENSE         0.11
+// #define J_CHAIN_POS     -1
+// #define J_INTERPOLATE  true
+// #define J_HOLD_MULTIPLIER 0.5
+// #define K_CURRENT      800
+// #define K_CURRENT_HOME K_CURRENT
+// #define K_MICROSTEPS    16
+// #define K_RSENSE         0.11
+// #define K_CHAIN_POS     -1
+// #define K_INTERPOLATE  true
+// #define K_HOLD_MULTIPLIER 0.5
+// #define U_CURRENT      800
+// #define U_CURRENT_HOME U_CURRENT
+// #define U_MICROSTEPS     8
+// #define U_RSENSE         0.11
+// #define U_CHAIN_POS     -1
+// #define U_INTERPOLATE  true
+// #define U_HOLD_MULTIPLIER 0.5
+// #define V_CURRENT      800
+// #define V_CURRENT_HOME V_CURRENT
+// #define V_MICROSTEPS     8
+// #define V_RSENSE         0.11
+// #define V_CHAIN_POS     -1
+// #define V_INTERPOLATE  true
+// #define V_HOLD_MULTIPLIER 0.5
+// #define W_CURRENT      800
+// #define W_CURRENT_HOME W_CURRENT
+// #define W_MICROSTEPS     8
+// #define W_RSENSE         0.11
+// #define W_CHAIN_POS     -1
+// #define W_INTERPOLATE  true
+// #define W_HOLD_MULTIPLIER 0.5
+// #define E0_CURRENT      800
+// #define E0_MICROSTEPS    16
+// #define E0_RSENSE         0.11
+// #define E0_CHAIN_POS     -1
+// #define E0_INTERPOLATE true
+// #define E0_HOLD_MULTIPLIER 0.5
+// #define E1_CURRENT      E0_CURRENT
+// #define E1_MICROSTEPS   E0_MICROSTEPS
+// #define E1_RSENSE       E0_RSENSE
+// #define E1_CHAIN_POS     -1
+// #define E1_INTERPOLATE true
+// #define E1_HOLD_MULTIPLIER 0.5
+// #define E2_CURRENT      E0_CURRENT
+// #define E2_MICROSTEPS   E0_MICROSTEPS
+// #define E2_RSENSE       E0_RSENSE
+// #define E2_CHAIN_POS     -1
+// #define E2_INTERPOLATE true
+// #define E2_HOLD_MULTIPLIER 0.5
+// #define E3_CURRENT      E0_CURRENT
+// #define E3_MICROSTEPS   E0_MICROSTEPS
+// #define E3_RSENSE       E0_RSENSE
+// #define E3_CHAIN_POS     -1
+// #define E3_INTERPOLATE true
+// #define E3_HOLD_MULTIPLIER 0.5
+// #define E4_CURRENT      E0_CURRENT
+// #define E4_MICROSTEPS   E0_MICROSTEPS
+// #define E4_RSENSE       E0_RSENSE
+// #define E4_CHAIN_POS     -1
+// #define E4_INTERPOLATE true
+// #define E4_HOLD_MULTIPLIER 0.5
+// #define E5_CURRENT      E0_CURRENT
+// #define E5_MICROSTEPS   E0_MICROSTEPS
+// #define E5_RSENSE       E0_RSENSE
+// #define E5_CHAIN_POS     -1
+// #define E5_INTERPOLATE true
+// #define E5_HOLD_MULTIPLIER 0.5
+// #define E6_CURRENT      E0_CURRENT
+// #define E6_MICROSTEPS   E0_MICROSTEPS
+// #define E6_RSENSE       E0_RSENSE
+// #define E6_CHAIN_POS     -1
+// #define E6_INTERPOLATE true
+// #define E6_HOLD_MULTIPLIER 0.5
+// #define E7_CURRENT      E0_CURRENT
+// #define E7_MICROSTEPS   E0_MICROSTEPS
+// #define E7_RSENSE       E0_RSENSE
+// #define E7_CHAIN_POS     -1
+// #define E7_INTERPOLATE true
+// #define E7_HOLD_MULTIPLIER 0.5
+// #define X_CS_PIN      -1
+// #define Y_CS_PIN      -1
+// #define Z_CS_PIN      -1
+// #define X2_CS_PIN     -1
+// #define Y2_CS_PIN     -1
+// #define Z2_CS_PIN     -1
+// #define Z3_CS_PIN     -1
+// #define Z4_CS_PIN     -1
+// #define I_CS_PIN      -1
+// #define J_CS_PIN      -1
+// #define K_CS_PIN      -1
+// #define U_CS_PIN      -1
+// #define V_CS_PIN      -1
+// #define W_CS_PIN      -1
+// #define E0_CS_PIN     -1
+// #define E1_CS_PIN     -1
+// #define E2_CS_PIN     -1
+// #define E3_CS_PIN     -1
+// #define E4_CS_PIN     -1
+// #define E5_CS_PIN     -1
+// #define E6_CS_PIN     -1
+// #define E7_CS_PIN     -1
+// #define TMC_USE_SW_SPI
+// #define TMC_SPI_MOSI  -1
+// #define TMC_SPI_MISO  -1
+// #define TMC_SPI_SCK   -1
+// #define X_SLAVE_ADDRESS 0
+// #define Y_SLAVE_ADDRESS 0
+// #define Z_SLAVE_ADDRESS 0
+// #define X2_SLAVE_ADDRESS 0
+// #define Y2_SLAVE_ADDRESS 0
+// #define Z2_SLAVE_ADDRESS 0
+// #define Z3_SLAVE_ADDRESS 0
+// #define Z4_SLAVE_ADDRESS 0
+// #define I_SLAVE_ADDRESS 0
+// #define J_SLAVE_ADDRESS 0
+// #define K_SLAVE_ADDRESS 0
+// #define U_SLAVE_ADDRESS 0
+// #define V_SLAVE_ADDRESS 0
+// #define W_SLAVE_ADDRESS 0
+// #define E0_SLAVE_ADDRESS 0
+// #define E1_SLAVE_ADDRESS 0
+// #define E2_SLAVE_ADDRESS 0
+// #define E3_SLAVE_ADDRESS 0
+// #define E4_SLAVE_ADDRESS 0
+// #define E5_SLAVE_ADDRESS 0
+// #define E6_SLAVE_ADDRESS 0
+// #define E7_SLAVE_ADDRESS 0
+// #define SOFTWARE_DRIVER_ENABLE
+// #define STEALTHCHOP_XY
+// #define STEALTHCHOP_Z
+// #define STEALTHCHOP_I
+// #define STEALTHCHOP_J
+// #define STEALTHCHOP_K
+// #define STEALTHCHOP_U
+// #define STEALTHCHOP_V
+// #define STEALTHCHOP_W
+// #define STEALTHCHOP_E
+// #define CHOPPER_TIMING CHOPPER_DEFAULT_24V
+// #define CHOPPER_TIMING_X  CHOPPER_TIMING
+// #define CHOPPER_TIMING_X2 CHOPPER_TIMING_X
+// #define CHOPPER_TIMING_Y  CHOPPER_TIMING
+// #define CHOPPER_TIMING_Y2 CHOPPER_TIMING_Y
+// #define CHOPPER_TIMING_Z  CHOPPER_TIMING
+// #define CHOPPER_TIMING_Z2 CHOPPER_TIMING_Z
+// #define CHOPPER_TIMING_Z3 CHOPPER_TIMING_Z
+// #define CHOPPER_TIMING_Z4 CHOPPER_TIMING_Z
+// #define CHOPPER_TIMING_I  CHOPPER_TIMING
+// #define CHOPPER_TIMING_J  CHOPPER_TIMING
+// #define CHOPPER_TIMING_K  CHOPPER_TIMING
+// #define CHOPPER_TIMING_U  CHOPPER_TIMING
+// #define CHOPPER_TIMING_V  CHOPPER_TIMING
+// #define CHOPPER_TIMING_W  CHOPPER_TIMING
+// #define CHOPPER_TIMING_E  CHOPPER_TIMING
+// #define CHOPPER_TIMING_E1 CHOPPER_TIMING_E
+// #define CHOPPER_TIMING_E2 CHOPPER_TIMING_E
+// #define CHOPPER_TIMING_E3 CHOPPER_TIMING_E
+// #define CHOPPER_TIMING_E4 CHOPPER_TIMING_E
+// #define CHOPPER_TIMING_E5 CHOPPER_TIMING_E
+// #define CHOPPER_TIMING_E6 CHOPPER_TIMING_E
+// #define CHOPPER_TIMING_E7 CHOPPER_TIMING_E
+// #define MONITOR_DRIVER_STATUS
+// #define CURRENT_STEP_DOWN     50
+// #define REPORT_CURRENT_CHANGE
+// #define STOP_ON_ERROR
+// #define HYBRID_THRESHOLD
+// #define X_HYBRID_THRESHOLD     100
+// #define X2_HYBRID_THRESHOLD    100
+// #define Y_HYBRID_THRESHOLD     100
+// #define Y2_HYBRID_THRESHOLD    100
+// #define Z_HYBRID_THRESHOLD       3
+// #define Z2_HYBRID_THRESHOLD      3
+// #define Z3_HYBRID_THRESHOLD      3
+// #define Z4_HYBRID_THRESHOLD      3
+// #define I_HYBRID_THRESHOLD       3
+// #define J_HYBRID_THRESHOLD       3
+// #define K_HYBRID_THRESHOLD       3
+// #define U_HYBRID_THRESHOLD       3
+// #define V_HYBRID_THRESHOLD       3
+// #define W_HYBRID_THRESHOLD       3
+// #define E0_HYBRID_THRESHOLD     30
+// #define E1_HYBRID_THRESHOLD     30
+// #define E2_HYBRID_THRESHOLD     30
+// #define E3_HYBRID_THRESHOLD     30
+// #define E4_HYBRID_THRESHOLD     30
+// #define E5_HYBRID_THRESHOLD     30
+// #define E6_HYBRID_THRESHOLD     30
+// #define E7_HYBRID_THRESHOLD     30
+// #define SENSORLESS_HOMING
+// #define X_STALL_SENSITIVITY  8
+// #define X2_STALL_SENSITIVITY X_STALL_SENSITIVITY
+// #define Y_STALL_SENSITIVITY  8
+// #define Y2_STALL_SENSITIVITY Y_STALL_SENSITIVITY
+// #define Z_STALL_SENSITIVITY  8
+// #define Z2_STALL_SENSITIVITY Z_STALL_SENSITIVITY
+// #define Z3_STALL_SENSITIVITY Z_STALL_SENSITIVITY
+// #define Z4_STALL_SENSITIVITY Z_STALL_SENSITIVITY
+// #define I_STALL_SENSITIVITY  8
+// #define J_STALL_SENSITIVITY  8
+// #define K_STALL_SENSITIVITY  8
+// #define U_STALL_SENSITIVITY  8
+// #define V_STALL_SENSITIVITY  8
+// #define W_STALL_SENSITIVITY  8
+// #define SPI_ENDSTOPS
+// #define IMPROVE_HOMING_RELIABILITY
+// #define TMC_HOME_PHASE { 896, 896, 896 }
+// #define EDGE_STEPPING
+// #define TMC_DEBUG
+// #define TMC_ADV() {  }
+// #define I2C_MASTER_ID  1
+// #define EXPERIMENTAL_I2CBUS
+// #define I2C_SLAVE_ADDRESS  0
+// #define PHOTO_GCODE
+// #define PHOTO_POSITION { X_MAX_POS - 5, Y_MAX_POS, 0 }
+// #define PHOTO_DELAY_MS   100
+// #define PHOTO_RETRACT_MM   6.5
+// #define PHOTOGRAPH_PIN 23
+// #define CHDK_PIN        4
+// #define PHOTO_SWITCH_POSITION { X_MAX_POS, Y_MAX_POS }
+// #define PHOTO_SWITCH_MS   50
+// #define PHOTO_PULSES_US { 2000, 27850, 400, 1580, 400, 3580, 400 }
+// #define PHOTO_PULSE_DELAY_US 13
+// #define SPINDLE_FEATURE
+// #define LASER_FEATURE
+// #define SPINDLE_LASER_ACTIVE_STATE    LOW
+// #define SPINDLE_LASER_USE_PWM
+// #define SPINDLE_LASER_PWM_INVERT    false
+// #define SPINDLE_LASER_FREQUENCY     2500
+// #define AIR_EVACUATION
+// #define AIR_EVACUATION_ACTIVE       LOW
+// #define AIR_EVACUATION_PIN        42
+// #define AIR_ASSIST
+// #define AIR_ASSIST_ACTIVE           LOW
+// #define AIR_ASSIST_PIN            44
+// #define SPINDLE_SERVO
+// #define SPINDLE_SERVO_NR   0
+// #define SPINDLE_SERVO_MIN 10
+// #define CUTTER_POWER_UNIT PWM255
+// #define CUTTER_POWER_RELATIVE
+// #define SPINDLE_CHANGE_DIR
+// #define SPINDLE_CHANGE_DIR_STOP
+// #define SPINDLE_INVERT_DIR          false
+// #define SPINDLE_LASER_POWERUP_DELAY   5000
+// #define SPINDLE_LASER_POWERDOWN_DELAY 5000
+// #define SPEED_POWER_INTERCEPT       0
+// #define SPEED_POWER_MIN          5000
+// #define SPEED_POWER_MAX         30000
+// #define SPEED_POWER_STARTUP     25000
+// #define SPEED_POWER_INTERCEPT       0
+// #define SPEED_POWER_MIN             0
+// #define SPEED_POWER_MAX           100
+// #define SPEED_POWER_STARTUP        80
+// #define LASER_TEST_PULSE_MIN           1
+// #define LASER_TEST_PULSE_MAX         999
+// #define SPINDLE_LASER_POWERUP_DELAY   50
+// #define SPINDLE_LASER_POWERDOWN_DELAY 50
+// #define LASER_SAFETY_TIMEOUT_MS     1000
+// #define LASER_POWER_SYNC
+// #define LASER_POWER_TRAP
+// #define I2C_AMMETER
+// #define I2C_AMMETER_IMAX            0.1
+// #define I2C_AMMETER_SHUNT_RESISTOR  0.1
+// #define LASER_COOLANT_FLOW_METER
+// #define FLOWMETER_PIN         20
+// #define FLOWMETER_PPL       5880
+// #define FLOWMETER_INTERVAL  1000
+// #define FLOWMETER_SAFETY
+// #define FLOWMETER_MIN_LITERS_PER_MINUTE 1.5
+// #define LASER_SYNCHRONOUS_M106_M107
+// #define COOLANT_CONTROL
+// #define COOLANT_MIST
+// #define COOLANT_FLOOD
+// #define COOLANT_MIST_INVERT  false
+// #define COOLANT_FLOOD_INVERT false
+// #define FILAMENT_WIDTH_SENSOR
+// #define FILAMENT_SENSOR_EXTRUDER_NUM 0
+// #define MEASUREMENT_DELAY_CM        14
+// #define FILWIDTH_ERROR_MARGIN        1.0
+// #define MAX_MEASUREMENT_DELAY       20
+// #define DEFAULT_MEASURED_FILAMENT_DIA DEFAULT_NOMINAL_FILAMENT_DIA
+// #define FILAMENT_LCD_DISPLAY
+// #define POWER_MONITOR_CURRENT
+// #define POWER_MONITOR_VOLTAGE
+// #define POWER_MONITOR_VOLTS_PER_AMP    0.05000
+// #define POWER_MONITOR_CURRENT_OFFSET   0
+// #define POWER_MONITOR_FIXED_VOLTAGE   13.6
+// #define POWER_MONITOR_VOLTS_PER_VOLT  0.077933
+// #define POWER_MONITOR_VOLTAGE_OFFSET  0
+// #define DISABLE_DRIVER_SAFE_POWER_PROTECT
+// #define CNC_COORDINATE_SYSTEMS
+// #define CNC_DRILLING_CYCLE
+// #define EXPECTED_PRINTER_CHECK
+// #define NO_VOLUMETRICS
+// #define VOLUMETRIC_DEFAULT_ON
+// #define VOLUMETRIC_EXTRUDER_LIMIT
+// #define DEFAULT_VOLUMETRIC_EXTRUDER_LIMIT 0.00
+// #define VOLUMETRIC_EXTRUDER_LIMIT_MAX     20
+// #define M114_DETAIL
+// #define M114_REALTIME
+// #define M114_LEGACY
+// #define AUTO_REPORT_FANS
+// #define REPORT_FAN_CHANGE
+// #define AUTO_REPORT_TEMPERATURES
+// #define AUTO_REPORT_REDUNDANT
+// #define AUTO_REPORT_POSITION
+// #define AUTO_REPORT_REAL_POSITION
+// #define CAPABILITIES_REPORT
+// #define EXTENDED_CAPABILITIES_REPORT
+// #define M115_GEOMETRY_REPORT
+// #define FASTER_GCODE_PARSER
+// #define GCODE_QUOTED_STRINGS
+// #define MEATPACK_ON_SERIAL_PORT_1
+// #define MEATPACK_ON_SERIAL_PORT_2
+// #define GCODE_CASE_INSENSITIVE
+// #define REPETIER_GCODE_M360
+// #define DEBUG_FLAGS_GCODE
+// #define NO_WORKSPACE_OFFSETS
+// #define NO_HOME_OFFSETS
+// #define PAREN_COMMENTS
+// #define GCODE_MOTION_MODES
+// #define G0_FEEDRATE 3000
+// #define VARIABLE_G0_FEEDRATE
+// #define G0_ANGULAR_FEEDRATE 2700
+// #define STARTUP_COMMANDS "M17 Z"
+// #define GCODE_MACROS
+// #define GCODE_MACROS_SLOTS       5
+// #define GCODE_MACROS_SLOT_SIZE  50
+// #define CUSTOM_MENU_MAIN
+// #define CUSTOM_MENU_MAIN_TITLE "Custom Commands"
+// #define CUSTOM_MENU_MAIN_SCRIPT_DONE "M117 User Script Done"
+// #define CUSTOM_MENU_MAIN_SCRIPT_AUDIBLE_FEEDBACK
+// #define CUSTOM_MENU_MAIN_SCRIPT_RETURN
+// #define CUSTOM_MENU_MAIN_ONLY_IDLE
+// #define MAIN_MENU_ITEM_1_DESC "Home & UBL Info"
+// #define MAIN_MENU_ITEM_1_GCODE "G28\nG29 W"
+// #define MAIN_MENU_ITEM_1_CONFIRM
+// #define MAIN_MENU_ITEM_2_DESC "Preheat for " PREHEAT_1_LABEL
+// #define MAIN_MENU_ITEM_2_GCODE "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
+// #define MAIN_MENU_ITEM_2_CONFIRM
+// #define MAIN_MENU_ITEM_3_DESC "Preheat for " PREHEAT_2_LABEL
+// #define MAIN_MENU_ITEM_3_GCODE "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
+// #define MAIN_MENU_ITEM_3_CONFIRM
+// #define MAIN_MENU_ITEM_4_DESC "Heat Bed/Home/Level"
+// #define MAIN_MENU_ITEM_4_GCODE "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nG28\nG29"
+// #define MAIN_MENU_ITEM_4_CONFIRM
+// #define MAIN_MENU_ITEM_5_DESC "Home & Info"
+// #define MAIN_MENU_ITEM_5_GCODE "G28\nM503"
+// #define MAIN_MENU_ITEM_5_CONFIRM
+// #define CUSTOM_MENU_CONFIG
+// #define CUSTOM_MENU_CONFIG_TITLE "Custom Commands"
+// #define CUSTOM_MENU_CONFIG_SCRIPT_DONE "M117 Wireless Script Done"
+// #define CUSTOM_MENU_CONFIG_SCRIPT_AUDIBLE_FEEDBACK
+// #define CUSTOM_MENU_CONFIG_SCRIPT_RETURN
+// #define CUSTOM_MENU_CONFIG_ONLY_IDLE
+// #define CONFIG_MENU_ITEM_1_DESC "Wifi ON"
+// #define CONFIG_MENU_ITEM_1_GCODE "M118 [ESP110] WIFI-STA pwd=12345678"
+// #define CONFIG_MENU_ITEM_1_CONFIRM
+// #define CONFIG_MENU_ITEM_2_DESC "Bluetooth ON"
+// #define CONFIG_MENU_ITEM_2_GCODE "M118 [ESP110] BT pwd=12345678"
+// #define CONFIG_MENU_ITEM_2_CONFIRM
+// #define CONFIG_MENU_ITEM_3_DESC "Radio OFF"
+// #define CONFIG_MENU_ITEM_3_GCODE "M118 [ESP110] OFF pwd=12345678"
+// #define CONFIG_MENU_ITEM_3_CONFIRM
+// #define CONFIG_MENU_ITEM_4_DESC "Wifi ????"
+// #define CONFIG_MENU_ITEM_4_GCODE "M118 ????"
+// #define CONFIG_MENU_ITEM_4_CONFIRM
+// #define CONFIG_MENU_ITEM_5_DESC "Wifi ????"
+// #define CONFIG_MENU_ITEM_5_GCODE "M118 ????"
+// #define CONFIG_MENU_ITEM_5_CONFIRM
+// #define CUSTOM_USER_BUTTONS
+// #define BUTTON1_PIN -1
+// #define BUTTON1_HIT_STATE     LOW
+// #define BUTTON1_WHEN_PRINTING false
+// #define BUTTON1_GCODE         "G28"
+// #define BUTTON1_DESC          "Homing"
+// #define BUTTON2_PIN -1
+// #define BUTTON2_HIT_STATE     LOW
+// #define BUTTON2_WHEN_PRINTING false
+// #define BUTTON2_GCODE         "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
+// #define BUTTON2_DESC          "Preheat for " PREHEAT_1_LABEL
+// #define BUTTON3_PIN -1
+// #define BUTTON3_HIT_STATE     LOW
+// #define BUTTON3_WHEN_PRINTING false
+// #define BUTTON3_GCODE         "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
+// #define BUTTON3_DESC          "Preheat for " PREHEAT_2_LABEL
+// #define HOST_ACTION_COMMANDS
+// #define HOST_PAUSE_M76
+// #define HOST_PROMPT_SUPPORT
+// #define HOST_STATUS_NOTIFICATIONS
+// #define HOST_START_MENU_ITEM
+// #define HOST_SHUTDOWN_MENU_ITEM
+// #define CANCEL_OBJECTS
+// #define CANCEL_OBJECTS_REPORTING
+// #define I2C_POSITION_ENCODERS
+// #define I2CPE_ENCODER_CNT         1
+// #define I2CPE_ENC_1_ADDR          I2CPE_PRESET_ADDR_X
+// #define I2CPE_ENC_1_AXIS          X_AXIS
+// #define I2CPE_ENC_1_TYPE          I2CPE_ENC_TYPE_LINEAR
+// #define I2CPE_ENC_1_TICKS_UNIT    2048
+// #define I2CPE_ENC_1_TICKS_REV     (16 * 200)
+// #define I2CPE_ENC_1_INVERT
+// #define I2CPE_ENC_1_EC_METHOD     I2CPE_ECM_MICROSTEP
+// #define I2CPE_ENC_1_EC_THRESH     0.10
+// #define I2CPE_ENC_2_ADDR          I2CPE_PRESET_ADDR_Y
+// #define I2CPE_ENC_2_AXIS          Y_AXIS
+// #define I2CPE_ENC_2_TYPE          I2CPE_ENC_TYPE_LINEAR
+// #define I2CPE_ENC_2_TICKS_UNIT    2048
+// #define I2CPE_ENC_2_TICKS_REV   (16 * 200)
+// #define I2CPE_ENC_2_INVERT
+// #define I2CPE_ENC_2_EC_METHOD     I2CPE_ECM_MICROSTEP
+// #define I2CPE_ENC_2_EC_THRESH     0.10
+// #define I2CPE_ENC_3_ADDR          I2CPE_PRESET_ADDR_Z
+// #define I2CPE_ENC_3_AXIS          Z_AXIS
+// #define I2CPE_ENC_4_ADDR          I2CPE_PRESET_ADDR_E
+// #define I2CPE_ENC_4_AXIS          E_AXIS
+// #define I2CPE_ENC_5_ADDR          34
+// #define I2CPE_ENC_5_AXIS          E_AXIS
+// #define I2CPE_DEF_TYPE            I2CPE_ENC_TYPE_LINEAR
+// #define I2CPE_DEF_ENC_TICKS_UNIT  2048
+// #define I2CPE_DEF_TICKS_REV       (16 * 200)
+// #define I2CPE_DEF_EC_METHOD       I2CPE_ECM_NONE
+// #define I2CPE_DEF_EC_THRESH       0.1
+// #define I2CPE_ERR_THRESH_ABORT  100.0
+// #define I2CPE_TIME_TRUSTED        10000
+// #define I2CPE_MIN_UPD_TIME_MS     4
+// #define I2CPE_ERR_ROLLING_AVERAGE
+// #define JOYSTICK
+// #define JOY_X_PIN    5
+// #define JOY_Y_PIN   10
+// #define JOY_Z_PIN   12
+// #define JOY_EN_PIN  44
+// #define INVERT_JOY_X
+// #define INVERT_JOY_Y
+// #define INVERT_JOY_Z
+// #define JOY_X_LIMITS { 5600, 8190-100, 8190+100, 10800 }
+// #define JOY_Y_LIMITS { 5600, 8250-100, 8250+100, 11000 }
+// #define JOY_Z_LIMITS { 4800, 8080-100, 8080+100, 11550 }
+// #define JOYSTICK_DEBUG
+// #define MECHANICAL_GANTRY_CALIBRATION
+// #define GANTRY_CALIBRATION_CURRENT          600
+// #define GANTRY_CALIBRATION_EXTRA_HEIGHT      15
+// #define GANTRY_CALIBRATION_FEEDRATE         500
+// #define GANTRY_CALIBRATION_TO_MIN
+// #define GANTRY_CALIBRATION_SAFE_POSITION XY_CENTER
+// #define GANTRY_CALIBRATION_XY_PARK_FEEDRATE 3000
+// #define GANTRY_CALIBRATION_COMMANDS_PRE   ""
+// #define GANTRY_CALIBRATION_COMMANDS_POST  "G28"
+// #define FREEZE_FEATURE
+// #define FREEZE_PIN 41
+// #define FREEZE_STATE LOW
+// #define MAX7219_DEBUG
+// #define MAX7219_CLK_PIN   64
+// #define MAX7219_DIN_PIN   57
+// #define MAX7219_LOAD_PIN  44
+// #define MAX7219_GCODE
+// #define MAX7219_INIT_TEST    2
+// #define MAX7219_NUMBER_UNITS 1
+// #define MAX7219_ROTATE       0
+// #define MAX7219_REVERSE_ORDER
+// #define MAX7219_REVERSE_EACH
+// #define MAX7219_SIDE_BY_SIDE
+// #define MAX7219_DEBUG_PRINTER_ALIVE
+// #define MAX7219_DEBUG_PLANNER_HEAD  2
+// #define MAX7219_DEBUG_PLANNER_TAIL  4
+// #define MAX7219_DEBUG_PLANNER_QUEUE 0
+// #define MAX7219_DEBUG_PROFILE       6
+// #define MAX7219_DEBUG_MULTISTEPPING 6
+// #define MAX7219_DEBUG_SLOWDOWN      6
+// #define NANODLP_Z_SYNC
+// #define NANODLP_ALL_AXIS
+// #define MAC_ADDRESS { 0xDE, 0xAD, 0xBE, 0xEF, 0xF0, 0x0D }
+// #define WIFISUPPORT
+// #define ESP3D_WIFISUPPORT
+// #define WEBSUPPORT
+// #define OTASUPPORT
+// #define WIFI_CUSTOM_COMMAND
+// #define WIFI_SSID "WiFi SSID"
+// #define WIFI_PWD  "WiFi Password"
+// #define E_MUX0_PIN 40
+// #define E_MUX1_PIN 42
+// #define E_MUX2_PIN 44
+// #define MMU2_SERIAL_PORT 2
+// #define MMU2_RST_PIN 23
+// #define MMU2_MODE_12V
+// #define MMU2_FILAMENT_RUNOUT_SCRIPT "M600"
+// #define MMU2_MENUS
+// #define MMU2_FILAMENTCHANGE_EJECT_FEED 80.0
+// #define MMU2_LOAD_TO_NOZZLE_SEQUENCE
+// #define MMU2_RAMMING_SEQUENCE
+// #define MMU2_C0_RETRY   5
+// #define MMU2_CAN_LOAD_FEEDRATE 800
+// #define MMU2_CAN_LOAD_SEQUENCE
+// #define MMU2_CAN_LOAD_RETRACT   6.0
+// #define MMU2_CAN_LOAD_DEVIATION 0.8
+// #define MMU2_CAN_LOAD_INCREMENT 0.2
+// #define MMU2_CAN_LOAD_INCREMENT_SEQUENCE
+// #define MMU_IR_UNLOAD_MOVE
+// #define MMU_EXTRUDER_SENSOR
+// #define MMU_LOADING_ATTEMPTS_NR 5
+// #define MMU2_DEBUG
+// #define SERVICE_WARNING_BUZZES  3
+// #define SERVICE_NAME_1      "Service S"
+// #define SERVICE_INTERVAL_1  100
+// #define SERVICE_NAME_2      "Service L"
+// #define SERVICE_INTERVAL_2  200
+// #define SERVICE_NAME_3      "Service 3"
+// #define SERVICE_INTERVAL_3    1
+// #define M100_FREE_MEMORY_WATCHER
+// #define DIRECT_PIN_CONTROL
+// #define PINS_DEBUGGING
+// #define MARLIN_TEST_BUILD
+// #define MARLIN_DEV_MODE
+// #define BUFFER_MONITORING
+// #define POSTMORTEM_DEBUGGING
+// #define SOFT_RESET_VIA_SERIAL
+// #define SOFT_RESET_ON_KILL
+// #define OPTIBOOT_RESET_REASON

@@ -153,9 +153,8 @@
 
 // Extended and default UI Colors
 #define COLOR_BLACK           0
-#define COLOR_GREEN           RGB(0,63,0)
-#define COLOR_AQUA            RGB(0,63,31)
-#define COLOR_BLUE            RGB(0,0,31)
+#define COLOR_GREEN           RGB(0, 63, 0)
+#define COLOR_BLUE            RGB(0, 0, 31)
 #define COLOR_LIGHT_WHITE     0xBDD7
 #define COLOR_LIGHT_GREEN     0x3460
 #define COLOR_CYAN            0x07FF
@@ -227,12 +226,10 @@ extern Title title;
 
 namespace DWINUI {
   extern xy_int_t cursor;
-  extern uint16_t penColor;
   extern uint16_t textColor;
   extern uint16_t backColor;
   extern uint16_t buttonColor;
   extern fontid_t fontID;
-  extern FSTR_P const author;
 
   extern void (*onTitleDraw)(Title* t);
 
@@ -274,16 +271,6 @@ namespace DWINUI {
   //  point: xy coordinate
   void moveBy(int16_t x, int16_t y);
   void moveBy(xy_int_t point);
-
-  // Draw a line from the cursor to xy position
-  //  color: Line segment color
-  //  x/y: End point
-  inline void lineTo(uint16_t color, uint16_t x, uint16_t y) {
-    dwinDrawLine(color, cursor.x, cursor.y, x, y);
-  }
-  inline void lineTo(uint16_t x, uint16_t y) {
-    dwinDrawLine(penColor, cursor.x, cursor.y, x, y);
-  }
 
   // Extend a frame box
   //  v: value to extend

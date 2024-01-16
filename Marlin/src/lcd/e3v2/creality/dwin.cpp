@@ -33,14 +33,6 @@
 //#define USE_STRING_HEADINGS
 //#define USE_STRING_TITLES
 
-#if DISABLED(PROBE_MANUALLY) && ANY(AUTO_BED_LEVELING_BILINEAR, AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_3POINT)
-  #define HAS_ONESTEP_LEVELING 1
-#endif
-
-#if ANY(BABYSTEPPING, HAS_BED_PROBE, HAS_WORKSPACE_OFFSET)
-  #define HAS_ZOFFSET_ITEM 1
-#endif
-
 #if !HAS_BED_PROBE && ENABLED(BABYSTEPPING)
   #define JUST_BABYSTEP 1
 #endif
@@ -68,7 +60,7 @@
   #include "../../../feature/host_actions.h"
 #endif
 
-#if HAS_ONESTEP_LEVELING
+#if HAS_LEVELING
   #include "../../../feature/bedlevel/bedlevel.h"
 #endif
 
@@ -504,7 +496,7 @@ void drawBackFirst(const bool is_sel=true) {
 #define PREHEAT_CASE_TOTAL PREHEAT_CASE_SAVE
 
 #define ADVSET_CASE_HOMEOFF   1
-#define ADVSET_CASE_PROBEOFF  (ADVSET_CASE_HOMEOFF + ENABLED(HAS_ONESTEP_LEVELING))
+#define ADVSET_CASE_PROBEOFF  (ADVSET_CASE_HOMEOFF + ENABLED(HAS_AUTOLEVEL))
 #define ADVSET_CASE_HEPID     (ADVSET_CASE_PROBEOFF + ENABLED(HAS_HOTEND))
 #define ADVSET_CASE_BEDPID    (ADVSET_CASE_HEPID + ENABLED(HAS_HEATED_BED))
 #define ADVSET_CASE_PWRLOSSR  (ADVSET_CASE_BEDPID + ENABLED(POWER_LOSS_RECOVERY))
@@ -1057,7 +1049,7 @@ void drawMotionMenu() {
     clearPopupArea();
     drawPopupBkgd105();
     if (toohigh) {
-      dwinIconShow(ICON, ICON_TempTooHigh, 102, 165);
+      dwinIconShow(ICON, ICON_TempTooHigh, 100, 165);
       if (hmiIsChinese()) {
         dwinFrameAreaCopy(1, 103, 371, 237, 386,  52, 285); // Temp Too High
         dwinFrameAreaCopy(1, 151, 389, 185, 402, 187, 285);
@@ -1069,7 +1061,7 @@ void drawMotionMenu() {
       }
     }
     else {
-      dwinIconShow(ICON, ICON_TempTooLow, 102, 165);
+      dwinIconShow(ICON, ICON_TempTooLow, 100, 165);
       if (hmiIsChinese()) {
         dwinFrameAreaCopy(1, 103, 371, 270, 386, 52, 285); // Tenp Too Low
         dwinFrameAreaCopy(1, 189, 389, 271, 402, 95, 310);
@@ -1092,7 +1084,7 @@ void drawPopupBkgd60() {
   void popupWindowETempTooLow() {
     clearMainWindow();
     drawPopupBkgd60();
-    dwinIconShow(ICON, ICON_TempTooLow, 102, 105);
+    dwinIconShow(ICON, ICON_TempTooLow, 100, 105);
     if (hmiIsChinese()) {
       dwinFrameAreaCopy(1, 103, 371, 136, 386, 69, 240);      // Nozzle Too Cold
       dwinFrameAreaCopy(1, 170, 371, 270, 386, 69 + 33, 240);
@@ -1127,7 +1119,7 @@ void popupWindowResume() {
 void popupWindowHome(const bool parking/*=false*/) {
   clearMainWindow();
   drawPopupBkgd60();
-  dwinIconShow(ICON, ICON_BLTouch, 101, 105);
+  dwinIconShow(ICON, ICON_BLTouch, 100, 105);
   if (hmiIsChinese()) {
     dwinFrameAreaCopy(1, 0, 371, 33, 386, 85, 240);       // Wait for Move to Complete
     dwinFrameAreaCopy(1, 203, 286, 271, 302, 118, 240);
@@ -1139,12 +1131,12 @@ void popupWindowHome(const bool parking/*=false*/) {
   }
 }
 
-#if HAS_ONESTEP_LEVELING
+#if HAS_AUTOLEVEL
 
   void popupWindowLeveling() {
     clearMainWindow();
     drawPopupBkgd60();
-    dwinIconShow(ICON, ICON_AutoLeveling, 101, 105);
+    dwinIconShow(ICON, ICON_AutoLeveling, 100, 105);
     if (hmiIsChinese()) {
       dwinFrameAreaCopy(1, 0, 371, 100, 386, 84, 240);    // Wait for Leveling
       dwinFrameAreaCopy(1, 0, 389, 150, 402, 61, 280);
@@ -1266,7 +1258,7 @@ void gotoMainMenu() {
   iconPrint();
   iconPrepare();
   iconControl();
-  TERN(HAS_ONESTEP_LEVELING, iconLeveling, iconStartInfo)();
+  TERN(HAS_AUTOLEVEL, iconLeveling, iconStartInfo)();
 }
 
 void hmiPlanMove(const feedRate_t fr_mm_s) {
@@ -1816,6 +1808,12 @@ void hmiSDCardInit() { card.cdroot(); }
 // Initialize or re-initialize the LCD
 void MarlinUI::init_lcd() { dwinStartup(); }
 
+void MarlinUI::update() {
+  eachMomentUpdate();   // Status update
+  hmiSDCardUpdate();   // SD card update
+  dwinHandleScreen();  // Rotary encoder update
+}
+
 void MarlinUI::refresh() { /* Nothing to see here */ }
 
 #if HAS_LCD_BRIGHTNESS
@@ -2090,7 +2088,7 @@ void hmiMainMenu() {
         case PAGE_PRINT: iconPrint(); break;
         case PAGE_PREPARE: iconPrint(); iconPrepare(); break;
         case PAGE_CONTROL: iconPrepare(); iconControl(); break;
-        case PAGE_INFO_LEVELING: iconControl(); TERN(HAS_ONESTEP_LEVELING, iconLeveling, iconStartInfo)(); break;
+        case PAGE_INFO_LEVELING: iconControl(); TERN(HAS_AUTOLEVEL, iconLeveling, iconStartInfo)(); break;
       }
     }
   }
@@ -2099,8 +2097,8 @@ void hmiMainMenu() {
       switch (select_page.now) {
         case PAGE_PRINT: iconPrint(); iconPrepare(); break;
         case PAGE_PREPARE: iconPrepare(); iconControl(); break;
-        case PAGE_CONTROL: iconControl(); TERN(HAS_ONESTEP_LEVELING, iconLeveling, iconStartInfo)(); break;
-        case PAGE_INFO_LEVELING: TERN(HAS_ONESTEP_LEVELING, iconLeveling, iconStartInfo)(); break;
+        case PAGE_CONTROL: iconControl(); TERN(HAS_AUTOLEVEL, iconLeveling, iconStartInfo)(); break;
+        case PAGE_INFO_LEVELING: TERN(HAS_AUTOLEVEL, iconLeveling, iconStartInfo)(); break;
       }
     }
   }
@@ -2126,7 +2124,7 @@ void hmiMainMenu() {
         break;
 
       case PAGE_INFO_LEVELING:
-        #if HAS_ONESTEP_LEVELING
+        #if HAS_AUTOLEVEL
           checkkey = ID_Leveling;
           hmiLeveling();
         #else
@@ -2427,7 +2425,7 @@ void itemAdvHomeOffsets(const uint8_t row) {
   drawMoreIcon(row);
 }
 
-#if HAS_ONESTEP_LEVELING
+#if HAS_AUTOLEVEL
 
   void itemAdvProbeOffsets(const uint8_t row) {
     if (false && hmiIsChinese()) {
@@ -2518,7 +2516,7 @@ void drawAdvancedSettingsMenu() {
 
   if (AVISI(0)) drawBackFirst(select_advset.now == CASE_BACK);
   if (AVISI(ADVSET_CASE_HOMEOFF)) itemAdvHomeOffsets(ASCROL(ADVSET_CASE_HOMEOFF));      // Set Home Offsets >
-  #if HAS_ONESTEP_LEVELING
+  #if HAS_AUTOLEVEL
     if (AVISI(ADVSET_CASE_PROBEOFF)) itemAdvProbeOffsets(ASCROL(ADVSET_CASE_PROBEOFF)); // Probe Offsets >
   #endif
   if (AVISI(ADVSET_CASE_HEPID)) itemAdvHotendPID(ASCROL(ADVSET_CASE_HEPID));            // Nozzle PID
@@ -2593,7 +2591,7 @@ void drawHomeOffMenu() {
   if (select_item.now != CASE_BACK) drawMenuCursor(select_item.now);
 }
 
-#if HAS_ONESTEP_LEVELING
+#if HAS_AUTOLEVEL
 
   void drawProbeOffMenu() {
     clearMainWindow();
@@ -2941,7 +2939,7 @@ void hmiControl() {
   dwinUpdateLCD();
 }
 
-#if HAS_ONESTEP_LEVELING
+#if HAS_AUTOLEVEL
   // Leveling
   void hmiLeveling() {
     popupWindowLeveling();
@@ -3570,7 +3568,7 @@ void hmiAdvSet() {
           break;
       #endif
 
-      #if HAS_ONESTEP_LEVELING
+      #if HAS_AUTOLEVEL
         case ADVSET_CASE_PROBEOFF:
           checkkey = ID_ProbeOff;
           select_item.reset();
@@ -3667,7 +3665,7 @@ void hmiAdvSet() {
 
 #endif // HAS_HOME_OFFSET
 
-#if HAS_ONESTEP_LEVELING
+#if HAS_AUTOLEVEL
 
   // Probe Offset
   void hmiProbeOff() {
@@ -3721,14 +3719,14 @@ void hmiAdvSet() {
   void hmiProbeOffX() { hmiProbeOffN(hmiValues.probeOffsScaled.x, probe.offset.x); }
   void hmiProbeOffY() { hmiProbeOffN(hmiValues.probeOffsScaled.y, probe.offset.y); }
 
-#endif // HAS_ONESTEP_LEVELING
+#endif // HAS_AUTOLEVEL
 
 // Info
 void hmiInfo() {
   EncoderState encoder_diffState = get_encoder_state();
   if (encoder_diffState == ENCODER_DIFF_NO) return;
   if (encoder_diffState == ENCODER_DIFF_ENTER) {
-    #if HAS_ONESTEP_LEVELING
+    #if HAS_AUTOLEVEL
       checkkey = ID_Control;
       select_control.set(CONTROL_CASE_INFO);
       drawControlMenu();
@@ -4080,14 +4078,6 @@ void dwinInitScreen() {
   hmiStartFrame(true);
 }
 
-void dwinUpdate() {
-  eachMomentUpdate(); // Status update
-  hmiSDCardUpdate();  // SD card update
-  dwinHandleScreen(); // Rotary encoder update
-}
-
-void MarlinUI::update() { dwinUpdate(); }
-
 void eachMomentUpdate() {
   static millis_t next_var_update_ms = 0, next_rts_update_ms = 0;
 
@@ -4242,7 +4232,7 @@ void dwinHandleScreen() {
       case ID_HomeOffY:     hmiHomeOffY(); break;
       case ID_HomeOffZ:     hmiHomeOffZ(); break;
     #endif
-    #if HAS_ONESTEP_LEVELING
+    #if HAS_AUTOLEVEL
       case ID_ProbeOff:     hmiProbeOff(); break;
       case ID_ProbeOffX:    hmiProbeOffX(); break;
       case ID_ProbeOffY:    hmiProbeOffY(); break;

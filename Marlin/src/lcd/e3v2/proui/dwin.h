@@ -181,6 +181,8 @@ typedef struct {
   AxisEnum axis = X_AXIS;             // Axis Select
 } hmi_value_t;
 
+extern hmi_value_t hmiValue;
+
 typedef struct {
   uint8_t language;
   bool printing_flag:1; // sd or host printing
@@ -190,13 +192,12 @@ typedef struct {
   bool home_flag:1;     // homing in course
 } hmi_flag_t;
 
-extern hmi_value_t hmiValue;
 extern hmi_flag_t hmiFlag;
 extern uint8_t checkkey;
 
 // Popups
 #if HAS_HOTEND || HAS_HEATED_BED
-  void dwinPopupTemperature(const bool toohigh);
+  void dwinPopupTemperature(const int_fast8_t heater_id, const bool toohigh);
 #endif
 #if ENABLED(POWER_LOSS_RECOVERY)
   void popupPowerLossRecovery();
@@ -235,7 +236,7 @@ void doCoolDown();
 #if ENABLED(NOZZLE_PARK_FEATURE)
   void parkHead();
 #endif
-#if HAS_ONESTEP_LEVELING
+#if HAS_AUTOLEVEL
   void trammingwizard();
 #endif
 #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)

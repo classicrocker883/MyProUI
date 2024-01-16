@@ -54,10 +54,6 @@
   #include "../../../feature/host_actions.h"
 #endif
 
-#if ANY(BABYSTEPPING, HAS_BED_PROBE, HAS_WORKSPACE_OFFSET)
-  #define HAS_ZOFFSET_ITEM 1
-#endif
-
 #if HAS_LEVELING
   #include "../../../feature/bedlevel/bedlevel.h"
 #endif
@@ -101,13 +97,12 @@
 
 #define MAX_XY_OFFSET 100
 
-#if HAS_ZOFFSET_ITEM
-  #define MAX_Z_OFFSET 9.99
-  #if HAS_BED_PROBE
-    #define MIN_Z_OFFSET -9.99
-  #else
-    #define MIN_Z_OFFSET -1
-  #endif
+#if HAS_ZOFFSET_ITEM && HAS_BED_PROBE
+  #define MAX_Z_OFFSET  20
+  #define MIN_Z_OFFSET -20
+#else
+  #define MAX_Z_OFFSET  3
+  #define MIN_Z_OFFSET -3
 #endif
 
 #if HAS_HOTEND

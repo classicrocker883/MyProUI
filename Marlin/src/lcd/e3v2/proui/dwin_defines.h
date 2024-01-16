@@ -42,27 +42,19 @@
   #define DASH_REDRAW 1
 #endif
 
-#if DISABLED(PROBE_MANUALLY) && ANY(AUTO_BED_LEVELING_BILINEAR, AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_3POINT, AUTO_BED_LEVELING_UBL)
-  #define HAS_ONESTEP_LEVELING 1
-#endif
-
 #if !HAS_BED_PROBE && ENABLED(BABYSTEPPING)
   #define JUST_BABYSTEP 1
 #endif
 
-#if ANY(BABYSTEPPING, HAS_BED_PROBE, HAS_WORKSPACE_OFFSET)
-  #define HAS_ZOFFSET_ITEM 1
-#endif
-
-#define defColorBackground  RGB( 1, 12,  8)
-#define defColorCursor      RGB(20, 49, 31)
-#define defColorTitleBg     RGB( 0, 23, 16)
+#define defColorBackground  COLOR_BG_BLACK
+#define defColorCursor      COLOR_WHITE
+#define defColorTitleBg     Color_Voxelab_Red
 #define defColorTitleTxt    COLOR_WHITE
 #define defColorText        COLOR_WHITE
 #define defColorSelected    COLOR_SELECT
-#define defColorSplitLine   RGB( 0, 23, 16)
+#define defColorSplitLine   COLOR_WHITE
 #define defColorHighlight   COLOR_WHITE
-#define defColorStatusBg    RGB( 0, 23, 16)
+#define defColorStatusBg    COLOR_BG_BLACK
 #define defColorStatusTxt   COLOR_YELLOW
 #define defColorPopupBg     COLOR_BG_WINDOW
 #define defColorPopupTxt    COLOR_POPUP_TEXT
@@ -72,7 +64,7 @@
 #define defColorBarfill     COLOR_BARFILL
 #define defColorIndicator   COLOR_WHITE
 #define defColorCoordinate  COLOR_WHITE
-#define defColorButton      RGB( 0, 23, 16)
+#define defColorButton      Color_Voxelab_Red
 #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
   #define defColorLeds      LEDColorWhite()
 #endif
@@ -109,8 +101,12 @@
 #if PROUI_TUNING_GRAPH
   #define PROUI_ITEM_PLOT     // Plot temp graph viewer
 #endif
+#if ALL(LCD_BED_TRAMMING, HAS_BED_PROBE, HAS_MESH)
+  #define HAS_TRAMMING_WIZARD 1  // Manual mesh not have a probe
+#endif
 #define HAS_GCODE_PREVIEW 1   // Preview G-code model thumbnail
 #define HAS_CUSTOM_COLORS 1   // Change display colors
 #define HAS_ESDIAG 1          // View End-stop/Runout switch continuity
 #define HAS_LOCKSCREEN 1      // Simple lockscreen
 #define HAS_SD_EXTENDER 1     // Enable to support SD card extender cables
+//#define SMOOTH_ENCODER_MENUITEMS  // Menu items value faster/smooth change rate

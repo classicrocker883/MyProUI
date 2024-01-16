@@ -25,7 +25,7 @@
 #define Language_English    1
 #define Language_Chinese    2
 
-#define ICON 7 // 7.ICO
+#define ICON 9 // 7.ICO
 
 #ifndef CORP_WEBSITE
   #define CORP_WEBSITE WEBSITE_URL
@@ -130,7 +130,7 @@
 
 #define ICON_Folder       ICON_More
 #define ICON_AdvSet       ICON_Language
-#define ICON_HomeOffset   ICON_AdvSet
+#define ICON_HomeOffset   ICON_PrintSize
 #define ICON_HomeOffsetX  ICON_StepX
 #define ICON_HomeOffsetY  ICON_StepY
 #define ICON_HomeOffsetZ  ICON_StepZ
@@ -138,8 +138,8 @@
 #define ICON_ProbeOffsetX ICON_StepX
 #define ICON_ProbeOffsetY ICON_StepY
 #define ICON_ProbeOffsetZ ICON_StepZ
-#define ICON_PIDNozzle    ICON_SetEndTemp
-#define ICON_PIDBed       ICON_SetBedTemp
+#define ICON_PIDNozzle    ICON_HotendTemp
+#define ICON_PIDBed       ICON_BedTemp
 #define ICON_FWRetract    ICON_StepE
 #define ICON_FWRetLength  ICON_StepE
 #define ICON_FWRetSpeed   ICON_Setspeed
