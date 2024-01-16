@@ -113,7 +113,7 @@ void ESDiag::update() {
   #endif
   #if HAS_FILAMENT_SENSOR
     #if PROUI_EX
-      draw_es_state(!FilamentSensorDevice::poll_runout_state(0));
+      draw_es_state(!FilamentSensorDevice::poll_runout_state(EXT));
     #else
       //draw_es_state(!FilamentSensorSwitch::poll_runout_states());
       draw_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE);
@@ -129,7 +129,7 @@ void ESDiag::update() {
   IF_DISABLED(USE_Z_MIN_PROBE, TERN_(USE_Z_MIN, ES_REPORT(Z_MIN);) TERN_(USE_Z_MAX, ES_REPORT(Z_MAX);))
   #if HAS_FILAMENT_SENSOR
     #if PROUI_EX
-      draw_es_state(!FilamentSensorDevice::poll_runout_state(0), true);
+      draw_es_state(!FilamentSensorDevice::poll_runout_state(EXT), true);
     #else
       //draw_es_state(!FilamentSensorSwitch::poll_runout_states());
       draw_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE, true);

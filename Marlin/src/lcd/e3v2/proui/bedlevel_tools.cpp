@@ -40,9 +40,6 @@
 
 BedLevelToolsClass bedLevelTools;
 
-#if USE_GRID_MESHVIEWER
-  bool BedLevelToolsClass::view_mesh = false;
-#endif
 bool BedLevelToolsClass::goto_mesh_value = false;
 uint8_t BedLevelToolsClass::mesh_x = 0;
 uint8_t BedLevelToolsClass::mesh_y = 0;
@@ -51,14 +48,6 @@ uint8_t BedLevelToolsClass::tilt_grid = 2;
 bool drawing_mesh = false;
 
 #if ENABLED(AUTO_BED_LEVELING_UBL)
-
-  void BedLevelToolsClass::manual_value_update(const uint8_t mesh_x, const uint8_t mesh_y, bool undefined/*=false*/) {
-    MString<MAX_CMD_SIZE> cmd;
-    cmd.set(F("M421 I"), mesh_x, 'J', mesh_y, 'Z', p_float_t(current_position.z, 3));
-    if (undefined) cmd += F(" N");
-    gcode.process_subcommands_now(cmd);
-    planner.synchronize();
-  }
 
   bool BedLevelToolsClass::create_plane_from_mesh() {
     struct linear_fit_data lsf_results;
@@ -99,16 +88,17 @@ bool drawing_mesh = false;
     return false;
   }
 
-#else
-
-  void BedLevelToolsClass::manual_value_update(const uint8_t mesh_x, const uint8_t mesh_y) {
-    gcode.process_subcommands_now(
-      TS(F("G29 I"), mesh_x, 'J', mesh_y, 'Z', p_float_t(current_position.z, 3))
-    );
-    planner.synchronize();
-  }
-
 #endif
+
+void BedLevelToolsClass::manual_value_update(const uint8_t mesh_x, const uint8_t mesh_y, bool reset/*=false*/) {
+  float zval;
+  if (reset) { zval = 0; }
+  else { zval = current_position.z; }
+  gcode.process_subcommands_now(
+  TS(F(TERN(AUTO_BED_LEVELING_UBL, "M421 I", "G29 I")), mesh_x, 'J', mesh_y, 'Z', p_float_t(zval, 3))
+  );
+  planner.synchronize();
+}
 
 void BedLevelToolsClass::manual_move(const uint8_t mesh_x, const uint8_t mesh_y, bool zmove/*=false*/) {
   gcode.process_subcommands_now(F("G28O"));
@@ -187,8 +177,8 @@ bool BedLevelToolsClass::meshValidate() {
 }
 
 #if USE_GRID_MESHVIEWER
-
-  constexpr uint8_t meshfont = TERN(TJC_DISPLAY, font8x16, font6x12);
+  #include "meshviewer.h"
+  bool BedLevelToolsClass::view_mesh = false;
 
   void BedLevelToolsClass::Draw_Bed_Mesh(int16_t selected/*=-1*/, uint8_t gridline_width/*=1*/, uint16_t padding_x/*=8*/, uint16_t padding_y_top/*=(40 + 53 - 7)*/) {
     drawing_mesh = true;
@@ -224,10 +214,10 @@ bool BedLevelToolsClass::meshValidate() {
       LCD_SERIAL.flushTX();
 
       // Draw value text on
-      const uint8_t fs = DWINUI::fontWidth(meshfont);
+      const uint8_t fs = DWINUI::fontWidth(MeshViewer.meshfont);
       const int8_t offset_y = cell_height_px / 2 - fs;
       if (isnan(z)) { // undefined
-        DWIN_Draw_String(false, meshfont, DWINUI::textcolor, DWINUI::backcolor, start_x_px + cell_width_px / 2 - 5, start_y_px + offset_y, F("X"));
+        DWIN_Draw_String(false, MeshViewer.meshfont, DWINUI::textcolor, DWINUI::backcolor, start_x_px + cell_width_px / 2 - 5, start_y_px + offset_y, F("X"));
       }
       else {          // has value
         MString<12> msg;
@@ -237,8 +227,8 @@ bool BedLevelToolsClass::meshValidate() {
           msg.set(p_float_t(abs(z), 2));
         const int8_t offset_x = cell_width_px / 2 - (fs / 2) * msg.length() - 2;
         if ((GRID_MAX_POINTS_X) >= TERN(TJC_DISPLAY, 8, 10))
-          DWIN_Draw_String(false, meshfont, DWINUI::textcolor, DWINUI::backcolor, start_x_px - 2 + offset_x, start_y_px + offset_y, F("."));
-        DWIN_Draw_String(false, meshfont, DWINUI::textcolor, DWINUI::backcolor, start_x_px + 1 + offset_x, start_y_px + offset_y, msg);
+          DWIN_Draw_String(false, MeshViewer.meshfont, DWINUI::textcolor, DWINUI::backcolor, start_x_px - 2 + offset_x, start_y_px + offset_y, F("."));
+        DWIN_Draw_String(false, MeshViewer.meshfont, DWINUI::textcolor, DWINUI::backcolor, start_x_px + 1 + offset_x, start_y_px + offset_y, msg);
       }
       safe_delay(10);
       LCD_SERIAL.flushTX();

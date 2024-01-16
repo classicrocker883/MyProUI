@@ -375,7 +375,9 @@ void PrintJobRecovery::write() {
  * Resume the saved print job
  */
 void PrintJobRecovery::resume() {
-  const uint32_t resume_sdpos = info.sdpos; // Get here before the stepper ISR overwrites it
+  // Get these fields before any moves because stepper.cpp overwrites them
+  const xyze_pos_t resume_pos = info.current_position;
+  const uint32_t resume_sdpos = info.sdpos;
 
   // Apply the dry-run flag if enabled
   if (info.flag.dryrun) marlin_debug_flags |= MARLIN_DEBUG_DRYRUN;
@@ -417,7 +419,7 @@ void PrintJobRecovery::resume() {
   #endif
 
   // Interpret the saved Z according to flags
-  const float z_print = info.current_position.z,
+  const float z_print = resume_pos.z,
               z_raised = z_print + info.zraise;
 
   //
@@ -569,7 +571,7 @@ void PrintJobRecovery::resume() {
 
   // Move back over to the saved XY
   PROCESS_SUBCOMMANDS_NOW(TS(
-    F("G1F3000X"), p_float_t(info.current_position.x, 3), 'Y', p_float_t(info.current_position.y, 3)
+    F("G1F3000X"), p_float_t(resume_pos.x, 3), 'Y', p_float_t(resume_pos.y, 3)
   ));
   DEBUG_ECHOLNPGM("Move XY : ",cmd);
 
@@ -582,7 +584,7 @@ void PrintJobRecovery::resume() {
   DEBUG_ECHOLNPGM("Feedrate: ",cmd);
 
   // Restore E position with G92.9
-  PROCESS_SUBCOMMANDS_NOW(TS(F("G92.9E"), p_float_t(info.current_position.e, 3)));
+  PROCESS_SUBCOMMANDS_NOW(TS(F("G92.9E"), p_float_t(resume_pos.e, 3)));
   DEBUG_ECHOLNPGM("Extruder : ",cmd);
 
   TERN_(GCODE_REPEAT_MARKERS, repeat = info.stored_repeat);

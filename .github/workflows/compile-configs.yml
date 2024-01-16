@@ -59,17 +59,16 @@ jobs:
         cp configurations/Voxelab\ Aquila/Default-NP/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/Default-NP/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/Default-NP/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -143,17 +142,16 @@ jobs:
         cp configurations/Voxelab\ Aquila/MM/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/MM/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/MM/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -176,14 +174,102 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-ProUI-A:            # UBL Pro for Aquila
+  Build-UBL-ProUI-A:            # UBL Pro PID_MPC for Aquila
     name: Build UBL Pro Files A
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chip: [GD32,N32]
+        temp: [true,false]
         tjc: [true,false]
-        pwr: [true,false]
+        t13: [true,false]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi;
+        echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI${TPTMP}.bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Voxelab\ Aquila/UBL/ConfigurationPro.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/UBL/Configuration_advPro.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define PREHEAT_2_LABEL/${PTEMP}#define PREHEAT_2_LABEL/" Marlin/Configuration.h
+        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/${PTEMP}#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PTEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
+        sed -i "s/.*#define SHOW_SPEED_IND/${PTEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h
+        sed -i "s/.*#define CAPABILITIES_REPORT/${PTEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        if ($T13); then THMP="13"; TMMP='\/\/'; else THMP="1"; TMMP=; fi;
+        sed -i "s/.*#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
+        sed -i "s/.*#define PROUI_MEDIASORT/${TMMP}#define PROUI_MEDIASORT/" Marlin/Configuration.h
+        pio run
+        mkdir temp
+        mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
+      env:
+        AQUILA_VER: ${{ matrix.chip }}
+        TP: ${{ matrix.temp }}
+        TJC: ${{ matrix.tjc }}
+        T13: ${{ matrix.t13 }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-UBL-ProUI-PWRLOSS-A:            # UBL Pro PWRLOSS for Aquila
+    name: Build UBL Pro PWRLOSS Files A
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [GD32,N32]
+        tjc: [true,false]
+        pwr: [true]
         t13: [true,false]
     steps:
     - uses: actions/checkout@v3
@@ -218,24 +304,24 @@ jobs:
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        if ($PWR); then PLTMP=-PWRLOSS; else PLTMP=; fi;
-        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi
-        echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI${PLTMP}.bin" >> $GITHUB_OUTPUT
+        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi;
+        echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI-PWRLOSS.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         cp configurations/Voxelab\ Aquila/UBL/ConfigurationPro.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/UBL/Configuration_advPro.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
-        if ($PWR); then PLMP='\/\/'; else PLMP=; fi;
-        sed -i "s/[^ ]*#define HAS_CUSTOM_COLORS 1/$PLMP#define HAS_CUSTOM_COLORS 1/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REPORT_CAPABILITIES_GCODE/$PLMP#define REPORT_CAPABILITIES_GCODE/g" Marlin/Configuration.h
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        sed -i "s/.*#define SHOW_SPEED_IND/\/\/#define SHOW_SPEED_IND/" Marlin/Configuration.h
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
+        sed -i "s/.*#define POWER_LOSS_RECOVERY/#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define CAPABILITIES_REPORT/\/\/#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         if ($T13); then THMP="13"; else THMP="1"; fi;
-        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 $THMP/g" Marlin/Configuration.h
-        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
+        sed -i "s/.*#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -303,10 +389,11 @@ jobs:
         cp configurations/Voxelab\ Aquila/X3/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/X3/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/X3/Version.h Marlin/Version.h
-        if ($PWR); then PLMP='\/\/'; else PLMP=; fi;
-        sed -i "s/[^ ]*#define HAS_CUSTOM_COLORS 1/$PLMP#define HAS_CUSTOM_COLORS 1/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REPORT_CAPABILITIES_GCODE/$PLMP#define REPORT_CAPABILITIES_GCODE/g" Marlin/Configuration.h
-        sed -i "s/default_envs =.*/default_envs = N32G455RE_voxelab_maple/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = N32G455RE_voxelab_maple/" platformio.ini
+        if ($PWR); then PLMP='\/\/'; PRMP=; else PLMP=; PRMP='\/\/'; fi;
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PLMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
+        sed -i "s/.*#define POWER_LOSS_RECOVERY/${PRMP}#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define CAPABILITIES_REPORT/${PLMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         pio run
         mkdir temp
         mv .pio/build/N32G455RE_voxelab_maple/*.bin temp/build.bin
@@ -376,17 +463,19 @@ jobs:
         cp configurations/Voxelab\ Aquila/UBL/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
-        sed -i "s/#define GRID_MAX_POINTS_X.*/#define GRID_MAX_POINTS_X $GRID/g" Marlin/Configuration.h
+        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
+        sed -i "s/.*#define GRID_MAX_POINTS_X.*/#define GRID_MAX_POINTS_X ${GRID}/g" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
-        if [[ $IS && $TP ]]; then ETEMP='\/\/'; else ETEMP=; fi;
-        sed -i "s/[^ ]*#define REPORT_CAPABILITIES_GCODE/$ETEMP#define REPORT_CAPABILITIES_GCODE/g" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        if [ "$IS" = true ] && [ "$TP" = true ]; then
+        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/\/\/#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h;
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h;
+        sed -i "s/.*#define CAPABILITIES_REPORT/\/\/#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h;
+        fi;
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -458,15 +547,14 @@ jobs:
         cp configurations/Voxelab\ Aquila/BLT/ConfigurationPro.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/BLT/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/BLT/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define NOZZLE_CLEAN_FEATURE/$PTEMP#define NOZZLE_CLEAN_FEATURE/g" Marlin/Configuration.h
+        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/${PTEMP}#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -538,15 +626,14 @@ jobs:
         cp configurations/Voxelab\ Aquila/BLT/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila/BLT/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/BLT/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/g" platformio.ini
-        sed -i "s/#define GRID_MAX_POINTS_X.*/#define GRID_MAX_POINTS_X $GRID/g" Marlin/Configuration.h
+        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
+        sed -i "s/.*#define GRID_MAX_POINTS_X.*/#define GRID_MAX_POINTS_X ${GRID}/g" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -607,9 +694,9 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$SKR" = V3_0 ]; then AVTMP="V3";
-        elif [ "$SKR" = V2_0 ]; then AVTMP="V2";
-        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1";
+        if [ "$SKR" = V3_0 ]; then AVTMP="V3"; STMP="STM32G0B1RE"
+        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"; STMP="STM32F103RC"
+        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"; STMP="STM32F401RC"
         fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Aquila_SKR-Mini-E3-${AVTMP}_UBL-ProUI.bin" >> $GITHUB_OUTPUT
@@ -625,15 +712,11 @@ jobs:
         cp configurations/BTT-SKR_Mini_E3_V2/Configuration_advUBL.h Marlin/Configuration_adv.h
         cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         fi;
-        sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_$SKR/g" Marlin/Configuration.h
-        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE";
-        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC";
-        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC";
-        fi;
+        sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_${SKR}/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
-        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         pio run
         mkdir temp
         mv .pio/build/${STMP}_btt/*.bin temp/build.bin
@@ -692,9 +775,9 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$SKR" = V3_0 ]; then AVTMP="V3";
-        elif [ "$SKR" = V2_0 ]; then AVTMP="V2";
-        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1";
+        if [ "$SKR" = V3_0 ]; then AVTMP="V3"; STMP="STM32G0B1RE"
+        elif [ "$SKR" = V2_0 ]; then AVTMP="V2"; STMP="STM32F103RC"
+        elif [ "$SKR" = V3_0_1 ]; then AVTMP="V3-0-1"; STMP="STM32F401RC"
         fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Aquila_SKR-Mini-E3-${AVTMP}_MM-ProUI.bin" >> $GITHUB_OUTPUT
@@ -710,15 +793,11 @@ jobs:
         cp configurations/BTT-SKR_Mini_E3_V2/Configuration_advMM.h Marlin/Configuration_adv.h
         cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         fi;
-        sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_$SKR/g" Marlin/Configuration.h
-        if [ "$SKR" = V3_0 ]; then STMP="STM32G0B1RE";
-        elif [ "$SKR" = V2_0 ]; then STMP="STM32F103RC";
-        elif [ "$SKR" = V3_0_1 ]; then STMP="STM32F401RC";
-        fi;
+        sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_${SKR}/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
-        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/g" platformio.ini
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         pio run
         mkdir temp
         mv .pio/build/${STMP}_btt/*.bin temp/build.bin
@@ -790,19 +869,18 @@ jobs:
         cp configurations/Voxelab\ Aquila\ 427/Default-NP/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ 427/Default-NP/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ 427/Default-NP/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
         if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
-        sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/g" Marlin/Configuration.h
+        sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -876,19 +954,18 @@ jobs:
         cp configurations/Voxelab\ Aquila\ 427/MM/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ 427/MM/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ 427/MM/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
         if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
-        sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/g" Marlin/Configuration.h
+        sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -955,7 +1032,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi
+        if ($T13); then TTMP=-SpriteT13; else TTMP=; fi;
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; else AVTMP="422"; fi;
         echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
@@ -964,21 +1041,20 @@ jobs:
         cp configurations/Voxelab\ Aquila\ 427/UBL/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ 427/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ 427/UBL/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
         if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
-        sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/g" Marlin/Configuration.h
+        sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
         if ($T13); then THMP="13"; else THMP="1"; fi;
-        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 $THMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -1053,19 +1129,18 @@ jobs:
         cp configurations/Voxelab\ Aquila\ 427/BLT/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ 427/BLT/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ 427/BLT/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/g" platformio.ini
+        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
         if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
-        sed -i "s/[^ ]*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/g" Marlin/Configuration.h
+        sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/g" Marlin/Configuration_adv.h
-        sed -i "s/[^ ]*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/g" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/[^ ]*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/[^ ]*#define MPCTEMP/$MTEMP#define MPCTEMP/g" Marlin/Configuration.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
-        sed -i "s/[^ ]*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/g" Marlin/Configuration.h
-        sed -i "s/[^ ]*#define REVERSE_ENCODER_DIRECTION/$REMP#define REVERSE_ENCODER_DIRECTION/g" Marlin/Configuration.h
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin

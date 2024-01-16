@@ -36,15 +36,13 @@ bool meshredraw;                            // Redraw mesh points
 uint8_t sizex, sizey;                       // Mesh XY size
 uint8_t rmax;                               // Maximum radius
 #define margin 25                           // XY Margins
-#define rmin 5                              // Minimum radius
+#define rmin   5                            // Minimum radius
 #define zmin -20                            // rmin at z=-0.20
 #define zmax  20                            // rmax at z= 0.20
 #define width DWIN_WIDTH - 2 * margin
 #define r(z) ((z - zmin) * (rmax - rmin) / (zmax - zmin) + rmin)
 #define px(xp) (margin + (xp) * (width) / (sizex - 1))
 #define py(yp) (30 + DWIN_WIDTH - margin - (yp) * (width) / (sizey - 1))
-
-constexpr uint8_t meshfont = TERN(TJC_DISPLAY, font8x16, font6x12);
 
 MeshViewerClass MeshViewer;
 
@@ -65,7 +63,7 @@ void MeshViewerClass::DrawMeshGrid(const uint8_t csizex, const uint8_t csizey) {
 void MeshViewerClass::DrawMeshPoint(const uint8_t x, const uint8_t y, const float z) {
   if (isnan(z)) return;
   TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout();)
-  const uint8_t fs = DWINUI::fontWidth(meshfont);
+  const uint8_t fs = DWINUI::fontWidth(MeshViewer.meshfont);
   const int16_t v = round(z * 100);
   NOLESS(max, z); NOMORE(min, z);
   const uint16_t color = DWINUI::RainbowInt(v, zmin, zmax);
@@ -73,21 +71,21 @@ void MeshViewerClass::DrawMeshPoint(const uint8_t x, const uint8_t y, const floa
   TERN_(TJC_DISPLAY, delay(100));
   const uint16_t fy = py(y) - fs;
   if (sizex < TERN(TJC_DISPLAY, 8, 9)) {
-    if (v == 0) DWINUI::Draw_Float(meshfont, 1, 2, px(x) - 2 * fs, fy, 0);
-    else DWINUI::Draw_Signed_Float(meshfont, 1, 2, px(x) - 3 * fs, fy, z);
+    if (v == 0) DWINUI::Draw_Float(MeshViewer.meshfont, 1, 2, px(x) - 2 * fs, fy, 0);
+    else DWINUI::Draw_Signed_Float(MeshViewer.meshfont, 1, 2, px(x) - 3 * fs, fy, z);
   }
   else {
     char msg[9]; msg[0] = '\0';
     switch (v) {
       case -999 ... -100:  // -9.99 .. -1.00 || 1.00 .. 9.99
-      case  100 ...  999: DWINUI::Draw_Signed_Float(meshfont, 1, 1, px(x) - 3 * fs, fy, z); break;
+      case  100 ...  999: DWINUI::Draw_Signed_Float(MeshViewer.meshfont, 1, 1, px(x) - 3 * fs, fy, z); break;
       case  -99 ...   -1: sprintf_P(msg, PSTR("-.%2i"), -v); break; // -0.99 .. -0.01 mm
       case    1 ...   99: sprintf_P(msg, PSTR( ".%2i"),  v); break; //  0.01 ..  0.99 mm
       default:
-        DWIN_Draw_String(false, meshfont, DWINUI::textcolor, DWINUI::backcolor, px(x) - 4, fy, "0");
+        DWIN_Draw_String(false, MeshViewer.meshfont, DWINUI::textcolor, DWINUI::backcolor, px(x) - 4, fy, "0");
         return;
     }
-    DWIN_Draw_String(false, meshfont, DWINUI::textcolor, DWINUI::backcolor, px(x) - 2 * fs, fy, msg);
+    DWIN_Draw_String(false, MeshViewer.meshfont, DWINUI::textcolor, DWINUI::backcolor, px(x) - 2 * fs, fy, msg);
   }
   SERIAL_FLUSH();
 }

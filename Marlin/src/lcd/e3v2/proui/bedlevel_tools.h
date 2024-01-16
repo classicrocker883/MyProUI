@@ -27,20 +27,15 @@
 
 class BedLevelToolsClass {
 public:
-  #if USE_GRID_MESHVIEWER
-    static bool view_mesh;
-  #endif
   static bool goto_mesh_value;
   static uint8_t mesh_x;
   static uint8_t mesh_y;
   static uint8_t tilt_grid;
 
   #if ENABLED(AUTO_BED_LEVELING_UBL)
-    static void manual_value_update(const uint8_t mesh_x, const uint8_t mesh_y, bool undefined=false);
     static bool create_plane_from_mesh();
-  #else
-    static void manual_value_update(const uint8_t mesh_x, const uint8_t mesh_y);
   #endif
+  static void manual_value_update(const uint8_t mesh_x, const uint8_t mesh_y, bool reset=false);
   static void manual_move(const uint8_t mesh_x, const uint8_t mesh_y, bool zmove=false);
   static void MoveToXYZ();
   static void MoveToXY();
@@ -51,6 +46,7 @@ public:
   static float get_min_value();
   static bool meshValidate();
   #if USE_GRID_MESHVIEWER
+    static bool view_mesh;
     static void Draw_Bed_Mesh(int16_t selected=-1, uint8_t gridline_width=1, uint16_t padding_x=8, uint16_t padding_y_top=(40 + 53 - 7));
     static void Set_Mesh_Viewer_Status();
   #endif

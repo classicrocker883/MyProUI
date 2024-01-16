@@ -22,6 +22,7 @@
 
 class MeshViewerClass {
 public:
+  const uint8_t meshfont = TERN(TJC_DISPLAY, font8x16, font6x12);
   static float max, min;
   static void DrawMeshGrid(const uint8_t csizex, const uint8_t csizey);
   static void DrawMeshPoint(const uint8_t x, const uint8_t y, const float z);

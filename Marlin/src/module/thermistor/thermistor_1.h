@@ -25,10 +25,10 @@
 constexpr temp_entry_t temptable_1[] PROGMEM = {
 
 // Extended table from SteinhartHart curvefit for ProUI
-  { OV( 13.55), 350 },
-  { OV( 14.29), 345 },
-  { OV( 15.08), 340 },
-  { OV( 15.93), 335 },
+// { OV( 13.55), 350 },
+// { OV( 14.29), 345 },
+// { OV( 15.08), 340 },
+// { OV( 15.93), 335 },
   { OV( 16.85), 330 },
   { OV( 17.84), 325 },
   { OV( 18.90), 320 },

@@ -228,7 +228,7 @@ void DWIN_Draw_String(bool bShow, uint8_t size, uint16_t color, uint16_t bColor,
   DWIN_Byte(i, 0x11);
   // Bit 7: widthAdjust
   // Bit 6: bShow
-  // Bit 5-4: Unused (0)
+  // Bit 5-4: unused (0)
   // Bit 3-0: size
   DWIN_Byte(i, (widthAdjust * 0x80) | (bShow * 0x40) | size);
   DWIN_Word(i, color);
