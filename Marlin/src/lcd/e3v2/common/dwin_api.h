@@ -107,13 +107,6 @@ void dwinUpdateLCD();
 //  color: Clear screen color
 void dwinFrameClear(const uint16_t color);
 
-// Draw a point
-//  color: point color
-//  width: point width   0x01-0x0F
-//  height: point height 0x01-0x0F
-//  x,y: upper left point
-void dwinDrawPoint(uint16_t color, uint8_t width, uint8_t height, uint16_t x, uint16_t y);
-
 // Draw a line
 //  color: Line segment color
 //  xStart/yStart: Start point
@@ -151,6 +144,19 @@ void dwinDrawRectangle(uint8_t mode, uint16_t color, uint16_t xStart, uint16_t y
 inline void dwinDrawBox(uint8_t mode, uint16_t color, uint16_t xStart, uint16_t yStart, uint16_t xSize, uint16_t ySize) {
   dwinDrawRectangle(mode, color, xStart, yStart, xStart + xSize - 1, yStart + ySize - 1);
 }
+
+// Draw a point
+//  color: point color
+//  width: point width   0x01-0x0F
+//  height: point height 0x01-0x0F
+//  x,y: upper left point
+#if ENABLED(TJC_DISPLAY)
+  inline void dwinDrawPoint(uint16_t color, uint8_t width, uint8_t height, uint16_t x, uint16_t y) {
+    dwinDrawBox(1, color, x, y, 1, 1);
+  }
+#else
+  void dwinDrawPoint(uint16_t color, uint8_t width, uint8_t height, uint16_t x, uint16_t y);
+#endif
 
 // Move a screen area
 //  mode: 0, circle shift; 1, translation
@@ -222,12 +228,6 @@ void dwinDrawFloatValue(uint8_t bShow, bool zeroFill, uint8_t zeroMode, uint8_t 
 // Draw JPG and cached in #0 virtual display area
 //  id: Picture ID
 void dwinJPGShowAndCache(const uint8_t id);
-
-// Draw an Icon
-//  libID: Icon library ID
-//  picID: Icon ID
-//  x/y: Upper-left point
-void dwinIconShow(uint8_t libID, uint8_t picID, uint16_t x, uint16_t y);
 
 // Draw an Icon
 //  IBD: The icon background display: 0=Background filtering is not displayed, 1=Background display \\When setting the background filtering not to display, the background must be pure black

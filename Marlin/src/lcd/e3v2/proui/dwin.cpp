@@ -1201,6 +1201,11 @@ void drawMainArea() {
     case ID_PrintProcess:     drawPrintProcess(); break;
     case ID_PrintDone:        drawPrintDone(); break;
     TERN_(HAS_ESDIAG, case ID_ESDiagProcess: drawEndStopDiag(); break;)
+    #if ENABLED(PROUI_ITEM_PLOT)
+      case ID_PlotProcess:
+        if (hmiValue.tempControl == PIDTEMPBED_START) { drawBPlot(); }
+        else { drawHPlot(); } break;
+    #endif
     case ID_Popup:            popupDraw(); break;
     TERN_(HAS_LOCKSCREEN, case ID_Locked: lockScreen.draw(); break;)
     case ID_Menu:
@@ -1433,7 +1438,11 @@ bool idIsPopUp() {    // If ID is popup...
     case ID_WaitResponse:
     case ID_Popup:
     case ID_Homing:
-    case ID_PIDProcess:
+    TERN_(PROUI_PID_TUNE, case ID_PIDProcess:)
+    TERN_(MPCTEMP, case ID_MPCProcess:)
+    TERN_(PROUI_ITEM_PLOT, case ID_PlotProcess:)
+    TERN_(MPCTEMP, case ID_MPCProcess:)
+    TERN_(PROUI_ITEM_PLOT, case ID_PlotProcess:)
       return true;
     default: break;
   }
@@ -1466,7 +1475,7 @@ void dwinHomingStart() {
   hmiFlag.home_flag = true;
   hmiSaveProcessID(ID_Homing);
   title.showCaption(GET_TEXT_F(MSG_HOMING));
-  dwinShowPopup(ICON_BLTouch, GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
+  dwinShowPopup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
 }
 
 void dwinHomingDone() {
@@ -1600,7 +1609,6 @@ void dwinLevelingDone() {
       plot.draw(gfrm, _maxtemp, _target);
       DWINUI::drawInt(false, 2, hmiData.colorStatusTxt, hmiData.colorPopupBg, 3, gfrm.x + 80, gfrm.y - DWINUI::fontHeight() - 4, _target);
       DWINUI::drawButton(BTN_Continue, 86, 305);
-      dwinUpdateLCD();
     }
 
     void drawHPlot() {
@@ -1878,7 +1886,7 @@ void MarlinUI::refresh() { /* Nothing to see here */ }
 #endif
 
 void MarlinUI::kill_screen(FSTR_P const lcd_error, FSTR_P const) {
-  dwinDrawPopup(ICON_BLTouch, GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
+  dwinDrawPopup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
   DWINUI::drawCenteredString(hmiData.colorPopupTxt, 270, GET_TEXT_F(MSG_TURN_OFF));
   dwinUpdateLCD();
 }
@@ -1905,7 +1913,7 @@ void dwinRedrawScreen() {
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   void dwinPopupPause(FSTR_P const fmsg, uint8_t button/*=0*/) {
     hmiSaveProcessID(button ? ID_WaitResponse : ID_NothingToDo);
-    dwinShowPopup(ICON_BLTouch, GET_TEXT_F(MSG_ADVANCED_PAUSE), fmsg, button);
+    dwinShowPopup(ICON_Pause_1, GET_TEXT_F(MSG_ADVANCED_PAUSE), fmsg, button);
   }
 
   void MarlinUI::pause_show_message(const PauseMessage message, const PauseMode mode/*=PAUSE_MODE_SAME*/, const uint8_t extruder/*=active_extruder*/) {
@@ -1929,7 +1937,7 @@ void dwinRedrawScreen() {
   }
 
   void drawPopupFilamentPurge() {
-    dwinDrawPopup(ICON_BLTouch, GET_TEXT_F(MSG_ADVANCED_PAUSE), GET_TEXT_F(MSG_FILAMENT_CHANGE_PURGE_CONTINUE));
+    dwinDrawPopup(ICON_AutoLeveling, GET_TEXT_F(MSG_ADVANCED_PAUSE), GET_TEXT_F(MSG_FILAMENT_CHANGE_PURGE_CONTINUE));
     DWINUI::drawButton(BTN_Purge, 26, 280);
     DWINUI::drawButton(BTN_Continue, 146, 280);
     drawSelectHighlight(true);
@@ -1954,7 +1962,7 @@ void dwinRedrawScreen() {
 #if HAS_MESH
   void dwinMeshViewer() {
     if (!leveling_is_valid())
-      dwinPopupContinue(ICON_BLTouch, GET_TEXT_F(MSG_MESH_VIEWER), GET_TEXT_F(MSG_NO_VALID_MESH));
+      dwinPopupContinue(ICON_Leveling_1, GET_TEXT_F(MSG_MESH_VIEWER), GET_TEXT_F(MSG_NO_VALID_MESH));
     else {
       hmiSaveProcessID(ID_WaitResponse);
       meshViewer.draw();
@@ -3906,9 +3914,9 @@ void drawMaxAccelMenu() {
         EDIT_ITEM(ICON_PIDCycles, MSG_PID_CYCLE, onDrawPIntMenu, setPidCycles, &hmiData.pidCycles);
       #endif
       #if ENABLED(PID_EDIT_MENU)
-        EDIT_ITEM_F(ICON_PIDValue, "Set" STR_KP, onDrawPFloat2Menu, setKp, &thermalManager.temp_hotend[0].pid.Kp);
-        EDIT_ITEM_F(ICON_PIDValue, "Set" STR_KI, onDrawPIDi, setKi, &thermalManager.temp_hotend[0].pid.Ki);
-        EDIT_ITEM_F(ICON_PIDValue, "Set" STR_KD, onDrawPIDd, setKd, &thermalManager.temp_hotend[0].pid.Kd);
+        EDIT_ITEM_F(ICON_PIDValue, "Set Kp: ", onDrawPFloat2Menu, setKp, &thermalManager.temp_hotend[0].pid.Kp);
+        EDIT_ITEM_F(ICON_PIDValue, "Set Ki: ", onDrawPIDi, setKi, &thermalManager.temp_hotend[0].pid.Ki);
+        EDIT_ITEM_F(ICON_PIDValue, "Set Kd: ", onDrawPIDd, setKd, &thermalManager.temp_hotend[0].pid.Kd);
       #endif
       #if ENABLED(EEPROM_SETTINGS)
         MENU_ITEM(ICON_WriteEEPROM, MSG_STORE_EEPROM, onDrawMenuItem, writeEEPROM);
@@ -3936,9 +3944,9 @@ void drawMaxAccelMenu() {
         EDIT_ITEM(ICON_PIDCycles, MSG_PID_CYCLE, onDrawPIntMenu, setPidCycles, &hmiData.pidCycles);
       #endif
       #if ENABLED(PID_EDIT_MENU)
-        EDIT_ITEM_F(ICON_PIDValue, "Set" STR_KP, onDrawPFloat2Menu, setKp, &thermalManager.temp_bed.pid.Kp);
-        EDIT_ITEM_F(ICON_PIDValue, "Set" STR_KI, onDrawPIDi, setKi, &thermalManager.temp_bed.pid.Ki);
-        EDIT_ITEM_F(ICON_PIDValue, "Set" STR_KD, onDrawPIDd, setKd, &thermalManager.temp_bed.pid.Kd);
+        EDIT_ITEM_F(ICON_PIDValue, "Set Kp: ", onDrawPFloat2Menu, setKp, &thermalManager.temp_bed.pid.Kp);
+        EDIT_ITEM_F(ICON_PIDValue, "Set Ki: ", onDrawPIDi, setKi, &thermalManager.temp_bed.pid.Ki);
+        EDIT_ITEM_F(ICON_PIDValue, "Set Kd: ", onDrawPIDd, setKd, &thermalManager.temp_bed.pid.Kd);
       #endif
       #if ENABLED(EEPROM_SETTINGS)
         MENU_ITEM(ICON_WriteEEPROM, MSG_STORE_EEPROM, onDrawMenuItem, writeEEPROM);

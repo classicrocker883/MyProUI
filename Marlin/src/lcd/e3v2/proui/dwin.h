@@ -53,17 +53,16 @@ enum processID : uint8_t {
   ID_MainMenu,
   ID_Menu,
   ID_SetInt,
-  ID_SetPInt,
-  ID_SetIntNoDraw,
   ID_SetFloat,
+  ID_SetPInt,
   ID_SetPFloat,
+  ID_SetIntNoDraw,
   ID_PrintProcess,
   ID_Popup,
   ID_Leveling,
   ID_Locked,
-  ID_Reboot,
-  ID_PrintDone,
   ID_ESDiagProcess,
+  ID_PrintDone,
   ID_WaitResponse,
   ID_Homing,
   ID_PIDProcess,
@@ -312,6 +311,11 @@ void dwinRebootScreen();
 #endif
 #if HAS_ESDIAG
   void drawEndStopDiag();
+#endif
+#if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
+  void dwinDrawPlot(tempcontrol_t result);
+  void drawHPlot();
+  void drawBPlot();
 #endif
 
 // Menu drawing functions
