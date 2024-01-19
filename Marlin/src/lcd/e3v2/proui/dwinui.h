@@ -63,6 +63,7 @@
 #define ICON_ExtrudeMinT      ICON_HotendTemp
 #define ICON_FilLoad          ICON_WriteEEPROM
 #define ICON_FilMan           ICON_ResetEEPROM
+#define ICON_FilRunOut        ICON_MaxAccE
 #define ICON_FilSet           ICON_ResetEEPROM
 #define ICON_FilUnload        ICON_ReadEEPROM
 #define ICON_Flow             ICON_StepE

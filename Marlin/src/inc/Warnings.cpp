@@ -43,7 +43,7 @@
 #endif
 
 #if DISABLED(DEBUG_FLAGS_GCODE)
-  #warning "DEBUG_FLAGS_GCODE is recommended if you have space. Some hosts rely on it."
+  //#warning "DEBUG_FLAGS_GCODE is recommended if you have space. Some hosts rely on it."
 #endif
 
 #if DISABLED(CAPABILITIES_REPORT)

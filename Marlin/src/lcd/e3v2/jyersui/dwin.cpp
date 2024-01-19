@@ -5146,8 +5146,8 @@ void MarlinUI::init_lcd() {
     delay(20);
   }
 
-  dwinJPGShowAndCache(3);
-  dwinJPGCacheTo1(Language_English);
+  dwinJPGShowAndCache(0);
+  dwinJPGCacheTo1(1);
   jyersDWIN.redrawScreen();
 }
 

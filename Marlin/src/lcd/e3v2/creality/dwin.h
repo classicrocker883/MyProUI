@@ -28,7 +28,7 @@
 #include "dwin_lcd.h"
 #include "../common/encoder.h"
 #include "../common/limits.h"
-#include "../../../libs/BL24CXX.h"
+//#include "../../../libs/BL24CXX.h"
 
 #include "../../../inc/MarlinConfigPre.h"
 
@@ -144,11 +144,7 @@ typedef struct {
   } probeOffsScaled;
 } hmi_value_t;
 
-#define DWIN_CHINESE 123
-#define DWIN_ENGLISH 0
-
 typedef struct {
-  uint8_t language;
   bool pause_flag:1;    // printing is paused
   bool pause_action:1;  // flag a pause action
   bool print_finish:1;  // print was finished
@@ -207,8 +203,6 @@ void hmiMaxJerkXYZE();
 #if ENABLED(EDITABLE_STEPS_PER_UNIT)
   void hmiStepXYZE();
 #endif
-
-void hmiSetLanguageCache();
 
 void updateVariable();
 void dwinDrawSignedFloat(uint8_t size, uint16_t bColor, uint8_t iNum, uint8_t fNum, uint16_t x, uint16_t y, long value);

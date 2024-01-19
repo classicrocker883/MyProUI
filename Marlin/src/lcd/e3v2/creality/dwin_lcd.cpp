@@ -49,7 +49,7 @@ void dwinStartup() {
   #if DISABLED(SHOW_BOOTSCREEN)
     dwinFrameClear(COLOR_BG_BLACK); // MarlinUI handles the bootscreen so just clear here
   #endif
-  dwinJPGShowAndCache(3);
+  dwinJPGShowAndCache(0);
   dwinUpdateLCD();
 }
 

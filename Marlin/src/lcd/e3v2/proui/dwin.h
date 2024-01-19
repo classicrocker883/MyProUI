@@ -34,7 +34,7 @@
 #include "dwinui.h"
 #include "../common/encoder.h"
 #include "../common/limits.h"
-#include "../../../libs/BL24CXX.h"
+//#include "../../../libs/BL24CXX.h"
 #if ENABLED(LED_CONTROL_MENU)
   #include "../../../feature/leds/leds.h"
 #endif
@@ -90,9 +90,6 @@ enum processID : uint8_t {
   };
 
 #endif
-
-#define DWIN_CHINESE 123
-#define DWIN_ENGLISH 0
 
 typedef struct {
   // Color settings
@@ -153,6 +150,9 @@ typedef struct {
   #if HAS_GCODE_PREVIEW
     bool enablePreview = true;
   #endif
+  #if JUST_BABYSTEP
+    float manualZOffset;
+  #endif
 } hmi_data_t;
 
 extern hmi_data_t hmiData;
@@ -183,12 +183,10 @@ typedef struct {
 extern hmi_value_t hmiValue;
 
 typedef struct {
-  uint8_t language;
   bool printing_flag:1; // sd or host printing
   bool abort_flag:1;    // sd or host was aborted
   bool pause_flag:1;    // printing is paused
   bool select_flag:1;   // Popup button selected
-  bool home_flag:1;     // homing in course
 } hmi_flag_t;
 
 extern hmi_flag_t hmiFlag;
