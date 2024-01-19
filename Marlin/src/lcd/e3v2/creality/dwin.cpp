@@ -30,8 +30,8 @@
 
 #include "dwin.h"
 
-//#define USE_STRING_HEADINGS
-//#define USE_STRING_TITLES
+#define USE_STRING_HEADINGS
+#define USE_STRING_TITLES
 
 #if !HAS_BED_PROBE && ENABLED(BABYSTEPPING)
   #define JUST_BABYSTEP 1
@@ -439,53 +439,6 @@ void drawBackFirst(const bool is_sel=true) {
 // Draw Menus
 //
 
-void say_move_en(const uint8_t row) {
-  itemAreaCopy( 69,  61, 102,  71, row);         // "Move"
-}
-void say_max_en(const uint8_t row) {
-  itemAreaCopy( 75, 119, 100, 129, row);         // "Max"
-}
-void say_jerk_en(const uint8_t row) {
-  itemAreaCopy(104, 119, 128, 129, row, 30);     // "Jerk"
-}
-void say_speed_en(const uint16_t inset, const uint8_t row) {
-  itemAreaCopy(133, 119, 172, 132, row, inset);  // "Speed"
-}
-void say_max_accel_en(const uint8_t row) {
-   say_max_en(row);                               // "Max"
-   itemAreaCopy(  0, 135,  79, 145, row, 30);    // "Acceleration"
-}
-void say_max_jerk_speed_en(const uint8_t row) {
-  itemAreaCopy( 75, 119, 172, 132, row);         // "Max Jerk Speed"
-}
-void say_x_en(const uint16_t inset, const uint8_t row) {
-  itemAreaCopy(175, 119, 184, 129, row, inset);  // "X"
-}
-void say_y_en(const uint16_t inset, const uint8_t row) {
-  itemAreaCopy(184, 119, 192, 129, row, inset);  // "Y"
-}
-void say_z_en(const uint16_t inset, const uint8_t row) {
-  itemAreaCopy(193, 119, 201, 129, row, inset);  // "Z"
-}
-void say_e_en(const uint16_t inset, const uint8_t row) {
-  itemAreaCopy(201, 119, 209, 129, row, inset);  // "E"
-}
-void say_pla_en(const uint16_t inset, const uint8_t row) {
-  itemAreaCopy(131, 164, 153, 174, row, inset);  // "PLA"
-}
-void say_abs_en(const uint16_t inset, const uint8_t row) {
-  itemAreaCopy(157,  76, 181,  86, row, inset);  // "ABS"
-}
-void say_home_offs_en(const uint8_t row) {
-  itemAreaCopy(153, 193, 225, 203, row);         // "Home Offset"
-}
-void say_probe_offs_en(const uint8_t row) {
-  itemAreaCopy(153, 205, 225, 215, row);         // "Probe Offset"
-}
-void say_steps_per_mm_en(const uint8_t row) {
-  itemAreaCopy(  1, 151,  91, 161, row);         // "Steps-per-mm"
-}
-
 void dwinDrawLabel(const uint8_t row, char *string) {
   dwinDrawString(true, font8x16, COLOR_WHITE, COLOR_BG_BLACK, LBLX, MBASE(row), string);
 }
@@ -493,7 +446,7 @@ void dwinDrawLabel(const uint8_t row, FSTR_P title) {
   dwinDrawLabel(row, (char*)title);
 }
 
-void dwinDrawSignedFloat(uint8_t size, uint16_t bColor, uint8_t iNum, uint8_t fNum, uint16_t x, uint16_t y, int32_t value) {
+void dwinDrawSignedFloat(uint8_t size, uint16_t bColor, uint8_t iNum, uint8_t fNum, uint16_t x, uint16_t y, long value) {
   dwinDrawString(true, size, COLOR_WHITE, bColor, x - 8, y, value < 0 ? F("-") : F(" "));
   dwinDrawFloatValue(true, true, 0, size, COLOR_WHITE, bColor, iNum, fNum, x, y, value < 0 ? -value : value);
 }
@@ -531,37 +484,36 @@ void drawStatFloat(const uint16_t xpos, const uint16_t ypos, const float value) 
 //
 
 void itemPrepareMove(const uint8_t row) {
-    say_move_en(row);             // "Move"
   drawMenuLine(row, ICON_Axis);
   drawMoreIcon(row);
 }
 
 void itemPrepareDisable(const uint8_t row) {
-    #ifdef USE_STRING_TITLES
-      dwinDrawLabel(row, GET_TEXT_F(MSG_DISABLE_STEPPERS));
-    #endif
+  #ifdef USE_STRING_TITLES
+    dwinDrawLabel(row, GET_TEXT_F(MSG_DISABLE_STEPPERS));
+  #endif
   drawMenuLine(row, ICON_CloseMotor);
 }
 
 void itemPrepareHome(const uint8_t row) {
-    #ifdef USE_STRING_TITLES
-      dwinDrawLabel(row, GET_TEXT_F(MSG_AUTO_HOME));
-    #endif
+  #ifdef USE_STRING_TITLES
+    dwinDrawLabel(row, GET_TEXT_F(MSG_AUTO_HOME));
+  #endif
   drawMenuLine(row, ICON_Homing);
 }
 
 #if HAS_ZOFFSET_ITEM
 
   void itemPrepareOffset(const uint8_t row) {
-      #if HAS_BED_PROBE
-        #ifdef USE_STRING_TITLES
-          dwinDrawLabel(row, GET_TEXT_F(MSG_ZPROBE_ZOFFSET));
-        #endif
-      #else
-        #ifdef USE_STRING_TITLES
-          dwinDrawLabel(row, GET_TEXT_F(MSG_SET_HOME_OFFSETS));
-        #endif
+    #if HAS_BED_PROBE
+      #ifdef USE_STRING_TITLES
+        dwinDrawLabel(row, GET_TEXT_F(MSG_ZPROBE_ZOFFSET));
       #endif
+    #else
+      #ifdef USE_STRING_TITLES
+        dwinDrawLabel(row, GET_TEXT_F(MSG_SET_HOME_OFFSETS));
+      #endif
+    #endif
     drawEditSignedFloat2(row, BABY_Z_VAR * 100);
     drawMenuLine(row, ICON_SetHome);
   }
@@ -570,25 +522,25 @@ void itemPrepareHome(const uint8_t row) {
 
 #if HAS_PREHEAT
   void itemPrepare_PLA(const uint8_t row) {
-      #ifdef USE_STRING_TITLES
-        dwinDrawLabel(row, GET_TEXT_F(MSG_PREHEAT_1));
-      #endif
+    #ifdef USE_STRING_TITLES
+      dwinDrawLabel(row, GET_TEXT_F(MSG_PREHEAT_1));
+    #endif
     drawMenuLine(row, ICON_PLAPreheat);
   }
 
   #if PREHEAT_COUNT > 1
     void itemPrepare_ABS(const uint8_t row) {
-        #ifdef USE_STRING_TITLES
-          dwinDrawLabel(row, F("Preheat " PREHEAT_2_LABEL));
-        #endif
+      #ifdef USE_STRING_TITLES
+        dwinDrawLabel(row, F("Preheat " PREHEAT_2_LABEL));
+      #endif
       drawMenuLine(row, ICON_ABSPreheat);
     }
   #endif
 
   void itemPrepareCool(const uint8_t row) {
-      #ifdef USE_STRING_TITLES
-        dwinDrawLabel(row, GET_TEXT_F(MSG_COOLDOWN));
-      #endif
+    #ifdef USE_STRING_TITLES
+      dwinDrawLabel(row, GET_TEXT_F(MSG_COOLDOWN));
+    #endif
     drawMenuLine(row, ICON_Cool);
   }
 #endif
@@ -602,9 +554,9 @@ void drawPrepareMenu() {
   #define PSCROL(L) (scroll + (L))
   #define PVISI(L) VISI(PREPARE_CASE_TOTAL, L, PSCROL(L))
 
-    #ifdef USE_STRING_HEADINGS
-      drawTitle(GET_TEXT_F(MSG_PREPARE));
-    #endif
+  #ifdef USE_STRING_HEADINGS
+    drawTitle(GET_TEXT_F(MSG_PREPARE));
+  #endif
 
   if (PVISI(0)) drawBackFirst(select_prepare.now == CASE_BACK);                 // < Back
   if (PVISI(PREPARE_CASE_MOVE)) itemPrepareMove(PSCROL(PREPARE_CASE_MOVE));     // Move >
@@ -631,35 +583,33 @@ void drawPrepareMenu() {
 //
 
 void itemControlTemp(const uint16_t row) {
-    #ifdef USE_STRING_TITLES
-      dwinDrawLabel(row, GET_TEXT_F(MSG_TEMPERATURE));
-    #endif
+  #ifdef USE_STRING_TITLES
+    dwinDrawLabel(row, GET_TEXT_F(MSG_TEMPERATURE));
+  #endif
   drawMenuLine(row, ICON_Temperature);
   drawMoreIcon(row);
 }
 
 void itemControlMotion(const uint16_t row) {
-    #ifdef USE_STRING_TITLES
-      dwinDrawLabel(row, GET_TEXT_F(MSG_MOTION));
-    #endif
-
+  #ifdef USE_STRING_TITLES
+    dwinDrawLabel(row, GET_TEXT_F(MSG_MOTION));
+  #endif
   drawMenuLine(row, ICON_Motion);
   drawMoreIcon(row);
 }
 
 void itemControlAdvanced(const uint16_t row) {
-    #ifdef USE_STRING_TITLES
-      dwinDrawLabel(row, GET_TEXT_F(MSG_ADVANCED_SETTINGS));
-    #endif
+  #ifdef USE_STRING_TITLES
+    dwinDrawLabel(row, GET_TEXT_F(MSG_ADVANCED_SETTINGS));
+  #endif
   drawMenuLine(row, ICON_AdvSet);
   drawMoreIcon(row);
 }
 
 void itemControlInfo(const uint16_t row) {
-    #ifdef USE_STRING_TITLES
-      dwinDrawLabel(row, GET_TEXT_F(MSG_INFO_SCREEN));
-    #endif
-
+  #ifdef USE_STRING_TITLES
+    dwinDrawLabel(row, GET_TEXT_F(MSG_INFO_SCREEN));
+  #endif
   drawMenuLine(row, ICON_Info);
   drawMoreIcon(row);
 }
@@ -735,22 +685,22 @@ void drawControlMenu() {
 
 void drawTuneMenu() {
   clearMainWindow();
-    #ifdef USE_STRING_HEADINGS
-      drawTitle(GET_TEXT_F(MSG_TUNE));
+  #ifdef USE_STRING_HEADINGS
+    drawTitle(GET_TEXT_F(MSG_TUNE));
+  #endif
+  #ifdef USE_STRING_TITLES
+    dwinDrawLabel(TUNE_CASE_SPEED, GET_TEXT_F(MSG_SPEED));
+    #if HAS_HOTEND
+      dwinDrawLabel(TUNE_CASE_TEMP, GET_TEXT_F(MSG_UBL_SET_TEMP_HOTEND));
     #endif
-    #ifdef USE_STRING_TITLES
-      dwinDrawLabel(TUNE_CASE_SPEED, GET_TEXT_F(MSG_SPEED));
-      #if HAS_HOTEND
-        dwinDrawLabel(TUNE_CASE_TEMP, GET_TEXT_F(MSG_UBL_SET_TEMP_HOTEND));
-      #endif
-      #if HAS_HEATED_BED
-        dwinDrawLabel(TUNE_CASE_BED, GET_TEXT_F(MSG_UBL_SET_TEMP_BED));
-      #endif
-      #if HAS_FAN
-        dwinDrawLabel(TUNE_CASE_FAN, GET_TEXT_F(MSG_FAN_SPEED));
-      #endif
-      dwinDrawLabel(TUNE_CASE_ZOFF, GET_TEXT_F(MSG_ZPROBE_ZOFFSET));
+    #if HAS_HEATED_BED
+      dwinDrawLabel(TUNE_CASE_BED, GET_TEXT_F(MSG_UBL_SET_TEMP_BED));
     #endif
+    #if HAS_FAN
+      dwinDrawLabel(TUNE_CASE_FAN, GET_TEXT_F(MSG_FAN_SPEED));
+    #endif
+    dwinDrawLabel(TUNE_CASE_ZOFF, GET_TEXT_F(MSG_ZPROBE_ZOFFSET));
+  #endif
 
   drawBackFirst(select_tune.now == CASE_BACK);
   if (select_tune.now != CASE_BACK) drawMenuCursor(select_tune.now);
@@ -781,17 +731,17 @@ void drawTuneMenu() {
 //
 void drawMotionMenu() {
   clearMainWindow();
-    #ifdef USE_STRING_HEADINGS
-      drawTitle(GET_TEXT_F(MSG_MOTION));
+  #ifdef USE_STRING_HEADINGS
+    drawTitle(GET_TEXT_F(MSG_MOTION));
+  #endif
+  #ifdef USE_STRING_TITLES
+    dwinDrawLabel(MOTION_CASE_RATE, F("Feedrate"));                 // "Feedrate"
+    dwinDrawLabel(MOTION_CASE_ACCEL, GET_TEXT_F(MSG_ACCELERATION)); // "Acceleration"
+    #if ENABLED(CLASSIC_JERK)
+      dwinDrawLabel(MOTION_CASE_JERK, GET_TEXT_F(MSG_JERK));        // "Jerk"
     #endif
-    #ifdef USE_STRING_TITLES
-      dwinDrawLabel(MOTION_CASE_RATE, F("Feedrate"));                 // "Feedrate"
-      dwinDrawLabel(MOTION_CASE_ACCEL, GET_TEXT_F(MSG_ACCELERATION)); // "Acceleration"
-      #if ENABLED(CLASSIC_JERK)
-        dwinDrawLabel(MOTION_CASE_JERK, GET_TEXT_F(MSG_JERK));        // "Jerk"
-      #endif
-      dwinDrawLabel(MOTION_CASE_STEPS, GET_TEXT_F(MSG_STEPS_PER_MM)); // "Steps/mm"
-    #endif
+    dwinDrawLabel(MOTION_CASE_STEPS, GET_TEXT_F(MSG_STEPS_PER_MM)); // "Steps/mm"
+  #endif
 
 
   drawBackFirst(select_motion.now == CASE_BACK);

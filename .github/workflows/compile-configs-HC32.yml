@@ -14,6 +14,7 @@ jobs:
     strategy:
       matrix:
         chip: [HC32]
+        ui: [ProUI,JyersUI,CrealityUI]
         temp: [true,false]
         inshape: [true,false]
     steps:
@@ -49,7 +50,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}_Default-NP-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}-${UI}_Default-NP${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -57,18 +58,20 @@ jobs:
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advDNP.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
-        if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
+        if [ "$UI" = "JyersUI"] then sed -i "s/.*#define DWIN_LCD_PROUI/#define DWIN_CREALITY_LCD_JYERSUI/" Marlin/Configuration.h; fi;
+        if [ "$UI" = "CrealityUI"] then sed -i "s/.*#define DWIN_LCD_PROUI/#define DWIN_CREALITY_LCD/" Marlin/Configuration.h; fi;
+        if ($IS); then ISMP=; else ISMP='\/\/'; fi;
+        sed -i "s/.*#define INPUT_SHAPING_X/${ISMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${ISMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        UI: ${{ matrix.ui }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
     - name: Get release
@@ -91,6 +94,7 @@ jobs:
     strategy:
       matrix:
         chip: [HC32]
+        ui: [ProUI,JyersUI,CrealityUI]
         temp: [true,false]
         inshape: [true,false]
     steps:
@@ -126,7 +130,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}-MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}-${UI}_MM${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -134,27 +138,20 @@ jobs:
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advMM.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
+        if [ "$UI" = "JyersUI"] then sed -i "s/.*#define DWIN_LCD_PROUI/#define DWIN_CREALITY_LCD_JYERSUI/" Marlin/Configuration.h; fi;
+        if [ "$UI" = "CrealityUI"] then sed -i "s/.*#define DWIN_LCD_PROUI/#define DWIN_CREALITY_LCD/" Marlin/Configuration.h; fi;
         if ($IS); then STEMP=; else STEMP='\/\/'; fi;
         sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
-        sed -i "s/.*#define USE_GRID_MESHVIEWER/${PTEMP}#define USE_GRID_MESHVIEWER/" Marlin/Configuration.h
-        sed -i "s/.*#define HAS_CUSTOM_COLORS/${PTEMP}#define HAS_CUSTOM_COLORS/" Marlin/Configuration.h
-        sed -i "s/.*#define HAS_LOCKSCREEN/${PTEMP}#define HAS_LOCKSCREEN/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
-        if ($IS); then ITEMP='\/\/'; else ITEMP=; fi;
-        sed -i "s/.*#define CAPABILITIES_REPORT/${ITEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define HAS_LOCKSCREEN/${ITEMP}#define HAS_LOCKSCREEN/" Marlin/Configuration.h
-        if [ "$IS" = true ] && [ "$TP" = true ]; then
-        sed -i "s/.*#define FILAMENT_RUNOUT_SENSOR/\/\/#define FILAMENT_RUNOUT_SENSOR/" Marlin/Configuration.h
-        fi;
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        UI: ${{ matrix.ui }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
     - name: Get release
@@ -171,14 +168,15 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-Pro-NP:
+  Build-UBL:
     name: Build UBL ProUI/NoPro Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chip: [HC32]
         temp: [true,false]
-        pro: [true,false]
+        ui: [ProUI,JyersUI,CrealityUI]
+        inshape: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -210,106 +208,31 @@ jobs:
       id: build_configs
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
-        if ($PRO); then PRTMP=-ProUI; else PRTMP=-NoPro; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}_UBL${PRTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}-${UI}_UBL${TPTMP}${ISTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
-        if ($PRO); then
-        cp configurations/Voxelab\ Aquila\ HC32/ConfigurationPro.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila\ HC32/Configuration_advPro.h Marlin/Configuration_adv.h
-        else
         cp configurations/Voxelab\ Aquila\ HC32/ConfigurationUBL.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
-        fi;
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
-        if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
+        if [ "$UI" = "JyersUI"] then sed -i "s/.*#define DWIN_LCD_PROUI/#define DWIN_CREALITY_LCD_JYERSUI/" Marlin/Configuration.h; fi;
+        if [ "$UI" = "CrealityUI"] then sed -i "s/.*#define DWIN_LCD_PROUI/#define DWIN_CREALITY_LCD/" Marlin/Configuration.h; fi;
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
-        if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
-        if [ "$PRO" = true ] && [ "$TP" = true ]; then
-        sed -i "s/.*#define PRINTCOUNTER/\/\/#define PRINTCOUNTER/" Marlin/Configuration.h
-        sed -i "s/.*#define EEPROM_CHITCHAT/\/\/#define EEPROM_CHITCHAT/" Marlin/Configuration.h
-        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/\/\/#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
-        fi;
+        if ($IS); then ISMP=; else ISMP='\/\/'; fi;
+        sed -i "s/.*#define INPUT_SHAPING_X/${ISMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${ISMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TP: ${{ matrix.temp }}
-        PRO: ${{ matrix.pro }}
-    - name: Get release
-      id: get_release
-      uses: bruceadams/get-release@v1.3.2
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: temp/build.bin
-        asset_name: ${{ steps.build_configs.outputs.filename }}
-        asset_content_type: application/x-binary
-  Build-UBL-NP-IS:
-    name: Build UBL NoPro IS Files
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        chip: [HC32]
-        inshape: [true]
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-    - name: Cache pip
-      uses: actions/cache@v3.3.2
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-    - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
-      with:
-        path: ~/.platformio
-        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    - name: Install PlatformIO
-      run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
-    - name: Run PlatformIO
-      id: build_configs
-      run: |
-        if ($IS); then ISTMP=-IS; fi;
-        if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}_UBL-NoPro${ISTMP}.bin" >> $GITHUB_OUTPUT
-        > Marlin/Configuration.h
-        > Marlin/Configuration_adv.h
-        > Marlin/Version.h
-        cp configurations/Voxelab\ Aquila\ HC32/ConfigurationUBL.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila\ HC32/Configuration_advUBL.h Marlin/Configuration_adv.h
-        cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
-        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
-        if ($IS); then TEMP=; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
-        pio run
-        mkdir temp
-        mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
-      env:
-        AQUILA_VER: ${{ matrix.chip }}
+        UI: ${{ matrix.ui }}
         IS: ${{ matrix.inshape }}
     - name: Get release
       id: get_release
@@ -331,6 +254,8 @@ jobs:
     strategy:
       matrix:
         chip: [HC32]
+        ui: [ProUI,JyersUI,CrealityUI]
+        temp: [true,false]
         inshape: [true,false]
     steps:
     - uses: actions/checkout@v3
@@ -362,23 +287,32 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}_BLT-ProUI${ISTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}-${UI}_BLT${TPTMP}${ISTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         cp configurations/Voxelab\ Aquila\ HC32/ConfigurationBLT.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advBLT.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
-        if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
+        if [ "$UI" = "JyersUI"] then sed -i "s/.*#define DWIN_LCD_PROUI/#define DWIN_CREALITY_LCD_JYERSUI/" Marlin/Configuration.h; fi;
+        if [ "$UI" = "CrealityUI"] then sed -i "s/.*#define DWIN_LCD_PROUI/#define DWIN_CREALITY_LCD/" Marlin/Configuration.h; fi;
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        if ($IS); then ISMP=; else ISMP='\/\/'; fi;
+        sed -i "s/.*#define INPUT_SHAPING_X/${ISMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${ISMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        UI: ${{ matrix.ui }}
+        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
     - name: Get release
       id: get_release

@@ -150,8 +150,8 @@ typedef struct {
   #if HAS_GCODE_PREVIEW
     bool enablePreview = true;
   #endif
-  #if JUST_BABYSTEP
-    float manualZOffset;
+  #if !HAS_BED_PROBE
+    float manualZOffset = 0.0f;
   #endif
 } hmi_data_t;
 
