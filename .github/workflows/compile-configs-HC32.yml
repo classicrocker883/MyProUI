@@ -130,7 +130,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}-${UI}_MM$${TPTMP}{ISTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}-${UI}_MM${TPTMP}${ISTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -169,13 +169,13 @@ jobs:
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
   Build-UBL:
-    name: Build UBL ProUI/NoPro Files
+    name: Build UBL Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chip: [HC32]
-        temp: [true,false]
         ui: [ProUI,JyersUI,CrealityUI]
+        temp: [true,false]
         inshape: [true,false]
     steps:
     - uses: actions/checkout@v3
@@ -231,8 +231,8 @@ jobs:
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
         UI: ${{ matrix.ui }}
+        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
     - name: Get release
       id: get_release
@@ -248,8 +248,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-BLTouch-ProUI:
-    name: Build BL-Touch ProUI Files
+  Build-BLTouch-BLT:
+    name: Build BL-Touch BLT Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -287,9 +287,9 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$TP" ]; then TPTMP=-MPC; else TPTMP=; fi;
-        if [ "$IS" ]; then ISTMP=-IS; else ISTMP=; fi;
-        if [ "$AQUILA_VER" = "HC32" ]; then AVTMP="HC32"; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
         echo "filename=${AVTMP}-${UI}_BLT${TPTMP}${ISTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
