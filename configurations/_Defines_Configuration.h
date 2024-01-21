@@ -397,6 +397,7 @@
 // #define DEFAULT_XJERK 10.0
 // #define DEFAULT_YJERK 10.0
 // #define DEFAULT_ZJERK  0.4
+// #define DEFAULT_EJERK 10.0
 // #define DEFAULT_IJERK  0.3
 // #define DEFAULT_JJERK  0.3
 // #define DEFAULT_KJERK  0.3
@@ -406,7 +407,6 @@
 // #define TRAVEL_EXTRA_XYJERK 0.0
 // #define LIMITED_JERK_EDITING
 // #define MAX_JERK_EDIT_VALUES { 20, 20, 1, 20 }
-// #define DEFAULT_EJERK    5.0
 // #define JUNCTION_DEVIATION_MM 0.013
 // #define JD_HANDLE_SMALL_SEGMENTS
 // #define S_CURVE_ACCELERATION

@@ -754,7 +754,6 @@
 // #define ADVANCE_K 0.00
 // #define ADVANCE_K_EXTRA
 // #define LA_DEBUG
-// #define ALLOW_LOW_EJERK
 // #define EXPERIMENTAL_I2S_LA
 // #define NONLINEAR_EXTRUSION
 // #define SAFE_BED_LEVELING_START_X 0.0
