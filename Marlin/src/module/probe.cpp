@@ -97,7 +97,7 @@
 #if ENABLED(EXTENSIBLE_UI)
   #include "../lcd/extui/ui_api.h"
 #elif ENABLED(DWIN_LCD_PROUI)
-  #include "../lcd/e3v2/proui/dwin.h"
+  #include "../lcd/e3v2/proui/dwin_popup.h"
 #endif
 
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
@@ -377,7 +377,7 @@ FORCE_INLINE void probe_specific_action(const bool deploy) {
 
     TERN_(HOST_PROMPT_SUPPORT, hostui.continue_prompt(ds_str));
     TERN_(EXTENSIBLE_UI, ExtUI::onUserConfirmRequired(ds_str));
-    TERN_(DWIN_LCD_PROUI, DWIN_Popup_Confirm(ICON_BLTouch, ds_str, FPSTR(CONTINUE_STR)));
+    TERN_(DWIN_LCD_PROUI, DWIN_Popup_Continue(ICON_BLTouch, ds_str, FPSTR(CONTINUE_STR)));
     TERN_(HAS_RESUME_CONTINUE, wait_for_user_response());
 
     ui.reset_status();

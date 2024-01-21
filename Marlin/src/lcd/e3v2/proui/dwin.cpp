@@ -922,7 +922,7 @@ void onClickSDItem() {
     if (card.flag.filenameIsDir) return SDCard_Folder(card.filename);
 
     if (card.fileIsBinary())
-      return DWIN_Popup_Confirm(ICON_Error, GET_TEXT_F(MSG_CHECK_FILENAME), GET_TEXT_F(MSG_ONLY_GCODE));
+      return DWIN_Popup_Continue(ICON_Error, GET_TEXT_F(MSG_CHECK_FILENAME), GET_TEXT_F(MSG_ONLY_GCODE));
     else {
       DWIN_Print_Header(card.longest_filename()); // Save filename
       return Goto_ConfirmToPrint();
@@ -1751,23 +1751,23 @@ void DWIN_HomingDone() {
         break;
       case PID_BAD_HEATER_ID:
         checkkey = last_checkkey;
-        DWIN_Popup_Confirm(ICON_TempTooLow, GET_TEXT_F(MSG_PID_AUTOTUNE_FAILED), GET_TEXT_F(MSG_BAD_HEATER_ID));
+        DWIN_Popup_Continue(ICON_TempTooLow, GET_TEXT_F(MSG_PID_AUTOTUNE_FAILED), GET_TEXT_F(MSG_BAD_HEATER_ID));
         break;
       case PID_TUNING_TIMEOUT:
         checkkey = last_checkkey;
-        DWIN_Popup_Confirm(ICON_TempTooHigh, GET_TEXT_F(MSG_ERROR), GET_TEXT_F(MSG_PID_TIMEOUT));
+        DWIN_Popup_Continue(ICON_TempTooHigh, GET_TEXT_F(MSG_ERROR), GET_TEXT_F(MSG_PID_TIMEOUT));
         break;
       case PID_TEMP_TOO_HIGH:
         checkkey = last_checkkey;
-        DWIN_Popup_Confirm(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE_FAILED), GET_TEXT_F(MSG_TEMP_TOO_HIGH));
+        DWIN_Popup_Continue(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE_FAILED), GET_TEXT_F(MSG_TEMP_TOO_HIGH));
         break;
       case AUTOTUNE_DONE:
         checkkey = last_checkkey;
-        DWIN_Popup_Confirm(ICON_TempTooLow, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_BUTTON_DONE));
+        DWIN_Popup_Continue(ICON_TempTooLow, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_BUTTON_DONE));
         break;
       default:
         checkkey = last_checkkey;
-        DWIN_Popup_Confirm(ICON_Info_0, GET_TEXT_F(MSG_ERROR), GET_TEXT_F(MSG_STOPPING));
+        DWIN_Popup_Continue(ICON_Info_0, GET_TEXT_F(MSG_ERROR), GET_TEXT_F(MSG_STOPPING));
         break;
     }
   }
@@ -1789,17 +1789,17 @@ void DWIN_HomingDone() {
         break;
       case MPC_TEMP_ERROR:
         checkkey = last_checkkey;
-        DWIN_Popup_Confirm(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE_FAILED), F(STR_MPC_TEMPERATURE_ERROR));
+        DWIN_Popup_Continue(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE_FAILED), F(STR_MPC_TEMPERATURE_ERROR));
         ui.reset_alert_level();
         break;
       case MPC_INTERRUPTED:
         checkkey = last_checkkey;
-        DWIN_Popup_Confirm(ICON_TempTooHigh, GET_TEXT_F(MSG_ERROR), F(STR_MPC_AUTOTUNE_INTERRUPTED));
+        DWIN_Popup_Continue(ICON_TempTooHigh, GET_TEXT_F(MSG_ERROR), F(STR_MPC_AUTOTUNE_INTERRUPTED));
         ui.reset_alert_level();
         break;
       case AUTOTUNE_DONE:
         checkkey = last_checkkey;
-        DWIN_Popup_Confirm(ICON_TempTooLow, GET_TEXT_F(MSG_MPC_AUTOTUNE), GET_TEXT_F(MSG_BUTTON_DONE));
+        DWIN_Popup_Continue(ICON_TempTooLow, GET_TEXT_F(MSG_MPC_AUTOTUNE), GET_TEXT_F(MSG_BUTTON_DONE));
         ui.reset_alert_level();
         break;
       default:
@@ -2117,8 +2117,10 @@ void DWIN_InitScreen() {
     //bedLevelTools.mesh_reset();
     (void)settings.load();
   #endif
-  TERN_(LASER_SYNCHRONOUS_M106_M107, thermalManager.set_fan_speed(0, 0);
-  planner.buffer_sync_block(BLOCK_BIT_SYNC_FANS);)
+  #if ENABLED(LASER_SYNCHRONOUS_M106_M107)  // Zero fans speed at boot with LASER_SYNCHRONOUS_M106_M107
+    thermalManager.zero_fan_speeds();
+    planner.buffer_sync_block(BLOCK_BIT_SYNC_FANS);
+  #endif
   LCD_MESSAGE(WELCOME_MSG);
 }
 
@@ -2409,7 +2411,7 @@ void AxisMove(AxisEnum axis) {
   #if HAS_HOTEND
     if (axis == E_AXIS && thermalManager.tooColdToExtrude(EXT)) {
       gcode.process_subcommands_now(F("G92E0"));  // reset extruder position
-      return DWIN_Popup_Confirm(ICON_TempTooLow, GET_TEXT_F(MSG_HOTEND_TOO_COLD), GET_TEXT_F(MSG_PLEASE_PREHEAT));
+      return DWIN_Popup_Continue(ICON_TempTooLow, GET_TEXT_F(MSG_HOTEND_TOO_COLD), GET_TEXT_F(MSG_PLEASE_PREHEAT));
     }
   #endif
   planner.synchronize();

@@ -37,7 +37,6 @@
   #include "../../lcd/extui/ui_api.h"
 #elif ENABLED(DWIN_LCD_PROUI)
   #include "../../lcd/e3v2/proui/dwin_popup.h"
-  #include "../../lcd/e3v2/proui/dwin.h"
 #endif
 
 #if ENABLED(HOST_PROMPT_SUPPORT)
@@ -73,9 +72,9 @@ void GcodeSuite::M0_M1() {
       ExtUI::onUserConfirmRequired(GET_TEXT_F(MSG_USERWAIT));
   #elif ENABLED(DWIN_LCD_PROUI)
     if (parser.string_arg)
-      DWIN_Popup_Confirm(ICON_Continue_1, parser.string_arg, GET_TEXT_F(MSG_USERWAIT));
+      DWIN_Popup_Continue(ICON_Continue_1, parser.string_arg, GET_TEXT_F(MSG_USERWAIT));
     else
-      DWIN_Popup_Confirm(ICON_Stop_1, GET_TEXT_F(MSG_STOPPED), GET_TEXT_F(MSG_USERWAIT));
+      DWIN_Popup_Continue(ICON_Stop_1, GET_TEXT_F(MSG_STOPPED), GET_TEXT_F(MSG_USERWAIT));
   #else
 
     if (parser.string_arg) {

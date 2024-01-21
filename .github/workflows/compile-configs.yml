@@ -320,8 +320,9 @@ jobs:
         sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
         sed -i "s/.*#define POWER_LOSS_RECOVERY/#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
         sed -i "s/.*#define CAPABILITIES_REPORT/\/\/#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
-        if ($T13); then THMP="13"; else THMP="1"; fi;
+        if ($T13); then THMP="13"; DSMP="425"; else THMP="1"; DSMP="98"; fi;
         sed -i "s/.*#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
+        sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin

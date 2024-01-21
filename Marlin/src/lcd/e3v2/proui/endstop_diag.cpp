@@ -95,21 +95,21 @@ void ESDiag::draw() {
 
 void ESDiag::update() {
   DWINUI::cursor.y = 80;
-  #define ES_REPORT(S) draw_es_state(READ(S##_PIN) == S##_ENDSTOP_HIT_STATE, false)
+  #define ESREPORT(S) draw_es_state(READ(S##_PIN) == S##_ENDSTOP_HIT_STATE, false)
 /*
   #if USE_X_MIN
-    ES_REPORT(X_MIN);
+    ESREPORT(X_MIN);
   #endif
-  TERN_(USE_X_MAX, ES_REPORT(X_MAX);)
+  TERN_(USE_X_MAX, ESREPORT(X_MAX);)
   #if USE_Y_MIN
-    ES_REPORT(Y_MIN);
+    ESREPORT(Y_MIN);
   #endif
-  TERN_(USE_Y_MAX, ES_REPORT(Y_MAX);)
+  TERN_(USE_Y_MAX, ESREPORT(Y_MAX);)
   #if !USE_Z_MIN_PROBE
     #if USE_Z_MIN
-      ES_REPORT(Z_MIN);
+      ESREPORT(Z_MIN);
     #endif
-    TERN_(USE_Z_MAX, ES_REPORT(Z_MAX);)
+    TERN_(USE_Z_MAX, ESREPORT(Z_MAX);)
   #endif
   #if HAS_FILAMENT_SENSOR
     #if PROUI_EX
@@ -122,11 +122,11 @@ void ESDiag::update() {
   #if USE_Z_MIN_PROBE
     draw_es_state(READ(Z_MIN_PROBE_PIN) != Z_MIN_PROBE_ENDSTOP_HIT_STATE);
   #endif
-  //TERN_(USE_Z_MIN_PROBE, ES_REPORT(Z_MIN_PROBE));
+  //TERN_(USE_Z_MIN_PROBE, ESREPORT(Z_MIN_PROBE));
 /*/
-  TERN_(USE_X_MIN, ES_REPORT(X_MIN);) TERN_(USE_X_MAX, ES_REPORT(X_MAX);)
-  TERN_(USE_Y_MIN, ES_REPORT(Y_MIN);) TERN_(USE_Y_MAX, ES_REPORT(Y_MAX);)
-  IF_DISABLED(USE_Z_MIN_PROBE, TERN_(USE_Z_MIN, ES_REPORT(Z_MIN);) TERN_(USE_Z_MAX, ES_REPORT(Z_MAX);))
+  TERN_(USE_X_MIN, ESREPORT(X_MIN);) TERN_(USE_X_MAX, ESREPORT(X_MAX);)
+  TERN_(USE_Y_MIN, ESREPORT(Y_MIN);) TERN_(USE_Y_MAX, ESREPORT(Y_MAX);)
+  IF_DISABLED(USE_Z_MIN_PROBE, TERN_(USE_Z_MIN, ESREPORT(Z_MIN);) TERN_(USE_Z_MAX, ESREPORT(Z_MAX);))
   #if HAS_FILAMENT_SENSOR
     #if PROUI_EX
       draw_es_state(!FilamentSensorDevice::poll_runout_state(EXT), true);
@@ -137,7 +137,7 @@ void ESDiag::update() {
   #endif
   //TERN_(USE_Z_MIN_PROBE, draw_es_state(!Z_MIN_PROBE_ENDSTOP_HIT_STATE);
   //TERN_(USE_Z_MIN_PROBE, draw_es_state(READ(Z_MIN_PROBE_PIN) != Z_MIN_PROBE_ENDSTOP_HIT_STATE));
-  TERN_(USE_Z_MIN_PROBE, ES_REPORT(Z_MIN_PROBE);)
+  TERN_(USE_Z_MIN_PROBE, ESREPORT(Z_MIN_PROBE);)
 //*/
   DWIN_UpdateLCD();
 }

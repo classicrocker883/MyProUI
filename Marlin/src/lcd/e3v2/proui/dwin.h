@@ -26,7 +26,6 @@
 #include "dwinui.h"
 #include "../common/encoder.h"
 #include "../common/limits.h"
-#include "../../../libs/BL24CXX.h"
 #include "../../../MarlinCore.h"
 #if ENABLED(LED_CONTROL_MENU)
   #include "../../../feature/leds/leds.h"

@@ -22,13 +22,15 @@
 
 #include "dwin.h"
 
-extern void (*Draw_Popup)();
+typedef void (*popupDrawFunc_t)();
+typedef void (*popupClickFunc_t)();
+typedef void (*popupChangeFunc_t)(const bool state);
+extern popupDrawFunc_t Draw_Popup;
 
 void Draw_Select_Highlight(const bool sel, const uint16_t ypos);
 inline void Draw_Select_Highlight(const bool sel) { Draw_Select_Highlight(sel, 280); }
-void DWIN_Popup_Continue(const uint8_t icon, FSTR_P const fmsg1, FSTR_P const fmsg2);
 void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2);
-void Goto_Popup(void (*onPopupDraw)(), void (*onClickPopup)()=nullptr, void (*onPopupChange)(bool state)=nullptr);
+void Goto_Popup(const popupDrawFunc_t fnDraw, const popupClickFunc_t fnClick=nullptr, const popupChangeFunc_t fnChange=nullptr);
 void HMI_Popup();
 
 inline void Draw_Popup_Bkgd() {
@@ -59,8 +61,8 @@ void DWIN_Show_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8
 }
 
 template<typename T, typename U>
-void DWIN_Popup_Confirm(const uint8_t icon, T amsg1, U amsg2) {
+void DWIN_Popup_Continue(const uint8_t icon, T amsg1, U amsg2) {
   HMI_SaveProcessID(WaitResponse);
-  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Confirm);  // Button Confirm
+  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Continue);  // Button Continue
   DWIN_UpdateLCD();
 }

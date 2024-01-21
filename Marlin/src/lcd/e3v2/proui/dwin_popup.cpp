@@ -25,13 +25,11 @@
 #include "../../../MarlinCore.h" // for wait_for_user
 #include "dwin_popup.h"
 
-void (*ClickPopup)()=nullptr;
-void (*PopupChange)(bool state)=nullptr;
-void (*Draw_Popup)()=nullptr;
-uint16_t HighlightYPos = 280;
+popupDrawFunc_t Draw_Popup = nullptr;
+popupClickFunc_t ClickPopup = nullptr;
+popupChangeFunc_t PopupChange = nullptr;
 
 void Draw_Select_Highlight(const bool sel, const uint16_t ypos) {
-  HighlightYPos = ypos;
   HMI_flag.select_flag = sel;
   const uint16_t c1 = sel ? HMI_data.Cursor_Color : HMI_data.PopupBg_Color,
                  c2 = sel ? HMI_data.PopupBg_Color : HMI_data.Cursor_Color;
@@ -39,12 +37,6 @@ void Draw_Select_Highlight(const bool sel, const uint16_t ypos) {
   DWIN_Draw_Rectangle(0, c1, 24, ypos - 2, 127, ypos + 39);
   DWIN_Draw_Rectangle(0, c2, 145, ypos - 1, 246, ypos + 38);
   DWIN_Draw_Rectangle(0, c2, 144, ypos - 2, 247, ypos + 39);
-}
-
-void DWIN_Popup_Continue(const uint8_t icon, FSTR_P const fmsg1, FSTR_P const fmsg2) {
-  HMI_SaveProcessID(WaitResponse);
-  DWIN_Draw_Popup(icon, fmsg1, fmsg2, BTN_Continue);  // Button Continue
-  DWIN_UpdateLCD();
 }
 
 void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2) {
@@ -55,10 +47,10 @@ void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2) {
   DWIN_UpdateLCD();
 }
 
-void Goto_Popup(void (*onPopupDraw)(), void (*onClickPopup)()/*=nullptr*/, void (*onPopupChange)(bool state)/*=nullptr*/) {
-  Draw_Popup = onPopupDraw;
-  ClickPopup = onClickPopup;
-  PopupChange = onPopupChange;
+void Goto_Popup(const popupDrawFunc_t fnDraw, const popupClickFunc_t fnClick/*=nullptr*/, const popupChangeFunc_t fnChange/*=nullptr*/) {
+  Draw_Popup = fnDraw;
+  ClickPopup = fnClick;
+  PopupChange = fnChange;
   HMI_SaveProcessID(Popup);
   HMI_flag.select_flag = false;
   Draw_Popup();
@@ -73,7 +65,7 @@ void HMI_Popup() {
     EncoderState encoder_diffState = get_encoder_state();
     if (encoder_diffState == ENCODER_DIFF_CW || encoder_diffState == ENCODER_DIFF_CCW) {
       const bool change = encoder_diffState != ENCODER_DIFF_CW;
-      if (PopupChange) PopupChange(change); else Draw_Select_Highlight(change, HighlightYPos);
+      if (PopupChange) PopupChange(change); else Draw_Select_Highlight(change);
       DWIN_UpdateLCD();
     }
   }
