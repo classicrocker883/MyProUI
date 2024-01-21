@@ -749,7 +749,6 @@
 // #undef ADVANCE_K
 // #undef ADVANCE_K_EXTRA
 // #undef LA_DEBUG
-// #undef ALLOW_LOW_EJERK
 // #undef EXPERIMENTAL_I2S_LA
 // #undef NONLINEAR_EXTRUSION
 // #undef SAFE_BED_LEVELING_START_X
