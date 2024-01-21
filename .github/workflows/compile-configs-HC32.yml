@@ -126,7 +126,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
-        echo "filename=${AVTMP}-MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=${AVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -371,6 +371,7 @@ jobs:
         cp configurations/Voxelab\ Aquila\ HC32/ConfigurationBLT.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ HC32/Configuration_advBLT.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ HC32/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = HC32F460C_aquila_101/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
         sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
