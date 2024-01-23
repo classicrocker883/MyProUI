@@ -1143,14 +1143,8 @@ void hmiWaitForUser() {
   }
   if (!wait_for_user) {
     switch (checkkey) {
-      case ID_PrintDone:
-        select_page.reset();
-        gotoMainMenu();
-        break;
-      TERN_(HAS_BED_PROBE, case ID_Leveling:)
-      default:
-        hmiReturnScreen();
-        break;
+      case ID_PrintDone: select_page.reset(); gotoMainMenu(); break;
+      default: hmiReturnScreen(); break;
     }
   }
 }
@@ -1235,7 +1229,7 @@ void eachMomentUpdate() {
         dwinPrintFinished();
     }
 
-    if ((hmiFlag.pause_flag != printingIsPaused()) && (checkkey != ID_Homing)) {
+    if ((hmiFlag.pause_flag != printingIsPaused()) && !hmiFlag.home_flag) {
       hmiFlag.pause_flag = printingIsPaused();
       if (hmiFlag.pause_flag)
         dwinPrintPause();
@@ -1328,8 +1322,9 @@ void dwinHandleScreen() {
     case ID_SetIntNoDraw: hmiSetNoDraw(); break;
     case ID_PrintProcess: hmiPrinting(); break;
     case ID_Popup:        hmiPopup(); break;
-    TERN_(HAS_LOCKSCREEN, case ID_Locked: hmiLockScreen(); break;)
-
+    #if HAS_LOCKSCREEN
+      case ID_Locked: hmiLockScreen(); break;
+    #endif
     TERN_(HAS_ESDIAG, case ID_ESDiagProcess:)
     TERN_(PROUI_ITEM_PLOT, case ID_PlotProcess:)
     case ID_PrintDone:
@@ -1526,11 +1521,11 @@ void dwinLevelingDone() {
     }
 
     void drawHPlot() {
-      TERN_(PIDTEMP, dwinDrawPlot(PIDTEMP_START);)
-      TERN_(MPCTEMP, dwinDrawPlot(MPCTEMP_START);)
+      TERN_(PIDTEMP, dwinDrawPlot(PIDTEMP_START));
+      TERN_(MPCTEMP, dwinDrawPlot(MPCTEMP_START));
     }
     void drawBPlot() {
-      TERN_(PIDTEMPBED, dwinDrawPlot(PIDTEMPBED_START);)
+      TERN_(PIDTEMPBED, dwinDrawPlot(PIDTEMPBED_START));
     }
 
   #endif // PROUI_ITEM_PLOT
@@ -1543,8 +1538,12 @@ void dwinLevelingDone() {
     if (seenC) hmiData.pidCycles = c;
     if (seenS) {
       switch (hid) {
-        OPTCODE(PIDTEMP,    case 0 ... HOTENDS - 1: hmiData.hotendPidT = temp; break)
-        OPTCODE(PIDTEMPBED, case H_BED:             hmiData.bedPidT = temp;    break)
+        #if ENABLED(PIDTEMP)
+          case 0 ... HOTENDS - 1: hmiData.hotendPidT = temp; break;
+        #endif
+        #if ENABLED(PIDTEMPBED)
+          case H_BED: hmiData.bedPidT = temp; break;
+        #endif
         default: break;
       }
     }
@@ -1791,9 +1790,9 @@ void dwinInitScreen() {
 }
 
 void MarlinUI::update() {
-  hmiSDCardUpdate();   // SD card update
-  eachMomentUpdate();  // Status update
-  dwinHandleScreen();  // Rotary encoder update
+  hmiSDCardUpdate();  // SD card update
+  eachMomentUpdate(); // Status update
+  dwinHandleScreen(); // Rotary encoder update
 }
 
 void MarlinUI::refresh() { /* Nothing to see here */ }
@@ -3594,9 +3593,9 @@ void drawMaxAccelMenu() {
     if (SET_MENU(getColorMenu, MSG_COLORS_GET, 5)) {
       BACK_ITEM(dwinApplyColor);
       MENU_ITEM(ICON_Cancel, MSG_BUTTON_CANCEL, onDrawMenuItem, drawSelectColorsMenu);
-      MENU_ITEM(0, MSG_COLORS_RED, onDrawGetColorItem, setRGBColor);
+      MENU_ITEM(0, MSG_COLORS_RED,   onDrawGetColorItem, setRGBColor);
       MENU_ITEM(1, MSG_COLORS_GREEN, onDrawGetColorItem, setRGBColor);
-      MENU_ITEM(2, MSG_COLORS_BLUE, onDrawGetColorItem, setRGBColor);
+      MENU_ITEM(2, MSG_COLORS_BLUE,  onDrawGetColorItem, setRGBColor);
     }
     updateMenu(getColorMenu);
     dwinDrawRectangle(1, *menuData.intPtr, 20, 315, DWIN_WIDTH - 20, 335);

@@ -238,7 +238,6 @@ void hmiStep();            // Transmission ratio
 
 void hmiInit();
 void dwinInitScreen();
-void dwinUpdate();
 void eachMomentUpdate();
 void dwinHandleScreen();
 void dwinStatusChanged(const char * const cstr=nullptr);
