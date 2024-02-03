@@ -729,7 +729,8 @@ void MarlinSettings::postprocess() {
 
   bool MarlinSettings::sd_update_status() {
     uint8_t val;
-    persistentStore.read_data(SD_FIRMWARE_UPDATE_EEPROM_ADDR, &val);
+    int pos = SD_FIRMWARE_UPDATE_EEPROM_ADDR;
+    persistentStore.read_data(pos, &val);
     return (val == SD_FIRMWARE_UPDATE_ACTIVE_VALUE);
   }
 
@@ -1861,8 +1862,10 @@ void MarlinSettings::postprocess() {
 
         EEPROM_READ(planner.settings.min_segment_time_us);
 
-        float tmp2[NUM_AXES + e_factors];
-        EEPROM_READ((uint8_t *)tmp2, sizeof(tmp2)); // axis_steps_per_mm
+        #if ENABLED(EDITABLE_STEPS_PER_UNIT)
+          float tmp2[NUM_AXES + e_factors];
+          EEPROM_READ((uint8_t *)tmp2, sizeof(tmp2)); // axis_steps_per_mm
+        #endif
 
         feedRate_t tmp3[NUM_AXES + e_factors];
         EEPROM_READ((uint8_t *)tmp3, sizeof(tmp3)); // max_feedrate_mm_s
