@@ -464,7 +464,7 @@ jobs:
         sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         sed -i "s/.*#define CAPABILITIES_REPORT/${ITEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define NO_HOME_OFFSETS/${ITEMP}#define NO_HOME_OFFSETS/" Marlin/Configuration_adv.h;
+        sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/${ITEMP}#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h;
         sed -i "s/.*#define HAS_CGCODE 1/${ITEMP}#define HAS_CGCODE 1/" Marlin/Configuration.h;
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
@@ -472,7 +472,7 @@ jobs:
         sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PTEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h;
         sed -i "s/.*#define CAPABILITIES_REPORT/${PTEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         if [ "$IS" = true ] && [ "$TP" = true ]; then
-        sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/\/\/#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h;
+        sed -i "s/.*#define NO_HOME_OFFSETS/\/\/#define NO_HOME_OFFSETS/" Marlin/Configuration_adv.h;
         sed -i "s/.*#define G26_MESH_VALIDATION/\/\/#define G26_MESH_VALIDATION/" Marlin/Configuration.h;
         fi;
         pio run
