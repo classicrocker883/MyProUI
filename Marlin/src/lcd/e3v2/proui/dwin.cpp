@@ -2365,20 +2365,19 @@ void setMoveZ() { hmiValue.axis = Z_AXIS; setPFloatOnClick(Z_MIN_POS, Z_MAX_POS,
       }
       else LCD_MESSAGE_F("Tramming Wizard Start");
       DWINUI::clearMainArea();
-      meshViewer.drawMeshGrid(2, 2); // Indicate start. Draw the grid
-      bed_mesh_t zval = {0};
+      static bed_mesh_t zval = {};
       probe.stow();
-      zval[0][0] = tram(0);
-      if (checkkey == ID_Homing) meshViewer.drawMeshGrid(2, 2); // Redraw if Homing
       checkkey = ID_NothingToDo;
-      meshViewer.drawMesh(zval, 2, 2);
-      zval[1][0] = tram(1);
-      meshViewer.drawMesh(zval, 2, 2);
-      zval[1][1] = tram(2);
-      meshViewer.drawMesh(zval, 2, 2);
-      zval[0][1] = tram(3);
+      zval[0][0] = tram(0, false);
+      meshViewer.drawMeshGrid(2, 2); // Indicate start. Draw the grid
+      meshViewer.drawMeshPoint(0, 0, zval[0][0]);
+      zval[1][0] = tram(1, false);
+      meshViewer.drawMeshPoint(1, 0, zval[1][0]);
+      zval[1][1] = tram(2, false);
+      meshViewer.drawMeshPoint(1, 1, zval[1][1]);
+      zval[0][1] = tram(3, false);
+      meshViewer.drawMeshPoint(0, 1, zval[0][1]);
       probe.stow();
-      meshViewer.drawMesh(zval, 2, 2);
 
       DWINUI::drawCenteredString(140, F("Calculating average"));
       DWINUI::drawCenteredString(160, F("and relative heights"));
@@ -2394,35 +2393,33 @@ void setMoveZ() { hmiValue.axis = Z_AXIS; setPFloatOnClick(Z_MIN_POS, Z_MAX_POS,
         #define BED_TRAMMING_PROBE_TOLERANCE 0.05f
       #endif
 
-      if (ABS(meshViewer.max - meshViewer.min) < BED_TRAMMING_PROBE_TOLERANCE) {
-        EXIT_TRAMWIZ:
+      uint8_t p = 0;
+      float max = 0.0f;
+      FSTR_P plabel;
+      bool s = true;
+      for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) {
+        const float d = fabsf(zval[x][y]);
+        if (max < d) {
+          s = (zval[x][y] >= 0);
+          max = d;
+          p = y + 2 * x;
+        }
+      }
+      if (fabsf(meshViewer.max - meshViewer.min) < BED_TRAMMING_PROBE_TOLERANCE || UNEAR_ZERO(max)) {
         DWINUI::drawCenteredString(140, F("Corners leveled"));
         DWINUI::drawCenteredString(160, F("Tolerance achieved!"));
       }
       else {
-        uint8_t p = 0;
-        float max = 0.0f;
-        FSTR_P plabel;
-        bool s = true;
-        for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) {
-          const float d = ABS(zval[x][y]);
-          if (max < d) {
-            s = (zval[x][y] >= 0);
-            max = d;
-            p = x + 2 * y;
-          }
-          else { goto EXIT_TRAMWIZ; } // fail-safe if Corners are = 0.00
-        }
         switch (p) {
           case 0b00 : plabel = GET_TEXT_F(MSG_TRAM_FL); break;
-          case 0b01 : plabel = GET_TEXT_F(MSG_TRAM_FR); break;
-          case 0b10 : plabel = GET_TEXT_F(MSG_TRAM_BL); break;
+          case 0b01 : plabel = GET_TEXT_F(MSG_TRAM_BL); break;
+          case 0b10 : plabel = GET_TEXT_F(MSG_TRAM_FR); break;
           case 0b11 : plabel = GET_TEXT_F(MSG_TRAM_BR); break;
           default   : plabel = F(""); break;
         }
         DWINUI::drawCenteredString(120, F("Corners not leveled"));
         DWINUI::drawCenteredString(140, F("Knob adjustment required"));
-        DWINUI::drawCenteredString((s ? COLOR_GREEN : COLOR_ERROR_RED), 160, (s ? F("Lower") : F("Raise")));
+        DWINUI::drawCenteredString((s ? COLOR_GREEN : COLOR_ERROR_RED), 160, s ? F("Lower") : F("Raise"));
         DWINUI::drawCenteredString(COLOR_GREEN, 180, plabel);
       }
       DWINUI::drawButton(BTN_Continue, 86, 305);
@@ -2832,7 +2829,7 @@ void onDrawAcc(MenuItem* menuitem, int8_t line) {
 
 void drawPrepareMenu() {
   checkkey = ID_Menu;
-  if (SET_MENU(prepareMenu, MSG_PREPARE, 12 + PREHEAT_COUNT)) {
+  if (SET_MENU(prepareMenu, MSG_PREPARE, 11 + PREHEAT_COUNT)) {
     BACK_ITEM(gotoMainMenu);
     MENU_ITEM(ICON_FilMan, MSG_FILAMENT_MAN, onDrawSubMenu, drawFilamentManMenu);
     MENU_ITEM(ICON_Axis, MSG_MOVE_AXIS, onDrawMoveSubMenu, drawMoveMenu);
