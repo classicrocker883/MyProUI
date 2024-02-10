@@ -3479,7 +3479,7 @@
 
 //
 // Factory display for Creality CR-10 / CR-7 / Ender-3
-// https://www.aliexpress.com/item/32833148327.html
+// https://marlinfw.org/docs/hardware/controllers.html#cr10_stockdisplay
 //
 // This is RAMPS-compatible using a single 10-pin connector.
 //

@@ -135,11 +135,11 @@ void MeshViewerClass::Draw(const bool withsave/*=false*/, const bool redraw/*=tr
 
 void Draw_MeshViewer() { MeshViewer.Draw(true, meshredraw); }
 
-void onClick_MeshViewer() { if (HMI_flag.select_flag) SaveMesh(); HMI_ReturnScreen(); }
+void OnClick_MeshViewer() { if (HMI_flag.select_flag) SaveMesh(); HMI_ReturnScreen(); }
 
 void Goto_MeshViewer(const bool redraw) {
   meshredraw = redraw;
-  if (leveling_is_valid()) { Goto_Popup(Draw_MeshViewer, onClick_MeshViewer); }
+  if (leveling_is_valid()) { Goto_Popup(Draw_MeshViewer, OnClick_MeshViewer); }
   else { HMI_ReturnScreen(); }
 }
 

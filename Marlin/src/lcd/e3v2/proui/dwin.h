@@ -68,16 +68,15 @@ enum processID : uint8_t {
   NothingToDo
 };
 
-#if ANY(PROUI_PID_TUNE, MPC_AUTOTUNE)
+#if ANY(HAS_PID_HEATING, MPC_AUTOTUNE)
   enum tempcontrol_t : uint8_t {
-    #if PROUI_PID_TUNE
+    #if HAS_PID_HEATING
       PID_EXTR_START,
       PID_BED_START,
       PID_BAD_HEATER_ID,
       PID_TEMP_TOO_HIGH,
       PID_TUNING_TIMEOUT,
-    #endif
-    #if ENABLED(MPC_AUTOTUNE)
+    #elif ENABLED(MPC_AUTOTUNE)
       MPCTEMP_START,
       MPC_TEMP_ERROR,
       MPC_INTERRUPTED,
@@ -143,7 +142,7 @@ typedef struct {
 
 typedef struct {
   rgb_t Color;                        // Color
-  #if ANY(PROUI_PID_TUNE, MPCTEMP)
+  #if ANY(HAS_PID_HEATING, MPCTEMP)
     tempcontrol_t tempControl = AUTOTUNE_DONE;
   #endif
   uint8_t Select = 0;                 // Auxiliary selector variable
@@ -157,8 +156,6 @@ typedef struct {
   bool abort_flag:1;    // sd or host was aborted
   bool pause_flag:1;    // printing is paused
   bool select_flag:1;   // Popup button selected
-  //bool home_flag:1;     // homing in course
-  //bool config_flag:1;   // SD G-code file is a Configuration file
   #if PROUI_EX && HAS_LEVELING
     bool cancel_abl:1;  // cancel current abl
   #endif
@@ -215,7 +212,7 @@ uint32_t GetHash(char * str);
   void AutoLev();
   void AutoLevStart();
   void PopUp_StartAutoLev();
-  void onClick_StartAutoLev();
+  void OnClick_StartAutoLev();
 #endif
 void RebootPrinter();
 void DisableMotors();
@@ -240,7 +237,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
 #if HAS_BED_PROBE && ENABLED(PROUI_ITEM_TRAM)
   void Trammingwizard();
   void TramwizStart();
-  void onClick_StartTramwiz();
+  void OnClick_StartTramwiz();
   void PopUp_StartTramwiz();
 #endif
 #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
@@ -393,26 +390,26 @@ void Draw_MaxAccel_Menu();
 #endif
 
 // PID
-#if PROUI_PID_TUNE
+#if HAS_PID_HEATING
   #include "../../../module/temperature.h"
   void DWIN_M303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp);
   void DWIN_PidTuning(tempcontrol_t result);
   void Draw_PID_Menu();
-#endif
-#if ENABLED(PIDTEMP)
-  #if ENABLED(PID_AUTOTUNE_MENU)
-    void HotendPID();
+  #if ENABLED(PIDTEMP)
+    #if ENABLED(PID_AUTOTUNE_MENU)
+      void HotendPID();
+    #endif
+    #if ANY(PID_AUTOTUNE_MENU, PID_EDIT_MENU)
+      void Draw_HotendPID_Menu();
+    #endif
   #endif
-  #if ANY(PID_AUTOTUNE_MENU, PID_EDIT_MENU)
-    void Draw_HotendPID_Menu();
-  #endif
-#endif
-#if ENABLED(PIDTEMPBED)
-  #if ENABLED(PID_AUTOTUNE_MENU)
-    void BedPID();
-  #endif
-  #if ANY(PID_AUTOTUNE_MENU, PID_EDIT_MENU)
-    void Draw_BedPID_Menu();
+  #if ENABLED(PIDTEMPBED)
+    #if ENABLED(PID_AUTOTUNE_MENU)
+      void BedPID();
+    #endif
+    #if ANY(PID_AUTOTUNE_MENU, PID_EDIT_MENU)
+      void Draw_BedPID_Menu();
+    #endif
   #endif
 #endif
 

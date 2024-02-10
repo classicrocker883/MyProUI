@@ -29,7 +29,10 @@ popupDrawFunc_t Draw_Popup = nullptr;
 popupClickFunc_t ClickPopup = nullptr;
 popupChangeFunc_t PopupChange = nullptr;
 
+uint16_t HighlightYPos = 280;
+
 void Draw_Select_Highlight(const bool sel, const uint16_t ypos) {
+  HighlightYPos = ypos;
   HMI_flag.select_flag = sel;
   const uint16_t c1 = sel ? HMI_data.Cursor_Color : HMI_data.PopupBg_Color,
                  c2 = sel ? HMI_data.PopupBg_Color : HMI_data.Cursor_Color;
@@ -52,7 +55,7 @@ void Goto_Popup(const popupDrawFunc_t fnDraw, const popupClickFunc_t fnClick/*=n
   ClickPopup = fnClick;
   PopupChange = fnChange;
   HMI_SaveProcessID(Popup);
-  HMI_flag.select_flag = false;
+  HMI_flag.select_flag = 0;
   Draw_Popup();
 }
 
@@ -65,7 +68,7 @@ void HMI_Popup() {
     EncoderState encoder_diffState = get_encoder_state();
     if (encoder_diffState == ENCODER_DIFF_CW || encoder_diffState == ENCODER_DIFF_CCW) {
       const bool change = encoder_diffState != ENCODER_DIFF_CW;
-      if (PopupChange) PopupChange(change); else Draw_Select_Highlight(change);
+      if (PopupChange) PopupChange(change); else Draw_Select_Highlight(change, HighlightYPos);
       DWIN_UpdateLCD();
     }
   }

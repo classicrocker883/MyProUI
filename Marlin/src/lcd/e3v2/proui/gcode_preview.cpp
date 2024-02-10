@@ -38,8 +38,13 @@
 #include "dwin_popup.h"
 #include "base64.h"
 
-#define THUMBWIDTH 200
-#define THUMBHEIGHT 200
+#if ENABLED(TJC_DISPLAY)
+  #define THUMBWIDTH  180
+  #define THUMBHEIGHT 180
+#else
+  #define THUMBWIDTH  200
+  #define THUMBHEIGHT 200
+#endif
 
 // When `getLine`, `getValue`, `getFileHeader` are enabled - uncomment this
 // ??? what they do... Maybe Laser related?

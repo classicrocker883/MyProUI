@@ -173,7 +173,6 @@ void DWIN_Frame_AreaMove(uint8_t mode, uint8_t dir, uint16_t dis,
 //y: bottom right point
 void DWIN_Draw_DegreeSymbol(uint16_t Color, uint16_t x, uint16_t y);
 
-
 /*---------------------------------------- Text related functions ----------------------------------------*/
 
 // Draw a string

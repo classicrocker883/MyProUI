@@ -249,7 +249,7 @@ void SetPFloatOnClick(const float lo, const float hi, uint8_t dp, void (*Apply)(
 
 // Generic menu control using the encoder
 void HMI_Menu() {
-  EncoderState encoder_diffState = get_encoder_state();
+  const EncoderState encoder_diffState = get_encoder_state();
   if (CurrentMenu) {
     if (encoder_diffState == ENCODER_DIFF_NO) return;
     if (encoder_diffState == ENCODER_DIFF_ENTER)
@@ -266,10 +266,8 @@ void HMI_Menu() {
 //  1 : live change
 //  2 : apply change
 int8_t HMI_Get(bool draw) {
-  const int32_t lo = MenuData.MinValue;
-  const int32_t hi = MenuData.MaxValue;
-  const int32_t cval = MenuData.Value;
-  EncoderState encoder_diffState = encoderReceiveAnalyze();
+  const int32_t lo = MenuData.MinValue, hi = MenuData.MaxValue, cval = MenuData.Value;
+  const EncoderState encoder_diffState = encoderReceiveAnalyze();
   if (encoder_diffState != ENCODER_DIFF_NO) {
     if (applyEncoder(encoder_diffState, MenuData.Value)) {
       encoderRate.enabled = false;
@@ -286,7 +284,7 @@ int8_t HMI_Get(bool draw) {
 
 // Set and draw a value using the encoder
 void HMI_SetDraw() {
-  int8_t val = HMI_Get(true);
+  const int8_t val = HMI_Get(true);
   switch (val) {
     case 0: return;
     case 1: if (MenuData.LiveUpdate) MenuData.LiveUpdate(); break;
@@ -296,7 +294,7 @@ void HMI_SetDraw() {
 
 // Set an value without drawing
 void HMI_SetNoDraw() {
-  int8_t val = HMI_Get(false);
+  const int8_t val = HMI_Get(false);
   switch (val) {
     case 0: return;
     case 1: if (MenuData.LiveUpdate) MenuData.LiveUpdate(); break;
@@ -306,7 +304,7 @@ void HMI_SetNoDraw() {
 
 // Set an integer pointer variable using the encoder
 void HMI_SetPInt() {
-  int8_t val = HMI_Get(true);
+  const int8_t val = HMI_Get(true);
   switch (val) {
     case 0: return;
     case 1: if (MenuData.LiveUpdate) MenuData.LiveUpdate(); break;

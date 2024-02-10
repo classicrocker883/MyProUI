@@ -1158,7 +1158,7 @@ void HMI_MainMenu() {
 }
 
 // Pause or Stop popup
-void onClick_PauseOrStop() {
+void OnClick_PauseOrStop() {
   switch (select_print.now) {
     case PRINT_PAUSE_RESUME: if (HMI_flag.select_flag) { ui.pause_print(); } break; // confirm pause
     case PRINT_STOP: if (HMI_flag.select_flag) { ui.abort_print(); } break; // stop confirmed then abort print
@@ -1199,10 +1199,10 @@ void HMI_Printing() {
           break;
         }
         else {
-          return Goto_Popup(Popup_window_PauseOrStop, onClick_PauseOrStop);
+          return Goto_Popup(Popup_window_PauseOrStop, OnClick_PauseOrStop);
         }
       case PRINT_STOP:
-        return Goto_Popup(Popup_window_PauseOrStop, onClick_PauseOrStop);
+        return Goto_Popup(Popup_window_PauseOrStop, OnClick_PauseOrStop);
       default: break;
     }
   }
@@ -1344,8 +1344,8 @@ void EachMomentUpdate() {
       else { DWIN_Print_Finished(); }
     }
 
-    if ((print_job_timer.isPaused() != HMI_flag.pause_flag) && (checkkey != Homing)) {
-      HMI_flag.pause_flag = print_job_timer.isPaused();
+    if ((HMI_flag.pause_flag != printingIsPaused()) && (checkkey != Homing)) {
+      HMI_flag.pause_flag = printingIsPaused();
       DEBUG_ECHOLNPGM("pause_flag: ", HMI_flag.pause_flag);
       if (HMI_flag.pause_flag) { DWIN_Print_Pause(); }
       else if (HMI_flag.abort_flag) { DWIN_Print_Aborted(); }
@@ -1411,7 +1411,7 @@ void EachMomentUpdate() {
     DWIN_UpdateLCD();
   }
 
-  void onClick_PowerLossRecovery() {
+  void OnClick_PowerLossRecovery() {
     if (HMI_flag.select_flag) {
       queue.inject(F("M1000C"));
       select_page.reset();
@@ -1427,7 +1427,7 @@ void EachMomentUpdate() {
   void Goto_PowerLossRecovery() {
     recovery.dwin_flag = false;
     LCD_MESSAGE(MSG_CONTINUE_PRINT_JOB);
-    Goto_Popup(Popup_PowerLossRecovery, onClick_PowerLossRecovery);
+    Goto_Popup(Popup_PowerLossRecovery, OnClick_PowerLossRecovery);
   }
 
 #endif // POWER_LOSS_RECOVERY
@@ -1509,7 +1509,7 @@ bool IDisPopUp() {    // If ID is popup...
     case Homing:
     TERN_(HAS_BED_PROBE,
     case Leveling:)
-    TERN_(PROUI_PID_TUNE,
+    TERN_(HAS_PID_HEATING,
     case PidProcess:)
     TERN_(MPCTEMP,
     case MPCProcess:)
@@ -1717,7 +1717,7 @@ void DWIN_HomingDone() {
   #endif // PROUI_ITEM_PLOT
 #endif // PROUI_TUNING_GRAPH
 
-#if PROUI_PID_TUNE
+#if HAS_PID_HEATING
 
   void DWIN_M303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp) {
     if (seenC) { HMI_data.PidCycles = c; }
@@ -1772,7 +1772,7 @@ void DWIN_HomingDone() {
     }
   }
 
-#endif // PROUI_PID_TUNE
+#endif // HAS_PID_HEATING
 
 #if ENABLED(MPC_AUTOTUNE)
 
@@ -1966,7 +1966,7 @@ void DWIN_SetDataDefaults() {
   DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
   TERN_(PIDTEMP, HMI_data.HotendPidT = DEF_HOTENDPIDT;)
   TERN_(PIDTEMPBED, HMI_data.BedPidT = DEF_BEDPIDT;)
-  TERN_(PROUI_PID_TUNE, HMI_data.PidCycles = DEF_PIDCYCLES;)
+  TERN_(HAS_PID_HEATING, HMI_data.PidCycles = DEF_PIDCYCLES;)
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     HMI_data.ExtMinT = EXTRUDE_MINTEMP;
     ApplyExtMinT();
@@ -2194,7 +2194,7 @@ void DWIN_RedrawScreen() {
     Draw_Select_Highlight(true);
   }
 
-  void onClick_FilamentPurge() {
+  void OnClick_FilamentPurge() {
     if (HMI_flag.select_flag) {
       pause_menu_response = PAUSE_RESPONSE_EXTRUDE_MORE;  // "Purge More" button
     }
@@ -2206,7 +2206,7 @@ void DWIN_RedrawScreen() {
 
   void Goto_FilamentPurge() {
     pause_menu_response = PAUSE_RESPONSE_WAIT_FOR;
-    Goto_Popup(Draw_Popup_FilamentPurge, onClick_FilamentPurge);
+    Goto_Popup(Draw_Popup_FilamentPurge, OnClick_FilamentPurge);
   }
 
 #endif // ADVANCED_PAUSE_FEATURE
@@ -2256,7 +2256,7 @@ void DWIN_RedrawScreen() {
 
   void SetPreview() { Toggle_Chkb_Line(HMI_data.EnablePreview); }
 
-  void onClick_ConfirmToPrint() {
+  void OnClick_ConfirmToPrint() {
     DWIN_ResetStatusLine();
 
     if (HMI_flag.select_flag) {     // Confirm
@@ -2282,7 +2282,7 @@ void Goto_ConfirmToPrint() {
       LaserOn(false); // If it is not laser file turn off laser mode
   #endif
   #if HAS_GCODE_PREVIEW
-    if (HMI_data.EnablePreview) return Goto_Popup(preview.drawFromSD, onClick_ConfirmToPrint);
+    if (HMI_data.EnablePreview) return Goto_Popup(preview.drawFromSD, OnClick_ConfirmToPrint);
   #endif
   card.openAndPrintFile(card.filename); // Direct print SD file
 }
@@ -3005,9 +3005,9 @@ void onDrawGetColorItem(MenuItemClass* menuitem, int8_t line) {
   const uint8_t i = menuitem->icon;
   uint16_t color;
   switch (i) {
-    case 0: color = RGB(31, 0, 0); break; // Red
-    case 1: color = RGB(0, 63, 0); break; // Green
-    case 2: color = RGB(0, 0, 31); break; // Blue
+    case 0:  color = RGB(31, 0, 0); break; // Red
+    case 1:  color = RGB(0, 63, 0); break; // Green
+    case 2:  color = RGB(0, 0, 31); break; // Blue
     default: color = 0; break;
   }
   DWIN_Draw_Rectangle(0, HMI_data.Highlight_Color, ICOX + 1, MBASE(line) - 1 + 1, ICOX + 18, MBASE(line) - 1 + 18);
@@ -3038,7 +3038,7 @@ void onDrawGetColorItem(MenuItemClass* menuitem, int8_t line) {
   #if ENABLED(PROUI_ITEM_TRAM)
     // Trammingwizard Popup
     void PopUp_StartTramwiz() { DWIN_Popup_ConfirmCancel(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), F("Start Tramming Wizard?")); }
-    void onClick_StartTramwiz() {
+    void OnClick_StartTramwiz() {
       if (HMI_flag.select_flag) {
         if (HMI_data.FullManualTramming) {
           LCD_MESSAGE_F("Disable manual tramming");
@@ -3049,7 +3049,7 @@ void onDrawGetColorItem(MenuItemClass* menuitem, int8_t line) {
       }
       else { HMI_ReturnScreen(); }
     }
-    void TramwizStart() { Goto_Popup(PopUp_StartTramwiz, onClick_StartTramwiz); }
+    void TramwizStart() { Goto_Popup(PopUp_StartTramwiz, OnClick_StartTramwiz); }
   #endif
 
   // Auto Bed Leveling
@@ -3059,11 +3059,11 @@ void onDrawGetColorItem(MenuItemClass* menuitem, int8_t line) {
 
   // Mesh Popup
   void PopUp_StartAutoLev() { DWIN_Popup_ConfirmCancel(ICON_Leveling_1, F("Start Auto Bed Leveling?")); }
-  void onClick_StartAutoLev() {
+  void OnClick_StartAutoLev() {
     if (HMI_flag.select_flag) { AutoLev(); }
     else { HMI_ReturnScreen(); }
   }
-  void AutoLevStart() { Goto_Popup(PopUp_StartAutoLev, onClick_StartAutoLev); }
+  void AutoLevStart() { Goto_Popup(PopUp_StartAutoLev, OnClick_StartAutoLev); }
 
 #endif // HAS_BED_PROBE
 
@@ -3835,9 +3835,9 @@ void Draw_MaxAccel_Menu() {
     if (SET_MENU(GetColorMenu, MSG_COLORS_GET, 5)) {
       BACK_ITEM(DWIN_ApplyColor);
       MENU_ITEM(ICON_Cancel, MSG_BUTTON_CANCEL, onDrawMenuItem, Draw_SelectColors_Menu);
-      MENU_ITEM(0, MSG_COLORS_RED, onDrawGetColorItem, SetRGBColor);
+      MENU_ITEM(0, MSG_COLORS_RED,   onDrawGetColorItem, SetRGBColor);
       MENU_ITEM(1, MSG_COLORS_GREEN, onDrawGetColorItem, SetRGBColor);
-      MENU_ITEM(2, MSG_COLORS_BLUE, onDrawGetColorItem, SetRGBColor);
+      MENU_ITEM(2, MSG_COLORS_BLUE,  onDrawGetColorItem, SetRGBColor);
     }
     UpdateMenu(GetColorMenu);
     DWIN_Draw_Rectangle(1, *MenuData.P_Int, 20, 315, DWIN_WIDTH - 20, 335);
@@ -3910,7 +3910,7 @@ void Draw_MaxAccel_Menu() {
 
 #endif // MPC_EDIT_MENU || MPC_AUTOTUNE_MENU
 
-#if ALL(PROUI_PID_TUNE, PID_AUTOTUNE_MENU)
+#if ALL(HAS_PID_HEATING, PID_AUTOTUNE_MENU)
   void SetPID(celsius_t t, heater_id_t h) {
     gcode.process_subcommands_now(
       TS(F("G28OXYR10\nG0Z10F300\nG0X"), X_CENTER, F("Y"), Y_CENTER, F("F5000\nM84\nM400"))
@@ -3920,7 +3920,7 @@ void Draw_MaxAccel_Menu() {
   void SetPidCycles() { SetPIntOnClick(3, 50); }
 #endif
 
-#if ALL(PROUI_PID_TUNE, PID_EDIT_MENU)
+#if ALL(HAS_PID_HEATING, PID_EDIT_MENU)
   void SetKp() { SetPFloatOnClick(0, 1000, 2); }
   void ApplyPIDi() {
     *MenuData.P_Float = scalePID_i(MenuData.Value / POW(10, 2));
@@ -4336,11 +4336,11 @@ void Draw_MaxAccel_Menu() {
 #if ENABLED(HOST_SHUTDOWN_MENU_ITEM) && defined(SHUTDOWN_ACTION)
 
   void PopUp_HostShutDown() { DWIN_Popup_ConfirmCancel(ICON_Info_1, GET_TEXT_F(MSG_HOST_SHUTDOWN)); }
-  void onClick_HostShutDown() {
+  void OnClick_HostShutDown() {
     if (HMI_flag.select_flag) { hostui.shutdown(); }
     HMI_ReturnScreen();
   }
-  void HostShutDown() { Goto_Popup(PopUp_HostShutDown, onClick_HostShutDown); }
+  void HostShutDown() { Goto_Popup(PopUp_HostShutDown, OnClick_HostShutDown); }
 
 #endif
 

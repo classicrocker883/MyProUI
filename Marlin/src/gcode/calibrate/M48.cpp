@@ -73,16 +73,13 @@ void GcodeSuite::M48() {
 
   const int8_t verbose_level = parser.byteval('V', 1);
   if (!WITHIN(verbose_level, 0, 4)) {
-    SERIAL_ECHOLNPGM("?(V)erbose level implausible (0-4).");
+    SERIAL_ECHOLNPGM(GCODE_ERR_MSG("(V)erbose level implausible (0-4)."));
     return;
   }
 
-  if (verbose_level > 0)
-    SERIAL_ECHOLNPGM("M48 Z-Probe Repeatability Test");
-
   const int8_t n_samples = parser.byteval('P', 10);
   if (!WITHIN(n_samples, 4, 50)) {
-    SERIAL_ECHOLNPGM("?Sample size not plausible (4-50).");
+    SERIAL_ECHOLNPGM(GCODE_ERR_MSG("Sample size not plausible (4-50)."));
     return;
   }
 
@@ -96,7 +93,7 @@ void GcodeSuite::M48() {
 
   if (!probe.can_reach(test_position)) {
     LCD_MESSAGE_MAX(MSG_M48_OUT_OF_BOUNDS);
-    SERIAL_ECHOLNPGM("? (X,Y) out of bounds.");
+    SERIAL_ECHOLNPGM(GCODE_ERR_MSG(" (X,Y) out of bounds."));
     return;
   }
 
@@ -104,7 +101,7 @@ void GcodeSuite::M48() {
   bool seen_L = parser.seen('L');
   uint8_t n_legs = seen_L ? parser.value_byte() : 0;
   if (n_legs > 15) {
-    SERIAL_ECHOLNPGM("?Legs of movement implausible (0-15).");
+    SERIAL_ECHOLNPGM(GCODE_ERR_MSG("Legs of movement implausible (0-15)."));
     return;
   }
   if (n_legs == 1) n_legs = 2;
@@ -112,6 +109,9 @@ void GcodeSuite::M48() {
   // Schizoid motion as an optional stress-test
   const bool schizoid_flag = parser.boolval('S');
   if (schizoid_flag && !seen_L) n_legs = 7;
+
+  if (verbose_level > 0)
+    SERIAL_ECHOLNPGM("M48 Z-Probe Repeatability Test");
 
   if (verbose_level > 2)
     SERIAL_ECHOLNPGM("Positioning the probe...");
