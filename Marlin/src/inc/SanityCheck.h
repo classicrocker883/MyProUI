@@ -267,7 +267,7 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
 /**
  * Validate bed size
  */
-#if DISABLED(PROUI_EX)
+#if !PROUI_EX
   #if !defined(X_BED_SIZE) || !defined(Y_BED_SIZE)
     #error "X_BED_SIZE and Y_BED_SIZE are required!"
   #else
@@ -573,7 +573,7 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
   #endif
 #endif
 
-#if ENABLED(NOZZLE_PARK_FEATURE) && DISABLED(PROUI_EX)
+#if ENABLED(NOZZLE_PARK_FEATURE) && !PROUI_EX
   constexpr float npp[] = NOZZLE_PARK_POINT;
   static_assert(COUNT(npp) == _MIN(NUM_AXES, XYZ), "NOZZLE_PARK_POINT requires coordinates for enabled axes, but only up to X,Y,Z.");
   constexpr xyz_pos_t npp_xyz = NOZZLE_PARK_POINT;
@@ -1282,7 +1282,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
       #endif
     #endif
 
-    #if HAS_BLTOUCH_HS_MODE && DISABLED(PROUI_EX)
+    #if HAS_BLTOUCH_HS_MODE && !PROUI_EX
       constexpr char hs[] = STRINGIFY(BLTOUCH_HS_MODE);
       static_assert(!(strcmp(hs, "1") && strcmp(hs, "0x1") && strcmp(hs, "true") && strcmp(hs, "0") && strcmp(hs, "0x0") && strcmp(hs, "false")), \
          "BLTOUCH_HS_MODE must now be defined as true or false, indicating the default state.");
@@ -1448,7 +1448,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
     static_assert(PROBING_MARGIN_RIGHT >= 0, "PROBING_MARGIN_RIGHT must be >= 0.");
   #endif
 
-  #if DISABLED(PROUI_EX)
+  #if !PROUI_EX
     #define _MARGIN(A) TERN(IS_KINEMATIC, PRINTABLE_RADIUS, ((A##_BED_SIZE) / 2))
     static_assert(PROBING_MARGIN       < _MARGIN(X), "PROBING_MARGIN is too large.");
     static_assert(PROBING_MARGIN_BACK  < _MARGIN(Y), "PROBING_MARGIN_BACK is too large.");
@@ -1503,14 +1503,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
     static_assert(Z_AFTER_PROBING >= 0, "Probes require Z_AFTER_PROBING >= 0.");
   #endif
 
-  #if PROUI_EX
-    #if MULTIPLE_PROBING == 1
-        #error "MULTIPLE_PROBING must be 0 or more than 2."
-    #endif
-    #if MULTIPLE_PROBING > 0 && EXTRA_PROBING != 1
-      #error "PROUI_EX requires an EXTRA_PROBING value of 1"
-    #endif
-  #else
+  #if DISABLED(DWIN_LCD_PROUI)
     #if MULTIPLE_PROBING > 0 || EXTRA_PROBING > 0
       #if MULTIPLE_PROBING == 0
         #error "EXTRA_PROBING requires MULTIPLE_PROBING."
@@ -1570,7 +1563,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
  * Bed Leveling Requirements
  */
 
-#if DISABLED(PROUI_EX)
+#if NONE(PROUI_EX, PROUI_GRID_PNTS)
   #if IS_SCARA && ANY(AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_3POINT, AUTO_BED_LEVELING_UBL)
     #error "SCARA machines can only use AUTO_BED_LEVELING_BILINEAR or MESH_BED_LEVELING."
   #elif ENABLED(AUTO_BED_LEVELING_LINEAR) && !(WITHIN(GRID_MAX_POINTS_X, 2, 255) && WITHIN(GRID_MAX_POINTS_Y, 2, 255))
@@ -1609,7 +1602,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
 #if ALL(HAS_MESH, CLASSIC_JERK)
   static_assert(DEFAULT_ZJERK > 0.1, "Low DEFAULT_ZJERK values are incompatible with mesh-based leveling.");
 #endif
-#if DISABLED(PROUI_EX)
+#if !PROUI_EX || PROUI_GRID_PNTS
   #if HAS_MESH && DGUS_LCD_UI_IA_CREALITY && GRID_MAX_POINTS > 25
     #error "DGUS_LCD_UI IA_CREALITY requires a mesh with no more than 25 points as defined by GRID_MAX_POINTS_X/Y."
   #endif
@@ -1736,7 +1729,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
 /**
  * Make sure Z_SAFE_HOMING point is reachable
  */
-#if ENABLED(Z_SAFE_HOMING) && DISABLED(PROUI_EX)
+#if ENABLED(Z_SAFE_HOMING) && !PROUI_EX
   static_assert(WITHIN(Z_SAFE_HOMING_X_POINT, X_MIN_POS, X_MAX_POS), "Z_SAFE_HOMING_X_POINT can't be reached by the nozzle.");
   static_assert(WITHIN(Z_SAFE_HOMING_Y_POINT, Y_MIN_POS, Y_MAX_POS), "Z_SAFE_HOMING_Y_POINT can't be reached by the nozzle.");
 #endif

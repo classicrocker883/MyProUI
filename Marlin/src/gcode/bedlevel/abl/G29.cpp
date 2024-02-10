@@ -51,6 +51,7 @@
   #include "../../../lcd/extui/ui_api.h"
 #elif ENABLED(DWIN_LCD_PROUI)
   #include "../../../lcd/e3v2/proui/dwin.h"
+  #include "../../../lcd/e3v2/proui/meshviewer.h"
 #endif
 
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
@@ -103,7 +104,7 @@ public:
   #elif ENABLED(AUTO_BED_LEVELING_3POINT)
     static constexpr grid_count_t abl_points = 3;
   #elif ABL_USES_GRID
-    TERN(PROUI_EX, const, static constexpr) grid_count_t abl_points = GRID_MAX_POINTS;
+    TERN(TERN(PROUI_EX, PROUI_EX, PROUI_GRID_PNTS), const, static constexpr) grid_count_t abl_points = GRID_MAX_POINTS;
   #endif
 
   #if ABL_USES_GRID
@@ -119,11 +120,7 @@ public:
       bool                topography_map;
       xy_uint8_t          grid_points;
     #else // Bilinear
-      #if PROUI_EX
-        xy_uint8_t grid_points = { GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y };
-      #else
-        static constexpr xy_uint8_t grid_points = { GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y };
-      #endif
+      IF_DISABLED(TERN(PROUI_EX, PROUI_EX, PROUI_GRID_PNTS), static constexpr) xy_uint8_t grid_points = { GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y };
     #endif
 
     #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
@@ -141,7 +138,7 @@ public:
 };
 
 #if ABL_USES_GRID && ANY(AUTO_BED_LEVELING_3POINT, AUTO_BED_LEVELING_BILINEAR)
-  #if DISABLED(PROUI_EX)
+  #if NONE(PROUI_EX, PROUI_GRID_PNTS)
     constexpr xy_uint8_t G29_State::grid_points;
     constexpr grid_count_t G29_State::abl_points;
   #endif
@@ -255,12 +252,14 @@ G29_TYPE GcodeSuite::G29() {
     G29_RETURN(false, false);
   }
 
+  // Send 'N' to force homing before G29 (internal only)
+  if (parser.seen_test('N'))
+    process_subcommands_now(TERN(CAN_SET_LEVELING_AFTER_G28, F("G28L0"), FPSTR(G28_STR)));
   #if ENABLED(DWIN_LCD_PROUI)
-    process_subcommands_now(F("G28Z"));
-  #else
-    // Send 'N' to force homing before G29 (internal only)
-    if (parser.seen_test('N'))
-      process_subcommands_now(TERN(CAN_SET_LEVELING_AFTER_G28, F("G28L0"), FPSTR(G28_STR)));
+    else {
+      process_subcommands_now(F("G28Z"));
+      process_subcommands_now(F("G28XY"));
+    }
   #endif
 
   // Don't allow auto-leveling without homing first
@@ -508,7 +507,7 @@ G29_TYPE GcodeSuite::G29() {
       }
       // Pre-populate local Z values from the stored mesh
       TERN_(IS_KINEMATIC, COPY(abl.z_values, bedlevel.z_values));
-    #endif // AUTO_BED_LEVELING_BILINEAR
+    #endif
 
   } // !g29_in_progress
 
@@ -671,7 +670,7 @@ G29_TYPE GcodeSuite::G29() {
 
         int8_t inStart, inStop, inInc;
 
-        TERN_(PROUI_EX, if (ProEx.QuitLeveling()) break; )
+        TERN_(DWIN_LCD_PROUI, if (HMI_flag.cancel_lev) break;)
 
         if (zig) {                      // Zig away from origin
           inStart = 0;                  // Left or front
@@ -755,6 +754,7 @@ G29_TYPE GcodeSuite::G29() {
             }
             //if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM_P(axis == Y_AXIS ? PSTR("Y=") : PSTR("X=", pos);
 
+            safe_delay(4);
             abl.measured_z = current_position.z - bdl.read();
             if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("x_cur ", planner.get_axis_position_mm(X_AXIS), " z ", abl.measured_z);
 
@@ -784,13 +784,13 @@ G29_TYPE GcodeSuite::G29() {
             const float z = abl.measured_z + abl.Z_offset;
             abl.z_values[abl.meshCount.x][abl.meshCount.y] = z;
             TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(abl.meshCount, z));
-            TERN_(PROUI_EX, ProEx.MeshUpdate(abl.meshCount.x, abl.meshCount.y, z));
+            TERN_(DWIN_LCD_PROUI, MeshViewer.DrawMeshPoint(abl.meshCount.x, abl.meshCount.y, z));
 
           #endif
 
           abl.reenable = false; // Don't re-enable after modifying the mesh
           idle_no_sleep();
-          TERN_(PROUI_EX, if (ProEx.QuitLeveling()) break; )
+          TERN_(DWIN_LCD_PROUI, if (HMI_flag.cancel_lev) break;)
 
         } // inner
       } // outer
@@ -860,7 +860,7 @@ G29_TYPE GcodeSuite::G29() {
       else {
         bedlevel.set_grid(abl.gridSpacing, abl.probe_position_lf);
         COPY(bedlevel.z_values, abl.z_values);
-        TERN_(IS_KINEMATIC, bedlevel.extrapolate_unprobed_bed_level());
+        TERN_(IS_KINEMATIC, bedlevel.extrapolate_unprobed_bed_levels());
         bedlevel.refresh_bed_level();
 
         bedlevel.print_leveling_grid();
@@ -996,7 +996,7 @@ G29_TYPE GcodeSuite::G29() {
   // Restore state after probing
   if (!faux) restore_feedrate_and_scaling();
 
-  TERN_(HAS_BED_PROBE, probe.move_z_after_probing());
+  TERN_(Z_AFTER_PROBING, probe.move_z_after_probing());
 
   #ifdef EVENT_GCODE_AFTER_G29
     if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Z Probe End Script: ", EVENT_GCODE_AFTER_G29);

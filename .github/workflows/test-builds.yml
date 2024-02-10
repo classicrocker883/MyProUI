@@ -8,7 +8,7 @@ name: CI
 on:
   pull_request:
     branches:
-    - 2024-January!
+    - 2024-February!
     paths-ignore:
     - config/**
     - data/**
@@ -16,7 +16,7 @@ on:
     - '**/*.md'
   push:
     branches:
-    - 2024-January!
+    - 2024-February!
     paths-ignore:
     - config/**
     - data/**

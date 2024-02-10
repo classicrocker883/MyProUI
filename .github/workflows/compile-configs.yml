@@ -223,7 +223,7 @@ jobs:
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         cp configurations/Voxelab\ Aquila/UBL/ConfigurationPro.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila/UBL/Configuration_advPro.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
@@ -232,14 +232,12 @@ jobs:
         sed -i "s/.*#define PREHEAT_2_LABEL/${PTEMP}#define PREHEAT_2_LABEL/" Marlin/Configuration.h
         sed -i "s/.*#define USE_GRID_MESHVIEWER 1/${PTEMP}#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
         sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PTEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
-        sed -i "s/.*#define SHOW_SPEED_IND/${PTEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h
         sed -i "s/.*#define CAPABILITIES_REPORT/${PTEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
         if ($T13); then THMP="13"; TMMP='\/\/'; else THMP="1"; TMMP=; fi;
         sed -i "s/.*#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
-        sed -i "s/.*#define PROUI_MEDIASORT/${TMMP}#define PROUI_MEDIASORT/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -269,7 +267,6 @@ jobs:
       matrix:
         chip: [GD32,N32]
         tjc: [true,false]
-        pwr: [true]
         t13: [true,false]
     steps:
     - uses: actions/checkout@v3
@@ -310,16 +307,16 @@ jobs:
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         cp configurations/Voxelab\ Aquila/UBL/ConfigurationPro.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila/UBL/Configuration_advPro.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
-        sed -i "s/.*#define SHOW_SPEED_IND/\/\/#define SHOW_SPEED_IND/" Marlin/Configuration.h
         sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
+        sed -i "s/.*#define PROUI_ITEM_PLR/#define PROUI_ITEM_PLR/" Marlin/Configuration.h
         sed -i "s/.*#define POWER_LOSS_RECOVERY/#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define CAPABILITIES_REPORT/\/\/#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define NO_HOME_OFFSETS/#define NO_HOME_OFFSETS/" Marlin/Configuration_adv.h
         if ($T13); then THMP="13"; DSMP="425"; else THMP="1"; DSMP="98"; fi;
         sed -i "s/.*#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
@@ -329,7 +326,6 @@ jobs:
       env:
         AQUILA_VER: ${{ matrix.chip }}
         TJC: ${{ matrix.tjc }}
-        PWR: ${{ matrix.pwr }}
         T13: ${{ matrix.t13 }}
     - name: Get release
       id: get_release
@@ -420,7 +416,6 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
-        grid: [3,5,7]
         temp: [true,false]
         inshape: [true,false]
     steps:
@@ -457,7 +452,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        echo "filename=Aquila_${AVTMP}_UBL-${GRID}x${GRID}-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=Aquila_${AVTMP}_UBL-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -465,24 +460,26 @@ jobs:
         cp configurations/Voxelab\ Aquila/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
-        sed -i "s/.*#define GRID_MAX_POINTS_X.*/#define GRID_MAX_POINTS_X ${GRID}/g" Marlin/Configuration.h
-        if ($IS); then TEMP=; else TEMP='\/\/'; fi;
+        if ($IS); then TEMP=; ITEMP='\/\/'; else TEMP='\/\/'; ITEMP=; fi;
         sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define CAPABILITIES_REPORT/${ITEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define NO_HOME_OFFSETS/${ITEMP}#define NO_HOME_OFFSETS/" Marlin/Configuration_adv.h;
+        sed -i "s/.*#define HAS_CGCODE 1/${ITEMP}#define HAS_CGCODE 1/" Marlin/Configuration.h;
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PTEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h;
+        sed -i "s/.*#define CAPABILITIES_REPORT/${PTEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         if [ "$IS" = true ] && [ "$TP" = true ]; then
-        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/\/\/#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h;
-        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h;
-        sed -i "s/.*#define CAPABILITIES_REPORT/\/\/#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h;
+        sed -i "s/.*#define NOZZLE_CLEAN_FEATURE/\/\/#define NOZZLE_CLEAN_FEATURE/" Marlin/Configuration.h;
+        sed -i "s/.*#define G26_MESH_VALIDATION/\/\/#define G26_MESH_VALIDATION/" Marlin/Configuration.h;
         fi;
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        GRID: ${{ matrix.grid }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
     - name: Get release
@@ -583,7 +580,6 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
-        grid: [3,4,5]
         temp: [true,false]
         inshape: [true,false]
     steps:
@@ -620,7 +616,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        echo "filename=Aquila_${AVTMP}_BLT-${GRID}x${GRID}-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=Aquila_${AVTMP}_BLT-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -628,7 +624,6 @@ jobs:
         cp configurations/Voxelab\ Aquila/BLT/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/BLT/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
-        sed -i "s/.*#define GRID_MAX_POINTS_X.*/#define GRID_MAX_POINTS_X ${GRID}/g" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
         sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
@@ -640,7 +635,6 @@ jobs:
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        GRID: ${{ matrix.grid }}
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
     - name: Get release
@@ -712,6 +706,7 @@ jobs:
         cp configurations/BTT-SKR_Mini_E3_V2/ConfigurationUBL.h Marlin/Configuration.h
         cp configurations/BTT-SKR_Mini_E3_V2/Configuration_advUBL.h Marlin/Configuration_adv.h
         cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
         fi;
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_${SKR}/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;

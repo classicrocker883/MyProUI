@@ -33,7 +33,7 @@ void safe_delay(millis_t ms);           // Delay ensuring that temperatures are 
   inline void serial_delay(const millis_t) {}
 #endif
 
-#if TERN(PROUI_EX, HAS_MESH, GRID_MAX_POINTS)
+#if TERN(DWIN_LCD_PROUI, HAS_MESH, GRID_MAX_POINTS)
 
   // 16x16 bit arrays
   template <int W, int H>
@@ -49,7 +49,7 @@ void safe_delay(millis_t ms);           // Delay ensuring that temperatures are 
     inline bool marked(const xy_int8_t &xy)       { return marked(xy.x, xy.y); }
   };
 
-  #if PROUI_EX
+  #if ANY(PROUI_EX, PROUI_GRID_PNTS)
     typedef FlagBits<GRID_LIMIT, GRID_LIMIT> MeshFlags;
   #else
     typedef FlagBits<GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y> MeshFlags;

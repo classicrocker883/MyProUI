@@ -26,7 +26,7 @@
 #include "bedlevel.h"
 #include "hilbert_curve.h"
 
-#if PROUI_EX
+#if ANY(PROUI_EX, PROUI_GRID_PNTS)
   int8_t  to_fix(int8_t  v) { return v * 2; }
   int8_t  to_int(int8_t  v) { return v / 2; }
   uint8_t   log2(uint8_t n) { return (n > 1) ? 1 + log2(uint8_t(n >> 1)) : 0; }

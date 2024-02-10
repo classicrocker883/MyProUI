@@ -46,30 +46,30 @@ constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
 constexpr uint8_t DEF_GRID_MAX_POINTS = TERN(HAS_MESH, GRID_MAX_POINTS_X, 3);
 #define GRID_MIN 3
 #define GRID_LIMIT 9
-#ifndef MESH_INSET
+#ifndef   MESH_INSET
   #define MESH_INSET 10
 #endif
-#ifndef MESH_MIN_X
+#ifndef   MESH_MIN_X
   #define MESH_MIN_X MESH_INSET
 #endif
-#ifndef MESH_MIN_Y
+#ifndef   MESH_MIN_Y
   #define MESH_MIN_Y MESH_INSET
 #endif
-#ifndef MESH_MAX_X
+#ifndef   MESH_MAX_X
   #define MESH_MAX_X  X_BED_SIZE - (MESH_INSET)
 #endif
-#ifndef MESH_MAX_Y
+#ifndef   MESH_MAX_Y
   #define MESH_MAX_Y  Y_BED_SIZE - (MESH_INSET)
 #endif
 constexpr uint16_t DEF_MESH_MIN_X = MESH_MIN_X;
-constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X; // TODO
+constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X;
 constexpr uint16_t DEF_MESH_MIN_Y = MESH_MIN_Y;
 constexpr uint16_t DEF_MESH_MAX_Y = MESH_MAX_Y;
 #define MIN_MESH_INSET 0
 #define MAX_MESH_INSET X_BED_SIZE
 constexpr uint16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
 #ifndef MULTIPLE_PROBING
-  #define MULTIPLE_PROBING 0
+  #define MULTIPLE_PROBING 2
 #endif
 #define DEF_FIL_MOTION_SENSOR ENABLED(FILAMENT_MOTION_SENSOR)
 #if DISABLED(FILAMENT_RUNOUT_SENSOR) // must be defined opposite FIL_RUNOUT_STATE in as Configuration.h
@@ -82,6 +82,7 @@ constexpr uint16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
   #endif
 #endif
 
+#if PROUI_EX
 typedef struct {
   uint16_t x_bed_size = DEF_X_BED_SIZE;
   uint16_t y_bed_size = DEF_Y_BED_SIZE;
@@ -92,7 +93,7 @@ typedef struct {
   int16_t z_max_pos  = DEF_Z_MAX_POS;
   uint8_t grid_max_points = DEF_GRID_MAX_POINTS;
   float mesh_min_x = DEF_MESH_MIN_X;
-  float mesh_max_x = DEF_MESH_MAX_X; // TODO
+  float mesh_max_x = DEF_MESH_MAX_X;
   float mesh_min_y = DEF_MESH_MIN_Y;
   float mesh_max_y = DEF_MESH_MAX_Y;
   uint16_t zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
@@ -171,3 +172,4 @@ public:
 };
 
 extern ProUIClass ProEx;
+#endif

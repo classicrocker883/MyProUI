@@ -300,7 +300,7 @@ void GcodeSuite::dwell(millis_t time) {
     #define G29_MAX_RETRIES 0
   #endif
 
-  #if DISABLED(PROUI_EX)
+  #if !PROUI_EX
     void GcodeSuite::G29_with_retry() {
       uint8_t retries = G29_MAX_RETRIES;
       while (G29()) { // G29 should return true for failed probes ONLY

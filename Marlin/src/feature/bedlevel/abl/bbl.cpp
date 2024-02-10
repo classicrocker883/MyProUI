@@ -37,16 +37,12 @@
 
 LevelingBilinear bedlevel;
 
-xy_pos_t LevelingBilinear::grid_spacing,
-         LevelingBilinear::grid_start;
 xy_float_t LevelingBilinear::grid_factor;
-#if PROUI_EX
-  float LevelingBilinear::z_values[GRID_LIMIT][GRID_LIMIT];
-#else
-  float LevelingBilinear::z_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
-#endif
-xy_pos_t LevelingBilinear::cached_rel;
+xy_pos_t LevelingBilinear::grid_spacing,
+         LevelingBilinear::grid_start,
+         LevelingBilinear::cached_rel;
 xy_int8_t LevelingBilinear::cached_g;
+bed_mesh_t LevelingBilinear::z_values;
 
 /**
  * Extrapolate a single point from its neighbors
@@ -116,24 +112,24 @@ void LevelingBilinear::set_grid(const xy_pos_t& _grid_spacing, const xy_pos_t& _
   grid_factor = grid_spacing.reciprocal();
 }
 
-#if DISABLED(PROUI_EX)
+//#if !PROUI_EX
 /**
  * Fill in the unprobed points (corners of circular print surface)
  * using linear extrapolation, away from the center.
  */
-void LevelingBilinear::extrapolate_unprobed_bed_level() {
+void LevelingBilinear::extrapolate_unprobed_bed_levels() {
   #ifdef HALF_IN_X
-    constexpr uint8_t ctrx2 = 0, xend = GRID_MAX_POINTS_X - 1;
+    TERN(DWIN_LCD_PROUI, const, constexpr) uint8_t ctrx2 = 0, xend = GRID_MAX_POINTS_X - 1;
   #else
-    constexpr uint8_t ctrx1 = (GRID_MAX_CELLS_X) / 2,  // left-of-center
+    TERN(DWIN_LCD_PROUI, const, constexpr) uint8_t ctrx1 = (GRID_MAX_CELLS_X) / 2,  // left-of-center
                       ctrx2 = (GRID_MAX_POINTS_X) / 2, // right-of-center
                       xend = ctrx1;
   #endif
 
   #ifdef HALF_IN_Y
-    constexpr uint8_t ctry2 = 0, yend = GRID_MAX_POINTS_Y - 1;
+    TERN(DWIN_LCD_PROUI, const, constexpr) uint8_t ctry2 = 0, yend = GRID_MAX_POINTS_Y - 1;
   #else
-    constexpr uint8_t ctry1 = (GRID_MAX_CELLS_Y) / 2,  // top-of-center
+    TERN(DWIN_LCD_PROUI, const, constexpr) uint8_t ctry1 = (GRID_MAX_CELLS_Y) / 2,  // top-of-center
                       ctry2 = (GRID_MAX_POINTS_Y) / 2, // bottom-of-center
                       yend = ctry1;
   #endif
@@ -157,7 +153,7 @@ void LevelingBilinear::extrapolate_unprobed_bed_level() {
       extrapolate_one_point(x2, y2, -1, -1);       // right-above - -
     }
 }
-#endif
+//#endif
 
 void LevelingBilinear::print_leveling_grid(const bed_mesh_t* _z_values/*=nullptr*/) {
   // print internal grid(s) or just the one passed as a parameter

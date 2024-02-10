@@ -282,7 +282,7 @@ MenuClass *PIDMenu = nullptr;
 #endif
 #if HAS_MESH
   MenuClass *MeshMenu = nullptr;
-  #if ENABLED(MESH_EDIT_MENU)
+  #if ENABLED(PROUI_MESH_EDIT)
     MenuClass *EditMeshMenu = nullptr;
   #endif
   #if PROUI_EX
@@ -304,7 +304,7 @@ MenuClass *PIDMenu = nullptr;
 MenuItemClass *HotendTargetItem = nullptr;
 MenuItemClass *BedTargetItem = nullptr;
 MenuItemClass *FanSpeedItem = nullptr;
-MenuItemClass *MMeshMoveZItem = nullptr;
+TERN_(MESH_BED_LEVELING, MenuItemClass *MMeshMoveZItem = nullptr;)
 MenuItemClass *EditZValueItem = nullptr;
 
 //-----------------------------------------------------------------------------
@@ -756,7 +756,7 @@ void _draw_xyz_position(const bool force) {
 }
 
 void update_variable() {
-  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH - 6 * DWINUI::fontWidth(), 6, checkkey);)
+  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Light_Red, Color_Bg_Black, 2, DWIN_WIDTH - 6 * DWINUI::fontWidth(), 6, checkkey);)
   TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH - 3 * DWINUI::fontWidth(), 6, last_checkkey);)
 
   _draw_xyz_position(false);
@@ -969,11 +969,11 @@ void onClickSDItem() {
     }
     else if ((selected >= 1 + hasUpDir) && (shift_len > MENU_CHAR_LIMIT)) {
       uint8_t shift_new = _MIN(shift_amt + 1, shift_len - MENU_CHAR_LIMIT); // Try to shift by...
-      Draw_SDItem_Shifted(shift_new);             // Draw the item
-      if (shift_new == shift_amt) {               // Scroll reached the end
-        shift_new = -1;                           // Reset
+      Draw_SDItem_Shifted(shift_new); // Draw the item
+      if (shift_new == shift_amt) {   // Scroll reached the end
+        shift_new = -1;               // Reset
       }
-      shift_amt = shift_new;                      // Set new scroll
+      shift_amt = shift_new;          // Set new scroll
     }
   }
 #else
@@ -1103,14 +1103,24 @@ void Draw_Info_Menu() {
   }
 
   #if PROUI_EX
-    ProEx.Init();
+    Init();
   #else
     DWINUI::Draw_CenteredString(198, GET_TEXT_F(MSG_INFO_FWVERSION));
     DWINUI::Draw_CenteredString(218, F(SHORT_BUILD_VERSION));
     DWINUI::Draw_CenteredString(251, GET_TEXT_F(MSG_INFO_BUILD));
     DWINUI::Draw_CenteredString(271, F(DateTime));
   #endif
+    // Draw the face
+    // DWINUI::Draw_FillCircle(0xFF0F, 128, 320, 50);
+    // Draw the eyes
+    // DWIN_Draw_Point(0x00FF, 15, 15, 75+28, 75+218);
+    // DWIN_Draw_Point(0x00FF, 15, 15, 110+28, 75+218);
 
+    // Draw the mouth
+    // DWIN_Draw_Line(0x0000, 80+28, 115+218, 120+28, 115+218);
+    // DWIN_Draw_Line(0x0000, 80+28, 115+218, 89+28, 124+218);
+    // DWIN_Draw_Line(0x0000, 111+28, 124+218, 120+28, 115+218);
+    // DWIN_Draw_Line(0x0000, 111+28, 124+218, 89+28, 124+218);
 }
 
 // Main Process
@@ -1243,6 +1253,8 @@ void HMI_WaitForUser() {
   EncoderState encoder_diffState = get_encoder_state();
   if ((encoder_diffState != ENCODER_DIFF_NO) && !ui.backlight) {
     if (checkkey == WaitResponse) { HMI_ReturnScreen(); }
+    //EachMomentUpdate();
+    //idle();
     return ui.refresh_brightness();
   }
   if (!wait_for_user) {
@@ -1253,9 +1265,13 @@ void HMI_WaitForUser() {
         break;
       #if HAS_BED_PROBE
         case Leveling:
-          TERN(PROUI_EX, ProEx.StopLeveling(), HMI_ReturnScreen());
+          HMI_flag.cancel_lev = 1;
+          DWIN_DrawStatusLine("Canceling auto leveling...");
+          DWIN_UpdateLCD();
           break;
       #endif
+      case NothingToDo:
+        break;
       default:
         HMI_ReturnScreen();
         break;
@@ -1456,7 +1472,7 @@ void EachMomentUpdate() {
   }
 
   void UBLSmartFillMesh() {
-    for (uint8_t x = 0; x < GRID_MAX_POINTS_X; ++x) bedlevel.smart_fill_mesh();
+    for (uint8_t x = 0; x < GRID_MAX_POINTS_X; ++x) bedlevel.smart_mesh_fill();
     LCD_MESSAGE(MSG_UBL_MESH_FILLED);
   }
 
@@ -1550,7 +1566,7 @@ void HMI_ReturnScreen() {
 
 void DWIN_HomingStart() {
   DEBUG_ECHOLNPGM("DWIN_HomingStart");
-  HMI_SaveProcessID(Homing);
+  if (checkkey != NothingToDo || checkkey != Leveling) { HMI_SaveProcessID(Homing); }
   Title.ShowCaption(GET_TEXT_F(MSG_HOMING));
   DWIN_Show_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
 }
@@ -1565,55 +1581,57 @@ void DWIN_HomingDone() {
     if (laser_device.is_laser_device()) { laser_device.laser_home(); }
   #endif
   if (last_checkkey == PrintDone) { Goto_PrintDone(); }
-  else { HMI_ReturnScreen(); }
+  else if (checkkey != NothingToDo || checkkey != Leveling) { HMI_ReturnScreen(); }
 }
 
 #if HAS_LEVELING
   void DWIN_LevelingStart() {
     DEBUG_ECHOLNPGM("DWIN_LevelingStart");
     #if HAS_BED_PROBE
+      HMI_flag.cancel_lev = 0;
       HMI_SaveProcessID(Leveling);
-      TERN_(PROUI_EX, HMI_flag.cancel_abl = 0;)
       Title.ShowCaption(GET_TEXT_F(MSG_BED_LEVELING));
-      #if PROUI_EX
-        MeshViewer.DrawMeshGrid(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y);
-        DWINUI::Draw_Button(BTN_Cancel, 86, 305, true);
-      #else
-        DWIN_Show_Popup(ICON_AutoLeveling, GET_TEXT_F(MSG_BED_LEVELING), GET_TEXT_F(MSG_PLEASE_WAIT), BTN_Cancel);
-      #endif
-      #if ALL(AUTO_BED_LEVELING_UBL, PREHEAT_BEFORE_LEVELING)
-        #if HAS_BED_PROBE
-          if (!DEBUGGING(DRYRUN)) { probe.preheat_for_probing(LEVELING_NOZZLE_TEMP, HMI_data.BedLevT); }
-        #else
-          #if HAS_HOTEND
-            if (!DEBUGGING(DRYRUN) && thermalManager.degTargetHotend(EXT) < LEVELING_NOZZLE_TEMP) {
-              thermalManager.setTargetHotend(LEVELING_NOZZLE_TEMP, 0);
-              thermalManager.wait_for_hotend(EXT);
-            }
-          #endif
-          #if HAS_HEATED_BED
-            if (!DEBUGGING(DRYRUN) && thermalManager.degTargetBed() < HMI_data.BedLevT) {
-              thermalManager.setTargetBed(HMI_data.BedLevT);
-              thermalManager.wait_for_bed_heating();
-            }
-          #endif
-        #endif
-      #endif
+      MeshViewer.DrawMeshGrid(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y);
+      DWINUI::Draw_Button(BTN_Cancel, 86, 305, true);
     #elif ENABLED(MESH_BED_LEVELING)
       Draw_AdvancedSettings_Menu();
     #endif
-  }
 
-  void DWIN_LevelingDone() {
-    DEBUG_ECHOLNPGM("DWIN_LevelingDone");
-    #if HAS_MESH
-      #if ALL(PROUI_EX, HAS_BED_PROBE)
-        ProEx.LevelingDone();
+    #if ENABLED(PREHEAT_BEFORE_LEVELING)
+      #if HAS_BED_PROBE
+        if (!DEBUGGING(DRYRUN)) { probe.preheat_for_probing(LEVELING_NOZZLE_TEMP, HMI_data.BedLevT); }
       #else
-        Goto_MeshViewer(true);
+        #if HAS_HOTEND
+          if (!DEBUGGING(DRYRUN) && thermalManager.degTargetHotend(EXT) < LEVELING_NOZZLE_TEMP) {
+            thermalManager.setTargetHotend(LEVELING_NOZZLE_TEMP, 0);
+            thermalManager.wait_for_hotend(EXT);
+          }
+        #endif
+        #if HAS_HEATED_BED
+          if (!DEBUGGING(DRYRUN) && thermalManager.degTargetBed() < HMI_data.BedLevT) {
+            thermalManager.setTargetBed(HMI_data.BedLevT);
+            thermalManager.wait_for_bed_heating();
+          }
+        #endif
       #endif
     #endif
   }
+
+  #if ALL(HAS_MESH, HAS_BED_PROBE)
+    void DWIN_LevelingDone() {
+      DEBUG_ECHOLNPGM("DWIN_LevelingDone");
+        if (HMI_flag.cancel_lev) {
+          probe.stow();
+          reset_bed_level();
+          HMI_ReturnScreen();
+          DWIN_UpdateLCD();
+          ui.set_status(F("Mesh was cancelled"));
+        }
+        else {
+          Goto_MeshViewer(true);
+        }
+    }
+  #endif
 #endif // HAS_LEVELING
 
 #if HAS_MESH
@@ -1733,22 +1751,26 @@ void DWIN_HomingDone() {
   void DWIN_PidTuning(tempcontrol_t result) {
     HMI_value.tempControl = result;
     switch (result) {
-      case PID_BED_START:
-        HMI_SaveProcessID(PidProcess);
-        #if PROUI_TUNING_GRAPH
-          DWIN_Draw_PID_MPC_Popup();
-        #else
-          DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_BED_RUN));
-        #endif
-        break;
-      case PID_EXTR_START:
-        HMI_SaveProcessID(PidProcess);
-        #if PROUI_TUNING_GRAPH
-          DWIN_Draw_PID_MPC_Popup();
-        #else
-          DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_NOZZLE_RUN));
-        #endif
-        break;
+      #if ENABLED(PIDTEMPBED)
+        case PID_BED_START:
+          HMI_SaveProcessID(PidProcess);
+          #if PROUI_TUNING_GRAPH
+            DWIN_Draw_PID_MPC_Popup();
+          #else
+            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_BED_RUN));
+          #endif
+          break;
+      #endif
+      #if ENABLED(PIDTEMP)
+        case PID_EXTR_START:
+          HMI_SaveProcessID(PidProcess);
+          #if PROUI_TUNING_GRAPH
+            DWIN_Draw_PID_MPC_Popup();
+          #else
+            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_NOZZLE_RUN));
+          #endif
+          break;
+      #endif
       case PID_BAD_HEATER_ID:
         checkkey = last_checkkey;
         DWIN_Popup_Continue(ICON_TempTooLow, GET_TEXT_F(MSG_PID_AUTOTUNE_FAILED), GET_TEXT_F(MSG_BAD_HEATER_ID));
@@ -1844,7 +1866,7 @@ void DWIN_Print_Finished() {
   DEBUG_ECHOLNPGM("DWIN_Print_Finished");
   #ifndef SD_FINISHED_RELEASECOMMAND
     if (all_axes_homed()) {
-      #if ENABLED(NOZZLE_PARK_FEATURE) && DISABLED(PROUI_EX)
+      #if ENABLED(NOZZLE_PARK_FEATURE) && !PROUI_EX
         const xyz_pos_t park_point = NOZZLE_PARK_POINT;
       #endif
       const int16_t zpos = current_position.z + TERN(NOZZLE_PARK_FEATURE,
@@ -1948,18 +1970,6 @@ void DWIN_Print_Aborted() {
   }
 #endif
 
-// Max X Mesh Inset does not save after restart - it is limited by Probe offset. TODO: this is just a temp workaround,
- #if ALL(PROUI_EX, HAS_MESH)
-  void SetMeshArea() {
-    PRO_data.mesh_min_x = ui.mesh_inset_min_x;
-    PRO_data.mesh_max_x = ui.mesh_inset_max_x;
-    PRO_data.mesh_min_y = ui.mesh_inset_min_y;
-    PRO_data.mesh_max_y = ui.mesh_inset_max_y;
-    ProEx.ApplyMeshLimits();
-    ReDrawMenu();
-  }
-#endif
-
 void DWIN_SetDataDefaults() {
   DEBUG_ECHOLNPGM("DWIN_SetDataDefaults");
   DWIN_SetColorDefaults();
@@ -1985,12 +1995,10 @@ void DWIN_SetDataDefaults() {
     card.setSortOn(TERN(SDSORT_REVERSE, AS_REV, AS_FWD));
   #endif
   HMI_data.MediaAutoMount = DISABLED(PROUI_EX);
-  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
+  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)// NoPro Mesh_Inset workaround
     HMI_data.z_after_homing = DEF_Z_AFTER_HOMING;
   #endif
-  #if DISABLED(HAS_BED_PROBE)
-    HMI_data.ManualZOffset = 0;
-  #endif
+  IF_DISABLED(HAS_BED_PROBE, HMI_data.ManualZOffset = 0;)
   #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
     #if ENABLED(LED_COLOR_PRESETS)
       leds.set_default();
@@ -2006,9 +2014,7 @@ void DWIN_SetDataDefaults() {
     #endif
   #endif
   TERN_(ADAPTIVE_STEP_SMOOTHING, HMI_data.AdaptiveStepSmoothing = true;)
-  #if HAS_GCODE_PREVIEW
-    HMI_data.EnablePreview = true;
-  #endif
+  TERN_(HAS_GCODE_PREVIEW, HMI_data.EnablePreview = true;)
   #if PROUI_EX
     PRO_data.x_bed_size = DEF_X_BED_SIZE;
     PRO_data.y_bed_size = DEF_Y_BED_SIZE;
@@ -2017,21 +2023,13 @@ void DWIN_SetDataDefaults() {
     PRO_data.x_max_pos  = DEF_X_MAX_POS;
     PRO_data.y_max_pos  = DEF_Y_MAX_POS;
     PRO_data.z_max_pos  = DEF_Z_MAX_POS;
-    #if HAS_MESH
-      PRO_data.grid_max_points = DEF_GRID_MAX_POINTS;
-      PRO_data.mesh_min_x = DEF_MESH_MIN_X;
-      PRO_data.mesh_max_x = DEF_MESH_MAX_X;
-      PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
-      PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
-    #endif
+    TERN_(HAS_MESH, PRO_data.grid_max_points = DEF_GRID_MAX_POINTS;)
     #if HAS_BED_PROBE
       PRO_data.zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
-      PRO_data.multiple_probing = MULTIPLE_PROBING;
+      IF_DISABLED(BD_SENSOR, PRO_data.multiple_probing = MULTIPLE_PROBING;)
     #endif
     TERN_(HAS_EXTRUDERS, PRO_data.Invert_E0 = DEF_INVERT_E0_DIR;)
-    #if ENABLED(NOZZLE_PARK_FEATURE)
-      PRO_data.Park_point = DEF_NOZZLE_PARK_POINT;
-    #endif
+    TERN_(NOZZLE_PARK_FEATURE, PRO_data.Park_point = DEF_NOZZLE_PARK_POINT;)
     #if HAS_FILAMENT_SENSOR
       PRO_data.Runout_active_state = FIL_RUNOUT_STATE;
       PRO_data.FilamentMotionSensor = DEF_FIL_MOTION_SENSOR;
@@ -2042,6 +2040,12 @@ void DWIN_SetDataDefaults() {
       for (uint8_t i = 0; i < TBMaxOpt; ++i) PRO_data.TBopt[i] = _def[i];
     #endif
     ProEx.SetData();
+  #else
+    #if HAS_BED_PROBE
+      HMI_data.zprobeFeed = DEF_Z_PROBE_FEEDRATE_SLOW;
+      IF_DISABLED(BD_SENSOR, HMI_data.multiple_probing = MULTIPLE_PROBING;)
+    #endif
+    TERN_(PROUI_GRID_PNTS, HMI_data.grid_max_points = DEF_GRID_MAX_POINTS;)
   #endif
 }
 
@@ -2092,14 +2096,43 @@ void MarlinUI::init_lcd() {
   encoderConfiguration();
 }
 
+void Init(){
+
+  uint16_t uVar2;
+  uint16_t uVar3;
+  uint16_t uVar4;
+
+  uVar4 = 25;
+  uVar2 = 65;
+
+  do {
+    DWIN_Draw_Box(1, 0, uVar2, uVar2 + 200, uVar4 + 117, uVar4);
+    uVar3 = uVar2 - 5;
+    DWIN_Draw_Box(0, Rectangle_Color, uVar2, uVar2 + 200, uVar4 + 117, uVar4);
+    DWIN_UpdateLCD();
+    uVar4 += 10;
+    safe_delay(20);
+    uVar2 = uVar3;
+  } while (uVar3 != 15);
+  char ver[25];
+  sprintf(ver, "Version: %s", SHORT_BUILD_VERSION);
+  DWINUI::Draw_CenteredString(2, Color_Cyan, 230, TERN(PROUI_EX, F("MRiscoC ProUI"), F("MRiscoC NoPro"))) ;
+  DWINUI::Draw_CenteredString((fontid_t)2, Color_White, 260, F(ver));
+  DWINUI::Draw_CenteredString(false, 1, Color_White, DWINUI::backcolor, 280, DateTime);
+  DWINUI::Draw_CenteredString(2, 0xffe0, 305, F("ClassicRocker883"));
+  DWIN_UpdateLCD();
+  safe_delay(300);
+}
+
 void DWIN_InitScreen() {
   DEBUG_ECHOLNPGM("DWIN_InitScreen");
   HMI_Init();
+  DWIN_UpdateLCD();
   #if PROUI_EX
-    DWIN_UpdateLCD();
     ProEx.Init();
-    safe_delay(2000);
   #endif
+  Init();
+  safe_delay(2000);
   DWINUI::init();
   DWINUI::onTitleDraw = Draw_Title;
   InitMenu();
@@ -2107,9 +2140,6 @@ void DWIN_InitScreen() {
   hash_changed = true;
   DWIN_DrawStatusLine("");
   DWIN_Draw_Dashboard();
-  #if ALL(PROUI_EX, HAS_MESH)
-    SetMeshArea();
-  #endif
   Goto_Main_Menu();
   #if ENABLED(AUTO_BED_LEVELING_UBL)
     UBLMeshLoad();
@@ -2353,7 +2383,7 @@ void AutoHome() { queue.inject_P(G28_STR); }
   void HomeX() { queue.inject(F("G28X")); }
   void HomeY() { queue.inject(F("G28Y")); }
   void HomeZ() { queue.inject(F("G28Z")); }
-  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
+  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)// NoPro Mesh_Inset workaround
     void ApplyZAfterHoming() { HMI_data.z_after_homing = MenuData.Value; }
     void SetZAfterHoming() { SetIntOnClick(0, 20, HMI_data.z_after_homing, ApplyZAfterHoming); }
   #endif
@@ -2535,8 +2565,16 @@ void ApplyMove() {
 
   #if PROUI_EX
     void SetProbeZSpeed()  { SetPIntOnClick(60, 1000); }
-    void ApplyProbeMultiple() { PRO_data.multiple_probing = (MenuData.Value > 1) ? MenuData.Value : 0; }
-    void SetProbeMultiple()  { SetIntOnClick(0, 4, PRO_data.multiple_probing, ApplyProbeMultiple); }
+    #if DISABLED(BD_SENSOR)
+      void ApplyProbeMultiple() { PRO_data.multiple_probing = MenuData.Value; }
+      void SetProbeMultiple()  { SetIntOnClick(1, 4, PRO_data.multiple_probing, ApplyProbeMultiple); }
+    #endif
+  #else
+    void SetProbeZSpeed()  { SetPIntOnClick(60, 1000); }
+    #if DISABLED(BD_SENSOR)
+      void ApplyProbeMultiple() { HMI_data.multiple_probing = MenuData.Value; }
+      void SetProbeMultiple()  { SetIntOnClick(1, 4, HMI_data.multiple_probing, ApplyProbeMultiple); }
+    #endif
   #endif
 
   #if ENABLED(Z_MIN_PROBE_REPEATABILITY_TEST)
@@ -2554,6 +2592,18 @@ void ApplyMove() {
     void SetHSMode() { Toggle_Chkb_Line(bltouch.high_speed_mode); }
   #endif
 
+  // Auto Bed Leveling
+  void AutoLev() {
+    queue.inject(F(TERN(AUTO_BED_LEVELING_UBL, "G29P1", "G29")));
+  }
+
+  // Mesh Popup
+  void PopUp_StartAutoLev() { DWIN_Popup_ConfirmCancel(ICON_Leveling_1, F("Start Auto Bed Leveling?")); }
+  void OnClick_StartAutoLev() {
+    if (HMI_flag.select_flag) { AutoLev(); }
+    else { HMI_ReturnScreen(); }
+  }
+  void AutoLevStart() { Goto_Popup(PopUp_StartAutoLev, OnClick_StartAutoLev); }
 #endif
 
 #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
@@ -2670,160 +2720,172 @@ void ApplyMove() {
 #endif // ADVANCED_PAUSE_FEATURE
 
 // Bed Tramming
-  TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool stow_probe/*=true*/)) {
-    #if ENABLED(LCD_BED_TRAMMING)
-      constexpr float lfrb[] = BED_TRAMMING_INSET_LFRB;
-    #else
-      const_float_t lfrb[] = { ui.screw_pos, ui.screw_pos, TERN(HAS_BED_PROBE, _MAX(((X_BED_SIZE - X_MAX_POS) - probe.offset.x), ui.screw_pos), ui.screw_pos), TERN(HAS_BED_PROBE, _MAX(((Y_BED_SIZE - Y_MAX_POS) - probe.offset.y), ui.screw_pos), ui.screw_pos) };
-    #endif
-    OPTCODE(HAS_BED_PROBE, static bool inLev = false)
-    OPTCODE(HAS_BED_PROBE, if (inLev) return NAN)
-    float xpos = 0, ypos = 0 OPTARG(HAS_BED_PROBE, zval = 0);
-    gcode.process_subcommands_now(F("G28O"));
-    ui.reset_status(true);
-    switch (point) {
-      case 0: LCD_MESSAGE(MSG_TRAM_FL);
-        xpos = lfrb[0];
-        ypos = lfrb[1];
-        break;
-      case 1: LCD_MESSAGE(MSG_TRAM_FR);
-        xpos = X_BED_SIZE - lfrb[2];
-        ypos = lfrb[1];
-        break;
-      case 2: LCD_MESSAGE(MSG_TRAM_BR);
-        xpos = X_BED_SIZE - lfrb[2];
-        ypos = Y_BED_SIZE - lfrb[3];
-        break;
-      case 3: LCD_MESSAGE(MSG_TRAM_BL);
-        xpos = lfrb[0];
-        ypos = Y_BED_SIZE - lfrb[3];
-        break;
-      case 4: LCD_MESSAGE(MSG_TRAM_C);
-        xpos = X_CENTER;
-        ypos = Y_CENTER;
-        break;
-    }
-    #if HAS_BED_PROBE
-      if (HMI_data.FullManualTramming) {
-        set_bed_leveling_enabled(false);
-        gcode.process_subcommands_now(MString<100>(
-          #if ENABLED(LCD_BED_TRAMMING)
-            F("M420S0\nG90\nG0F300Z" STRINGIFY(BED_TRAMMING_Z_HOP) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z" STRINGIFY(BED_TRAMMING_HEIGHT))
-          #else
-            F("M420S0\nG90\nG0F300Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z0")
-          #endif
-        ));
-      }
-      else {
-        set_bed_leveling_enabled(false);
-        if (stow_probe) { probe.stow(); }
-        inLev = true;
-        zval = probe.probe_at_point(xpos, ypos, (stow_probe ? PROBE_PT_STOW : PROBE_PT_RAISE));
-        if (!isnan(zval)) {
-          ui.set_status(TS(F("X:"), p_float_t(xpos, 1), F(" Y:"), p_float_t(ypos, 1), F(" Z:"), p_float_t(zval, 3)));
-        }
-        else { LCD_MESSAGE(MSG_ZPROBE_OUT); }
-        inLev = false;
-      }
-      return zval;
-    #else // !HAS_BED_PROBE
-      queue.inject(MString<100>(
+TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool stow_probe/*=true*/)) {
+  #if ENABLED(LCD_BED_TRAMMING)
+    constexpr float lfrb[] = BED_TRAMMING_INSET_LFRB;
+  #else
+    const_float_t lfrb[] = { ui.screw_pos, ui.screw_pos, TERN(HAS_BED_PROBE, _MAX(((X_BED_SIZE - X_MAX_POS) - probe.offset.x), ui.screw_pos), ui.screw_pos), TERN(HAS_BED_PROBE, _MAX(((Y_BED_SIZE - Y_MAX_POS) - probe.offset.y), ui.screw_pos), ui.screw_pos) };
+  #endif
+  OPTCODE(HAS_BED_PROBE, static bool inLev = false)
+  OPTCODE(HAS_BED_PROBE, if (inLev) return NAN)
+  float xpos = 0, ypos = 0 OPTARG(HAS_BED_PROBE, zval = 0);
+  gcode.process_subcommands_now(F("G28O"));
+  ui.reset_status(true);
+  switch (point) {
+    case 0: LCD_MESSAGE(MSG_TRAM_FL);
+      xpos = lfrb[0];
+      ypos = lfrb[1];
+      break;
+    case 1: LCD_MESSAGE(MSG_TRAM_FR);
+      xpos = X_BED_SIZE - lfrb[2];
+      ypos = lfrb[1];
+      break;
+    case 2: LCD_MESSAGE(MSG_TRAM_BR);
+      xpos = X_BED_SIZE - lfrb[2];
+      ypos = Y_BED_SIZE - lfrb[3];
+      break;
+    case 3: LCD_MESSAGE(MSG_TRAM_BL);
+      xpos = lfrb[0];
+      ypos = Y_BED_SIZE - lfrb[3];
+      break;
+    case 4: LCD_MESSAGE(MSG_TRAM_C);
+      xpos = X_CENTER;
+      ypos = Y_CENTER;
+      break;
+  }
+  #if HAS_BED_PROBE
+    if (HMI_data.FullManualTramming) {
+      set_bed_leveling_enabled(false);
+      gcode.process_subcommands_now(MString<100>(
         #if ENABLED(LCD_BED_TRAMMING)
-          F("M420S0\nG28O\nG90\nG0F300Z" STRINGIFY(BED_TRAMMING_Z_HOP) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z" STRINGIFY(BED_TRAMMING_HEIGHT))
+          F("M420S0\nG90\nG0F300Z" STRINGIFY(BED_TRAMMING_Z_HOP) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z" STRINGIFY(BED_TRAMMING_HEIGHT))
         #else
-          F("M420S0\nG28O\nG90\nG0F300Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z0")
+          F("M420S0\nG90\nG0F300Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z0")
         #endif
       ));
-    #endif // HAS_BED_PROBE
-  } // Bed Tramming
+    }
+    else {
+      set_bed_leveling_enabled(false);
+      if (stow_probe) { probe.stow(); }
+      inLev = true;
+      zval = probe.probe_at_point(xpos, ypos, (stow_probe ? PROBE_PT_STOW : PROBE_PT_RAISE));
+      if (!isnan(zval)) {
+        ui.set_status(TS(F("X:"), p_float_t(xpos, 1), F(" Y:"), p_float_t(ypos, 1), F(" Z:"), p_float_t(zval, 3)));
+      }
+      else { LCD_MESSAGE(MSG_ZPROBE_OUT); }
+      inLev = false;
+    }
+    return zval;
+  #else // !HAS_BED_PROBE
+    queue.inject(MString<100>(
+      #if ENABLED(LCD_BED_TRAMMING)
+        F("M420S0\nG28O\nG90\nG0F300Z" STRINGIFY(BED_TRAMMING_Z_HOP) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z" STRINGIFY(BED_TRAMMING_HEIGHT))
+      #else
+        F("M420S0\nG28O\nG90\nG0F300Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z0")
+      #endif
+    ));
+  #endif // HAS_BED_PROBE
+} // Bed Tramming
 
-  #if ALL(HAS_BED_PROBE, PROUI_ITEM_TRAM)
+#if ALL(HAS_BED_PROBE, PROUI_ITEM_TRAM)
 
-    void Trammingwizard() {
+  void Trammingwizard() {
+    if (HMI_data.FullManualTramming) {
+      LCD_MESSAGE(MSG_DISABLE_MANUAL_TRAMMING);
+      return;
+    }
+    else LCD_MESSAGE(MSG_TRAMMING_WIZARD_START);
+    DWINUI::ClearMainArea();
+    static bed_mesh_t zval = {};
+    probe.stow();
+    checkkey = NothingToDo;       // Before home disable user input
+    zval[0][0] = tram(0, false);  // First tram point can do Homing
+    MeshViewer.DrawMeshGrid(2, 2);
+    MeshViewer.DrawMeshPoint(0, 0, zval[0][0]);
+    zval[1][0] = tram(1, false);
+    MeshViewer.DrawMeshPoint(1, 0, zval[1][0]);
+    zval[1][1] = tram(2, false);
+    MeshViewer.DrawMeshPoint(1, 1, zval[1][1]);
+    zval[0][1] = tram(3, false);
+    MeshViewer.DrawMeshPoint(0, 1, zval[0][1]);
+    probe.stow();
+
+    if (HMI_data.CalcAvg) {
+      DWINUI::Draw_CenteredString(140, F("Calculating average"));
+      DWINUI::Draw_CenteredString(160, F("and relative heights"));
+      safe_delay(1000);
+      float avg = 0.0f;
+      for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) avg += zval[x][y];
+      avg /= 4.0f;
+      for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) zval[x][y] -= avg;
+      MeshViewer.DrawMesh(zval, 2, 2);
+    }
+    else { DWINUI::Draw_CenteredString(100, F("Finding True value")); }
+    safe_delay(1000);
+    ui.reset_status();
+
+    #ifndef BED_TRAMMING_PROBE_TOLERANCE
+      #define BED_TRAMMING_PROBE_TOLERANCE 0.06f
+    #endif
+
+    uint8_t p = 0;
+    float max = 0.0f;
+    FSTR_P plabel;
+    bool s = true;
+    for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) {
+      const float d = fabsf(zval[x][y]);
+      if (max < d) {
+        s = (zval[x][y] >= 0);
+        max = d;
+        p = y + 2 * x;
+      }
+    }
+    if (fabsf(MeshViewer.max - MeshViewer.min) < BED_TRAMMING_PROBE_TOLERANCE || UNEAR_ZERO(max)) {
+      DWINUI::Draw_CenteredString(140, F("Corners leveled"));
+      DWINUI::Draw_CenteredString(160, F("Tolerance achieved!"));
+    }
+    else {
+      switch (p) {
+        case 0b00 : plabel = GET_TEXT_F(MSG_TRAM_FL); break;
+        case 0b01 : plabel = GET_TEXT_F(MSG_TRAM_BL); break;
+        case 0b10 : plabel = GET_TEXT_F(MSG_TRAM_FR); break;
+        case 0b11 : plabel = GET_TEXT_F(MSG_TRAM_BR); break;
+        default   : plabel = F(""); break;
+      }
+      DWINUI::Draw_CenteredString(120, F("Corners not leveled"));
+      DWINUI::Draw_CenteredString(140, F("Knob adjustment required"));
+      DWINUI::Draw_CenteredString((s ? Color_Green : Color_Error_Red), 160, (s ? GET_TEXT_F(MSG_TRAMWIZ_LOWER) : GET_TEXT_F(MSG_TRAMWIZ_RAISE)));
+      DWINUI::Draw_CenteredString(HMI_data.StatusTxt_Color, 180, plabel);
+    }
+    DWINUI::Draw_Button(BTN_Continue, 86, 305, true);
+    checkkey = Menu;
+    HMI_SaveProcessID(WaitResponse);
+  }
+
+  void SetManualTramming() {
+    Toggle_Chkb_Line(HMI_data.FullManualTramming);
+  }
+
+  void SetCalcAvg() {
+    Toggle_Chkb_Line(HMI_data.CalcAvg);
+  }
+
+  // Trammingwizard Popup
+  void PopUp_StartTramwiz() { DWIN_Popup_ConfirmCancel(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), F("Start Tramming Wizard?")); }
+  void OnClick_StartTramwiz() {
+    if (HMI_flag.select_flag) {
       if (HMI_data.FullManualTramming) {
         LCD_MESSAGE_F("Disable manual tramming");
+        HMI_ReturnScreen();
         return;
       }
-      else LCD_MESSAGE_F("Tramming Wizard Start");
-      DWINUI::ClearMainArea();
-      MeshViewer.DrawMeshGrid(2, 2);
-      bed_mesh_t zval = {0};
-      probe.stow();
-      zval[0][0] = tram(0, false);  // First tram point can do Homing
-      if (checkkey == Homing) { MeshViewer.DrawMeshGrid(2, 2); }
-      checkkey = NothingToDo;       // After home disable user input
-      MeshViewer.DrawMesh(zval, 2, 2);
-      zval[1][0] = tram(1, false);
-      MeshViewer.DrawMeshPoint(1, 0, zval[1][0]);
-      zval[1][1] = tram(2, false);
-      MeshViewer.DrawMeshPoint(1, 1, zval[1][1]);
-      zval[0][1] = tram(3, false);
-      probe.stow();
-      MeshViewer.DrawMeshPoint(0, 1, zval[0][1]);
-
-      if (HMI_data.CalcAvg) {
-        DWINUI::Draw_CenteredString(140, F("Calculating average"));
-        DWINUI::Draw_CenteredString(160, F("and relative heights"));
-        safe_delay(1000);
-        float avg = 0.0f;
-        for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) avg += zval[x][y];
-        avg /= 4.0f;
-        for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) zval[x][y] -= avg;
-        MeshViewer.DrawMesh(zval, 2, 2);
-      }
-      else { DWINUI::Draw_CenteredString(100, F("Finding True value")); }
-      safe_delay(1000);
-      ui.reset_status();
-
-      #ifndef BED_TRAMMING_PROBE_TOLERANCE
-        #define BED_TRAMMING_PROBE_TOLERANCE 0.06f
-      #endif
-
-      if (ABS(MeshViewer.max - MeshViewer.min) < BED_TRAMMING_PROBE_TOLERANCE) {
-        EXIT_TRAMWIZ:
-        DWINUI::Draw_CenteredString(140, F("Corners leveled"));
-        DWINUI::Draw_CenteredString(160, F("Tolerance achieved!"));
-      }
-      else {
-        uint8_t p = 0;
-        float max = 0.0f;
-        FSTR_P plabel;
-        bool s = true;
-        for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) {
-          const float d = ABS(zval[x][y]);
-          if (max < d) {
-            s = (zval[x][y] >= 0);
-            max = d;
-            p = x + 2 * y;
-          }
-          else { goto EXIT_TRAMWIZ; } // fail-safe if Corners are = 0.00
-        }
-        switch (p) {
-          case 0b00 : plabel = GET_TEXT_F(MSG_TRAM_FL); break;
-          case 0b01 : plabel = GET_TEXT_F(MSG_TRAM_FR); break;
-          case 0b10 : plabel = GET_TEXT_F(MSG_TRAM_BL); break;
-          case 0b11 : plabel = GET_TEXT_F(MSG_TRAM_BR); break;
-          default   : plabel = F(""); break;
-        }
-        DWINUI::Draw_CenteredString(120, F("Corners not leveled"));
-        DWINUI::Draw_CenteredString(140, F("Knob adjustment required"));
-        DWINUI::Draw_CenteredString((s ? Color_Green : Color_Error_Red), 160, (s ? GET_TEXT_F(MSG_TRAMWIZ_LOWER) : GET_TEXT_F(MSG_TRAMWIZ_RAISE)));
-        DWINUI::Draw_CenteredString(HMI_data.StatusTxt_Color, 180, plabel);
-      }
-      DWINUI::Draw_Button(BTN_Continue, 86, 305, true);
-      checkkey = Menu;
-      HMI_SaveProcessID(WaitResponse);
+      else { Trammingwizard(); }
     }
+    else { HMI_ReturnScreen(); }
+  }
+  void TramwizStart() { Goto_Popup(PopUp_StartTramwiz, OnClick_StartTramwiz); }
 
-    void SetManualTramming() {
-      Toggle_Chkb_Line(HMI_data.FullManualTramming);
-    }
-
-    void SetCalcAvg() {
-      Toggle_Chkb_Line(HMI_data.CalcAvg);
-    }
-
-  #endif // HAS_BED_PROBE && PROUI_ITEM_TRAM
+#endif // HAS_BED_PROBE && PROUI_ITEM_TRAM
 // TrammingWizard
 
 #if ENABLED(MESH_BED_LEVELING)
@@ -3021,51 +3083,26 @@ void onDrawGetColorItem(MenuItemClass* menuitem, int8_t line) {
   void onDrawRunoutActive(MenuItemClass* menuitem, int8_t line) {
     onDrawMenuItem(menuitem, line);
     if (PRO_data.FilamentMotionSensor)
-      { DWINUI::Draw_String(VALX - 8, MBASE(line), GET_TEXT_F(MSG_MOTION)); }
+      { DWINUI::Draw_String(VALX - MENU_CHR_W, MBASE(line), GET_TEXT_F(MSG_MOTION)); }
     else
-      { DWINUI::Draw_String(VALX + 8, MBASE(line), PRO_data.Runout_active_state ? GET_TEXT_F(MSG_HIGH) : GET_TEXT_F(MSG_LOW)); }
+      { DWINUI::Draw_String(VALX + MENU_CHR_W, MBASE(line), PRO_data.Runout_active_state ? GET_TEXT_F(MSG_HIGH) : GET_TEXT_F(MSG_LOW)); }
   }
 #endif
 
 #if ALL(HAS_MESH, PROUI_EX)
+  void drawMeshPoints(bool selected, int8_t line, int8_t value) {
+    char mpmsg[10];
+    sprintf(mpmsg, "%ix%i", value, value);
+    if (selected) { DWINUI::Draw_String(DWINUI::textcolor, HMI_data.Selected_Color, VALX + MENU_CHR_H, MBASE(line), mpmsg); }
+    else { DWINUI::Draw_String(VALX + MENU_CHR_H, MBASE(line), mpmsg); }
+  }
+
   void onDrawMeshPoints(MenuItemClass* menuitem, int8_t line) {
     onDrawMenuItem(menuitem, line);
-    ProEx.DrawMeshPoints(false, line, PRO_data.grid_max_points);
+    drawMeshPoints(false, line, PRO_data.grid_max_points);
+    ReDrawItem();
   }
 #endif
-
-#if HAS_BED_PROBE
-  #if ENABLED(PROUI_ITEM_TRAM)
-    // Trammingwizard Popup
-    void PopUp_StartTramwiz() { DWIN_Popup_ConfirmCancel(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), F("Start Tramming Wizard?")); }
-    void OnClick_StartTramwiz() {
-      if (HMI_flag.select_flag) {
-        if (HMI_data.FullManualTramming) {
-          LCD_MESSAGE_F("Disable manual tramming");
-          HMI_ReturnScreen();
-          return;
-        }
-        else { Trammingwizard(); }
-      }
-      else { HMI_ReturnScreen(); }
-    }
-    void TramwizStart() { Goto_Popup(PopUp_StartTramwiz, OnClick_StartTramwiz); }
-  #endif
-
-  // Auto Bed Leveling
-  void AutoLev() {   // Always reacquire the Z "home" position
-    queue.inject(F(TERN(AUTO_BED_LEVELING_UBL, "G29P1", "G29")));
-  }
-
-  // Mesh Popup
-  void PopUp_StartAutoLev() { DWIN_Popup_ConfirmCancel(ICON_Leveling_1, F("Start Auto Bed Leveling?")); }
-  void OnClick_StartAutoLev() {
-    if (HMI_flag.select_flag) { AutoLev(); }
-    else { HMI_ReturnScreen(); }
-  }
-  void AutoLevStart() { Goto_Popup(PopUp_StartAutoLev, OnClick_StartAutoLev); }
-
-#endif // HAS_BED_PROBE
 
 // Menu Creation and Drawing functions ======================================================
 
@@ -3159,6 +3196,8 @@ void Draw_Control_Menu() {
     #endif
     #if HAS_HOME_OFFSET
       MENU_ITEM(ICON_HomeOffset, MSG_SET_HOME_OFFSETS, onDrawSubMenu, Draw_HomeOffset_Menu);
+    #elif ALL(PROUI_EX, NOZZLE_PARK_FEATURE)
+      MENU_ITEM(ICON_ParkPos, MSG_FILAMENT_PARK_ENABLED, onDrawSubMenu, Draw_ParkPos_Menu);
     #endif
     #if HAS_CUSTOM_COLORS
       MENU_ITEM(ICON_Scolor, MSG_COLORS_SELECT, onDrawSubMenu, Draw_SelectColors_Menu);
@@ -3219,6 +3258,9 @@ void Draw_Move_Menu() {
     checkkey = Menu;
     if (SET_MENU(HomeOffMenu, MSG_SET_HOME_OFFSETS, 6)) {
       BACK_ITEM(Draw_Control_Menu);
+      #if ALL(PROUI_EX, NOZZLE_PARK_FEATURE)
+        MENU_ITEM(ICON_ParkPos, MSG_FILAMENT_PARK_ENABLED, onDrawSubMenu, Draw_ParkPos_Menu);
+      #endif
       #if HAS_X_AXIS
         EDIT_ITEM(ICON_HomeOffsetX, MSG_HOME_OFFSET_X, onDrawPFloatMenu, SetHomeOffsetX, &home_offset.x);
       #endif
@@ -3228,12 +3270,7 @@ void Draw_Move_Menu() {
       #if HAS_Z_AXIS
         EDIT_ITEM(ICON_HomeOffsetZ, MSG_HOME_OFFSET_Z, onDrawPFloatMenu, SetHomeOffsetZ, &home_offset.z);
       #endif
-      #if ALL(PROUI_EX, NOZZLE_PARK_FEATURE)
-        MENU_ITEM(ICON_ParkPos, MSG_FILAMENT_PARK_ENABLED, onDrawSubMenu, Draw_ParkPos_Menu);
-      #endif
-      #if HAS_HOME_OFFSET
-        MENU_ITEM_F(ICON_SetHome, "Set as Home position: 0,0,0", onDrawMenuItem, SetHome);
-      #endif
+      MENU_ITEM_F(ICON_SetHome, "Set as Home position: 0,0,0", onDrawMenuItem, SetHome);
     }
     UpdateMenu(HomeOffMenu);
   }
@@ -3254,7 +3291,10 @@ void Draw_Move_Menu() {
       #endif
       #if PROUI_EX
         EDIT_ITEM(ICON_ProbeZSpeed, MSG_Z_FEED_RATE, onDrawPIntMenu, SetProbeZSpeed, &PRO_data.zprobefeedslow);
-        EDIT_ITEM(ICON_Cancel, MSG_ZPROBE_MULTIPLE, onDrawPInt8Menu, SetProbeMultiple, &PRO_data.multiple_probing);
+        IF_DISABLED(BD_SENSOR, EDIT_ITEM(ICON_Cancel, MSG_ZPROBE_MULTIPLE, onDrawPInt8Menu, SetProbeMultiple, &PRO_data.multiple_probing);)
+      #else
+        EDIT_ITEM(ICON_ProbeZSpeed, MSG_Z_FEED_RATE, onDrawPIntMenu, SetProbeZSpeed, &HMI_data.zprobeFeed);
+        IF_DISABLED(BD_SENSOR, EDIT_ITEM(ICON_Cancel, MSG_ZPROBE_MULTIPLE, onDrawPInt8Menu, SetProbeMultiple, &HMI_data.multiple_probing);)
       #endif
       #if ENABLED(BLTOUCH)
         MENU_ITEM(ICON_ProbeStow, MSG_MANUAL_STOW, onDrawMenuItem, ProbeStow);
@@ -3299,11 +3339,12 @@ void Draw_FilSet_Menu() {
 }
 
 #if PROUI_EX
+
   #if ENABLED(NOZZLE_PARK_FEATURE)
     void Draw_ParkPos_Menu() {
       checkkey = Menu;
       if (SET_MENU(ParkPosMenu, MSG_FILAMENT_PARK_ENABLED, 4)) {
-        BACK_ITEM(Draw_HomeOffset_Menu);
+        BACK_ITEM(TERN(HAS_HOME_OFFSET, Draw_HomeOffset_Menu, Draw_Control_Menu));
         EDIT_ITEM(ICON_ParkPosX, MSG_PARK_XPOSITION, onDrawPIntMenu, SetParkPosX, &PRO_data.Park_point.x);
         EDIT_ITEM(ICON_ParkPosY, MSG_PARK_YPOSITION, onDrawPIntMenu, SetParkPosY, &PRO_data.Park_point.y);
         EDIT_ITEM(ICON_ParkPosZ, MSG_PARK_ZRAISE, onDrawPIntMenu, SetParkZRaise, &PRO_data.Park_point.z);
@@ -4041,7 +4082,7 @@ void Draw_MaxAccel_Menu() {
         MENU_ITEM(ICON_Park, MSG_FILAMENT_PARK_ENABLED, onDrawMenuItem, ParkHead);
       #endif
       MENU_ITEM(ICON_MoveZ, MSG_TOOL_CHANGE_ZLIFT, onDrawMenuItem, RaiseHead);
-      #if ENABLED(MESH_BED_LEVELING)
+      #if ENABLED(MESH_BED_LEVELING)// NoPro Mesh_Inset workaround
         EDIT_ITEM(ICON_ZAfterHome, MSG_Z_AFTER_HOME, onDrawPInt8Menu, SetZAfterHoming, &HMI_data.z_after_homing);
       #endif
     }
@@ -4072,6 +4113,11 @@ void Draw_MaxAccel_Menu() {
 //=============================================================================
 
 #if HAS_MESH
+    // void applyMeshPoints() { PRO_data.grid_max_points = MenuData.Value;
+    //   set_bed_leveling_enabled(false);
+    //   reset_bed_level();
+    //   drawMeshPoints(false, CurrentMenu->line(), MenuData.Value);}
+
 
   #if PROUI_EX
     void ApplyMeshPoints() { ProEx.ApplyMeshPoints(); ReDrawMenu(); }
@@ -4080,28 +4126,32 @@ void Draw_MaxAccel_Menu() {
       SetOnClick(SetIntNoDraw, GRID_MIN, GRID_LIMIT, 0, PRO_data.grid_max_points, ApplyMeshPoints, LiveMeshPoints);
       ProEx.DrawMeshPoints(true, CurrentMenu->line(), PRO_data.grid_max_points);
     }
-    void SetMeshInset()  { SetPFloatOnClick(MIN_MESH_INSET, MAX_MESH_INSET, UNITFDIGITS, SetMeshArea, ProEx.ApplyMeshLimits);  }
+  #else
+    void ApplyMeshPoints() { HMI_data.grid_max_points = MenuData.Value; }
+    void SetMeshPoints() { SetPIntOnClick(GRID_MIN, GRID_LIMIT, ApplyMeshPoints); }
+  #endif
+    void ApplyMeshInset() { reset_bed_level(); ReDrawItem(); }
+    void SetMeshInset()  { SetPFloatOnClick(MIN_MESH_INSET, MAX_MESH_INSET, UNITFDIGITS, ApplyMeshInset);  }
     void MaxMeshArea() {
-      PRO_data.mesh_min_x = ui.mesh_inset_min_x = 0;
-      PRO_data.mesh_max_x = ui.mesh_inset_max_x = X_BED_SIZE;
-      PRO_data.mesh_min_y = ui.mesh_inset_min_y = 0;
-      PRO_data.mesh_max_y = ui.mesh_inset_max_y = Y_BED_SIZE;
-      ProEx.ApplyMeshLimits();
+      MESH_MIN_X = 0;
+      MESH_MAX_X = X_BED_SIZE;
+      MESH_MIN_Y = 0;
+      MESH_MAX_Y = Y_BED_SIZE;
+      reset_bed_level();
       ReDrawMenu();
     }
     void CenterMeshArea() {
-      float max = ui.mesh_inset_min_x;
-      if (max < X_BED_SIZE - ui.mesh_inset_max_x) { max = X_BED_SIZE - ui.mesh_inset_max_x; }
-      if (max < ui.mesh_inset_min_y) { max = ui.mesh_inset_min_y; }
-      if (max < Y_BED_SIZE - ui.mesh_inset_max_y) { max = Y_BED_SIZE - ui.mesh_inset_max_y; }
-      PRO_data.mesh_min_x = ui.mesh_inset_min_x = max;
-      PRO_data.mesh_max_x = ui.mesh_inset_max_x = X_BED_SIZE - max;
-      PRO_data.mesh_min_y = ui.mesh_inset_min_y = max;
-      PRO_data.mesh_max_y = ui.mesh_inset_max_y = Y_BED_SIZE - max;
-      ProEx.ApplyMeshLimits();
+      float max = (MESH_MIN_X + MESH_MIN_Y) * 0.5;
+      if (max < X_BED_SIZE - MESH_MAX_X) { max = X_BED_SIZE - MESH_MAX_X; }
+      if (max < MESH_MIN_Y) { max = MESH_MIN_Y; }
+      if (max < Y_BED_SIZE - MESH_MAX_Y) { max = Y_BED_SIZE - MESH_MAX_Y; }
+      MESH_MIN_X = max;
+      MESH_MAX_X = X_BED_SIZE - max;
+      MESH_MIN_Y = max;
+      MESH_MAX_Y = Y_BED_SIZE - max;
+      reset_bed_level();
       ReDrawMenu();
     }
-  #endif
 
   #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
     void ApplyMeshFadeHeight() { set_z_fade_height(planner.z_fade_height); }
@@ -4133,7 +4183,7 @@ void Draw_MaxAccel_Menu() {
     void SetBedLevT() { SetPIntOnClick(MIN_BEDTEMP, MAX_BEDTEMP); }
   #endif
 
-  #if ENABLED(MESH_EDIT_MENU)
+  #if ENABLED(PROUI_MESH_EDIT)
     bool AutoMovToMesh = false;
 
     void LiveEditMesh() { ((MenuItemPtrClass*)EditZValueItem)->value = &bedlevel.z_values[HMI_value.Select ? bedLevelTools.mesh_x : MenuData.Value][HMI_value.Select ? MenuData.Value : bedLevelTools.mesh_y]; EditZValueItem->redraw(); }
@@ -4174,6 +4224,8 @@ void Draw_MaxAccel_Menu() {
       #if PROUI_EX
         MENU_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawMeshPoints, SetMeshPoints);
         MENU_ITEM(ICON_ProbeMargin, MSG_MESH_INSET, onDrawSubMenu, Draw_MeshInset_Menu);
+      #else
+        EDIT_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawPInt8Menu, SetMeshPoints, &HMI_data.grid_max_points);
       #endif
       #if ALL(HAS_HEATED_BED, PREHEAT_BEFORE_LEVELING)
         EDIT_ITEM(ICON_Temperature, MSG_UBL_SET_TEMP_BED, onDrawPIntMenu, SetBedLevT, &HMI_data.BedLevT);
@@ -4188,7 +4240,7 @@ void Draw_MaxAccel_Menu() {
     UpdateMenu(MeshMenu);
   }
 
-  #if ENABLED(MESH_EDIT_MENU)
+  #if ENABLED(PROUI_MESH_EDIT)
     void Draw_EditMesh_Menu() {
       if (!leveling_is_valid()) { LCD_MESSAGE(MSG_UBL_MESH_INVALID); return; }
       set_bed_leveling_enabled(false);
@@ -4231,13 +4283,15 @@ void Draw_MaxAccel_Menu() {
 //=============================================================================
 #if ENABLED(CV_LASER_MODULE)
 
-  // Make the current position 0,0,0
-  void SetHome() {
-    laser_device.homepos += current_position;
-    set_all_homed();
-    gcode.process_subcommands_now(F("G92X0Y0Z0"));
-    ReDrawMenu();
-  }
+  #if HAS_HOME_OFFSET
+    // Make the current position 0,0,0
+    void SetHome() {
+      laser_device.homepos += current_position;
+      set_all_homed();
+      gcode.process_subcommands_now(F("G92X0Y0Z0"));
+      ReDrawMenu();
+    }
+  #endif
 
   void LaserOn(const bool turn_on) {
     laser_device.laser_set(turn_on);
@@ -4276,7 +4330,7 @@ void Draw_MaxAccel_Menu() {
       EDIT_ITEM_F(ICON_LaserFocus, "Laser Focus", onDrawPFloatMenu, SetMoveZ, &current_position.z);
       EDIT_ITEM(ICON_MoveX, MSG_MOVE_X, onDrawPFloatMenu, SetMoveX, &current_position.x);
       EDIT_ITEM(ICON_MoveY, MSG_MOVE_Y, onDrawPFloatMenu, SetMoveY, &current_position.y);
-      MENU_ITEM_F(ICON_SetHome, "Set as Home", onDrawMenuItem, SetHome);
+      TERN_(HAS_HOME_OFFSET, MENU_ITEM_F(ICON_SetHome, "Set as Home position: 0,0,0", onDrawMenuItem, SetHome);)
     }
     UpdateMenu(LaserSettings);
   }
@@ -4373,7 +4427,7 @@ void Draw_AdvancedSettings_Menu() {
     #if USE_GRID_MESHVIEWER
       EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
     #endif
-    #if ENABLED(MESH_EDIT_MENU)
+    #if ENABLED(PROUI_MESH_EDIT)
       MENU_ITEM(ICON_MeshEdit, MSG_EDIT_MESH, onDrawSubMenu, Draw_EditMesh_Menu);
     #endif
     EDIT_ITEM(ICON_UBLSlot, MSG_UBL_STORAGE_SLOT, onDrawUBLSlot, SetUBLSlot, &bedlevel.storage_slot);
@@ -4403,7 +4457,7 @@ void Draw_AdvancedSettings_Menu() {
     #if USE_GRID_MESHVIEWER
       EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
     #endif
-    #if ENABLED(MESH_EDIT_MENU)
+    #if ENABLED(PROUI_MESH_EDIT)
       MENU_ITEM(ICON_MeshEdit, MSG_EDIT_MESH, onDrawSubMenu, Draw_EditMesh_Menu);
     #endif
     MENU_ITEM(ICON_MeshReset, MSG_MESH_RESET, onDrawMenuItem, ResetMesh);
@@ -4425,7 +4479,7 @@ void Draw_AdvancedSettings_Menu() {
     #if USE_GRID_MESHVIEWER
       EDIT_ITEM(ICON_PrintSize, MSG_CHANGE_MESH, onDrawChkbMenu, SetViewMesh, &bedLevelTools.view_mesh);
     #endif
-    #if ENABLED(MESH_EDIT_MENU)
+    #if ENABLED(PROUI_MESH_EDIT)
       MENU_ITEM(ICON_MeshEdit, MSG_EDIT_MESH, onDrawSubMenu, Draw_EditMesh_Menu);
     #endif
     MENU_ITEM(ICON_MeshSave, MSG_UBL_SAVE_MESH, onDrawMenuItem, SaveMesh);

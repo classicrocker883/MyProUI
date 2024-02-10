@@ -267,7 +267,7 @@ typedef struct SettingsDataStruct {
   float mbl_z_offset;                                   // bedlevel.z_offset
   uint8_t mesh_num_x, mesh_num_y;                       // GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y
   uint16_t mesh_check;                                  // Hash to check against X/Y
-  #if PROUI_EX
+  #if ANY(PROUI_EX, PROUI_GRID_PNTS)
     float mbl_z_values[TERN(MESH_BED_LEVELING, GRID_LIMIT, 3)]   // bedlevel.z_values
                       [TERN(MESH_BED_LEVELING, GRID_LIMIT, 3)];
   #else
@@ -588,7 +588,7 @@ typedef struct SettingsDataStruct {
   //
   // Toggle the meshviwer
   //
-  #if HAS_MESH && USE_GRID_MESHVIEWER
+  #if ALL(DWIN_LCD_PROUI, HAS_MESH, USE_GRID_MESHVIEWER)
     bool view_mesh;
   #endif
 
@@ -602,7 +602,7 @@ typedef struct SettingsDataStruct {
   //
   // MESH_INSET workaround
   //
-  #if PROUI_EX && HAS_MESH
+  #if ALL(DWIN_LCD_PROUI, HAS_MESH)
     float ui_mesh_inset_min_x;
     float ui_mesh_inset_max_x;
     float ui_mesh_inset_min_y;
@@ -976,7 +976,7 @@ void MarlinSettings::postprocess() {
     //
     {
       #if ENABLED(MESH_BED_LEVELING)
-        #if PROUI_EX
+        #if ANY(PROUI_EX, PROUI_GRID_PNTS)
           static_assert(
             sizeof(bedlevel.z_values) == GRID_LIMIT * GRID_LIMIT * sizeof(bedlevel.z_values[0][0]),
             "MBL Z array is the wrong size."
@@ -991,13 +991,13 @@ void MarlinSettings::postprocess() {
         dummyf = 0;
       #endif
 
-      #if PROUI_EX
-        const uint8_t mesh_num_x = TERN(MESH_BED_LEVELING, GRID_LIMIT, 3),
-                      mesh_num_y = TERN(MESH_BED_LEVELING, GRID_LIMIT, 3);
-      #else
+      // #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+      //   const uint8_t mesh_num_x = TERN(MESH_BED_LEVELING, GRID_LIMIT, 3),
+      //                 mesh_num_y = TERN(MESH_BED_LEVELING, GRID_LIMIT, 3);
+      // #else
         const uint8_t mesh_num_x = TERN(MESH_BED_LEVELING, GRID_MAX_POINTS_X, 3),
                       mesh_num_y = TERN(MESH_BED_LEVELING, GRID_MAX_POINTS_Y, 3);
-      #endif
+      // #endif
       EEPROM_WRITE(TERN(MESH_BED_LEVELING, bedlevel.z_offset, dummyf));
       EEPROM_WRITE(mesh_num_x);
       EEPROM_WRITE(mesh_num_y);
@@ -1045,7 +1045,7 @@ void MarlinSettings::postprocess() {
     //
     {
       #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
-        #if PROUI_EX
+        #if ANY(PROUI_EX, PROUI_GRID_PNTS)
           static_assert(
             sizeof(bedlevel.z_values) == GRID_LIMIT * GRID_LIMIT * sizeof(bedlevel.z_values[0][0]),
             "Bilinear Z array is the wrong size."
@@ -1058,13 +1058,13 @@ void MarlinSettings::postprocess() {
         #endif
       #endif
 
-      #if PROUI_EX
-        const uint8_t grid_max_x = TERN(AUTO_BED_LEVELING_BILINEAR, GRID_LIMIT, 3),
-                      grid_max_y = TERN(AUTO_BED_LEVELING_BILINEAR, GRID_LIMIT, 3);
-      #else
+      // #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+        // const uint8_t grid_max_x = TERN(AUTO_BED_LEVELING_BILINEAR, GRID_LIMIT, 3),
+                      // grid_max_y = TERN(AUTO_BED_LEVELING_BILINEAR, GRID_LIMIT, 3);
+      // #else
         const uint8_t grid_max_x = TERN(AUTO_BED_LEVELING_BILINEAR, GRID_MAX_POINTS_X, 3),
                       grid_max_y = TERN(AUTO_BED_LEVELING_BILINEAR, GRID_MAX_POINTS_Y, 3);
-      #endif
+      // #endif
       EEPROM_WRITE(grid_max_x);
       EEPROM_WRITE(grid_max_y);
 
@@ -1617,10 +1617,8 @@ void MarlinSettings::postprocess() {
     // Advanced Pause filament load & unload lengths
     //
     #if ENABLED(CONFIGURE_FILAMENT_CHANGE)
-    {
       _FIELD_TEST(fc_settings);
       EEPROM_WRITE(fc_settings);
-    }
     #endif
 
     //
@@ -1691,7 +1689,7 @@ void MarlinSettings::postprocess() {
     //
     // MESH_INSET workaround
     //
-    #if PROUI_EX && HAS_MESH
+    #if ALL(DWIN_LCD_PROUI, HAS_MESH)
       EEPROM_WRITE(ui.mesh_inset_min_x);
       EEPROM_WRITE(ui.mesh_inset_max_x);
       EEPROM_WRITE(ui.mesh_inset_min_y);
@@ -2067,11 +2065,11 @@ void MarlinSettings::postprocess() {
 
         #if ENABLED(MESH_BED_LEVELING)
           if (!validating) bedlevel.z_offset = dummyf;
-          #if PROUI_EX
-          if (mesh_num_x == (GRID_LIMIT) && mesh_num_y == (GRID_LIMIT)) {
-          #else
+          //#if ANY(PROUI_EX, PROUI_GRID_PNTS)
+         // if (mesh_num_x == (GRID_LIMIT) && mesh_num_y == (GRID_LIMIT)) {
+         // #else
           if (mesh_num_x == (GRID_MAX_POINTS_X) && mesh_num_y == (GRID_MAX_POINTS_Y)) {
-          #endif
+          //#endif
             // EEPROM data fits the current mesh
             EEPROM_READ(bedlevel.z_values);
           }
@@ -2136,11 +2134,11 @@ void MarlinSettings::postprocess() {
         EEPROM_READ(spacing);                          // 2 ints
         EEPROM_READ(start);                            // 2 ints
         #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
-          #if PROUI_EX
-          if (grid_max_x == (GRID_LIMIT) && grid_max_y == (GRID_LIMIT)) {
-          #else
+          //#if ANY(PROUI_EX, PROUI_GRID_PNTS)
+         // if (grid_max_x == (GRID_LIMIT) && grid_max_y == (GRID_LIMIT)) {
+          //#else
           if (grid_max_x == (GRID_MAX_POINTS_X) && grid_max_y == (GRID_MAX_POINTS_Y)) {
-          #endif
+          //#endif
             if (!validating) set_bed_leveling_enabled(false);
             bedlevel.set_grid(spacing, start);
             EEPROM_READ(bedlevel.z_values);            // 9 to 256 floats
@@ -2735,10 +2733,8 @@ void MarlinSettings::postprocess() {
       // Advanced Pause filament load & unload lengths
       //
       #if ENABLED(CONFIGURE_FILAMENT_CHANGE)
-      {
         _FIELD_TEST(fc_settings);
         EEPROM_READ(fc_settings);
-      }
       #endif
 
       //
@@ -2795,39 +2791,40 @@ void MarlinSettings::postprocess() {
         EEPROM_READ(dwin_data);
         if (!validating) DWIN_CopySettingsFrom(dwin_data);
       }
-      #endif
 
-      //
-      // BED_SCREW_INSET
-      //
-      #ifdef BED_SCREW_INSET
-        _FIELD_TEST(ui_screw_pos);
-        EEPROM_READ(ui.screw_pos);
-      #endif
+        //
+        // BED_SCREW_INSET
+        //
+        #ifdef BED_SCREW_INSET
+          _FIELD_TEST(ui_screw_pos);
+          EEPROM_READ(ui.screw_pos);
+        #endif
 
-      //
-      // MESH_INSET workaround
-      //
-      #if PROUI_EX && HAS_MESH
-        _FIELD_TEST(ui_mesh_inset_min_x);
-        EEPROM_READ(ui.mesh_inset_min_x);
-        _FIELD_TEST(ui_mesh_inset_max_x);
-        EEPROM_READ(ui.mesh_inset_max_x);
-        _FIELD_TEST(ui_mesh_inset_min_y);
-        EEPROM_READ(ui.mesh_inset_min_y);
-        _FIELD_TEST(ui_mesh_inset_max_y);
-        EEPROM_READ(ui.mesh_inset_max_y);
-      #endif
+        //
+        // MESH_INSET workaround
+        //
+        #if HAS_MESH
+          _FIELD_TEST(ui_mesh_inset_min_x);
+          EEPROM_READ(ui.mesh_inset_min_x);
+          _FIELD_TEST(ui_mesh_inset_max_x);
+          EEPROM_READ(ui.mesh_inset_max_x);
+          _FIELD_TEST(ui_mesh_inset_min_y);
+          EEPROM_READ(ui.mesh_inset_min_y);
+          _FIELD_TEST(ui_mesh_inset_max_y);
+          EEPROM_READ(ui.mesh_inset_max_y);
+        #endif
 
-      //
-      // Encoder Rate
-      //
-      #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
-        _FIELD_TEST(enc_rateA);
-        EEPROM_READ(ui.enc_rateA);
-        _FIELD_TEST(enc_rateB);
-        EEPROM_READ(ui.enc_rateB);
-      #endif
+        //
+        // Encoder Rate
+        //
+        #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+          _FIELD_TEST(enc_rateA);
+          EEPROM_READ(ui.enc_rateA);
+          _FIELD_TEST(enc_rateB);
+          EEPROM_READ(ui.enc_rateB);
+        #endif
+
+      #endif // DWIN_LCD_PROUI
 
       //
       // Case Light Brightness
@@ -3129,7 +3126,7 @@ void MarlinSettings::postprocess() {
         uint16_t crc = 0;
 
         #if ENABLED(OPTIMIZED_MESH_STORAGE)
-          #if PROUI_EX
+          #if ANY(PROUI_EX, PROUI_GRID_PNTS)
             int16_t z_mesh_store[GRID_LIMIT][GRID_LIMIT];
           #else
             int16_t z_mesh_store[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
@@ -3169,7 +3166,7 @@ void MarlinSettings::postprocess() {
         int pos = mesh_slot_offset(slot);
         uint16_t crc = 0;
         #if ENABLED(OPTIMIZED_MESH_STORAGE)
-          #if PROUI_EX
+          #if ANY(PROUI_EX, PROUI_GRID_PNTS)
             int16_t z_mesh_store[GRID_LIMIT][GRID_LIMIT];
           #else
             int16_t z_mesh_store[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
@@ -3185,7 +3182,7 @@ void MarlinSettings::postprocess() {
 
         #if ENABLED(OPTIMIZED_MESH_STORAGE)
           if (into) {
-            #if PROUI_EX
+            #if ANY(PROUI_EX, PROUI_GRID_PNTS)
               float z_values[GRID_LIMIT][GRID_LIMIT];
             #else
               float z_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
@@ -3362,11 +3359,11 @@ void MarlinSettings::reset() {
   //
   // MESH_INSET workaround
   //
-  #if PROUI_EX && HAS_MESH
+  #if ALL(DWIN_LCD_PROUI, HAS_MESH)
     ui.mesh_inset_min_x = MESH_INSET;
-    ui.mesh_inset_max_x = (DEF_X_BED_SIZE - MESH_INSET);
+    ui.mesh_inset_max_x = (X_BED_SIZE - MESH_INSET);
     ui.mesh_inset_min_y = MESH_INSET;
-    ui.mesh_inset_max_y = (DEF_Y_BED_SIZE - MESH_INSET);
+    ui.mesh_inset_max_y = (Y_BED_SIZE - MESH_INSET);
   #endif
 
   //
@@ -3398,7 +3395,7 @@ void MarlinSettings::reset() {
   //
   // Toggle the meshviewer
   //
-  #if HAS_MESH && USE_GRID_MESHVIEWER
+  #if ALL(DWIN_LCD_PROUI, HAS_MESH, USE_GRID_MESHVIEWER)
     bedLevelTools.view_mesh = false; //added mesh viewer option
   #endif
 
@@ -3938,13 +3935,13 @@ void MarlinSettings::reset() {
       #if ENABLED(MESH_BED_LEVELING)
 
         if (leveling_is_valid()) {
-          #if PROUI_EX
-            for (uint8_t py = 0; py < GRID_LIMIT; ++py) {
-              for (uint8_t px = 0; px < GRID_LIMIT; ++px) {
-          #else
+          // #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+          //   for (uint8_t py = 0; py < GRID_LIMIT; ++py) {
+          //     for (uint8_t px = 0; px < GRID_LIMIT; ++px) {
+          // #else
             for (uint8_t py = 0; py < GRID_MAX_POINTS_Y; ++py) {
               for (uint8_t px = 0; px < GRID_MAX_POINTS_X; ++px) {
-          #endif
+          // #endif
               CONFIG_ECHO_START();
               SERIAL_ECHOLN(F("  G29 S3 I"), px, F(" J"), py, FPSTR(SP_Z_STR), p_float_t(LINEAR_UNIT(bedlevel.z_values[px][py]), 5));
             }
@@ -3968,13 +3965,13 @@ void MarlinSettings::reset() {
       #elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
         if (leveling_is_valid()) {
-          #if PROUI_EX
-            for (uint8_t py = 0; py < GRID_LIMIT; ++py) {
-              for (uint8_t px = 0; px < GRID_LIMIT; ++px) {
-          #else
+          // #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+          //   for (uint8_t py = 0; py < GRID_LIMIT; ++py) {
+          //     for (uint8_t px = 0; px < GRID_LIMIT; ++px) {
+          // #else
             for (uint8_t py = 0; py < GRID_MAX_POINTS_Y; ++py) {
               for (uint8_t px = 0; px < GRID_MAX_POINTS_X; ++px) {
-          #endif
+          // #endif
               CONFIG_ECHO_START();
               SERIAL_ECHOLN(F("  G29 W I"), px, F(" J"), py, FPSTR(SP_Z_STR), p_float_t(LINEAR_UNIT(bedlevel.z_values[px][py]), 5));
             }

@@ -24,7 +24,8 @@
 
 // #define DEBUG_DWIN 1
 
-#if ENABLED(MESH_EDIT_MENU)
+#define PROUI_MESH_EDIT     // Add a menu to edit mesh inset + points
+#if ENABLED(PROUI_MESH_EDIT)
   #define Z_OFFSET_MIN -3.0
   #define Z_OFFSET_MAX  3.0
 #endif
@@ -79,7 +80,7 @@
 // Only for Professional Firmware UI extensions
 //=============================================================================
 
-// #if HAS_GCODE_PREVIEW && DISABLED(PROUI_EX)
+// #if HAS_GCODE_PREVIEW && !PROUI_EX
 //   #error "HAS_GCODE_PREVIEW requires PROUI_EX."
 // #endif
 #if HAS_TOOLBAR && !PROUI_EX
@@ -117,10 +118,10 @@
     #undef GRID_MAX_POINTS_X
     #undef GRID_MAX_POINTS_Y
     #undef GRID_MAX_POINTS
-    #undef MESH_MIN_X
-    #undef MESH_MAX_X
-    #undef MESH_MIN_Y
-    #undef MESH_MAX_Y
+    // #undef MESH_MIN_X
+    // #undef MESH_MAX_X
+    // #undef MESH_MIN_Y
+    // #undef MESH_MAX_Y
   #endif
   #if HAS_BED_PROBE
     #undef Z_PROBE_FEEDRATE_SLOW
@@ -139,10 +140,10 @@
     #define GRID_MAX_POINTS_X PRO_data.grid_max_points
     #define GRID_MAX_POINTS_Y PRO_data.grid_max_points
     #define GRID_MAX_POINTS (PRO_data.grid_max_points * PRO_data.grid_max_points)
-    #define MESH_MIN_X (float)PRO_data.mesh_min_x
-    #define MESH_MAX_X (float)PRO_data.mesh_max_x
-    #define MESH_MIN_Y (float)PRO_data.mesh_min_y
-    #define MESH_MAX_Y (float)PRO_data.mesh_max_y
+    // #define MESH_MIN_X PRO_data.mesh_min_x
+    // #define MESH_MAX_X PRO_data.mesh_max_x
+    // #define MESH_MIN_Y PRO_data.mesh_min_y
+    // #define MESH_MAX_Y PRO_data.mesh_max_y
   #endif
   #if HAS_BED_PROBE
     #define Z_PROBE_FEEDRATE_SLOW PRO_data.zprobefeedslow
@@ -151,17 +152,5 @@
 #else
   #include <stddef.h>
   #include "../../../core/types.h"
-  #ifndef MESH_MIN_X
-    #define MESH_MIN_X MESH_INSET
-  #endif
-  #ifndef MESH_MIN_Y
-    #define MESH_MIN_Y MESH_INSET
-  #endif
-  #ifndef MESH_MAX_X
-    #define MESH_MAX_X  X_BED_SIZE - (MESH_INSET)
-  #endif
-  #ifndef MESH_MAX_Y
-    #define MESH_MAX_Y  Y_BED_SIZE - (MESH_INSET)
-  #endif
-  //#include "proui.h"
-#endif  // PROUI_EX
+  #include "proui.h"
+#endif // PROUI_EX

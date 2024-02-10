@@ -354,7 +354,7 @@ FORCE_INLINE void probe_specific_action(const bool deploy) {
   #if ENABLED(PAUSE_BEFORE_DEPLOY_STOW)
 
     // Start preheating before waiting for user confirmation that the probe is ready.
-    TERN_(PREHEAT_BEFORE_PROBING, if (deploy) probe.preheat_for_probing(0, PROBING_BED_TEMP, true));
+    TERN_(PREHEAT_BEFORE_PROBING, if (deploy) probe.preheat_for_probing(PROBING_NOZZLE_TEMP, PROBING_BED_TEMP, true));
 
     FSTR_P const ds_fstr = deploy ? GET_TEXT_F(MSG_MANUAL_DEPLOY) : GET_TEXT_F(MSG_MANUAL_STOW);
     ui.return_to_status();       // To display the new status message
@@ -375,9 +375,9 @@ FORCE_INLINE void probe_specific_action(const bool deploy) {
     }
     #endif
 
-    TERN_(HOST_PROMPT_SUPPORT, hostui.continue_prompt(ds_str));
-    TERN_(EXTENSIBLE_UI, ExtUI::onUserConfirmRequired(ds_str));
-    TERN_(DWIN_LCD_PROUI, DWIN_Popup_Continue(ICON_BLTouch, ds_str, FPSTR(CONTINUE_STR)));
+    TERN_(HOST_PROMPT_SUPPORT, hostui.continue_prompt(ds_fstr));
+    TERN_(EXTENSIBLE_UI, ExtUI::onUserConfirmRequired(ds_fstr));
+    TERN_(DWIN_LCD_PROUI, DWIN_Popup_Continue(ICON_BLTouch, ds_fstr, FPSTR(CONTINUE_STR)));
     TERN_(HAS_RESUME_CONTINUE, wait_for_user_response());
 
     ui.reset_status();
@@ -731,22 +731,23 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
   }
 #endif
 
-#if DISABLED(PROUI_EX)
-  /**
-   * @brief Probe at the current XY (possibly more than once) to find the bed Z.
-   *
-   * @details Used by probe_at_point to get the bed Z height at the current XY.
-   *          Leaves current_position.z at the height where the probe triggered.
-   *
-   * @param sanity_check Flag to compare the probe result with the expected result
-   *                     based on the probe Z offset. If the result is too far away
-   *                     (more than Z_PROBE_ERROR_TOLERANCE too early) then throw an error.
-   * @param z_min_point Override the minimum probing height (-2mm), to allow deeper probing.
-   * @param z_clearance Z clearance to apply on probe failure.
-   *
-   * @return The Z position of the bed at the current XY or NAN on error.
-   */
-  float Probe::run_z_probe(const bool sanity_check/*=true*/, const_float_t z_min_point/*=Z_PROBE_LOW_POINT*/, const_float_t z_clearance/*=Z_TWEEN_SAFE_CLEARANCE*/) {
+/**
+ * @brief Probe at the current XY (possibly more than once) to find the bed Z.
+ *
+ * @details Used by probe_at_point to get the bed Z height at the current XY.
+ *          Leaves current_position.z at the height where the probe triggered.
+ *
+ * @param sanity_check Flag to compare the probe result with the expected result
+ *                     based on the probe Z offset. If the result is too far away
+ *                     (more than Z_PROBE_ERROR_TOLERANCE too early) then throw an error.
+ * @param z_min_point Override the minimum probing height (-2mm), to allow deeper probing.
+ * @param z_clearance Z clearance to apply on probe failure.
+ *
+ * @return The Z position of the bed at the current XY or NAN on error.
+ */
+#if DISABLED(DWIN_LCD_PROUI)
+
+  float Probe::run_z_probes(const bool sanity_check/*=true*/, const_float_t z_min_point/*=Z_PROBE_LOW_POINT*/, const_float_t z_clearance/*=Z_TWEEN_SAFE_CLEARANCE*/) {
     DEBUG_SECTION(log_probe, "Probe::run_z_probe", DEBUGGING(LEVELING));
 
     const float zoffs = SUM_TERN(HAS_HOTEND_OFFSET, -offset.z, hotend_offset[active_extruder].z);
@@ -778,7 +779,7 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
 
     // Stop the probe before it goes too low to prevent damage.
     // For known Z probe below the expected trigger point, otherwise -10mm lower.
-    const float z_probe_low_point = zoffs + z_min_point -float((!axis_is_trusted(Z_AXIS)) * 10);
+    const float z_probe_low_point = zoffs + z_min_point - float((!axis_is_trusted(Z_AXIS)) * 10);
     if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Probe Low Point: ", z_probe_low_point);
 
     // Double-probing does a fast probe followed by a slow probe
@@ -899,7 +900,83 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
 
     return DIFF_TERN(HAS_HOTEND_OFFSET, measured_z, hotend_offset[active_extruder].z);
   }
-#endif // DISABLED(PROUI_EX)
+
+#else // if DWIN_LCD_PROUI
+
+  float Probe::run_z_probes(const bool sanity_check/*=true*/, const_float_t z_min_point/*=Z_PROBE_LOW_POINT*/, const_float_t z_clearance/*=Z_TWEEN_SAFE_CLEARANCE*/) {
+    DEBUG_SECTION(log_probe, "Probe::run_z_probe", DEBUGGING(LEVELING));
+
+    const float zoffs = SUM_TERN(HAS_HOTEND_OFFSET, -offset.z, hotend_offset[active_extruder].z);
+
+    auto try_to_probe = [&](PGM_P const plbl, const_float_t z_probe_low_point, const feedRate_t fr_mm_s, const bool scheck) -> bool {
+      constexpr float error_tolerance = Z_PROBE_ERROR_TOLERANCE;
+      if (DEBUGGING(LEVELING)) {
+        DEBUG_ECHOPGM_P(plbl);
+        DEBUG_ECHOLNPGM("> try_to_probe(..., ", z_probe_low_point, ", ", fr_mm_s, ", ...)");
+      }
+
+      // Tare the probe, if supported
+      if (TERN0(PROBE_TARE, tare())) return true;
+
+      // Do a first probe at the fast speed
+      const bool probe_fail = probe_down_to_z(z_probe_low_point, fr_mm_s),              // No probe trigger?
+                 early_fail = (scheck && current_position.z > zoffs + error_tolerance); // Probe triggered too high?
+      #if ENABLED(DEBUG_LEVELING_FEATURE)
+        if (DEBUGGING(LEVELING) && (probe_fail || early_fail)) {
+          DEBUG_ECHOPGM(" Probe fail! - ");
+          if (probe_fail) DEBUG_ECHOLNPGM("No trigger.");
+          if (early_fail) DEBUG_ECHOLNPGM("Triggered early (above ", zoffs + error_tolerance, "mm)");
+        }
+      #else
+        UNUSED(plbl);
+      #endif
+      return probe_fail || early_fail;
+    };
+
+    // Stop the probe before it goes too low to prevent damage.
+    // For known Z probe below the expected trigger point, otherwise -10mm lower.
+    const float z_probe_low_point = zoffs + z_min_point - float((!axis_is_trusted(Z_AXIS)) * 10);
+    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Probe Low Point: ", z_probe_low_point);
+
+    // Double-probing does a fast probe followed by a slow probe
+
+    // Attempt to tare the probe
+    if (TERN0(PROBE_TARE, tare())) return NAN;
+
+    // Do a first probe at the fast speed
+    if (try_to_probe(PSTR("FAST"), z_probe_low_point, z_probe_fast_mm_s, sanity_check)) return NAN;
+
+    const float z1 = DIFF_TERN(HAS_DELTA_SENSORLESS_PROBING, current_position.z, largest_sensorless_adj);
+    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("1st Probe Z:", z1);
+
+    // Raise to give the probe clearance
+    do_z_clearance(z1 + (Z_CLEARANCE_MULTI_PROBE), false);
+
+    float probes_z_sum = 0;
+    for (uint8_t p = 0; p < TERN(PROUI_EX, PRO_data, HMI_data).multiple_probing - 1; p++) {
+      // If the probe won't tare, return
+      if (TERN0(PROBE_TARE, tare())) return true;
+
+      // Probe downward slowly to find the bed
+      if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Slow Probe:");
+      if (try_to_probe(PSTR("SLOW"), z_probe_low_point, MMM_TO_MMS(Z_PROBE_FEEDRATE_SLOW), sanity_check)) return NAN;
+
+      TERN_(MEASURE_BACKLASH_WHEN_PROBING, backlash.measure_with_probe());
+
+      const float z = DIFF_TERN(HAS_DELTA_SENSORLESS_PROBING, current_position.z, largest_sensorless_adj);
+      probes_z_sum += z;
+      // Small Z raise after probe
+      do_z_clearance(z + (Z_CLEARANCE_MULTI_PROBE), false);
+    }
+
+    // Return a weighted average of the fast and slow probes
+    const float measured_z = (TERN(PROUI_EX, PRO_data, HMI_data).multiple_probing > 1) ?
+    (probes_z_sum * 3.0f + z1 * 2.0f) * 0.2f : z1;
+
+    return DIFF_TERN(HAS_HOTEND_OFFSET, measured_z, hotend_offset[active_extruder].z);
+  }
+
+#endif // !PROUI_EX
 
 #if DO_TOOLCHANGE_FOR_PROBING
 
@@ -991,7 +1068,7 @@ float Probe::probe_at_point(const_float_t rx, const_float_t ry, const ProbePtRai
 
   #else // !BD_SENSOR
 
-    float measured_z = deploy() ? NAN : run_z_probe(sanity_check, z_min_point, z_clearance) + offset.z;
+    float measured_z = deploy() ? NAN : run_z_probes(sanity_check, z_min_point, z_clearance) + offset.z;
 
     // Deploy succeeded and a successful measurement was done.
     // Raise and/or stow the probe depending on 'raise_after' and settings.

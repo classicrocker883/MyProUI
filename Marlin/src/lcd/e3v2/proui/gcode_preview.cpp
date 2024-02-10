@@ -198,7 +198,7 @@ void Preview::drawFromSD() {
                   ypos = ((DWIN_HEIGHT)  / 2) - 125;
     DWINUI::Draw_Icon(ICON_Info_0, xpos, ypos);
     buf.set(PSTR("No " STRINGIFY(THUMBWIDTH) "x" STRINGIFY(THUMBHEIGHT) " Thumbnail"));
-    DWINUI::Draw_CenteredString(false, (DWINUI::fontid*3), DWINUI::textcolor, DWINUI::backcolor, 0, DWIN_WIDTH, (DWIN_HEIGHT / 2), &buf);
+    DWINUI::Draw_CenteredString(false, (DWINUI::fontid * 3), DWINUI::textcolor, DWINUI::backcolor, 0, DWIN_WIDTH, (DWIN_HEIGHT / 2), &buf);
   }
   DWINUI::Draw_Button(BTN_Print, 26, 290);
   DWINUI::Draw_Button(BTN_Cancel, 146, 290);

@@ -62,13 +62,17 @@ void MeshViewerClass::DrawMeshGrid(const uint8_t csizex, const uint8_t csizey) {
 
 void MeshViewerClass::DrawMeshPoint(const uint8_t x, const uint8_t y, const float z) {
   if (isnan(z)) return;
+
   TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout();)
+
   const uint8_t fs = DWINUI::fontWidth(MeshViewer.meshfont);
   const int16_t v = round(z * 100);
   NOLESS(max, z); NOMORE(min, z);
+
   const uint16_t color = DWINUI::RainbowInt(v, zmin, zmax);
   DWINUI::Draw_FillCircle(color, px(x), py(y), r(_MAX(_MIN(v, zmax), zmin)));
   TERN_(TJC_DISPLAY, delay(100));
+
   const uint16_t fy = py(y) - fs;
   if (sizex < TERN(TJC_DISPLAY, 8, 9)) {
     if (v == 0) DWINUI::Draw_Float(MeshViewer.meshfont, 1, 2, px(x) - 2 * fs, fy, 0);

@@ -84,7 +84,7 @@ void Show_Chkb_Line(const bool checked) {
 }
 
 void Toggle_Chkb_Line(bool &checked) {
-  checked = !checked;
+  checked ^= true;
   Show_Chkb_Line(checked);
 }
 
@@ -505,7 +505,7 @@ void ReDrawMenu(bool force/*=false*/) {
 }
 
 void ReDrawItem() {
-  static_cast<MenuItemClass*>(CurrentMenu->SelectedItem())->redraw(false);
+  static_cast<MenuItemPtrClass*>(CurrentMenu->SelectedItem())->value;
 }
 
 #endif // DWIN_LCD_PROUI

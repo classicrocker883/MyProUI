@@ -32,16 +32,16 @@ private:
   static xy_float_t grid_factor;
   static xy_pos_t cached_rel;
   static xy_int8_t cached_g;
-  IF_DISABLED(PROUI_EX, static void extrapolate_one_point(const uint8_t x, const uint8_t y, const int8_t xdir, const int8_t ydir);)
+
+  // IF_DISABLED(PROUI_EX, static void extrapolate_one_point(const uint8_t x, const uint8_t y, const int8_t xdir, const int8_t ydir);)
+  static void extrapolate_one_point(const uint8_t x, const uint8_t y, const int8_t xdir, const int8_t ydir);
 
   #if ENABLED(ABL_BILINEAR_SUBDIVISION)
-
-    #if PROUI_EX
+    #if ANY(PROUI_EX, PROUI_GRID_PNTS)
       #define ABL_GRID_POINTS_VIRT_N (GRID_LIMIT - 1) * (BILINEAR_SUBDIVISIONS) + 1
       #define ABL_GRID_POINTS_VIRT_X ABL_GRID_POINTS_VIRT_N
       #define ABL_GRID_POINTS_VIRT_Y ABL_GRID_POINTS_VIRT_N
     #else
-      static void extrapolate_one_point(const uint8_t x, const uint8_t y, const int8_t xdir, const int8_t ydir);
       #define ABL_GRID_POINTS_VIRT_X (GRID_MAX_CELLS_X * (BILINEAR_SUBDIVISIONS) + 1)
       #define ABL_GRID_POINTS_VIRT_Y (GRID_MAX_CELLS_Y * (BILINEAR_SUBDIVISIONS) + 1)
     #endif
@@ -59,8 +59,8 @@ private:
 public:
   static void reset();
   static void set_grid(const xy_pos_t& _grid_spacing, const xy_pos_t& _grid_start);
-  TERN_(PROUI_EX, static void extrapolate_one_point(const uint8_t x, const uint8_t y, const int8_t xdir, const int8_t ydir);)
-  static void extrapolate_unprobed_bed_level();
+  // TERN_(PROUI_EX, static void extrapolate_one_point(const uint8_t x, const uint8_t y, const int8_t xdir, const int8_t ydir);)
+  static void extrapolate_unprobed_bed_levels();
   static void print_leveling_grid(const bed_mesh_t *_z_values=nullptr);
   static void refresh_bed_level();
   static bool has_mesh() { return !!grid_spacing.x; }

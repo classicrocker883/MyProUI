@@ -65,7 +65,7 @@
 #endif
 
 #if DISABLED(CAPABILITIES_REPORT)
-  #warning "CAPABILITIES_REPORT is recommended if you have space. Some hosts rely on it."
+  //#warning "CAPABILITIES_REPORT is recommended if you have space. Some hosts rely on it."
 #endif
 
 #if ENABLED(LA_DEBUG)

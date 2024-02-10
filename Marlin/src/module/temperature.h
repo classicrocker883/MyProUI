@@ -606,7 +606,7 @@ class Temperature {
       #else
         static constexpr celsius_t hotend_maxtemp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_MAXTEMP, HEATER_1_MAXTEMP, HEATER_2_MAXTEMP, HEATER_3_MAXTEMP, HEATER_4_MAXTEMP, HEATER_5_MAXTEMP, HEATER_6_MAXTEMP, HEATER_7_MAXTEMP);
       #endif
-      static TERN(PROUI_EX, , constexpr) celsius_t hotend_max_target(const uint8_t e) { return hotend_maxtemp[e] - (HOTEND_OVERSHOOT); }
+      static IF_DISABLED(PROUI_EX, constexpr) celsius_t hotend_max_target(const uint8_t e) { return hotend_maxtemp[e] - (HOTEND_OVERSHOOT); }
     #endif
 
     #if HAS_HEATED_BED
@@ -738,7 +738,7 @@ class Temperature {
       static hotend_watch_t watch_hotend[HOTENDS];
     #endif
 
-    #if HAS_HOTEND && DISABLED(PROUI_EX)
+    #if HAS_HOTEND && !PROUI_EX
       // Sensor ranges, not user-configured
       static temp_range_t temp_range[HOTENDS];
     #endif

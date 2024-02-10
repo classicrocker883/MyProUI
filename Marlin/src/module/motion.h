@@ -127,19 +127,11 @@ extern int16_t feedrate_percentage;
 inline float pgm_read_any(const float *p)   { return TERN(__IMXRT1062__, *p, pgm_read_float(p)); }
 inline int8_t pgm_read_any(const int8_t *p) { return TERN(__IMXRT1062__, *p, pgm_read_byte(p)); }
 
-#if PROUI_EX
-  #define XYZ_DEFS(T, NAME, OPT) \
-    inline T NAME(const AxisEnum axis) { \
-      const XYZval<T> Value = NUM_AXIS_ARRAY(X_##OPT, Y_##OPT, Z_##OPT, I_##OPT, J_##OPT, K_##OPT, U_##OPT, V_##OPT, W_##OPT); \
-      return Value[axis]; \
-    }
-#else
-  #define XYZ_DEFS(T, NAME, OPT) \
-    inline T NAME(const AxisEnum axis) { \
-      static const XYZval<T> NAME##_P DEFS_PROGMEM = NUM_AXIS_ARRAY(X_##OPT, Y_##OPT, Z_##OPT, I_##OPT, J_##OPT, K_##OPT, U_##OPT, V_##OPT, W_##OPT); \
-      return pgm_read_any(&NAME##_P[axis]); \
-    }
-#endif
+#define XYZ_DEFS(T, NAME, OPT) \
+  inline T NAME(const AxisEnum axis) { \
+    static const XYZval<T> NAME##_P DEFS_PROGMEM = NUM_AXIS_ARRAY(X_##OPT, Y_##OPT, Z_##OPT, I_##OPT, J_##OPT, K_##OPT, U_##OPT, V_##OPT, W_##OPT); \
+    return pgm_read_any(&NAME##_P[axis]); \
+  }
 
 XYZ_DEFS(float, base_min_pos,   MIN_POS);
 XYZ_DEFS(float, base_max_pos,   MAX_POS);
@@ -242,9 +234,7 @@ inline float home_bump_mm(const AxisEnum axis) {
   extern soft_endstops_t soft_endstop;
   void apply_motion_limits(xyz_pos_t &target);
   void update_software_endstops(const AxisEnum axis
-    #if HAS_HOTEND_OFFSET
-      , const uint8_t old_tool_index=0, const uint8_t new_tool_index=0
-    #endif
+    OPTARG(HAS_HOTEND_OFFSET, const uint8_t old_tool_index=0, const uint8_t new_tool_index=0)
   );
   #define SET_SOFT_ENDSTOP_LOOSE(loose) (soft_endstop._loose = loose)
 

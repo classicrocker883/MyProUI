@@ -628,7 +628,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_ZPROBE_YOFFSET                 = _UxGT("Probe Y Offset");
   LSTR MSG_ZPROBE_ZOFFSET                 = _UxGT("Z-Offset");
   LSTR MSG_ZPROBE_MARGIN                  = _UxGT("Probe Margin");
-  LSTR MSG_ZPROBE_MULTIPLE                = _UxGT("Extra Probing");
+  LSTR MSG_ZPROBE_MULTIPLE                = _UxGT("Multiple Probing");
   LSTR MSG_Z_FEED_RATE                    = _UxGT("Z Feed Rate");
   LSTR MSG_ENABLE_HS_MODE                 = _UxGT("Enable HS Mode");
   LSTR MSG_MOVE_NOZZLE_TO_BED             = _UxGT("Center Nozzle on Bed");
@@ -954,49 +954,6 @@ namespace LanguageNarrow_en {
   LSTR DGUS_MSG_WRITE_EEPROM_FAILED       = _UxGT("EEPROM write failed");
   LSTR DGUS_MSG_READ_EEPROM_FAILED        = _UxGT("EEPROM read failed");
   LSTR DGUS_MSG_FILAMENT_RUNOUT           = _UxGT("Filament runout E%d");
-
-  // DWIN_LCD_PROUI specific message strings
-  #define _MSG_PREHEAT(N) \
-    LSTR MSG_PREHEAT_##N                  = _UxGT("Preheat ") PREHEAT_## N ##_LABEL; \
-    LSTR MSG_PREHEAT_## N ##_SETTINGS     = _UxGT("Preheat ") PREHEAT_## N ##_LABEL _UxGT(" Settings");
-  #if PREHEAT_COUNT > 3
-    REPEAT_S(4, INCREMENT(PREHEAT_COUNT), _MSG_PREHEAT)
-  #endif
-  LSTR MSG_BED_TEMPERATURE                = _UxGT("Bed Temperature");
-  LSTR MSG_NOZZLE_TEMPERATURE             = _UxGT("Nozzle temperature");
-  LSTR MSG_TOO_HIGH                       = _UxGT("is too high");
-  LSTR MSG_TOO_LOW                        = _UxGT("is too low");
-  LSTR MSG_CHECK_FILENAME                 = _UxGT("Please check filenames");
-  LSTR MSG_ONLY_GCODE                     = _UxGT("Only G-code can be printed");
-  LSTR MSG_MPC_SETTINGS                   = _UxGT("MPC Settings");
-  LSTR MSG_HOTEND_PID_SETTINGS            = _UxGT(STR_HOTEND_PID " Settings");
-  LSTR MSG_BED_PID_SETTINGS               = _UxGT(STR_BED_PID " Settings");
-  LSTR MSG_HOTEND_TUNE                    = _UxGT("Tune " STR_HOTEND_PID);
-  LSTR MSG_BED_TUNE                       = _UxGT("Tune " STR_BED_PID);
-  LSTR MSG_PID_SETTINGS                   = _UxGT("PID Settings");
-  LSTR MSG_PID_SET_KP                     = _UxGT("Set" STR_KP);
-  LSTR MSG_PID_SET_KI                     = _UxGT("Set" STR_KI);
-  LSTR MSG_PID_SET_KD                     = _UxGT("Set" STR_KD);
-  LSTR MSG_MPC_TARGET                     = _UxGT("MPC target:     Celsius");
-  LSTR MSG_PID_TARGET                     = _UxGT("PID target:     Celsius");
-  LSTR MSG_TARGET                         = _UxGT("Target:     Celsius");
-  LSTR MSG_FOR_NOZZLE                     = _UxGT("for NOZZLE");
-  LSTR MSG_FOR_BED                        = _UxGT("for BED");
-  LSTR MSG_NOZZLE_RUN                     = _UxGT("for NOZZLE is running");
-  LSTR MSG_BED_RUN                        = _UxGT("for BED is running");
-  LSTR MSG_250K_BAUD                      = _UxGT("250K baud");
-  LSTR MSG_SCREW_INSET                    = _UxGT("Bed Screw Inset");
-  LSTR MSG_SPEED_IND                      = _UxGT("Speed Indicator");
-  LSTR MSG_ZERO_MESH                      = _UxGT("Zero Current Point");
-  LSTR MSG_HOTEND_TEMP_GRAPH              = _UxGT("Hotend Temp Graph");
-  LSTR MSG_BED_TEMP_GRAPH                 = _UxGT("Bed Temp Graph");
-  LSTR MSG_EXIT_MENU                      = _UxGT("Exit to Main Menu");
-  LSTR MSG_TRAMWIZ_CALC                   = _UxGT("Calculate Average");
-  LSTR MSG_TRAMWIZ_LOWER                  = _UxGT("Lower");
-  LSTR MSG_TRAMWIZ_RAISE                  = _UxGT("Raise");
-  LSTR MSG_HOME_Z_AND_DISABLE             = _UxGT("Home Z and Disable");
-  LSTR MSG_TOOLBAR_SETUP                  = _UxGT("Toolbar Setup");
-  LSTR MSG_OPTION_DISABLED                = _UxGT("Option Disabled");
 }
 
 namespace LanguageWide_en {
@@ -1017,7 +974,52 @@ namespace LanguageWide_en {
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("Print Time");
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Longest Job Time");
     LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Extruded Total");
-  #endif
+
+    // DWIN_LCD_PROUI specific message strings
+    #define _MSG_PREHEAT(N) \
+      LSTR MSG_PREHEAT_##N                  = _UxGT("Preheat ") PREHEAT_## N ##_LABEL; \
+      LSTR MSG_PREHEAT_## N ##_SETTINGS     = _UxGT("Preheat ") PREHEAT_## N ##_LABEL _UxGT(" Settings");
+    #if PREHEAT_COUNT > 3
+      REPEAT_S(4, INCREMENT(PREHEAT_COUNT), _MSG_PREHEAT)
+    #endif
+    LSTR MSG_BED_TEMPERATURE                = _UxGT("Bed Temperature");
+    LSTR MSG_NOZZLE_TEMPERATURE             = _UxGT("Nozzle temperature");
+    LSTR MSG_TOO_HIGH                       = _UxGT("is too high");
+    LSTR MSG_TOO_LOW                        = _UxGT("is too low");
+    LSTR MSG_CHECK_FILENAME                 = _UxGT("Please check filenames");
+    LSTR MSG_ONLY_GCODE                     = _UxGT("Only G-code can be printed");
+    LSTR MSG_MPC_SETTINGS                   = _UxGT("MPC Settings");
+    LSTR MSG_HOTEND_PID_SETTINGS            = _UxGT(STR_HOTEND_PID " Settings");
+    LSTR MSG_BED_PID_SETTINGS               = _UxGT(STR_BED_PID " Settings");
+    LSTR MSG_HOTEND_TUNE                    = _UxGT("Tune " STR_HOTEND_PID);
+    LSTR MSG_BED_TUNE                       = _UxGT("Tune " STR_BED_PID);
+    LSTR MSG_PID_SETTINGS                   = _UxGT("PID Settings");
+    LSTR MSG_PID_SET_KP                     = _UxGT("Set" STR_KP);
+    LSTR MSG_PID_SET_KI                     = _UxGT("Set" STR_KI);
+    LSTR MSG_PID_SET_KD                     = _UxGT("Set" STR_KD);
+    LSTR MSG_MPC_TARGET                     = _UxGT("MPC target:     Celsius");
+    LSTR MSG_PID_TARGET                     = _UxGT("PID target:     Celsius");
+    LSTR MSG_TARGET                         = _UxGT("Target:     Celsius");
+    LSTR MSG_FOR_NOZZLE                     = _UxGT("for NOZZLE");
+    LSTR MSG_FOR_BED                        = _UxGT("for BED");
+    LSTR MSG_NOZZLE_RUN                     = _UxGT("for NOZZLE is running");
+    LSTR MSG_BED_RUN                        = _UxGT("for BED is running");
+    LSTR MSG_250K_BAUD                      = _UxGT("250K baud");
+    LSTR MSG_SCREW_INSET                    = _UxGT("Bed Screw Inset");
+    LSTR MSG_SPEED_IND                      = _UxGT("Speed Indicator");
+    LSTR MSG_ZERO_MESH                      = _UxGT("Zero Current Point");
+    LSTR MSG_HOTEND_TEMP_GRAPH              = _UxGT("Hotend Temp Graph");
+    LSTR MSG_BED_TEMP_GRAPH                 = _UxGT("Bed Temp Graph");
+    LSTR MSG_EXIT_MENU                      = _UxGT("Exit to Main Menu");
+    LSTR MSG_TRAMWIZ_CALC                   = _UxGT("Calculate Average");
+    LSTR MSG_TRAMWIZ_LOWER                  = _UxGT("Lower");
+    LSTR MSG_TRAMWIZ_RAISE                  = _UxGT("Raise");
+    LSTR MSG_HOME_Z_AND_DISABLE             = _UxGT("Home Z and Disable");
+    LSTR MSG_TOOLBAR_SETUP                  = _UxGT("Toolbar Setup");
+    LSTR MSG_OPTION_DISABLED                = _UxGT("Option Disabled");
+    LSTR MSG_DISABLE_MANUAL_TRAMMING        = _UxGT("Disable manual tramming");
+    LSTR MSG_TRAMMING_WIZARD_START          = _UxGT("Tramming Wizard Start");
+  #endif // LCD_WIDTH >= 20 || HAS_DWIN_E3V2
 }
 
 namespace LanguageTall_en {

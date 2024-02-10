@@ -49,11 +49,7 @@ typedef struct {
   float time,
   filament,
   layer,
-  width, height, length,
-  minx,
-  maxx,
-  miny,
-  maxy;
+  width, height, length;
 
   void setnames(const char * const fn);
   void clears();

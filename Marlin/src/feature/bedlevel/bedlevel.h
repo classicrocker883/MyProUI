@@ -59,7 +59,7 @@ class TemporaryBedLevelingState {
 
 #if HAS_MESH
 
-  #if PROUI_EX
+  #if ANY(PROUI_EX, PROUI_GRID_PNTS)
     typedef float bed_mesh_t[GRID_LIMIT][GRID_LIMIT];
   #else
     typedef float bed_mesh_t[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];

@@ -233,7 +233,7 @@ class FilamentSensorBase {
       #undef _INVERT_BIT
     }
 
-    #if ENABLED(FILAMENT_SWITCH_AND_MOTION) && DISABLED(PROUI_EX)
+    #if ENABLED(FILAMENT_SWITCH_AND_MOTION) && !PROUI_EX
       // Return a bitmask of motion pin states
       static uint8_t poll_motion_pins() {
         #define _OR_MOTION(N) | (READ(FIL_MOTION##N##_PIN) ? _BV((N) - 1) : 0)
@@ -318,7 +318,7 @@ class FilamentSensorBase {
 
 #endif // HAS_FILAMENT_MOTION
 
-#if HAS_FILAMENT_SWITCH && DISABLED(PROUI_EX)
+#if HAS_FILAMENT_SWITCH && !PROUI_EX
 
   /**
    * This is a simple endstop switch in the path of the filament.
@@ -358,7 +358,7 @@ class FilamentSensorBase {
 
 #endif // HAS_FILAMENT_SWITCH
 
-#if DISABLED(PROUI_EX)
+#if !PROUI_EX
   /**
    * This is a simple endstop switch in the path of the filament.
    * It can detect filament runout, but not stripouts or jams.

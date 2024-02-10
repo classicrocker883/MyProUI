@@ -793,7 +793,7 @@ void do_blocking_move_to(const xyze_pos_t &raw, const_feedRate_t fr_mm_s/*=0.0f*
     );
   }
   void do_z_clearance(const_float_t zclear, const bool with_probe/*=true*/, const bool lower_allowed/*=false*/) {
-    UNUSED(with_probe);
+    IF_DISABLED(HAS_BED_PROBE, UNUSED(with_probe);)
     float zdest = zclear;
     TERN_(HAS_BED_PROBE, if (with_probe && probe.offset.z < 0) zdest -= probe.offset.z);
     NOMORE(zdest, Z_MAX_POS);
@@ -857,11 +857,12 @@ void restore_feedrate_and_scaling() {
     OPTARG(HAS_HOTEND_OFFSET, const uint8_t old_tool_index/*=0*/, const uint8_t new_tool_index/*=0*/)
   ) {
 
-    #if PROUI_EX
+    // #if PROUI_EX
 
-      ProEx.UpdateAxis(axis);
+      // ProEx.UpdateAxis(axis);
 
-    #elif ENABLED(DUAL_X_CARRIAGE)
+    #if ENABLED(DUAL_X_CARRIAGE)
+
       if (axis == X_AXIS) {
 
         // In Dual X mode hotend_offset[X] is T1's home position

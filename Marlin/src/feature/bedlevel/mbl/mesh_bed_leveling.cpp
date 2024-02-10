@@ -35,14 +35,14 @@
   mesh_bed_leveling bedlevel;
 
   float mesh_bed_leveling::z_offset,
-     #if PROUI_EX
-        mesh_bed_leveling::z_values[GRID_LIMIT][GRID_LIMIT],
+     #if ANY(PROUI_EX, PROUI_GRID_PNTS)
         mesh_bed_leveling::index_to_xpos[GRID_LIMIT],
         mesh_bed_leveling::index_to_ypos[GRID_LIMIT];
+        bed_mesh_t mesh_bed_leveling::z_values;
      #else
-        mesh_bed_leveling::z_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y],
         mesh_bed_leveling::index_to_xpos[GRID_MAX_POINTS_X],
         mesh_bed_leveling::index_to_ypos[GRID_MAX_POINTS_Y];
+        bed_mesh_t mesh_bed_leveling::z_values;
      #endif
 
   mesh_bed_leveling::mesh_bed_leveling() {

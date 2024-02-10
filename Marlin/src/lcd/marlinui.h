@@ -200,7 +200,7 @@ public:
     static float screw_pos; // bed corner screw inset
   #endif
 
-  #if PROUI_EX && HAS_MESH // workaround for mesh inset not saving on restart
+  #if ALL(DWIN_LCD_PROUI, HAS_MESH) // workaround for mesh inset not saving on restart
     static float mesh_inset_min_x;
     static float mesh_inset_max_x;
     static float mesh_inset_min_y;

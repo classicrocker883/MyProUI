@@ -22,7 +22,6 @@
 
 #include "../../../inc/MarlinConfig.h"
 
-#include "dwin_defines.h"
 #include "dwinui.h"
 #include "../common/encoder.h"
 #include "../common/limits.h"
@@ -76,7 +75,8 @@ enum processID : uint8_t {
       PID_BAD_HEATER_ID,
       PID_TEMP_TOO_HIGH,
       PID_TUNING_TIMEOUT,
-    #elif ENABLED(MPC_AUTOTUNE)
+    #endif
+    #if ENABLED(MPC_AUTOTUNE)
       MPCTEMP_START,
       MPC_TEMP_ERROR,
       MPC_INTERRUPTED,
@@ -121,6 +121,11 @@ typedef struct {
   uint32_t Led_Color;
   bool AdaptiveStepSmoothing;
   bool EnablePreview;
+#if !PROUI_EX
+  TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points;)
+  IF_DISABLED(BD_SENSOR, uint8_t multiple_probing;)
+  uint16_t zprobeFeed;
+#endif
 } HMI_data_t;
 
 extern HMI_data_t HMI_data;
@@ -156,9 +161,7 @@ typedef struct {
   bool abort_flag:1;    // sd or host was aborted
   bool pause_flag:1;    // printing is paused
   bool select_flag:1;   // Popup button selected
-  #if PROUI_EX && HAS_LEVELING
-    bool cancel_abl:1;  // cancel current abl
-  #endif
+  bool cancel_lev:1; // cancel current abl
 } HMI_flag_t;
 
 extern HMI_flag_t HMI_flag;
@@ -213,6 +216,8 @@ uint32_t GetHash(char * str);
   void AutoLevStart();
   void PopUp_StartAutoLev();
   void OnClick_StartAutoLev();
+#else
+  void HomeZandDisable();
 #endif
 void RebootPrinter();
 void DisableMotors();
@@ -251,9 +256,6 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
 #if ENABLED(HOST_SHUTDOWN_MENU_ITEM) && defined(SHUTDOWN_ACTION)
   void HostShutDown();
 #endif
-#if DISABLED(HAS_BED_PROBE)
-  void HomeZandDisable();
-#endif
 
 // Other
 void Goto_PrintProcess();
@@ -275,6 +277,7 @@ void HMI_SaveProcessID(const uint8_t id);
 void HMI_SDCardUpdate();
 void EachMomentUpdate();
 void update_variable();
+void Init();
 void DWIN_InitScreen();
 void DWIN_HandleScreen();
 void DWIN_CheckStatusMessage();
@@ -373,7 +376,7 @@ void Draw_MaxAccel_Menu();
 #if HAS_MESH
   void Draw_MeshSet_Menu();
   void Draw_MeshInset_Menu();
-  #if ENABLED(MESH_EDIT_MENU)
+  #if ENABLED(PROUI_MESH_EDIT)
     void Draw_EditMesh_Menu();
   #endif
 #endif
@@ -437,4 +440,31 @@ void Draw_MaxAccel_Menu();
 
 #if DEBUG_DWIN
   void DWIN_Debug(const char *msg);
+#endif
+
+#if !PROUI_EX
+  #if PROUI_GRID_PNTS
+    #undef  GRID_MAX_POINTS_X
+    #undef  GRID_MAX_POINTS_Y
+    #undef  GRID_MAX_POINTS
+    #define GRID_MAX_POINTS_X HMI_data.grid_max_points
+    #define GRID_MAX_POINTS_Y HMI_data.grid_max_points
+    #define GRID_MAX_POINTS  (HMI_data.grid_max_points * HMI_data.grid_max_points)
+  #endif
+  #if HAS_BED_PROBE
+    #undef Z_PROBE_FEEDRATE_SLOW
+    #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobeFeed
+  #endif
+#endif
+
+#if HAS_MESH
+  #undef  MESH_MIN_X
+  #undef  MESH_MAX_X
+  #undef  MESH_MIN_Y
+  #undef  MESH_MAX_Y
+  #include "../../marlinui.h"
+  #define MESH_MIN_X ui.mesh_inset_min_x
+  #define MESH_MAX_X ui.mesh_inset_max_x
+  #define MESH_MIN_Y ui.mesh_inset_min_y
+  #define MESH_MAX_Y ui.mesh_inset_max_y
 #endif
