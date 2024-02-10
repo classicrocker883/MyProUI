@@ -1335,6 +1335,7 @@
     #define MAX_JERK_EDIT_VALUES { 20, 20, 1, 20 } // ...or, set your own edit limits
   #endif
 #endif
+
 /**
  * Junction Deviation Factor
  *
