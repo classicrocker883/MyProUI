@@ -113,22 +113,13 @@ struct SerialBase {
   // Called on destruction
   void end()                       { SerialChild->end(); }
 
-  // Redirect flush
-  void flush()                     { SerialChild->flush(); }
-
-  // Not all implementation have a flushTX, so let's call them only if the child has the implementation
-  void flushTX()                   { CALL_IF_EXISTS(void, SerialChild, flushTX); }
-
-  // Check if the serial port is connected (usually bypassed)
-  bool connected() const           { return SerialChild->connected(); }
+  /** Check for available data from the port
+      @param index  The port index, usually 0 */
+  int available(serial_index_t index=0) const { return SerialChild->available(index); }
 
   /** Read a value from the port
       @param index  The port index, usually 0 */
   int read(serial_index_t index=0) { return SerialChild->read(index); }
-
-  /** Check for available data from the port
-      @param index  The port index, usually 0 */
-  int available(serial_index_t index=0) const { return SerialChild->available(index); }
 
   /** Combine the features of this serial instance and return it
       @param index  The port index, usually 0 */
@@ -136,6 +127,15 @@ struct SerialBase {
 
   // Check if the serial port has a feature
   bool has_feature(serial_index_t index, SerialFeature flag) const { return (features(index) & flag) != SerialFeature::None; }
+
+  // Check if the serial port is connected (usually bypassed)
+  bool connected() const            { return SerialChild->connected(); }
+
+  // Redirect flush
+  void flush()                      { SerialChild->flush(); }
+
+  // Not all implementation have a flushTX, so let's call them only if the child has the implementation
+  void flushTX()                    { CALL_IF_EXISTS(void, SerialChild, flushTX); }
 
   // Glue code here
   void write(const char *str)                    { while (*str) write(*str++); }
