@@ -3454,6 +3454,8 @@
   //#define PROUI_EX 1          // Extended UI features (15152 bytes of flash)
   #ifdef PROUI_EX
     #define HAS_TOOLBAR 1
+  #else
+    #define PROUI_GRID_PNTS 1
   #endif
   #define HAS_GCODE_PREVIEW 1
   //#define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)
