@@ -285,9 +285,7 @@ MenuClass *PIDMenu = nullptr;
   #if ENABLED(PROUI_MESH_EDIT)
     MenuClass *EditMeshMenu = nullptr;
   #endif
-  #if PROUI_EX
-    MenuClass *MeshInsetMenu = nullptr;
-  #endif
+  MenuClass *MeshInsetMenu = nullptr;
 #endif
 #if ENABLED(SHAPING_MENU)
   MenuClass *InputShapingMenu = nullptr;
@@ -305,7 +303,7 @@ MenuItemClass *HotendTargetItem = nullptr;
 MenuItemClass *BedTargetItem = nullptr;
 MenuItemClass *FanSpeedItem = nullptr;
 TERN_(MESH_BED_LEVELING, MenuItemClass *MMeshMoveZItem = nullptr;)
-MenuItemClass *EditZValueItem = nullptr;
+TERN_(PROUI_MESH_EDIT, MenuItemClass *EditZValueItem = nullptr;)
 
 //-----------------------------------------------------------------------------
 // Main Buttons
@@ -1864,23 +1862,23 @@ void DWIN_Print_Resume() {
 // Ended print job
 void DWIN_Print_Finished() {
   DEBUG_ECHOLNPGM("DWIN_Print_Finished");
-  #ifndef SD_FINISHED_RELEASECOMMAND
-    if (all_axes_homed()) {
-      #if ENABLED(NOZZLE_PARK_FEATURE) && !PROUI_EX
-        const xyz_pos_t park_point = NOZZLE_PARK_POINT;
-      #endif
+  if (all_axes_homed()) {
+    #ifdef SD_FINISHED_RELEASECOMMAND
+      queue.inject(F(SD_FINISHED_RELEASECOMMAND));
+    #else
       const int16_t zpos = current_position.z + TERN(NOZZLE_PARK_FEATURE,
       NOZZLE_PARK_Z_RAISE_MIN, Z_POST_CLEARANCE);
       _MIN(zpos, Z_MAX_POS);
-      const int16_t ypos = TERN(NOZZLE_PARK_FEATURE, TERN(PROUI_EX, PRO_data.Park_point.y, park_point.y), Y_MAX_POS);
+      const int16_t ypos = TERN(NOZZLE_PARK_FEATURE, TERN(PROUI_EX, PRO_data.Park_point.y, DEF_NOZZLE_PARK_POINT.y), Y_MAX_POS);
       MString<32> cmd;
       cmd.setf(cmd, F("G0F3000Z%i\nG0F2000Y%i"), zpos, ypos);
       queue.inject(&cmd);
-    }
-  #else
-    if (all_axes_homed()) queue.inject(F(SD_FINISHED_RELEASECOMMAND));
-  #endif
-  if (!HMI_flag.abort_flag) DisableMotors();
+    #endif
+  }
+  if (!HMI_flag.abort_flag) {
+    set_bed_leveling_enabled(false);
+    DisableMotors();
+  }
   HMI_flag.abort_flag = false;
   HMI_flag.pause_flag = false;
   wait_for_heatup = false;
@@ -1894,6 +1892,7 @@ void DWIN_Print_Finished() {
 // Print was aborted
 void DWIN_Print_Aborted() {
   DEBUG_ECHOLNPGM("DWIN_Print_Aborted");
+  RaiseHead();
   #ifdef EVENT_GCODE_SD_ABORT
     queue.inject(F(EVENT_GCODE_SD_ABORT));
   #endif
@@ -1995,7 +1994,7 @@ void DWIN_SetDataDefaults() {
     card.setSortOn(TERN(SDSORT_REVERSE, AS_REV, AS_FWD));
   #endif
   HMI_data.MediaAutoMount = DISABLED(PROUI_EX);
-  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)// NoPro Mesh_Inset workaround
+  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
     HMI_data.z_after_homing = DEF_Z_AFTER_HOMING;
   #endif
   IF_DISABLED(HAS_BED_PROBE, HMI_data.ManualZOffset = 0;)
@@ -2383,7 +2382,7 @@ void AutoHome() { queue.inject_P(G28_STR); }
   void HomeX() { queue.inject(F("G28X")); }
   void HomeY() { queue.inject(F("G28Y")); }
   void HomeZ() { queue.inject(F("G28Z")); }
-  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)// NoPro Mesh_Inset workaround
+  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
     void ApplyZAfterHoming() { HMI_data.z_after_homing = MenuData.Value; }
     void SetZAfterHoming() { SetIntOnClick(0, 20, HMI_data.z_after_homing, ApplyZAfterHoming); }
   #endif
@@ -2415,7 +2414,7 @@ void AutoHome() { queue.inject_P(G28_STR); }
 
   void SetMoveZto0() {
     TERN_(HAS_LEVELING, set_bed_leveling_enabled(false));
-    gcode.process_subcommands_now(MString<54>(F("G28O\nG0F5000X"), TERN(Z_SAFE_HOMING, Z_SAFE_HOMING_X_POINT, X_CENTER), F("Y"), TERN(Z_SAFE_HOMING, Z_SAFE_HOMING_Y_POINT, Y_CENTER), F("\nG0Z0F300\nM400")));
+    gcode.process_subcommands_now(TS(F("G28XYO\nG28Z\nG0F5000X"), X_CENTER, F("Y"), Y_CENTER, F("\nG0Z0F300\nM400")));
     ui.reset_status();
   }
 
@@ -2511,10 +2510,10 @@ void ApplyMove() {
     Toggle_Chkb_Line(caselight.on);
     caselight.update_enabled();
   }
-  #if CASELIGHT_USES_BRIGHTNESS.
-    bool EnableLiveCaseLightBrightness = true;
-    void LiveCaseLightBrightness() { caselight.brightness = MenuData.Value; caselight.update_brightness(); }
-    void SetCaseLightBrightness() { SetIntOnClick(0, 255, caselight.brightness, LiveCaseLightBrightness, EnableLiveCaseLightBrightness ? LiveCaseLightBrightness : nullptr)); }
+  #if CASELIGHT_USES_BRIGHTNESS
+    void ApplyCaseLightBrightness() { caselight.brightness = MenuData.Value; }
+    void LiveCaseLightBrightness() { caselight.update_brightness(); }
+    void SetCaseLightBrightness() { SetIntOnClick(0, 255, caselight.brightness, ApplyCaseLightBrightness, LiveCaseLightBrightness)); }
   #endif
 #endif
 
@@ -2526,9 +2525,8 @@ void ApplyMove() {
     }
   #endif
   #if HAS_COLOR_LEDS
-    bool EnableLiveLedColor = true;
-    void ApplyLEDColor() { HMI_data.Led_Color = LEDColor( {leds.color.r, leds.color.g, leds.color.b OPTARG(HAS_WHITE_LED, leds.color.w) } ); if (!EnableLiveLedColor) leds.update(); }
-    void LiveLEDColor(uint8_t *color) { *color = MenuData.Value; if (EnableLiveLedColor) leds.update(); }
+    void ApplyLEDColor() { HMI_data.Led_Color = LEDColor( {leds.color.r, leds.color.g, leds.color.b OPTARG(HAS_WHITE_LED, leds.color.w) } ); }
+    void LiveLEDColor(uint8_t *color) { *color = MenuData.Value; leds.update(); }
     void LiveLEDColorR() { LiveLEDColor(&leds.color.r); }
     void LiveLEDColorG() { LiveLEDColor(&leds.color.g); }
     void LiveLEDColorB() { LiveLEDColor(&leds.color.b); }
@@ -2682,9 +2680,9 @@ void ApplyMove() {
     queue.inject(F("G28O\nG27 P1"));
   }
   void RaiseHead() {
-    char cmd[20] = "";
-    sprintf_P(cmd, PSTR("Raise Z by %i"), NOZZLE_PARK_Z_RAISE_MIN);
-    LCD_MESSAGE_F(cmd);
+    char msg[20] = "";
+    sprintf_P(msg, PSTR("Raise Z by %i"), NOZZLE_PARK_Z_RAISE_MIN);
+    LCD_MESSAGE_F(msg);
     queue.inject(F("G27 P3"));
   }
 #else
@@ -2755,7 +2753,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
   }
   #if HAS_BED_PROBE
     if (HMI_data.FullManualTramming) {
-      set_bed_leveling_enabled(false);
+      TERN_(HAS_LEVELING, set_bed_leveling_enabled(false);)
       gcode.process_subcommands_now(MString<100>(
         #if ENABLED(LCD_BED_TRAMMING)
           F("M420S0\nG90\nG0F300Z" STRINGIFY(BED_TRAMMING_Z_HOP) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z" STRINGIFY(BED_TRAMMING_HEIGHT))
@@ -2765,7 +2763,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
       ));
     }
     else {
-      set_bed_leveling_enabled(false);
+      TERN_(HAS_LEVELING, set_bed_leveling_enabled(false);)
       if (stow_probe) { probe.stow(); }
       inLev = true;
       zval = probe.probe_at_point(xpos, ypos, (stow_probe ? PROBE_PT_STOW : PROBE_PT_RAISE));
@@ -3210,14 +3208,12 @@ void Draw_Control_Menu() {
     #endif
     #if ENABLED(CASE_LIGHT_MENU)
       #if CASELIGHT_USES_BRIGHTNESS
-        EnableLiveCaseLightBrightness = true;  // Allow live update of brightness in control menu
         MENU_ITEM(ICON_CaseLight, MSG_CASE_LIGHT, onDrawSubMenu, Draw_CaseLight_Menu);
       #else
         EDIT_ITEM(ICON_CaseLight, MSG_CASE_LIGHT, onDrawChkbMenu, SetCaseLight, &caselight.on);
       #endif
     #endif
     #if ENABLED(LED_CONTROL_MENU)
-      EnableLiveLedColor = true;  // Allow live update of color in control menu
       MENU_ITEM(ICON_LedControl, MSG_LED_CONTROL, onDrawSubMenu, Draw_LedControl_Menu);
     #endif
     #if ENABLED(PRINTCOUNTER)
@@ -3483,13 +3479,9 @@ void Draw_Tune_Menu() {
     #if ENABLED(CASE_LIGHT_MENU)
       EDIT_ITEM(ICON_CaseLight, MSG_CASE_LIGHT, onDrawChkbMenu, SetCaseLight, &caselight.on);
       #if CASELIGHT_USES_BRIGHTNESS
-        // Avoid heavy interference with print job disabling live update of brightness in tune menu
-        EnableLiveCaseLightBrightness = false;
         EDIT_ITEM(ICON_Brightness, MSG_CASE_LIGHT_BRIGHTNESS, onDrawPInt8Menu, SetCaseLightBrightness, &caselight.brightness);
       #endif
       #if ENABLED(LED_CONTROL_MENU)
-        // Avoid heavy interference with print job disabling live update of color in tune menu
-        EnableLiveLedColor = false;
         MENU_ITEM(ICON_LedControl, MSG_LED_CONTROL, onDrawSubMenu, Draw_LedControl_Menu);
       #endif
     #elif ENABLED(LED_CONTROL_MENU) && DISABLED(CASE_LIGHT_USE_NEOPIXEL)
@@ -4082,7 +4074,7 @@ void Draw_MaxAccel_Menu() {
         MENU_ITEM(ICON_Park, MSG_FILAMENT_PARK_ENABLED, onDrawMenuItem, ParkHead);
       #endif
       MENU_ITEM(ICON_MoveZ, MSG_TOOL_CHANGE_ZLIFT, onDrawMenuItem, RaiseHead);
-      #if ENABLED(MESH_BED_LEVELING)// NoPro Mesh_Inset workaround
+      #if ENABLED(MESH_BED_LEVELING)
         EDIT_ITEM(ICON_ZAfterHome, MSG_Z_AFTER_HOME, onDrawPInt8Menu, SetZAfterHoming, &HMI_data.z_after_homing);
       #endif
     }
@@ -4185,31 +4177,30 @@ void Draw_MaxAccel_Menu() {
 
   #if ENABLED(PROUI_MESH_EDIT)
     bool AutoMovToMesh = false;
+    void SetAutoMovToMesh() { Toggle_Chkb_Line(AutoMovToMesh); }
 
-    void LiveEditMesh() { ((MenuItemPtrClass*)EditZValueItem)->value = &bedlevel.z_values[HMI_value.Select ? bedLevelTools.mesh_x : MenuData.Value][HMI_value.Select ? MenuData.Value : bedLevelTools.mesh_y]; EditZValueItem->redraw(); }
+    void LiveEditMesh()  { ((MenuItemPtrClass*)EditZValueItem)->value = &bedlevel.z_values[HMI_value.Select ? bedLevelTools.mesh_x : MenuData.Value][HMI_value.Select ? MenuData.Value : bedLevelTools.mesh_y]; EditZValueItem->redraw(); }
     void LiveEditMeshZ() { *MenuData.P_Float = MenuData.Value / POW(10, 3); if (AutoMovToMesh) { bedLevelTools.MoveToZ(); } }
     void ApplyEditMeshX() { bedLevelTools.mesh_x = MenuData.Value; if (AutoMovToMesh) { bedLevelTools.MoveToXY(); } }
     void ApplyEditMeshY() { bedLevelTools.mesh_y = MenuData.Value; if (AutoMovToMesh) { bedLevelTools.MoveToXY(); } }
     void ZeroPoint() { bedLevelTools.manual_value_update(bedLevelTools.mesh_x, bedLevelTools.mesh_y, true); EditZValueItem->redraw(); LCD_MESSAGE(MSG_ZERO_MESH); }
-    void ZeroMesh() { bedLevelTools.mesh_reset(); LCD_MESSAGE(MSG_MESH_RESET); }
+    void ZeroMesh()  { bedLevelTools.mesh_reset(); LCD_MESSAGE(MSG_MESH_RESET); }
     void SetEditMeshX() { HMI_value.Select = 0; SetIntOnClick(0, GRID_MAX_POINTS_X - 1, bedLevelTools.mesh_x, ApplyEditMeshX, LiveEditMesh); }
     void SetEditMeshY() { HMI_value.Select = 1; SetIntOnClick(0, GRID_MAX_POINTS_Y - 1, bedLevelTools.mesh_y, ApplyEditMeshY, LiveEditMesh); }
     void SetEditZValue() { SetPFloatOnClick(Z_OFFSET_MIN, Z_OFFSET_MAX, 3, nullptr, LiveEditMeshZ); if (AutoMovToMesh) { bedLevelTools.MoveToXYZ(); } }
 
-    void SetAutoMovToMesh() { Toggle_Chkb_Line(AutoMovToMesh); }
-  #endif
-
-  // Zero or Reset Bed Mesh Values
-  void Popup_ResetMesh() { DWIN_Popup_ConfirmCancel(ICON_Info_0, F("Reset Current Mesh?")); }
-  void OnClick_ResetMesh() {
-    if (HMI_flag.select_flag) {
-      HMI_ReturnScreen();
-      ZeroMesh();
-      DONE_BUZZ(true);
+    // Zero or Reset Bed Mesh Values
+    void Popup_ResetMesh() { DWIN_Popup_ConfirmCancel(ICON_Info_0, F("Reset Current Mesh?")); }
+    void OnClick_ResetMesh() {
+      if (HMI_flag.select_flag) {
+        HMI_ReturnScreen();
+        ZeroMesh();
+        DONE_BUZZ(true);
+      }
+      else { HMI_ReturnScreen(); }
     }
-    else { HMI_ReturnScreen(); }
-  }
-  void ResetMesh() { Goto_Popup(Popup_ResetMesh, OnClick_ResetMesh); }
+    void ResetMesh() { Goto_Popup(Popup_ResetMesh, OnClick_ResetMesh); }
+  #endif
 
 #endif // HAS_MESH
 
@@ -4223,10 +4214,10 @@ void Draw_MaxAccel_Menu() {
       #endif
       #if PROUI_EX
         MENU_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawMeshPoints, SetMeshPoints);
-        MENU_ITEM(ICON_ProbeMargin, MSG_MESH_INSET, onDrawSubMenu, Draw_MeshInset_Menu);
       #else
         EDIT_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawPInt8Menu, SetMeshPoints, &HMI_data.grid_max_points);
       #endif
+      MENU_ITEM(ICON_ProbeMargin, MSG_MESH_INSET, onDrawSubMenu, Draw_MeshInset_Menu);
       #if ALL(HAS_HEATED_BED, PREHEAT_BEFORE_LEVELING)
         EDIT_ITEM(ICON_Temperature, MSG_UBL_SET_TEMP_BED, onDrawPIntMenu, SetBedLevT, &HMI_data.BedLevT);
       #endif
@@ -4243,7 +4234,7 @@ void Draw_MaxAccel_Menu() {
   #if ENABLED(PROUI_MESH_EDIT)
     void Draw_EditMesh_Menu() {
       if (!leveling_is_valid()) { LCD_MESSAGE(MSG_UBL_MESH_INVALID); return; }
-      set_bed_leveling_enabled(false);
+      TERN_(HAS_LEVELING, set_bed_leveling_enabled(false);)
       checkkey = Menu;
       if (SET_MENU(EditMeshMenu, MSG_MESH_EDITOR, 7)) {
         bedLevelTools.mesh_x = bedLevelTools.mesh_y = 0;
@@ -4259,22 +4250,20 @@ void Draw_MaxAccel_Menu() {
     }
   #endif
 
-  #if PROUI_EX
-    void Draw_MeshInset_Menu() {
-      checkkey = Menu;
-      if (SET_MENU(MeshInsetMenu, MSG_MESH_INSET, 7)) {
-        BACK_ITEM(Draw_MeshSet_Menu);
-        EDIT_ITEM(ICON_Box, MSG_MESH_MIN_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_x);
-        EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_x);
-        EDIT_ITEM(ICON_Box, MSG_MESH_MIN_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_y);
-        EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_y);
-        MENU_ITEM(ICON_AxisC, MSG_MESH_AMAX, onDrawMenuItem, MaxMeshArea);
-        MENU_ITEM(ICON_SetHome, MSG_MESH_CENTER, onDrawMenuItem, CenterMeshArea);
-      }
-      UpdateMenu(MeshInsetMenu);
-      LCD_MESSAGE_F("..Center Area sets mesh equidistant by greatest inset from edge.");
+  void Draw_MeshInset_Menu() {
+    checkkey = Menu;
+    if (SET_MENU(MeshInsetMenu, MSG_MESH_INSET, 7)) {
+      BACK_ITEM(Draw_MeshSet_Menu);
+      EDIT_ITEM(ICON_Box, MSG_MESH_MIN_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_x);
+      EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_x);
+      EDIT_ITEM(ICON_Box, MSG_MESH_MIN_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_y);
+      EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_y);
+      MENU_ITEM(ICON_AxisC, MSG_MESH_AMAX, onDrawMenuItem, MaxMeshArea);
+      MENU_ITEM(ICON_SetHome, MSG_MESH_CENTER, onDrawMenuItem, CenterMeshArea);
     }
-  #endif
+    UpdateMenu(MeshInsetMenu);
+    LCD_MESSAGE_F("..Center Area sets mesh equidistant by greatest inset from edge.");
+  }
 
 #endif  // HAS_MESH
 
@@ -4429,12 +4418,12 @@ void Draw_AdvancedSettings_Menu() {
     #endif
     #if ENABLED(PROUI_MESH_EDIT)
       MENU_ITEM(ICON_MeshEdit, MSG_EDIT_MESH, onDrawSubMenu, Draw_EditMesh_Menu);
+      MENU_ITEM(ICON_MeshReset, MSG_MESH_RESET, onDrawMenuItem, ResetMesh);
     #endif
     EDIT_ITEM(ICON_UBLSlot, MSG_UBL_STORAGE_SLOT, onDrawUBLSlot, SetUBLSlot, &bedlevel.storage_slot);
     MENU_ITEM(ICON_UBLSaveMesh, MSG_UBL_SAVE_MESH, onDrawMenuItem, SaveMesh);
     MENU_ITEM(ICON_UBLLoadMesh, MSG_UBL_LOAD_MESH, onDrawMenuItem, UBLMeshLoad);
     MENU_ITEM(ICON_UBLSmartFill, MSG_UBL_SMART_FILLIN, onDrawMenuItem, UBLSmartFillMesh);
-    MENU_ITEM(ICON_MeshReset, MSG_MESH_RESET, onDrawMenuItem, ResetMesh);
   }
   ui.reset_status(true);
   UpdateMenu(AdvancedSettings);

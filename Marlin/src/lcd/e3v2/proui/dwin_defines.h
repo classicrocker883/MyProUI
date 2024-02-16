@@ -24,10 +24,12 @@
 
 // #define DEBUG_DWIN 1
 
-#define PROUI_MESH_EDIT     // Add a menu to edit mesh inset + points
-#if ENABLED(PROUI_MESH_EDIT)
-  #define Z_OFFSET_MIN -3.0
-  #define Z_OFFSET_MAX  3.0
+#if HAS_MESH
+  #define PROUI_MESH_EDIT     // Add a menu to edit mesh inset + points
+  #if ENABLED(PROUI_MESH_EDIT)
+    #define Z_OFFSET_MIN -3.0
+    #define Z_OFFSET_MAX  3.0
+  #endif
 #endif
 
 #if defined(__STM32F1__) || defined(STM32F1) || defined(ARDUINO_ARCH_HC32)//#if MB(CREALITY_V24S1_301, CREALITY_V24S1_301F4)

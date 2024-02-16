@@ -28,16 +28,6 @@
   #define HIGH 0x1
 #endif
 
-#define X_BED_MIN 150
-#define Y_BED_MIN 150
-constexpr uint16_t DEF_X_BED_SIZE = X_BED_SIZE;
-constexpr uint16_t DEF_Y_BED_SIZE = Y_BED_SIZE;
-constexpr int16_t DEF_X_MIN_POS = X_MIN_POS;
-constexpr int16_t DEF_Y_MIN_POS = Y_MIN_POS;
-constexpr int16_t DEF_X_MAX_POS = X_MAX_POS;
-constexpr int16_t DEF_Y_MAX_POS = Y_MAX_POS;
-constexpr int16_t DEF_Z_MAX_POS = Z_MAX_POS;
-constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
 #if ENABLED(NOZZLE_PARK_FEATURE)
   constexpr xyz_int_t DEF_NOZZLE_PARK_POINT = NOZZLE_PARK_POINT;
 #else
@@ -83,14 +73,25 @@ constexpr uint16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
 #endif
 
 #if PROUI_EX
+#define X_BED_MIN 150
+#define Y_BED_MIN 150
+constexpr uint16_t DEF_X_BED_SIZE = X_BED_SIZE;
+constexpr uint16_t DEF_Y_BED_SIZE = Y_BED_SIZE;
+constexpr int16_t DEF_X_MIN_POS = X_MIN_POS;
+constexpr int16_t DEF_Y_MIN_POS = Y_MIN_POS;
+constexpr int16_t DEF_X_MAX_POS = X_MAX_POS;
+constexpr int16_t DEF_Y_MAX_POS = Y_MAX_POS;
+constexpr int16_t DEF_Z_MAX_POS = Z_MAX_POS;
+constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
+
 typedef struct {
   uint16_t x_bed_size = DEF_X_BED_SIZE;
   uint16_t y_bed_size = DEF_Y_BED_SIZE;
-  int16_t x_min_pos  = DEF_X_MIN_POS;
-  int16_t y_min_pos  = DEF_Y_MIN_POS;
-  int16_t x_max_pos  = DEF_X_MAX_POS;
-  int16_t y_max_pos  = DEF_Y_MAX_POS;
-  int16_t z_max_pos  = DEF_Z_MAX_POS;
+  int16_t  x_min_pos  = DEF_X_MIN_POS;
+  int16_t  y_min_pos  = DEF_Y_MIN_POS;
+  int16_t  x_max_pos  = DEF_X_MAX_POS;
+  int16_t  y_max_pos  = DEF_Y_MAX_POS;
+  int16_t  z_max_pos  = DEF_Z_MAX_POS;
   uint8_t grid_max_points = DEF_GRID_MAX_POINTS;
   float mesh_min_x = DEF_MESH_MIN_X;
   float mesh_max_x = DEF_MESH_MAX_X;

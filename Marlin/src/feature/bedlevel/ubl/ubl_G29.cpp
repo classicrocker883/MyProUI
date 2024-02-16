@@ -313,7 +313,7 @@ void unified_bed_leveling::G29() {
     #if ENABLED(DWIN_LCD_PROUI)
       save_ubl_active_state_and_disable();
       gcode.process_subcommands_now(F("G28Z"));
-      gcode.process_subcommands_now(F("G28XY"));
+      //gcode.process_subcommands_now(F("G28XY"));
       restore_ubl_active_state_and_leave();
     #else
       // Send 'N' to force homing before G29 (internal only)
@@ -1196,9 +1196,9 @@ bool unified_bed_leveling::G29_parse_parameters() {
   }
 
   param.XY_seen.x = parser.seenval('X');
-  float sx = param.XY_seen.x ? parser.value_float() : current_position.x - TERN0(HAS_BED_PROBE, probe.offset.x);
+  float sx = param.XY_seen.x ? parser.value_float() : TERN(DWIN_LCD_PROUI, 0, current_position.x - TERN0(HAS_BED_PROBE, probe.offset.x));
   param.XY_seen.y = parser.seenval('Y');
-  float sy = param.XY_seen.y ? parser.value_float() : current_position.y - TERN0(HAS_BED_PROBE, probe.offset.y);
+  float sy = param.XY_seen.y ? parser.value_float() : TERN(DWIN_LCD_PROUI, 0, current_position.y - TERN0(HAS_BED_PROBE, probe.offset.y));
 
   if (param.XY_seen.x != param.XY_seen.y) {
     SERIAL_ECHOLNPGM("Both X & Y locations must be specified.\n");
