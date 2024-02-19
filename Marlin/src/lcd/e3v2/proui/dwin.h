@@ -71,10 +71,10 @@ enum processID : uint8_t {
   ID_NothingToDo
 };
 
-#if ANY(PROUI_PID_TUNE, MPC_AUTOTUNE)
+#if ANY(HAS_PID_HEATING, MPC_AUTOTUNE)
 
   enum tempcontrol_t : uint8_t {
-    #if PROUI_PID_TUNE
+    #if HAS_PID_HEATING
       PIDTEMP_START,
       PIDTEMPBED_START,
       PID_BAD_HEATER_ID,
@@ -113,20 +113,20 @@ typedef struct {
   uint16_t colorCoordinate;
 
   // Temperatures
-  #if PROUI_PID_TUNE
+  #if HAS_PID_HEATING
     int16_t pidCycles = DEF_PIDCYCLES;
     #if ENABLED(PIDTEMP)
-      int16_t hotendPidT = DEF_HOTENDPIDT;
+      celsius_t hotendPidT = DEF_HOTENDPIDT;
     #endif
     #if ENABLED(PIDTEMPBED)
-      int16_t bedPidT = DEF_BEDPIDT;
+      celsius_t bedPidT = DEF_BEDPIDT;
     #endif
   #endif
   #if ENABLED(PREVENT_COLD_EXTRUSION)
-    int16_t extMinT = EXTRUDE_MINTEMP;
+    celsius_t extMinT = EXTRUDE_MINTEMP;
   #endif
   #if ENABLED(PREHEAT_BEFORE_LEVELING)
-    int16_t bedLevT = LEVELING_BED_TEMP;
+    celsius_t bedLevT = LEVELING_BED_TEMP;
   #endif
   #if ENABLED(BAUD_RATE_GCODE)
     bool baud115K = false;
@@ -150,9 +150,13 @@ typedef struct {
   #if HAS_GCODE_PREVIEW
     bool enablePreview = true;
   #endif
-  #if !HAS_BED_PROBE
+  #if HAS_BED_PROBE
+    IF_DISABLED(BD_SENSOR, uint8_t multiple_probing = MULTIPLE_PROBING);
+    uint16_t zprobeFeed = DEF_Z_PROBE_FEEDRATE_SLOW;
+  #else
     float manualZOffset = 0.0f;
   #endif
+  TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points = DEF_GRID_MAX_POINTS);
 } hmi_data_t;
 
 extern hmi_data_t hmiData;
@@ -173,7 +177,7 @@ typedef struct {
 
 typedef struct {
   rgb_t color;                        // Color
-  #if ANY(PROUI_PID_TUNE, MPCTEMP)
+  #if ANY(HAS_PID_HEATING, MPCTEMP)
     tempcontrol_t tempControl = AUTOTUNE_DONE;
   #endif
   uint8_t select = 0;                 // Auxiliary selector variable
@@ -187,6 +191,7 @@ typedef struct {
   bool abort_flag:1;    // sd or host was aborted
   bool pause_flag:1;    // printing is paused
   bool select_flag:1;   // Popup button selected
+  bool cancel_lev:1;    // cancel abl
 } hmi_flag_t;
 
 extern hmi_flag_t hmiFlag;
@@ -210,9 +215,13 @@ uint32_t getHash(char * str);
     void saveMesh();
   #endif
 #endif
+#if HAS_BED_PROBE
+  void autoLevel();
+#else
+  void homeZAndDisable();
+#endif
 void rebootPrinter();
 void disableMotors();
-void autoLevel();
 void autoHome();
 #if HAS_PREHEAT
   #define _DOPREHEAT(N) void DoPreheat##N();
@@ -244,9 +253,6 @@ void doCoolDown();
   void ublMeshSave();
   void ublMeshLoad();
 #endif
-#if DISABLED(HAS_BED_PROBE)
-  void homeZAndDisable();
-#endif
 
 // Other
 void gotoPrintProcess();
@@ -275,8 +281,10 @@ void dwinHomingDone();
 #if HAS_MESH
   void dwinMeshUpdate(const int8_t cpos, const int8_t tpos, const_float_t zval);
 #endif
-void dwinLevelingStart();
-void dwinLevelingDone();
+#if HAS_LEVELING
+  void dwinLevelingStart();
+  void dwinLevelingDone();
+#endif
 void dwinPrintStarted();
 void dwinPrintPause();
 void dwinPrintResume();
@@ -285,7 +293,7 @@ void dwinPrintAborted();
 #if HAS_FILAMENT_SENSOR
   void dwinFilamentRunout(const uint8_t extruder);
 #endif
-void dwinPrintHeader(const char *text);
+void dwinPrintHeader(const char * const cstr=nullptr);
 void dwinSetColorDefaults();
 void dwinCopySettingsTo(char * const buff);
 void dwinCopySettingsFrom(const char * const buff);
@@ -379,10 +387,13 @@ void drawMaxAccelMenu();
 #endif
 
 // PID
-#if PROUI_PID_TUNE
+#if HAS_PID_HEATING
   #include "../../../module/temperature.h"
-  void dwinStartM303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp);
+  void dwinStartM303(const int count, const heater_id_t hid, const celsius_t temp);
   void dwinPidTuning(tempcontrol_t result);
+  #if PROUI_TUNING_GRAPH
+    void dwinDrawPIDMPCPopup();
+  #endif
 #endif
 #if ENABLED(PIDTEMP)
   #if ENABLED(PID_AUTOTUNE_MENU)
@@ -411,6 +422,30 @@ void drawMaxAccelMenu();
   #endif
 #endif
 
-#if PROUI_TUNING_GRAPH
-  void dwinDrawPIDMPCPopup();
+// /**
+//  * ProUI extra features
+//  */
+#if PROUI_GRID_PNTS
+  #undef  GRID_MAX_POINTS_X
+  #undef  GRID_MAX_POINTS_Y
+  #undef  GRID_MAX_POINTS
+  #define GRID_MAX_POINTS_X hmiData.grid_max_points
+  #define GRID_MAX_POINTS_Y hmiData.grid_max_points
+  #define GRID_MAX_POINTS  (hmiData.grid_max_points * hmiData.grid_max_points)
+#endif
+#if HAS_BED_PROBE
+  #undef Z_PROBE_FEEDRATE_SLOW
+  #define Z_PROBE_FEEDRATE_SLOW hmiData.zprobeFeed
+#endif
+
+#if HAS_MESH
+  #undef  MESH_MIN_X
+  #undef  MESH_MAX_X
+  #undef  MESH_MIN_Y
+  #undef  MESH_MAX_Y
+  #include "../../marlinui.h"
+  #define MESH_MIN_X ui.mesh_inset_min_x
+  #define MESH_MAX_X ui.mesh_inset_max_x
+  #define MESH_MIN_Y ui.mesh_inset_min_y
+  #define MESH_MAX_Y ui.mesh_inset_max_y
 #endif

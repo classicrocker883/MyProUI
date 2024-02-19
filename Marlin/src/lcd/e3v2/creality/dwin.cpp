@@ -3380,7 +3380,6 @@ void hmiInit() {
 void dwinInitScreen() {
   encoderConfiguration();
   hmiInit();
-  dwinJPGCacheTo1(1);
   hmiStartFrame(true);
 }
 

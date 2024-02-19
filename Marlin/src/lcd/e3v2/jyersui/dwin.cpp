@@ -5147,7 +5147,6 @@ void MarlinUI::init_lcd() {
   }
 
   dwinJPGShowAndCache(0);
-  dwinJPGCacheTo1(1);
   jyersDWIN.redrawScreen();
 }
 

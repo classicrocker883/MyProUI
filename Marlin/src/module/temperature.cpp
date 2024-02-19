@@ -922,7 +922,7 @@ volatile bool Temperature::raw_temps_ready = false;
     EXIT_M303:
       TERN_(PRINTER_EVENT_LEDS, printerEventLEDs.onPidTuningDone(oldcolor));
       TERN_(EXTENSIBLE_UI, ExtUI::onPidTuning(ExtUI::result_t::PID_DONE));
-      TERN_(PROUI_PID_TUNE, dwinPidTuning(AUTOTUNE_DONE));
+      TERN_(DWIN_LCD_PROUI, dwinPidTuning(AUTOTUNE_DONE));
       TERN_(TEMP_TUNING_MAINTAIN_FAN, adaptive_fan_slowing = true);
       return;
   }

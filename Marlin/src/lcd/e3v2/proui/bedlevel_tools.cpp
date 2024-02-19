@@ -164,7 +164,7 @@ void BedLevelTools::moveToZ() {
 }
 void BedLevelTools::probeXY() {
   gcode.process_subcommands_now(
-    MString<MAX_CMD_SIZE>(
+    TS(
       F("G28O\nG0Z"), uint16_t(Z_CLEARANCE_DEPLOY_PROBE),
       F("\nG30X"), p_float_t(bedlevel.get_mesh_x(mesh_x), 2),
       F("Y"), p_float_t(bedlevel.get_mesh_y(mesh_y), 2)
@@ -248,7 +248,7 @@ bool BedLevelTools::meshValidate() {
       }
       else {          // has value
         MString<12> msg;
-        constexpr bool is_wide = (GRID_MAX_POINTS_X) >= TERN(TJC_DISPLAY, 8, 10);
+        const bool is_wide = (GRID_MAX_POINTS_X) >= TERN(TJC_DISPLAY, 8, 10);
         if (is_wide)
           msg.setf(F("%02i"), uint16_t(z * 100) % 100);
         else
