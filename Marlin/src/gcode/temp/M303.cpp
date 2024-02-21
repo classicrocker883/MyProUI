@@ -79,7 +79,7 @@ void GcodeSuite::M303() {
   const celsius_t temp = seenS ? parser.value_celsius() : default_temp;
   const bool u = parser.boolval('U');
 
-  TERN_(DWIN_LCD_PROUI, DWIN_M303(seenC, c, seenS, hid, temp);)
+  TERN_(DWIN_LCD_PROUI, DWIN_M303(c, hid, temp);)
 
   IF_DISABLED(BUSY_WHILE_HEATING, KEEPALIVE_STATE(NOT_BUSY);)
 

@@ -221,7 +221,7 @@ void DWIN_Draw_DegreeSymbol(uint16_t Color, uint16_t x, uint16_t y) {
 //  x/y: Upper-left coordinate of the string
 //  *string: The string
 //  rlimit: To limit the drawn string length
-void DWIN_Draw_String(bool bShow, uint8_t size, uint16_t color, uint16_t bColor, uint16_t x, uint16_t y, const char * const string, uint16_t rlimit/*=0xFFFF*/) {
+void DWIN_Draw_String(bool bShow, uint8_t size, uint16_t color, uint16_t bColor, uint16_t x, uint16_t y, PGM_P const string, uint16_t rlimit/*=0xFFFF*/) {
 
   constexpr uint8_t widthAdjust = 0;
   size_t i = 0;

@@ -32,7 +32,6 @@
 #include "../../../gcode/gcode.h"
 #include "../../../gcode/queue.h"
 #include "../../../libs/numtostr.h"
-#include "../../../module/motion.h"
 #include "../../../module/planner.h"
 #include "../../../module/printcounter.h"
 #include "../../../module/stepper.h"
@@ -416,7 +415,7 @@ void Popup_window_PauseOrStop() {
 //
 // Draw status line
 //
-void DWIN_DrawStatusLine(const char *text) {
+void DWIN_DrawStatusLine(PGM_P text) {
   DWIN_Draw_Rectangle(1, HMI_data.StatusBg_Color, 0, STATUS_Y, DWIN_WIDTH, STATUS_Y + 20);
   if (text) { DWINUI::Draw_CenteredString(HMI_data.StatusTxt_Color, STATUS_Y + 2, text); }
 }
@@ -461,7 +460,7 @@ void DWIN_DrawStatusMessage() {
       // Get a pointer to the next valid UTF8 character
       // and the string remaining length
       uint8_t rlen;
-      const char *stat = ui.status_and_len(rlen);
+      PGM_P stat = ui.status_and_len(rlen);
       DWIN_Draw_Rectangle(1, HMI_data.StatusBg_Color, 0, STATUS_Y, DWIN_WIDTH, STATUS_Y + 20);
       DWINUI::MoveTo(0, STATUS_Y + 2);
       DWINUI::Draw_String(HMI_data.StatusTxt_Color, stat, LCD_WIDTH);
@@ -538,15 +537,15 @@ void ICON_ResumeOrPause() {
 }
 
 // Update filename on print
-void DWIN_Print_Header(const char *text=nullptr) {
+void DWIN_Print_Header(PGM_P const cstr/*=nullptr*/) {
   static char headertxt[31] = "";  // Print header text
-  if (text) {
-    const int8_t size = _MIN(30U, strlen_P(text));
-    for (uint8_t i = 0; i < size; ++i) headertxt[i] = text[i];
+  if (cstr) {
+    const int8_t size = _MIN(30U, strlen(cstr));
+    for (uint8_t i = 0; i < size; ++i) headertxt[i] = cstr[i];
     headertxt[size] = '\0';
   }
   if (checkkey == PrintProcess || checkkey == PrintDone) {
-    DWIN_Draw_Rectangle(1, HMI_data.Background_Color, 0, 60, DWIN_WIDTH, 60+16);
+    DWIN_Draw_Rectangle(1, HMI_data.Background_Color, 0, 60, DWIN_WIDTH, 60 + 16);
     DWINUI::Draw_CenteredString(60, headertxt);
   }
 }
@@ -558,7 +557,7 @@ void Draw_PrintProcess() {
     Title.ShowCaption(GET_TEXT_F(MSG_PRINTING));
   #endif
   DWINUI::ClearMainArea();
-  DWIN_Print_Header(nullptr);
+  DWIN_Print_Header();
   Draw_Print_Labels();
   DWINUI::Draw_Icon(ICON_PrintTime, 15, 171);
   DWINUI::Draw_Icon(ICON_RemainTime, 150, 171);
@@ -586,7 +585,7 @@ void Draw_PrintDone() {
   ui.reset_remaining_time();
   Title.ShowCaption(GET_TEXT_F(MSG_PRINT_DONE));
   DWINUI::ClearMainArea();
-  DWIN_Print_Header(nullptr);
+  DWIN_Print_Header();
   #if HAS_GCODE_PREVIEW
     const bool haspreview = preview.valid();
     if (haspreview) {
@@ -754,9 +753,10 @@ void _draw_xyz_position(const bool force) {
 }
 
 void update_variable() {
-  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Light_Red, Color_Bg_Black, 2, DWIN_WIDTH - 6 * DWINUI::fontWidth(), 6, checkkey);)
-  TERN_(DEBUG_DWIN, DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH - 3 * DWINUI::fontWidth(), 6, last_checkkey);)
-
+  #if ENABLED(DEBUG_DWIN)
+    DWINUI::Draw_Int(Color_Light_Red, Color_Bg_Black, 2, DWIN_WIDTH - 6 * DWINUI::fontWidth(), 6, checkkey);
+    DWINUI::Draw_Int(Color_Yellow, Color_Bg_Black, 2, DWIN_WIDTH - 3 * DWINUI::fontWidth(), 6, last_checkkey);
+  #endif
   _draw_xyz_position(false);
 
   TERN_(CV_LASER_MODULE, if (laser_device.is_laser_device()) return;)
@@ -1391,11 +1391,10 @@ void EachMomentUpdate() {
       #endif
 
       // Elapsed print time
-      const uint16_t min = print_job_timer.duration();
-      if (_printtime.minute() + 1 <= min) { // 1 minute update
-        _printtime.value = min;
-        Draw_Print_ProgressElapsed();
-      }
+      const duration_t min = print_job_timer.duration();
+      //if ((min.value % 60) == 0) // 1 minute update, else every second
+      _printtime = min;
+      Draw_Print_ProgressElapsed();
 
     }
     #if ENABLED(POWER_LOSS_RECOVERY)
@@ -1417,7 +1416,7 @@ void EachMomentUpdate() {
     DWINUI::Draw_Button(BTN_Cancel, 26, 280);
     DWINUI::Draw_Button(BTN_Continue, 146, 280);
     MediaFile *dir = nullptr;
-    const char * const filename = card.diveToFile(true, dir, recovery.info.sd_filename);
+    PGM_P const filename = card.diveToFile(true, dir, recovery.info.sd_filename);
     card.selectFileByName(filename);
     DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 207, card.longest_filename());
     DWIN_Print_Header(card.longest_filename()); // Save filename
@@ -1735,14 +1734,12 @@ void DWIN_HomingDone() {
 
 #if HAS_PID_HEATING
 
-  void DWIN_M303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp) {
-    if (seenC) { HMI_data.PidCycles = c; }
-    if (seenS) {
-      switch (hid) {
-        OPTCODE(PIDTEMP,    case 0 ... HOTENDS - 1: HMI_data.HotendPidT = temp; break)
-        OPTCODE(PIDTEMPBED, case H_BED:             HMI_data.BedPidT = temp;    break)
-        default: break;
-      }
+  void DWIN_M303(const int c, const heater_id_t hid, const celsius_t temp) {
+    HMI_data.PidCycles = c;
+    switch (hid) {
+      OPTCODE(PIDTEMP,    case 0 ... HOTENDS - 1: HMI_data.HotendPidT = temp; break)
+      OPTCODE(PIDTEMPBED, case H_BED:             HMI_data.BedPidT = temp;    break)
+      default: break;
     }
   }
 
@@ -1876,7 +1873,7 @@ void DWIN_Print_Finished() {
     #endif
   }
   if (!HMI_flag.abort_flag) {
-    set_bed_leveling_enabled(false);
+    TERN_(HAS_LEVELING, set_bed_leveling_enabled(false);)
     DisableMotors();
   }
   HMI_flag.abort_flag = false;
@@ -1892,12 +1889,12 @@ void DWIN_Print_Finished() {
 // Print was aborted
 void DWIN_Print_Aborted() {
   DEBUG_ECHOLNPGM("DWIN_Print_Aborted");
-  RaiseHead();
   #ifdef EVENT_GCODE_SD_ABORT
     queue.inject(F(EVENT_GCODE_SD_ABORT));
   #endif
   TERN_(HOST_PROMPT_SUPPORT, hostui.notify(GET_TEXT_F(MSG_PRINT_ABORTED)));
   LCD_MESSAGE_F("Print Aborted");
+  RaiseHead();
   DWIN_Print_Finished();
 }
 
@@ -2058,7 +2055,7 @@ void DWIN_CopySettingsTo(char * const buff) {
   #endif
 }
 
-void DWIN_CopySettingsFrom(const char * const buff) {
+void DWIN_CopySettingsFrom(PGM_P const buff) {
   DEBUG_ECHOLNPGM("DWIN_CopySettingsFrom");
   memcpy(&HMI_data, buff, sizeof(HMI_data_t));
   #if PROUI_EX
@@ -2680,10 +2677,10 @@ void ApplyMove() {
     queue.inject(F("G28O\nG27 P1"));
   }
   void RaiseHead() {
+    gcode.process_subcommands_now(F("G27 P3"));
     char msg[20] = "";
-    sprintf_P(msg, PSTR("Raise Z by %i"), NOZZLE_PARK_Z_RAISE_MIN);
+    sprintf(msg, "Raise Z by %i", NOZZLE_PARK_Z_RAISE_MIN);
     LCD_MESSAGE_F(msg);
-    queue.inject(F("G27 P3"));
   }
 #else
   void RaiseHead() {
@@ -2691,8 +2688,8 @@ void ApplyMove() {
     char cmd[20] = "";
     const int16_t zpos = current_position.z + Z_POST_CLEARANCE;
     if (axis_is_trusted(Z_AXIS)) _MIN(zpos, Z_MAX_POS);
-    sprintf_P(cmd, PSTR("G0 F3000 Z%i"), zpos);
-    queue.inject(cmd);
+    sprintf(cmd, "G0 F3000 Z%i", zpos);
+    gcode.process_subcommands_now(cmd);
   }
 #endif
 
@@ -2754,7 +2751,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
   #if HAS_BED_PROBE
     if (HMI_data.FullManualTramming) {
       TERN_(HAS_LEVELING, set_bed_leveling_enabled(false);)
-      gcode.process_subcommands_now(MString<100>(
+      gcode.process_subcommands_now(TS(
         #if ENABLED(LCD_BED_TRAMMING)
           F("M420S0\nG90\nG0F300Z" STRINGIFY(BED_TRAMMING_Z_HOP) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z" STRINGIFY(BED_TRAMMING_HEIGHT))
         #else
@@ -2775,7 +2772,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     }
     return zval;
   #else // !HAS_BED_PROBE
-    queue.inject(MString<100>(
+    queue.inject(TS(
       #if ENABLED(LCD_BED_TRAMMING)
         F("M420S0\nG28O\nG90\nG0F300Z" STRINGIFY(BED_TRAMMING_Z_HOP) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z" STRINGIFY(BED_TRAMMING_HEIGHT))
       #else
@@ -4105,11 +4102,6 @@ void Draw_MaxAccel_Menu() {
 //=============================================================================
 
 #if HAS_MESH
-    // void applyMeshPoints() { PRO_data.grid_max_points = MenuData.Value;
-    //   set_bed_leveling_enabled(false);
-    //   reset_bed_level();
-    //   drawMeshPoints(false, CurrentMenu->line(), MenuData.Value);}
-
 
   #if PROUI_EX
     void ApplyMeshPoints() { ProEx.ApplyMeshPoints(); ReDrawMenu(); }
@@ -4177,17 +4169,17 @@ void Draw_MaxAccel_Menu() {
 
   #if ENABLED(PROUI_MESH_EDIT)
     bool AutoMovToMesh = false;
-    void SetAutoMovToMesh() { Toggle_Chkb_Line(AutoMovToMesh); }
 
-    void LiveEditMesh()  { ((MenuItemPtrClass*)EditZValueItem)->value = &bedlevel.z_values[HMI_value.Select ? bedLevelTools.mesh_x : MenuData.Value][HMI_value.Select ? MenuData.Value : bedLevelTools.mesh_y]; EditZValueItem->redraw(); }
-    void LiveEditMeshZ() { *MenuData.P_Float = MenuData.Value / POW(10, 3); if (AutoMovToMesh) { bedLevelTools.MoveToZ(); } }
     void ApplyEditMeshX() { bedLevelTools.mesh_x = MenuData.Value; if (AutoMovToMesh) { bedLevelTools.MoveToXY(); } }
     void ApplyEditMeshY() { bedLevelTools.mesh_y = MenuData.Value; if (AutoMovToMesh) { bedLevelTools.MoveToXY(); } }
-    void ZeroPoint() { bedLevelTools.manual_value_update(bedLevelTools.mesh_x, bedLevelTools.mesh_y, true); EditZValueItem->redraw(); LCD_MESSAGE(MSG_ZERO_MESH); }
-    void ZeroMesh()  { bedLevelTools.mesh_reset(); LCD_MESSAGE(MSG_MESH_RESET); }
+    void LiveEditMesh()  { ((MenuItemPtrClass*)EditZValueItem)->value = &bedlevel.z_values[HMI_value.Select ? bedLevelTools.mesh_x : MenuData.Value][HMI_value.Select ? MenuData.Value : bedLevelTools.mesh_y]; EditZValueItem->redraw(); }
+    void LiveEditMeshZ() { *MenuData.P_Float = MenuData.Value / POW(10, 3); if (AutoMovToMesh) { bedLevelTools.MoveToZ(); } }
     void SetEditMeshX() { HMI_value.Select = 0; SetIntOnClick(0, GRID_MAX_POINTS_X - 1, bedLevelTools.mesh_x, ApplyEditMeshX, LiveEditMesh); }
     void SetEditMeshY() { HMI_value.Select = 1; SetIntOnClick(0, GRID_MAX_POINTS_Y - 1, bedLevelTools.mesh_y, ApplyEditMeshY, LiveEditMesh); }
     void SetEditZValue() { SetPFloatOnClick(Z_OFFSET_MIN, Z_OFFSET_MAX, 3, nullptr, LiveEditMeshZ); if (AutoMovToMesh) { bedLevelTools.MoveToXYZ(); } }
+    void ZeroPoint() { bedLevelTools.manual_value_update(bedLevelTools.mesh_x, bedLevelTools.mesh_y, true); EditZValueItem->redraw(); LCD_MESSAGE(MSG_ZERO_MESH); }
+    void ZeroMesh()  { bedLevelTools.mesh_reset(); LCD_MESSAGE(MSG_MESH_RESET); }
+    void SetAutoMovToMesh() { Toggle_Chkb_Line(AutoMovToMesh); }
 
     // Zero or Reset Bed Mesh Values
     void Popup_ResetMesh() { DWIN_Popup_ConfirmCancel(ICON_Info_0, F("Reset Current Mesh?")); }
@@ -4389,8 +4381,8 @@ void Draw_MaxAccel_Menu() {
 
 //=============================================================================
 
-#if DEBUG_DWIN
-  void DWIN_Debug(const char *msg) {
+#if ENABLED(DEBUG_DWIN)
+  void DWIN_Debug(PGM_P msg) {
     DEBUG_ECHOLNPGM_P(msg);
     DWIN_Show_Popup(ICON_Control_1, STR_DEBUG_PREFIX, msg, BTN_Continue);
     wait_for_user_response();

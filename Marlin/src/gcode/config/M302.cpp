@@ -50,13 +50,14 @@ void GcodeSuite::M302() {
   const bool seen_S = parser.seen('S');
   if (seen_S) {
     thermalManager.extrude_min_temp = parser.value_celsius();
-    thermalManager.allow_cold_extrude = (thermalManager.extrude_min_temp == 0);
     TERN_(DWIN_LCD_PROUI, HMI_data.ExtMinT = thermalManager.extrude_min_temp);
   }
 
-  if (parser.seen('P'))
-    thermalManager.allow_cold_extrude = (thermalManager.extrude_min_temp == 0) || parser.value_bool();
-  else if (!seen_S) {
+  const bool seen_P = parser.seen('P');
+  if (seen_P || seen_S) {
+    thermalManager.allow_cold_extrude = (thermalManager.extrude_min_temp == 0) || (seen_P && parser.value_bool());
+  }
+  else {
     // Report current state
     SERIAL_ECHO_START();
     SERIAL_ECHOLN(F("Cold extrudes are "), thermalManager.allow_cold_extrude ? F("en") : F("dis"), F("abled (min temp "), thermalManager.extrude_min_temp, F("C)"));

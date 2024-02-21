@@ -130,7 +130,7 @@ void DWINUI::MoveBy(xy_int_t point) {
 }
 
 // Draw a Centered string using arbitrary x1 and x2 margins
-void DWINUI::Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t x1, uint16_t x2, uint16_t y, const char * const string) {
+void DWINUI::Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t x1, uint16_t x2, uint16_t y, PGM_P const string) {
   const uint16_t x = _MAX(0U, x2 + x1 - strlen_P(string) * fontWidth(fid)) / 2 - 1;
   DWIN_Draw_String(bShow, fid, color, bColor, x, y, string);
 }
@@ -155,11 +155,11 @@ void DWINUI::Draw_Char(uint16_t color, const char c) {
 //  color: Character color
 //  *string: The string
 //  rlimit: For draw less chars than string length use rlimit
-void DWINUI::Draw_String(const char * const string, uint16_t rlimit) {
+void DWINUI::Draw_String(PGM_P const string, uint16_t rlimit) {
   DWIN_Draw_String(false, fontid, textcolor, backcolor, cursor.x, cursor.y, string, rlimit);
   MoveBy(strlen(string) * fontWidth(fontid), 0);
 }
-void DWINUI::Draw_String(uint16_t color, const char * const string, uint16_t rlimit) {
+void DWINUI::Draw_String(uint16_t color, PGM_P const string, uint16_t rlimit) {
   DWIN_Draw_String(false, fontid, color, backcolor, cursor.x, cursor.y, string, rlimit);
   MoveBy(strlen(string) * fontWidth(fontid), 0);
 }
@@ -215,7 +215,7 @@ void DWINUI::Draw_Select_Box(uint16_t xpos, uint16_t ypos) {
   DWIN_Draw_Rectangle(0, c1, xpos - 2, ypos - 2, xpos + 101, ypos + 39);
 }
 
-void DWINUI::Draw_Button(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, const char * const caption) {
+void DWINUI::Draw_Button(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, PGM_P const caption) {
   DWIN_Draw_Rectangle(1, bcolor, x1, y1, x2, y2);
   Draw_CenteredString(0, fontid, color, bcolor, x1, x2, (y2 + y1 - fontHeight()) / 2, caption);
 }
@@ -333,14 +333,14 @@ void TitleClass::draw() {
   if (DWINUI::onTitleDraw != nullptr) (*DWINUI::onTitleDraw)(this);
 }
 
-void TitleClass::SetCaption(const char * const title) {
+void TitleClass::SetCaption(PGM_P const title) {
   if ( caption == title ) return;
   const uint8_t len = _MIN(sizeof(caption) - 1, strlen(title));
   memcpy(&caption[0], title, len);
   caption[len] = '\0';
 }
 
-void TitleClass::ShowCaption(const char * const title) {
+void TitleClass::ShowCaption(PGM_P const title) {
   SetCaption(title);
   draw();
 }

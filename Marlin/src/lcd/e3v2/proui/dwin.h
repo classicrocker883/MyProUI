@@ -105,22 +105,22 @@ typedef struct {
   uint16_t Indicator_Color;
   uint16_t Coordinate_Color;
   uint16_t Bottom_Color;
-  int16_t HotendPidT;
-  int16_t BedPidT;
   int16_t PidCycles;
-  int16_t ExtMinT;
-  int16_t BedLevT;
+  celsius_t HotendPidT;
+  celsius_t BedPidT;
+  celsius_t ExtMinT;
+  celsius_t BedLevT;
   bool Baud250K;
   bool CalcAvg;
   bool SpdInd;
   bool FullManualTramming;
   bool MediaSort;
   bool MediaAutoMount;
-  uint8_t z_after_homing;
-  float ManualZOffset;
-  uint32_t Led_Color;
   bool AdaptiveStepSmoothing;
   bool EnablePreview;
+  uint8_t z_after_homing;
+  uint32_t Led_Color;
+  float ManualZOffset;
 #if !PROUI_EX
   TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points;)
   IF_DISABLED(BD_SENSOR, uint8_t multiple_probing;)
@@ -265,7 +265,7 @@ void Goto_PowerLossRecovery();
 void Goto_ConfirmToPrint();
 void Draw_Main_Area();      // Redraw main area
 void DWIN_Draw_Dashboard(); // Status Area
-void DWIN_DrawStatusLine(const char *text); // Draw simple status text
+void DWIN_DrawStatusLine(PGM_P text); // Draw simple status text
 inline void DWIN_DrawStatusLine(FSTR_P fstr) { DWIN_DrawStatusLine(FTOP(fstr)); }
 void DWIN_RedrawDash();     // Redraw Dash and Status line
 void DWIN_RedrawScreen();   // Redraw all screen elements
@@ -295,10 +295,10 @@ void DWIN_Print_Pause();
 void DWIN_Print_Resume();
 void DWIN_Print_Finished();
 void DWIN_Print_Aborted();
-void DWIN_Print_Header(const char *text);
+void DWIN_Print_Header(PGM_P const cstr=nullptr);
 void DWIN_SetColorDefaults();
 void DWIN_CopySettingsTo(char * const buff);
-void DWIN_CopySettingsFrom(const char * const buff);
+void DWIN_CopySettingsFrom(PGM_P const buff);
 void DWIN_SetDataDefaults();
 void DWIN_RebootScreen();
 
@@ -395,7 +395,7 @@ void Draw_MaxAccel_Menu();
 // PID
 #if HAS_PID_HEATING
   #include "../../../module/temperature.h"
-  void DWIN_M303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp);
+  void DWIN_M303(const int c, const heater_id_t hid, const celsius_t temp);
   void DWIN_PidTuning(tempcontrol_t result);
   void Draw_PID_Menu();
   #if ENABLED(PIDTEMP)
@@ -439,7 +439,7 @@ void Draw_MaxAccel_Menu();
 #endif
 
 #if DEBUG_DWIN
-  void DWIN_Debug(const char *msg);
+  void DWIN_Debug(PGM_P msg);
 #endif
 
 #if !PROUI_EX

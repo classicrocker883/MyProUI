@@ -61,7 +61,7 @@ void Erase_Menu_Text(const int8_t line) {
   DWINUI::Draw_Box(1, HMI_data.Background_Color, {LBLX, ypos, DWIN_WIDTH - LBLX, MLINE - 2});
 }
 
-void Draw_Menu_Line(const uint8_t line, const uint8_t icon/*=0*/, const char * const label/*=nullptr*/, bool more/*=false*/, bool selected/*=false*/) {
+void Draw_Menu_Line(const uint8_t line, const uint8_t icon/*=0*/, PGM_P const label/*=nullptr*/, bool more/*=false*/, bool selected/*=false*/) {
   if (icon)  DWINUI::Draw_Icon(icon, ICOX, MBASE(line) - 3);
   if (label) DWINUI::Draw_String(LBLX, MBASE(line) - 1, (char*)label);
   if (more)  DWINUI::Draw_Icon(ICON_More, VALX + 16, MBASE(line) - 3);
@@ -396,18 +396,18 @@ CustomMenuItemClass::CustomMenuItemClass(OnDrawItem ondraw, OnClickItem onclick)
   onDraw =  ondraw;
 }
 
-MenuItemClass::MenuItemClass(uint8_t cicon, const char * const text, OnDrawItem ondraw, OnClickItem onclick) : CustomMenuItemClass(ondraw, onclick) {
+MenuItemClass::MenuItemClass(uint8_t cicon, PGM_P const text, OnDrawItem ondraw, OnClickItem onclick) : CustomMenuItemClass(ondraw, onclick) {
   icon = cicon;
   SetCaption(text);
 }
 
-void MenuItemClass::SetCaption(const char * const text) {
+void MenuItemClass::SetCaption(PGM_P const text) {
   const uint8_t len = _MIN(sizeof(caption) - 1, strlen(text));
   memcpy(&caption[0], text, len);
   caption[len] = '\0';
 }
 
-MenuItemPtrClass::MenuItemPtrClass(uint8_t cicon, const char * const text, OnDrawItem ondraw, OnClickItem onclick, void* val) : MenuItemClass(cicon, text, ondraw, onclick) {
+MenuItemPtrClass::MenuItemPtrClass(uint8_t cicon, PGM_P const text, OnDrawItem ondraw, OnClickItem onclick, void* val) : MenuItemClass(cicon, text, ondraw, onclick) {
   value = val;
 }
 
@@ -447,7 +447,7 @@ CustomMenuItemClass* MenuItemAdd(OnDrawItem ondraw/*=nullptr*/, OnClickItem oncl
   else return nullptr;
 }
 
-MenuItemClass* MenuItemAdd(uint8_t cicon, const char * const text/*=nullptr*/, OnDrawItem ondraw/*=nullptr*/, OnClickItem onclick/*=nullptr*/) {
+MenuItemClass* MenuItemAdd(uint8_t cicon, PGM_P const text/*=nullptr*/, OnDrawItem ondraw/*=nullptr*/, OnClickItem onclick/*=nullptr*/) {
   if (MenuItemCount < MenuItemTotal) {
     MenuItemClass* menuitem = new MenuItemClass(cicon, text, ondraw, onclick);
     return MenuItemAdd(menuitem);
@@ -455,7 +455,7 @@ MenuItemClass* MenuItemAdd(uint8_t cicon, const char * const text/*=nullptr*/, O
   else return nullptr;
 }
 
-MenuItemClass* EditItemAdd(uint8_t cicon, const char * const text, OnDrawItem ondraw, OnClickItem onclick, void* val) {
+MenuItemClass* EditItemAdd(uint8_t cicon, PGM_P const text, OnDrawItem ondraw, OnClickItem onclick, void* val) {
   if (MenuItemCount < MenuItemTotal) {
     MenuItemClass* menuitem = new MenuItemPtrClass(cicon, text, ondraw, onclick, val);
     return MenuItemAdd(menuitem);

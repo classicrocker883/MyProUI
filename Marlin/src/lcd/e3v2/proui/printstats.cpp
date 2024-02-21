@@ -45,9 +45,9 @@ void PrintStats::draw() {
   DWINUI::Draw_String(MRG,  80, TS(GET_TEXT_F(MSG_INFO_PRINT_COUNT), F(": "), ps.totalPrints));
   DWINUI::Draw_String(MRG, 100, TS(GET_TEXT_F(MSG_INFO_COMPLETED_PRINTS), F(": "), ps.finishedPrints));
   duration_t(print_job_timer.getStats().printTime).toDigital(str, true);
-  DWINUI::Draw_String(MRG, 120, MString<50>(GET_TEXT_F(MSG_INFO_PRINT_TIME), F(": "), str));
+  DWINUI::Draw_String(MRG, 120, TS(GET_TEXT_F(MSG_INFO_PRINT_TIME), F(": "), str));
   duration_t(print_job_timer.getStats().longestPrint).toDigital(str, true);
-  DWINUI::Draw_String(MRG, 140, MString<50>(GET_TEXT(MSG_INFO_PRINT_LONGEST), F(": "), str));
+  DWINUI::Draw_String(MRG, 140, TS(GET_TEXT(MSG_INFO_PRINT_LONGEST), F(": "), str));
   DWINUI::Draw_String(MRG, 160, TS(GET_TEXT_F(MSG_INFO_PRINT_FILAMENT), F(": "), p_float_t(ps.filamentUsed / 1000, 2), F(" m")));
 }
 

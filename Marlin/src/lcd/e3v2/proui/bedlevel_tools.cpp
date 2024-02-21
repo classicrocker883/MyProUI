@@ -136,7 +136,7 @@ void BedLevelToolsClass::MoveToZ() {
 }
 void BedLevelToolsClass::ProbeXY() {
   gcode.process_subcommands_now(
-    MString<MAX_CMD_SIZE>(
+    TS(
       F("G28O\nG0Z"), uint16_t(Z_CLEARANCE_DEPLOY_PROBE),
       F("\nG30X"), p_float_t(bedlevel.get_mesh_x(mesh_x), 2),
       F("Y"), p_float_t(bedlevel.get_mesh_y(mesh_y), 2)

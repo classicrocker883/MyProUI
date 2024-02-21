@@ -237,9 +237,9 @@ public:
   char caption[32] = "";
   rect_t frame = {0};
   void draw();
-  void SetCaption(const char * const title);
+  void SetCaption(PGM_P const title);
   inline void SetCaption(FSTR_P title) { SetCaption((char *)title); }
-  void ShowCaption(const char * const title);
+  void ShowCaption(PGM_P const title);
   inline void ShowCaption(FSTR_P title) { ShowCaption((char *)title); }
 };
 
@@ -460,8 +460,8 @@ namespace DWINUI {
   //  color: Character color
   //  *string: The string
   //  rlimit: For draw less chars than string length use rlimit
-  void Draw_String(const char * const string, uint16_t rlimit = 0xFFFF);
-  void Draw_String(uint16_t color, const char * const string, uint16_t rlimit = 0xFFFF);
+  void Draw_String(PGM_P const string, uint16_t rlimit = 0xFFFF);
+  void Draw_String(uint16_t color, PGM_P const string, uint16_t rlimit = 0xFFFF);
   inline void Draw_String(FSTR_P  string, uint16_t rlimit = 0xFFFF) {
     Draw_String(FTOP(string), rlimit);
   }
@@ -475,25 +475,25 @@ namespace DWINUI {
   //  bColor: Background color
   //  x/y: Upper-left coordinate of the string
   //  *string: The string
-  inline void Draw_String(uint16_t x, uint16_t y, const char * const string) {
+  inline void Draw_String(uint16_t x, uint16_t y, PGM_P const string) {
     DWIN_Draw_String(false, fontid, textcolor, backcolor, x, y, string);
   }
   inline void Draw_String(uint16_t x, uint16_t y, FSTR_P title) {
     DWIN_Draw_String(false, fontid, textcolor, backcolor, x, y, FTOP(title));
   }
-  inline void Draw_String(uint16_t color, uint16_t x, uint16_t y, const char * const string) {
+  inline void Draw_String(uint16_t color, uint16_t x, uint16_t y, PGM_P const string) {
     DWIN_Draw_String(false, fontid, color, backcolor, x, y, string);
   }
   inline void Draw_String(uint16_t color, uint16_t x, uint16_t y, FSTR_P title) {
     DWIN_Draw_String(false, fontid, color, backcolor, x, y, title);
   }
-  inline void Draw_String(uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, const char * const string) {
+  inline void Draw_String(uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, PGM_P const string) {
     DWIN_Draw_String(true, fontid, color, bgcolor, x, y, string);
   }
   inline void Draw_String(uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, FSTR_P title) {
     DWIN_Draw_String(true, fontid, color, bgcolor, x, y, title);
   }
-  inline void Draw_String(fontid_t fid, uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, const char * const string) {
+  inline void Draw_String(fontid_t fid, uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, PGM_P const string) {
     DWIN_Draw_String(true, fid, color, bgcolor, x, y, string);
   }
   inline void Draw_String(fontid_t fid, uint16_t color, uint16_t bgcolor, uint16_t x, uint16_t y, FSTR_P title) {
@@ -507,32 +507,32 @@ namespace DWINUI {
   //  bColor: Background color
   //  y: Upper coordinate of the string
   //  *string: The string
-  void Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t x1, uint16_t x2, uint16_t y, const char * const string);
-  inline void Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t x, uint16_t y, const char * const string) {
+  void Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t x1, uint16_t x2, uint16_t y, PGM_P const string);
+  inline void Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t x, uint16_t y, PGM_P const string) {
     Draw_CenteredString(bShow, fid, color, bColor, 2 * x, 0, y, string);
   }
-  inline void Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t y, const char * const string) {
+  inline void Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t y, PGM_P const string) {
     Draw_CenteredString(bShow, fid, color, bColor, 0, DWIN_WIDTH, y, string);
   }
   inline void Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t y, FSTR_P string) {
     Draw_CenteredString(bShow, fid, color, bColor, y, FTOP(string));
   }
-  inline void Draw_CenteredString(uint16_t color, uint16_t bcolor, uint16_t y, const char * const string) {
+  inline void Draw_CenteredString(uint16_t color, uint16_t bcolor, uint16_t y, PGM_P const string) {
     Draw_CenteredString(true, fontid, color, bcolor, y, string);
   }
-  inline void Draw_CenteredString(fontid_t fid, uint16_t color, uint16_t y, const char * const string) {
+  inline void Draw_CenteredString(fontid_t fid, uint16_t color, uint16_t y, PGM_P const string) {
     Draw_CenteredString(false, fid, color, backcolor, y, string);
   }
   inline void Draw_CenteredString(fontid_t fid, uint16_t color, uint16_t y, FSTR_P title) {
     Draw_CenteredString(false, fid, color, backcolor, y, title);
   }
-  inline void Draw_CenteredString(uint16_t color, uint16_t y, const char * const string) {
+  inline void Draw_CenteredString(uint16_t color, uint16_t y, PGM_P const string) {
     Draw_CenteredString(false, fontid, color, backcolor, y, string);
   }
   inline void Draw_CenteredString(uint16_t color, uint16_t y, FSTR_P title) {
     Draw_CenteredString(false, fontid, color, backcolor, y, title);
   }
-  inline void Draw_CenteredString(uint16_t y, const char * const string) {
+  inline void Draw_CenteredString(uint16_t y, PGM_P const string) {
     Draw_CenteredString(false, fontid, textcolor, backcolor, y, string);
   }
   inline void Draw_CenteredString(uint16_t y, FSTR_P title) {
@@ -579,7 +579,7 @@ namespace DWINUI {
 
   void Draw_Select_Box(uint16_t xpos, uint16_t ypos);
 
-  void Draw_Button(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, const char * const caption);
+  void Draw_Button(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, PGM_P const caption);
   inline void Draw_Button(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, FSTR_P caption) {
     Draw_Button(color, bcolor, x1, y1, x2, y2, FTOP(caption));
   }

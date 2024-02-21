@@ -64,7 +64,7 @@ inline void DWIN_Long(size_t &i, const uint32_t lval) {
 // Send the data in the buffer plus the packet tail
 void DWIN_Send(size_t &i);
 
-inline void DWIN_Text(size_t &i, const char * const string, uint16_t rlimit=0xFFFF) {
+inline void DWIN_Text(size_t &i, PGM_P const string, uint16_t rlimit=0xFFFF) {
   if (!string) return;
   const size_t len = _MIN(sizeof(DWIN_SendBuf) - i, _MIN(strlen(string), rlimit));
   if (len == 0) return;
@@ -183,7 +183,7 @@ void DWIN_Draw_DegreeSymbol(uint16_t Color, uint16_t x, uint16_t y);
 //  x/y: Upper-left coordinate of the string
 //  *string: The string
 //  rlimit: For draw less chars than string length use rlimit
-void DWIN_Draw_String(bool bShow, uint8_t size, uint16_t color, uint16_t bColor, uint16_t x, uint16_t y, const char * const string, uint16_t rlimit=0xFFFF);
+void DWIN_Draw_String(bool bShow, uint8_t size, uint16_t color, uint16_t bColor, uint16_t x, uint16_t y, PGM_P const string, uint16_t rlimit=0xFFFF);
 
 inline void DWIN_Draw_String(bool bShow, uint8_t size, uint16_t color, uint16_t bColor, uint16_t x, uint16_t y, FSTR_P const ftitle) {
   #ifdef __AVR__
