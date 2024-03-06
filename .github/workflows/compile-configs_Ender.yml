@@ -17,25 +17,25 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -59,14 +59,14 @@ jobs:
         cp configurations/Creality\ Ender/Default-NP/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = GD32F303RE_creality_maple/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/*#define MPCTEMP/$MTEMP#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
-        sed -i "s/*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
@@ -97,25 +97,25 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -139,14 +139,14 @@ jobs:
         cp configurations/Creality\ Ender/MM/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = GD32F303RE_creality_maple/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/*#define MPCTEMP/$MTEMP#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
-        sed -i "s/*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
@@ -177,26 +177,27 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
         t13: [true,false]
+        mp: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -212,7 +213,8 @@ jobs:
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=-SpriteT13; else TTMP=; fi
-        echo "filename=${DTMP}Ender${TTMP}_GD32_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($MP); then MPTMP=-MP; else MPTMP=; fi;
+        echo "filename=${DTMP}Ender${TTMP}_GD32_UBL-ProUI${ISTMP}${TPTMP}${MPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -221,16 +223,21 @@ jobs:
         cp configurations/Creality\ Ender/UBL/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = GD32F303RE_creality_maple/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/*#define MPCTEMP/$MTEMP#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
-        sed -i "s/*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         if ($T13); then THMP="13"; else THMP="1"; fi;
-        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 $THMP/" Marlin/Configuration.h
+        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
+        if ($MP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
@@ -239,6 +246,7 @@ jobs:
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
         T13: ${{ matrix.t13 }}
+        MP: ${{ matrix.mp }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -263,25 +271,25 @@ jobs:
   #       temp: [true,false]
   #       inshape: [true,false]
   #   steps:
-  #   - uses: actions/checkout@v3
+  #   - uses: actions/checkout@v4
   #   - name: Setup node
   #     uses: actions/setup-node@v3
   #     with:
   #       node-version: 16
   #   - name: Cache pip
-  #     uses: actions/cache@v3.3.2
+  #     uses: actions/cache@v4
   #     with:
   #       path: ~/.cache/pip
   #       key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
   #       restore-keys: |
   #         ${{ runner.os }}-pip-
   #   - name: Cache PlatformIO
-  #     uses: actions/cache@v3.3.2
+  #     uses: actions/cache@v4
   #     with:
   #       path: ~/.platformio
   #       key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
   #   - name: Set up Python
-  #     uses: actions/setup-python@v4
+  #     uses: actions/setup-python@v5
   #     with:
   #       python-version: '3.10'
   #   - name: Install PlatformIO
@@ -351,26 +359,27 @@ jobs:
         temp: [true,false]
         inshape: [true,false]
         tjc: [true,false]
+        mp: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -385,7 +394,8 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        echo "filename=${DTMP}Ender_GD32_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($MP); then MPTMP=-MP; else MPTMP=; fi;
+        echo "filename=${DTMP}Ender_GD32_BLT-ProUI${ISTMP}${TPTMP}${MPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -394,14 +404,19 @@ jobs:
         cp configurations/Creality\ Ender/BLT/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = GD32F303RE_creality_maple/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/*#define MPCTEMP/$MTEMP#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
-        sed -i "s/*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        if ($MP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/GD32F303RE_creality_maple/*.bin temp/build.bin
@@ -409,6 +424,7 @@ jobs:
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
+        MP: ${{ matrix.mp }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -433,25 +449,25 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -463,9 +479,9 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
+        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; DBORD='CREALITY_V427'; else EVTMP="422"; DBORD='CREALITY_V422'; fi;
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; else EVTMP="422"; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Ender_${EVTMP}_Default-NoPro${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
@@ -475,17 +491,16 @@ jobs:
         cp configurations/Creality\ Ender/Default-NP/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Creality\ Ender/Default-NP/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
-        if [ "$ENDER_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
-        sed -i "s/*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/" Marlin/Configuration.h
+        sed -i "s/*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/*#define MPCTEMP/$MTEMP#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
-        sed -i "s/*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -518,25 +533,25 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -548,9 +563,9 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
+        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; DBORD='CREALITY_V427'; else EVTMP="422"; DBORD='CREALITY_V422'; fi;
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; else EVTMP="422"; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Ender_${EVTMP}_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
@@ -560,17 +575,16 @@ jobs:
         cp configurations/Creality\ Ender/MM/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Creality\ Ender/MM/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
-        if [ "$ENDER_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
-        sed -i "s/*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/" Marlin/Configuration.h
+        sed -i "s/*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/*#define MPCTEMP/$MTEMP#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
-        sed -i "s/*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -603,26 +617,27 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
         t13: [true,false]
+        mp: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -634,12 +649,13 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
+        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; DBORD='CREALITY_V427'; else EVTMP="422"; DBORD='CREALITY_V422'; fi;
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; else EVTMP="422"; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=-SpriteT13; else TTMP=; fi
-        echo "filename=${DTMP}Ender${TTMP}_${EVTMP}_UBL-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($MP); then MPTMP=-MP; else MPTMP=; fi;
+        echo "filename=${DTMP}Ender${TTMP}_${EVTMP}_UBL-ProUI${ISTMP}${TPTMP}${MPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -647,19 +663,23 @@ jobs:
         cp configurations/Creality\ Ender/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Creality\ Ender/UBL/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
-        if [ "$ENDER_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
-        sed -i "s/*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/" Marlin/Configuration.h
+        sed -i "s/*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/*#define MPCTEMP/$MTEMP#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
-        sed -i "s/*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         if ($T13); then THMP="13"; else THMP="1"; fi;
-        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 $THMP/" Marlin/Configuration.h
+        sed -i "s/^#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
+        if ($MP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -669,6 +689,7 @@ jobs:
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
         T13: ${{ matrix.t13 }}
+        MP: ${{ matrix.mp }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -692,26 +713,27 @@ jobs:
         temp: [true,false]
         inshape: [true,false]
         tjc: [true,false]
+        mp: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -723,11 +745,12 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
+        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; DBORD='CREALITY_V427'; else EVTMP="422"; DBORD='CREALITY_V422'; fi;
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        if [ "$ENDER_VER" = 427 ]; then EVTMP="427"; else EVTMP="422"; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        echo "filename=${DTMP}Ender_${EVTMP}_BLT-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($MP); then MPTMP=-MP; else MPTMP=; fi;
+        echo "filename=${DTMP}Ender_${EVTMP}_BLT-ProUI${ISTMP}${TPTMP}${MPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -735,17 +758,21 @@ jobs:
         cp configurations/Creality\ Ender/BLT/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Creality\ Ender/BLT/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
-        if [ "$ENDER_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
-        sed -i "s/*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_$DBORD/" Marlin/Configuration.h
+        sed -i "s/*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
-        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/$PTEMP#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "0,/^#define PIDTEMP/ s/*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
-        sed -i "s/*#define MPCTEMP/$MTEMP#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
-        sed -i "s/*#define TJC_DISPLAY/$TJEMP#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        if ($MP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -754,6 +781,7 @@ jobs:
         TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
+        MP: ${{ matrix.mp }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2

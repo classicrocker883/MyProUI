@@ -174,7 +174,7 @@ bool Preview::hasPreview() {
 void Preview::drawFromSD() {
   hasPreview();
 
-  MString<45> buf;
+  TString buf;
   DWIN_Draw_Rectangle(1, HMI_data.Background_Color, 0, 0, DWIN_WIDTH, STATUS_Y - 1);
   if (fileprop.time) {
     buf.setf(F("Estimated time: %i:%02i"), (uint16_t)fileprop.time / 3600, ((uint16_t)fileprop.time % 3600) / 60);

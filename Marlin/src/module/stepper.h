@@ -235,7 +235,7 @@ constexpr ena_mask_t enable_overlap[] = {
       }
       #if ENABLED(INPUT_SHAPING_X)
         static shaping_time_t peek_x() { return peek_x_val; }
-        static bool dequeue_x() {
+        static bool __O0 dequeue_x() {
           bool forward = echo_axes[head_x].x == ECHO_FWD;
           do {
             _free_count_x++;
@@ -249,7 +249,7 @@ constexpr ena_mask_t enable_overlap[] = {
       #endif
       #if ENABLED(INPUT_SHAPING_Y)
         static shaping_time_t peek_y() { return peek_y_val; }
-        static bool dequeue_y() {
+        static bool __O0 dequeue_y() {
           bool forward = echo_axes[head_y].y == ECHO_FWD;
           do {
             _free_count_y++;

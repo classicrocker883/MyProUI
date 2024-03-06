@@ -55,8 +55,6 @@ constexpr uint16_t DEF_MESH_MIN_X = MESH_MIN_X;
 constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X;
 constexpr uint16_t DEF_MESH_MIN_Y = MESH_MIN_Y;
 constexpr uint16_t DEF_MESH_MAX_Y = MESH_MAX_Y;
-#define MIN_MESH_INSET 0
-#define MAX_MESH_INSET X_BED_SIZE
 constexpr uint16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
 #ifndef MULTIPLE_PROBING
   #define MULTIPLE_PROBING 2

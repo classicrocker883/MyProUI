@@ -131,7 +131,7 @@ void MeshViewerClass::Draw(const bool withsave/*=false*/, const bool redraw/*=tr
     TERN_(USE_GRID_MESHVIEWER, bedLevelTools.Set_Mesh_Viewer_Status();)
     }
   else {
-    ui.set_status_and_level(MString<32>(
+    ui.set_status_and_level(TS(
       F("Zmin: "), p_float_t(min, 3), F(" | "), p_float_t(max, 3), F("+"), F(" :Zmax"))
     );
   }

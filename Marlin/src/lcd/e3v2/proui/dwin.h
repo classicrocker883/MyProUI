@@ -204,7 +204,8 @@ uint32_t GetHash(char * str);
 #endif
 #if PROUI_EX
   void SetMeshPoints();
-  void SetMeshInset();
+  void SetXMeshInset();
+  void SetYMeshInset();
   void MaxMeshArea();
   void CenterMeshArea();
 #endif

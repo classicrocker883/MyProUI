@@ -219,22 +219,24 @@ inline void report_logical_position(const xyze_pos_t &rpos) {
   #endif
 }
 
-// Report the real current position according to the steppers.
-// Forward kinematics and un-leveling are applied.
-void report_real_position() {
-  get_cartesian_from_steppers();
-  xyze_pos_t npos = LOGICAL_AXIS_ARRAY(
-    planner.get_axis_position_mm(E_AXIS),
-    cartes.x, cartes.y, cartes.z,
-    cartes.i, cartes.j, cartes.k,
-    cartes.u, cartes.v, cartes.w
-  );
+#if ANY(AUTO_REPORT_REAL_POSITION, M114_REALTIME)
+  // Report the real current position according to the steppers.
+  // Forward kinematics and un-leveling are applied.
+  void report_real_position() {
+    get_cartesian_from_steppers();
+    xyze_pos_t npos = LOGICAL_AXIS_ARRAY(
+      planner.get_axis_position_mm(E_AXIS),
+      cartes.x, cartes.y, cartes.z,
+      cartes.i, cartes.j, cartes.k,
+      cartes.u, cartes.v, cartes.w
+    );
 
-  TERN_(HAS_POSITION_MODIFIERS, planner.unapply_modifiers(npos, true));
+    TERN_(HAS_POSITION_MODIFIERS, planner.unapply_modifiers(npos, true));
 
-  report_logical_position(npos);
-  report_more_positions();
-}
+    report_logical_position(npos);
+    report_more_positions();
+  }
+#endif
 
 // Report the logical current position according to the most recent G-code command
 void report_current_position() {
@@ -1157,9 +1159,12 @@ float get_move_distance(const xyze_pos_t &diff OPTARG(HAS_ROTATIONAL_AXES, bool 
 
       #if HAS_ROTATIONAL_AXES
         if (UNEAR_ZERO(distance_sqr)) {
-          // Move involves only rotational axes. Calculate angular distance in accordance with LinuxCNC
-          is_cartesian_move = false;
+          // Move involves no linear axes. Calculate angular distance in accordance with LinuxCNC
           distance_sqr = ROTATIONAL_AXIS_GANG(sq(diff.i), + sq(diff.j), + sq(diff.k), + sq(diff.u), + sq(diff.v), + sq(diff.w));
+        }
+        if (!UNEAR_ZERO(distance_sqr)) {
+          // Move involves rotational axes, not just the extruder
+          is_cartesian_move = false;
         }
       #endif
 

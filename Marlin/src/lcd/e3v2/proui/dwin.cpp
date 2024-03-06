@@ -3289,11 +3289,11 @@ void Draw_Move_Menu() {
         EDIT_ITEM(ICON_ProbeZSpeed, MSG_Z_FEED_RATE, onDrawPIntMenu, SetProbeZSpeed, &HMI_data.zprobeFeed);
         IF_DISABLED(BD_SENSOR, EDIT_ITEM(ICON_Cancel, MSG_ZPROBE_MULTIPLE, onDrawPInt8Menu, SetProbeMultiple, &HMI_data.multiple_probing);)
       #endif
+      MENU_ITEM(ICON_ProbeTest, MSG_M48_TEST, onDrawMenuItem, ProbeTest);
+      MENU_ITEM(ICON_ProbeStow, MSG_MANUAL_STOW, onDrawMenuItem, ProbeStow);
+      MENU_ITEM(ICON_ProbeDeploy, MSG_MANUAL_DEPLOY, onDrawMenuItem, ProbeDeploy);
       #if ENABLED(BLTOUCH)
-        MENU_ITEM(ICON_ProbeStow, MSG_MANUAL_STOW, onDrawMenuItem, ProbeStow);
-        MENU_ITEM(ICON_ProbeDeploy, MSG_MANUAL_DEPLOY, onDrawMenuItem, ProbeDeploy);
         MENU_ITEM(ICON_BLtouchReset, MSG_MANUAL_RESET, onDrawMenuItem, bltouch._reset);
-        MENU_ITEM(ICON_ProbeTest, MSG_M48_TEST, onDrawMenuItem, ProbeTest);
         #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
           EDIT_ITEM(ICON_HSMode, MSG_ENABLE_HS_MODE, onDrawChkbMenu, SetHSMode, &bltouch.high_speed_mode);
         #endif
@@ -4102,6 +4102,7 @@ void Draw_MaxAccel_Menu() {
 //=============================================================================
 
 #if HAS_MESH
+  //void CreatePlaneFromMesh() { bedLevelTools.create_plane_from_mesh(); }
 
   #if PROUI_EX
     void ApplyMeshPoints() { ProEx.ApplyMeshPoints(); ReDrawMenu(); }
@@ -4115,7 +4116,8 @@ void Draw_MaxAccel_Menu() {
     void SetMeshPoints() { SetPIntOnClick(GRID_MIN, GRID_LIMIT, ApplyMeshPoints); }
   #endif
     void ApplyMeshInset() { reset_bed_level(); ReDrawItem(); }
-    void SetMeshInset()  { SetPFloatOnClick(MIN_MESH_INSET, MAX_MESH_INSET, UNITFDIGITS, ApplyMeshInset);  }
+    void SetXMeshInset()  { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, ApplyMeshInset);  }
+    void SetYMeshInset()  { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, ApplyMeshInset);  }
     void MaxMeshArea() {
       MESH_MIN_X = 0;
       MESH_MAX_X = X_BED_SIZE;
@@ -4219,6 +4221,7 @@ void Draw_MaxAccel_Menu() {
       #if ENABLED(AUTO_BED_LEVELING_UBL)
         EDIT_ITEM(ICON_Tilt, MSG_UBL_TILTING_GRID, onDrawPInt8Menu, SetUBLTiltGrid, &bedLevelTools.tilt_grid);
       #endif
+      //MENU_ITEM_F(ICON_ProbeMargin, "Create Plane from Mesh", onDrawMenuItem, CreatePlaneFromMesh);
     }
     UpdateMenu(MeshMenu);
   }
@@ -4246,10 +4249,10 @@ void Draw_MaxAccel_Menu() {
     checkkey = Menu;
     if (SET_MENU(MeshInsetMenu, MSG_MESH_INSET, 7)) {
       BACK_ITEM(Draw_MeshSet_Menu);
-      EDIT_ITEM(ICON_Box, MSG_MESH_MIN_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_x);
-      EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_X, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_x);
-      EDIT_ITEM(ICON_Box, MSG_MESH_MIN_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_min_y);
-      EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_Y, onDrawPFloatMenu, SetMeshInset, &ui.mesh_inset_max_y);
+      EDIT_ITEM(ICON_Box, MSG_MESH_MIN_X, onDrawPFloatMenu, SetXMeshInset, &ui.mesh_inset_min_x);
+      EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_X, onDrawPFloatMenu, SetXMeshInset, &ui.mesh_inset_max_x);
+      EDIT_ITEM(ICON_Box, MSG_MESH_MIN_Y, onDrawPFloatMenu, SetYMeshInset, &ui.mesh_inset_min_y);
+      EDIT_ITEM(ICON_ProbeMargin, MSG_MESH_MAX_Y, onDrawPFloatMenu, SetYMeshInset, &ui.mesh_inset_max_y);
       MENU_ITEM(ICON_AxisC, MSG_MESH_AMAX, onDrawMenuItem, MaxMeshArea);
       MENU_ITEM(ICON_SetHome, MSG_MESH_CENTER, onDrawMenuItem, CenterMeshArea);
     }
