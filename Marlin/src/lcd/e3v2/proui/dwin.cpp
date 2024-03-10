@@ -191,11 +191,11 @@ char DateTime[16+1] =
   // First month letter, Oct Nov Dec = '1' otherwise '0'
   (__DATE__[0] == 'O' || __DATE__[0] == 'N' || __DATE__[0] == 'D') ? '1' : '0',
   // Second month letter
-  (__DATE__[0] == 'J') ? ( (__DATE__[1] == 'a') ? '1' :       // Jan, Jun or Jul
-                          ((__DATE__[2] == 'n') ? '6' : '7') ) :
+  (__DATE__[0] == 'J') ? ((__DATE__[1] == 'a') ? '1' :        // Jan, Jun or Jul
+                         ((__DATE__[2] == 'n') ? '6' : '7') ) :
   (__DATE__[0] == 'F') ? '2' :                                // Feb
-  (__DATE__[0] == 'M') ? (__DATE__[2] == 'r') ? '3' : '5' :   // Mar or May
-  (__DATE__[0] == 'A') ? (__DATE__[1] == 'p') ? '4' : '8' :   // Apr or Aug
+  (__DATE__[0] == 'M') ?  (__DATE__[2] == 'r') ? '3' : '5' :  // Mar or May
+  (__DATE__[0] == 'A') ?  (__DATE__[1] == 'p') ? '4' : '8' :  // Apr or Aug
   (__DATE__[0] == 'S') ? '9' :                                // Sep
   (__DATE__[0] == 'O') ? '0' :                                // Oct
   (__DATE__[0] == 'N') ? '1' :                                // Nov
@@ -2522,7 +2522,7 @@ void ApplyMove() {
     }
   #endif
   #if HAS_COLOR_LEDS
-    void ApplyLEDColor() { HMI_data.Led_Color = LEDColor( {leds.color.r, leds.color.g, leds.color.b OPTARG(HAS_WHITE_LED, leds.color.w) } ); }
+    void ApplyLEDColor() { HMI_data.Led_Color = LEDColor({ leds.color.r, leds.color.g, leds.color.b OPTARG(HAS_WHITE_LED, leds.color.w) }); }
     void LiveLEDColor(uint8_t *color) { *color = MenuData.Value; leds.update(); }
     void LiveLEDColorR() { LiveLEDColor(&leds.color.r); }
     void LiveLEDColorG() { LiveLEDColor(&leds.color.g); }
@@ -2772,7 +2772,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     }
     return zval;
   #else // !HAS_BED_PROBE
-    queue.inject(TS(
+    gcode.process_subcommands_now(TS(
       #if ENABLED(LCD_BED_TRAMMING)
         F("M420S0\nG28O\nG90\nG0F300Z" STRINGIFY(BED_TRAMMING_Z_HOP) "\nG0F5000X"), p_float_t(xpos, 1), 'Y', p_float_t(ypos, 1), F("\nG0F300Z" STRINGIFY(BED_TRAMMING_HEIGHT))
       #else
@@ -2793,8 +2793,8 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     DWINUI::ClearMainArea();
     static bed_mesh_t zval = {};
     probe.stow();
-    checkkey = NothingToDo;       // Before home disable user input
-    zval[0][0] = tram(0, false);  // First tram point can do Homing
+    checkkey = NothingToDo;      // Before home disable user input
+    zval[0][0] = tram(0, false); // First tram point can do Homing
     MeshViewer.DrawMeshGrid(2, 2);
     MeshViewer.DrawMeshPoint(0, 0, zval[0][0]);
     zval[1][0] = tram(1, false);
@@ -2979,16 +2979,16 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
 #endif
 
 #if HAS_X_AXIS
-  void SetStepsX() { HMI_value.axis = X_AXIS, SetPFloatOnClick( min_steps_edit_values.x, max_steps_edit_values.x, 2); }
+  void SetStepsX() { HMI_value.axis = X_AXIS, SetPFloatOnClick(min_steps_edit_values.x, max_steps_edit_values.x, 2); }
 #endif
 #if HAS_Y_AXIS
-  void SetStepsY() { HMI_value.axis = Y_AXIS, SetPFloatOnClick( min_steps_edit_values.y, max_steps_edit_values.y, 2); }
+  void SetStepsY() { HMI_value.axis = Y_AXIS, SetPFloatOnClick(min_steps_edit_values.y, max_steps_edit_values.y, 2); }
 #endif
 #if HAS_Z_AXIS
-  void SetStepsZ() { HMI_value.axis = Z_AXIS, SetPFloatOnClick( min_steps_edit_values.z, max_steps_edit_values.z, 2); }
+  void SetStepsZ() { HMI_value.axis = Z_AXIS, SetPFloatOnClick(min_steps_edit_values.z, max_steps_edit_values.z, 2); }
 #endif
 #if HAS_HOTEND
-  void SetStepsE() { HMI_value.axis = E_AXIS; SetPFloatOnClick( min_steps_edit_values.e, max_steps_edit_values.e, 2); }
+  void SetStepsE() { HMI_value.axis = E_AXIS; SetPFloatOnClick(min_steps_edit_values.e, max_steps_edit_values.e, 2); }
 #endif
 
 #if PROUI_EX
@@ -3021,8 +3021,8 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
 #endif
 
 #if ENABLED(ENC_MENU_ITEM)
-  void SetEncRateA() { SetPIntOnClick( ui.enc_rateB + 1, 1000 ); }
-  void SetEncRateB() { SetPIntOnClick( 11, ui.enc_rateA - 1); }
+  void SetEncRateA() { SetPIntOnClick(ui.enc_rateB + 1, 1000); }
+  void SetEncRateB() { SetPIntOnClick(11, ui.enc_rateA - 1); }
 #endif
 
 #if HAS_TOOLBAR
