@@ -3550,7 +3550,7 @@ void Draw_Tune_Menu() {
   void Draw_TrinamicConfig_menu() {
     checkkey = Menu;
     if (SET_MENU(TrinamicConfigMenu, MSG_TMC_DRIVERS, 5)) {
-      BACK_ITEM(Draw_AdvancedSettings_Menu);
+      BACK_ITEM(Draw_Advanced_Menu);
       #if AXIS_IS_TMC(X)
         EDIT_ITEM(ICON_TMCXSet, MSG_TMC_ACURRENT, onDrawPIntMenu, SetXTMCCurrent, &stepperX.val_mA);
       #endif
