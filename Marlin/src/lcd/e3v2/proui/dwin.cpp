@@ -3533,32 +3533,65 @@ void Draw_Tune_Menu() {
 #if HAS_TRINAMIC_CONFIG
   #if AXIS_IS_TMC(X)
     void SetXTMCCurrent() { SetPIntOnClick(MIN_TMC_CURRENT, MAX_TMC_CURRENT, []{ stepperX.refresh_stepper_current(); }); }
-  #endif
+    #if AXIS_HAS_STEALTHCHOP(X)
+      void SetXTMCStealth() { Show_Chkb_Line(stepperX.toggle_stepping_mode()); }
+    #endif
+ #endif
   #if AXIS_IS_TMC(Y)
     void SetYTMCCurrent() { SetPIntOnClick(MIN_TMC_CURRENT, MAX_TMC_CURRENT, []{ stepperY.refresh_stepper_current(); }); }
+    #if AXIS_HAS_STEALTHCHOP(Y)
+      void SetYTMCStealth() { Show_Chkb_Line(stepperY.toggle_stepping_mode()); }
+    #endif
   #endif
   #if AXIS_IS_TMC(Z)
     void SetZTMCCurrent() { SetPIntOnClick(MIN_TMC_CURRENT, MAX_TMC_CURRENT, []{ stepperZ.refresh_stepper_current(); }); }
+    #if AXIS_HAS_STEALTHCHOP(Z)
+      void SetZTMCStealth() { Show_Chkb_Line(stepperZ.toggle_stepping_mode()); }
+    #endif
   #endif
   #if AXIS_IS_TMC(E0)
     void SetETMCCurrent() { SetPIntOnClick(MIN_TMC_CURRENT, MAX_TMC_CURRENT, []{ stepperE0.refresh_stepper_current(); }); }
+    #if AXIS_HAS_STEALTHCHOP(E0)
+      void SetETMCStealth() { Show_Chkb_Line(stepperE0.toggle_stepping_mode()); }
+    #endif
+  #endif
+
+  #if ANY_AXIS_HAS(STEALTHCHOP)
+    namespace GET_LANG(LCD_LANGUAGE) {
+      LSTR MSG_TMC_ASTEALTH           = _UxGT(STR_A " " STR_TMC_STEALTH);
+      LSTR MSG_TMC_BSTEALTH           = _UxGT(STR_B " " STR_TMC_STEALTH);
+      LSTR MSG_TMC_CSTEALTH           = _UxGT(STR_C " " STR_TMC_STEALTH);
+      LSTR MSG_TMC_ESTEALTH           = _UxGT(STR_E " " STR_TMC_STEALTH);
+    }
   #endif
 
   void Draw_TrinamicConfig_menu() {
     checkkey = Menu;
-    if (SET_MENU(TrinamicConfigMenu, MSG_TMC_DRIVERS, 5)) {
+    if (SET_MENU(TrinamicConfigMenu, MSG_TMC_DRIVERS, 9)) {
       BACK_ITEM(Draw_AdvancedSettings_Menu);
       #if AXIS_IS_TMC(X)
         EDIT_ITEM(ICON_TMCXSet, MSG_TMC_ACURRENT, onDrawPIntMenu, SetXTMCCurrent, &stepperX.val_mA);
+        #if AXIS_HAS_STEALTHCHOP(X)
+          EDIT_ITEM(ICON_TMCXSet, MSG_TMC_ASTEALTH, onDrawChkbMenu, SetXTMCStealth, &stepperX.stored.stealthChop_enabled);
+        #endif
       #endif
       #if AXIS_IS_TMC(Y)
         EDIT_ITEM(ICON_TMCYSet, MSG_TMC_BCURRENT, onDrawPIntMenu, SetYTMCCurrent, &stepperY.val_mA);
+        #if AXIS_HAS_STEALTHCHOP(Y)
+          EDIT_ITEM(ICON_TMCYSet, MSG_TMC_BSTEALTH, onDrawChkbMenu, SetYTMCStealth, &stepperY.stored.stealthChop_enabled);
+        #endif
       #endif
       #if AXIS_IS_TMC(Z)
         EDIT_ITEM(ICON_TMCZSet, MSG_TMC_CCURRENT, onDrawPIntMenu, SetZTMCCurrent, &stepperZ.val_mA);
+        #if AXIS_HAS_STEALTHCHOP(Z)
+          EDIT_ITEM(ICON_TMCZSet, MSG_TMC_CSTEALTH, onDrawChkbMenu, SetZTMCStealth, &stepperZ.stored.stealthChop_enabled);
+        #endif
       #endif
       #if AXIS_IS_TMC(E0)
         EDIT_ITEM(ICON_TMCESet, MSG_TMC_ECURRENT, onDrawPIntMenu, SetETMCCurrent, &stepperE0.val_mA);
+        #if AXIS_HAS_STEALTHCHOP(E0)
+          EDIT_ITEM(ICON_TMCESet, MSG_TMC_ESTEALTH, onDrawChkbMenu, SetETMCStealth, &stepperE0.stored.stealthChop_enabled);
+        #endif
       #endif
     }
     UpdateMenu(TrinamicConfigMenu);
