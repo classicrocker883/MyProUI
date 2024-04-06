@@ -3,11 +3,11 @@
  * it is used to configure the arduino core (and ddl) automatically according
  * to the settings in Configuration.h and Configuration_adv.h.
  */
-#pragma once
-#ifndef _HC32_APP_CONFIG_H_
-#define _HC32_APP_CONFIG_H_
-
-#include "../../inc/MarlinConfigPre.h"
+// #pragma once
+// #ifndef _HC32_APP_CONFIG_H_
+// #define _HC32_APP_CONFIG_H_
+//
+// #include "../../inc/MarlinConfigPre.h"
 
 //
 // dev mode
@@ -67,4 +67,4 @@
 // FIXME override F_CPU to PCLK1, as marlin freaks out otherwise
 #define F_CPU (SYSTEM_CLOCK_FREQUENCIES.pclk1)
 
-#endif // _HC32_APP_CONFIG_H_
+// #endif // _HC32_APP_CONFIG_H_
