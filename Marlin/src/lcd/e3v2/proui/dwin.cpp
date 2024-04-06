@@ -621,7 +621,7 @@ void Goto_PrintDone() {
 void Draw_Main_Menu() {
   DWINUI::ClearMainArea();
   #if ENABLED(CV_LASER_MODULE)
-    Title.ShowCaption(laser_device.is_laser_device() ? F("Laser Engraver") : CUSTOM_MACHINE_NAME);
+    Title.ShowCaption(laser_device.is_laser_device() ? "Laser Engraver" : CUSTOM_MACHINE_NAME);
   #else
     Title.ShowCaption(CUSTOM_MACHINE_NAME);
   #endif
@@ -2042,6 +2042,7 @@ void DWIN_SetDataDefaults() {
       IF_DISABLED(BD_SENSOR, HMI_data.multiple_probing = MULTIPLE_PROBING;)
     #endif
     TERN_(PROUI_GRID_PNTS, HMI_data.grid_max_points = DEF_GRID_MAX_POINTS;)
+    TERN_(HAS_EXTRUDERS, HMI_data.Invert_E0 = DEF_INVERT_E0_DIR;)
   #endif
 }
 
@@ -2385,7 +2386,7 @@ void AutoHome() { queue.inject_P(G28_STR); }
   #endif
 #endif
 
-#if HAS_HOME_OFFSET
+#if HAS_HOME_OFFSET && DISABLED(CV_LASER_MODULE)
   // Apply workspace offset, making the current position 0,0,0
   void SetHome() {
     queue.inject(F("G92X0Y0Z0"));
@@ -3001,10 +3002,10 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
   void SetMaxPosZ()  { HMI_value.axis = Z_AXIS,       SetPIntOnClick(      100,       999, ProEx.ApplyPhySet); }
 #endif
 
-#if ALL(PROUI_EX, HAS_EXTRUDERS)
+#if HAS_EXTRUDERS
   void SetInvertE0() {
     stepper.disable_e_steppers();
-    Toggle_Chkb_Line(PRO_data.Invert_E0);
+    Toggle_Chkb_Line(TERN(PROUI_EX, PRO_data, HMI_data).Invert_E0);
     current_position.e = 0;
     sync_plan_position_e();
   }
@@ -3323,6 +3324,8 @@ void Draw_FilSet_Menu() {
     #endif
     #if ALL(PROUI_EX, HAS_EXTRUDERS)
       EDIT_ITEM(ICON_InvertE0, MSG_INVERT_EXTRUDER, onDrawChkbMenu, SetInvertE0, &PRO_data.Invert_E0);
+    #elif HAS_EXTRUDERS
+      EDIT_ITEM(ICON_InvertE0, MSG_INVERT_EXTRUDER, onDrawChkbMenu, SetInvertE0, &HMI_data.Invert_E0);
     #endif
     #if ENABLED(PREVENT_COLD_EXTRUSION)
       EDIT_ITEM(ICON_ExtrudeMinT, MSG_EXTRUDER_MIN_TEMP, onDrawPIntMenu, SetExtMinT, &HMI_data.ExtMinT);
@@ -4111,7 +4114,7 @@ void Draw_MaxAccel_Menu() {
       SetOnClick(SetIntNoDraw, GRID_MIN, GRID_LIMIT, 0, PRO_data.grid_max_points, ApplyMeshPoints, LiveMeshPoints);
       ProEx.DrawMeshPoints(true, CurrentMenu->line(), PRO_data.grid_max_points);
     }
-  #else
+  #elif PROUI_GRID_PNTS
     void ApplyMeshPoints() { HMI_data.grid_max_points = MenuData.Value; }
     void SetMeshPoints() { SetPIntOnClick(GRID_MIN, GRID_LIMIT, ApplyMeshPoints); }
   #endif
@@ -4208,7 +4211,7 @@ void Draw_MaxAccel_Menu() {
       #endif
       #if PROUI_EX
         MENU_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawMeshPoints, SetMeshPoints);
-      #else
+      #elif PROUI_GRID_PNTS
         EDIT_ITEM(ICON_MeshPoints, MSG_MESH_POINTS, onDrawPInt8Menu, SetMeshPoints, &HMI_data.grid_max_points);
       #endif
       MENU_ITEM(ICON_ProbeMargin, MSG_MESH_INSET, onDrawSubMenu, Draw_MeshInset_Menu);
@@ -4273,6 +4276,7 @@ void Draw_MaxAccel_Menu() {
       laser_device.homepos += current_position;
       set_all_homed();
       gcode.process_subcommands_now(F("G92X0Y0Z0"));
+      DONE_BUZZ(true);
       ReDrawMenu();
     }
   #endif
@@ -4329,11 +4333,11 @@ void Draw_MaxAccel_Menu() {
       MENU_ITEM_F(ICON_LaserRunRange, "Run Range", onDrawMenuItem, LaserRunRange);
     }
     UpdateMenu(LaserPrintMenu);
-    char buf[23], str_1[5], str_2[5];
-    sprintf_P(buf, PSTR("XMIN: %s XMAX: %s"), dtostrf(LASER_XMIN, 1, 1, str_1), dtostrf(LASER_XMAX, 1, 1, str_2));
-    DWINUI::Draw_String(LBLX, MBASE(4) + 10, buf);
-    sprintf_P(buf, PSTR("YMIN: %s YMAX: %s"), dtostrf(LASER_YMIN, 1, 1, str_1), dtostrf(LASER_YMAX, 1, 1, str_2));
-    DWINUI::Draw_String(LBLX, MBASE(5) - 10, buf);
+    // char buf[23], str_1[5], str_2[5];
+    // sprintf_P(buf, PSTR("XMIN: %s XMAX: %s"), dtostrf(LASER_XMIN, 1, 1, str_1), dtostrf(LASER_XMAX, 1, 1, str_2));
+    // DWINUI::Draw_String(LBLX, MBASE(4) + 10, buf);
+    // sprintf_P(buf, PSTR("YMIN: %s YMAX: %s"), dtostrf(LASER_YMIN, 1, 1, str_1), dtostrf(LASER_YMAX, 1, 1, str_2));
+    // DWINUI::Draw_String(LBLX, MBASE(5) - 10, buf);
   }
 
 #endif // CV_LASER_MODULE

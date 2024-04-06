@@ -24,15 +24,16 @@
 #
 import sys
 from pathlib import Path
-from distutils.dir_util import copy_tree  # for copy_tree, because shutil.copytree can't handle existing files, dirs
+from shutil import copytree  # for copy_tree, because shutil.copytree can't handle existing files, dirs
+#from distutils.dir_util import copy_tree
 
 # Modify input_examples_dir and output_examples_dir for your installation
 # No trailing slash
 # Setting output_examples_dir = input_examples_dir causes the program to insert into the existing files.
 
-input_examples_dir = r'config/examples'
+input_examples_dir = r'Marlin'
 # output_examples_dir   = input_examples_dir
-output_examples_dir = r'config/examples'
+output_examples_dir = r'configurations'
 
 #-------------------------------------
 
@@ -173,7 +174,7 @@ def main():
     if different_out_dir:
         print('Copying files to new directory: ' + output_examples_dir)
         try:
-            copy_tree(input_examples_dir, output_examples_dir)
+            copytree(input_examples_dir, output_examples_dir, dirs_exist_ok=True)
         except Exception as e:
             print('Failed to copy directory: ' + str(e) )
             raise Exception

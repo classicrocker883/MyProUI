@@ -75,6 +75,10 @@ GcodeSuite gcode;
   #include "../lcd/e3v2/proui/custom_gcodes.h"
 #endif
 
+#if ENABLED(CV_LASER_MODULE)
+  #include "../lcd/e3v2/proui/cv_laser_module.h"
+#endif
+
 // Inactivity shutdown
 millis_t GcodeSuite::previous_move_ms = 0,
          GcodeSuite::max_inactive_time = 0;

@@ -33,14 +33,6 @@
 
 #include "../../../inc/MarlinConfig.h"
 
-#if HAS_MEDIA
-  #include "gcode_preview.h"
-  #define LASER_XMIN fileprop.minx
-  #define LASER_XMAX fileprop.maxx
-  #define LASER_YMIN fileprop.miny
-  #define LASER_YMAX fileprop.maxy
-#endif
-
 class spindle_laser_soft_pwm
 {
   public:

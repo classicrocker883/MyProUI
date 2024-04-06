@@ -56,6 +56,7 @@ constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X;
 constexpr uint16_t DEF_MESH_MIN_Y = MESH_MIN_Y;
 constexpr uint16_t DEF_MESH_MAX_Y = MESH_MAX_Y;
 constexpr uint16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
+constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
 #ifndef MULTIPLE_PROBING
   #define MULTIPLE_PROBING 2
 #endif
@@ -80,7 +81,6 @@ constexpr int16_t DEF_Y_MIN_POS = Y_MIN_POS;
 constexpr int16_t DEF_X_MAX_POS = X_MAX_POS;
 constexpr int16_t DEF_Y_MAX_POS = Y_MAX_POS;
 constexpr int16_t DEF_Z_MAX_POS = Z_MAX_POS;
-constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
 
 typedef struct {
   uint16_t x_bed_size = DEF_X_BED_SIZE;
@@ -172,3 +172,51 @@ public:
 
 extern ProUIClass ProEx;
 #endif
+
+typedef struct {
+  uint16_t Background_Color;
+  uint16_t Cursor_Color;
+  uint16_t TitleBg_Color;
+  uint16_t TitleTxt_Color;
+  uint16_t Text_Color;
+  uint16_t Selected_Color;
+  uint16_t SplitLine_Color;
+  uint16_t Highlight_Color;
+  uint16_t StatusBg_Color;
+  uint16_t StatusTxt_Color;
+  uint16_t PopupBg_Color;
+  uint16_t PopupTxt_Color;
+  uint16_t AlertBg_Color;
+  uint16_t AlertTxt_Color;
+  uint16_t PercentTxt_Color;
+  uint16_t Barfill_Color;
+  uint16_t Indicator_Color;
+  uint16_t Coordinate_Color;
+  uint16_t Bottom_Color;
+  int16_t PidCycles;
+  celsius_t HotendPidT;
+  celsius_t BedPidT;
+  celsius_t ExtMinT;
+  celsius_t BedLevT;
+  bool Baud250K;
+  bool CalcAvg;
+  bool SpdInd;
+  bool FullManualTramming;
+  bool MediaSort;
+  bool MediaAutoMount;
+  bool AdaptiveStepSmoothing;
+  bool EnablePreview;
+  uint8_t z_after_homing;
+  uint32_t Led_Color;
+  float ManualZOffset;
+#if !PROUI_EX
+  TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points = DEF_GRID_MAX_POINTS;)
+  IF_DISABLED(BD_SENSOR, uint8_t multiple_probing = MULTIPLE_PROBING;)
+  uint16_t zprobeFeed = DEF_Z_PROBE_FEEDRATE_SLOW ;
+  bool Invert_E0 = DEF_INVERT_E0_DIR;
+#endif
+} HMI_data_t;
+
+extern HMI_data_t HMI_data;
+
+static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) + TERN0(PROUI_EX, sizeof(PRO_data_t));

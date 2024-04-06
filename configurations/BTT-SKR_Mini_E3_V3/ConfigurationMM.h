@@ -3451,6 +3451,7 @@
   #else
     #define PROUI_GRID_PNTS 1
   #endif
+  //#define CV_LASER_MODULE
   #define HAS_GCODE_PREVIEW 1
   #define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)
   #define HAS_ESDIAG 1          // View End-stop switch continuity (560 bytes of flash)

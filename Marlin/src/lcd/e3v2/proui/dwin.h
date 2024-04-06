@@ -86,53 +86,6 @@ enum processID : uint8_t {
 #endif
 
 typedef struct {
-  uint16_t Background_Color;
-  uint16_t Cursor_Color;
-  uint16_t TitleBg_Color;
-  uint16_t TitleTxt_Color;
-  uint16_t Text_Color;
-  uint16_t Selected_Color;
-  uint16_t SplitLine_Color;
-  uint16_t Highlight_Color;
-  uint16_t StatusBg_Color;
-  uint16_t StatusTxt_Color;
-  uint16_t PopupBg_Color;
-  uint16_t PopupTxt_Color;
-  uint16_t AlertBg_Color;
-  uint16_t AlertTxt_Color;
-  uint16_t PercentTxt_Color;
-  uint16_t Barfill_Color;
-  uint16_t Indicator_Color;
-  uint16_t Coordinate_Color;
-  uint16_t Bottom_Color;
-  int16_t PidCycles;
-  celsius_t HotendPidT;
-  celsius_t BedPidT;
-  celsius_t ExtMinT;
-  celsius_t BedLevT;
-  bool Baud250K;
-  bool CalcAvg;
-  bool SpdInd;
-  bool FullManualTramming;
-  bool MediaSort;
-  bool MediaAutoMount;
-  bool AdaptiveStepSmoothing;
-  bool EnablePreview;
-  uint8_t z_after_homing;
-  uint32_t Led_Color;
-  float ManualZOffset;
-#if !PROUI_EX
-  TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points;)
-  IF_DISABLED(BD_SENSOR, uint8_t multiple_probing;)
-  uint16_t zprobeFeed;
-#endif
-} HMI_data_t;
-
-extern HMI_data_t HMI_data;
-
-static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) + TERN0(PROUI_EX, sizeof(PRO_data_t));
-
-typedef struct {
   int8_t r, g, b;
   void set(int8_t _r, int8_t _g, int8_t _b) { r = _r; g = _g; b = _b; }
   int8_t& operator[](const int i) {
@@ -430,6 +383,9 @@ void Draw_MaxAccel_Menu();
   void LaserOn(const bool turn_on);
   void Draw_LaserSettings_Menu();
   void Draw_LaserPrint_Menu();
+  #if HAS_HOME_OFFSET
+    void SetHome();
+  #endif
 #endif
 
 // ToolBar
@@ -441,21 +397,6 @@ void Draw_MaxAccel_Menu();
 
 #if DEBUG_DWIN
   void DWIN_Debug(PGM_P msg);
-#endif
-
-#if !PROUI_EX
-  #if PROUI_GRID_PNTS
-    #undef  GRID_MAX_POINTS_X
-    #undef  GRID_MAX_POINTS_Y
-    #undef  GRID_MAX_POINTS
-    #define GRID_MAX_POINTS_X HMI_data.grid_max_points
-    #define GRID_MAX_POINTS_Y HMI_data.grid_max_points
-    #define GRID_MAX_POINTS  (HMI_data.grid_max_points * HMI_data.grid_max_points)
-  #endif
-  #if HAS_BED_PROBE
-    #undef Z_PROBE_FEEDRATE_SLOW
-    #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobeFeed
-  #endif
 #endif
 
 #if HAS_MESH

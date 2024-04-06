@@ -155,4 +155,20 @@
   #include <stddef.h>
   #include "../../../core/types.h"
   #include "proui.h"
+
+  #if PROUI_GRID_PNTS
+    #undef  GRID_MAX_POINTS_X
+    #undef  GRID_MAX_POINTS_Y
+    #undef  GRID_MAX_POINTS
+    #define GRID_MAX_POINTS_X HMI_data.grid_max_points
+    #define GRID_MAX_POINTS_Y HMI_data.grid_max_points
+    #define GRID_MAX_POINTS  (HMI_data.grid_max_points * HMI_data.grid_max_points)
+  #endif
+  #if HAS_BED_PROBE
+    #undef Z_PROBE_FEEDRATE_SLOW
+    #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobeFeed
+  #endif
+  #undef INVERT_E0_DIR
+  #define INVERT_E0_DIR HMI_data.Invert_E0
+
 #endif // PROUI_EX
