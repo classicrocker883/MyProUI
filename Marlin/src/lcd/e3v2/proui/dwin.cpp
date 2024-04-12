@@ -3550,11 +3550,7 @@ void Draw_Tune_Menu() {
   void Draw_TrinamicConfig_menu() {
     checkkey = Menu;
     if (SET_MENU(TrinamicConfigMenu, MSG_TMC_DRIVERS, 5)) {
-      #if NONE(AUTO_BED_LEVELING_UBL, AUTO_BED_LEVELING_BILINEAR, MESH_BED_LEVELING)
-        BACK_ITEM(Draw_AdvancedSettings_Menu);
-      #else
-        BACK_ITEM(Draw_Advanced_Menu);
-      #endif
+      BACK_ITEM(Draw_AdvancedSettings_Menu);
       #if AXIS_IS_TMC(X)
         EDIT_ITEM(ICON_TMCXSet, MSG_TMC_ACURRENT, onDrawPIntMenu, SetXTMCCurrent, &stepperX.val_mA);
       #endif
