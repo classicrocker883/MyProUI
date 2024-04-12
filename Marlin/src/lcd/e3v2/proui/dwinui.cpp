@@ -169,7 +169,7 @@ void DWINUI::drawString(uint16_t color, const char * const string, uint16_t rlim
 //  iNum: Number of digits
 //  x/y: Upper-left coordinate
 //  value: Integer value
-void DWINUI::drawInt(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t color, uint16_t bColor, uint8_t iNum, uint16_t x, uint16_t y, int32_t value) {
+void DWINUI::drawInt(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t color, uint16_t bColor, uint8_t iNum, uint16_t x, uint16_t y, long value) {
   char nstr[10];
   sprintf_P(nstr, PSTR("%*li"), (signedMode ? iNum + 1 : iNum), value);
   dwinDrawString(bShow, fid, color, bColor, x, y, nstr);
@@ -331,7 +331,7 @@ uint16_t Title::backColor = defColorTitleBg;
 void Title::draw(const char * const caption) {
   dwinDrawRectangle(1, backColor, 0, 0, DWIN_WIDTH - 1, TITLE_HEIGHT - 1);
   #if ENABLED(TITLE_CENTERED)
-    drawCenteredString(false, DWIN_FONT_HEAD, textColor, backColor, (TITLE_HEIGHT - DWINUI::fontHeight(DWIN_FONT_HEAD)) / 2 - 1, caption);
+    DWINUI::drawCenteredString(false, DWIN_FONT_HEAD, textColor, backColor, (TITLE_HEIGHT - DWINUI::fontHeight(DWIN_FONT_HEAD)) / 2 - 1, caption);
   #else
     dwinDrawString(false, DWIN_FONT_HEAD, textColor, backColor, 14, (TITLE_HEIGHT - DWINUI::fontHeight(DWIN_FONT_HEAD)) / 2 - 1, caption);
   #endif

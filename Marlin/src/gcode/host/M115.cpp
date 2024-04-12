@@ -20,8 +20,11 @@
  *
  */
 
-#include "../gcode.h"
 #include "../../inc/MarlinConfig.h"
+
+#if ENABLED(CAPABILITIES_REPORT)
+
+#include "../gcode.h"
 #include "../queue.h"           // for getting the command port
 
 #if ENABLED(M115_GEOMETRY_REPORT)
@@ -219,6 +222,9 @@ void GcodeSuite::M115() {
     // CONFIG_EXPORT
     cap_line(F("CONFIG_EXPORT"), ENABLED(CONFIGURATION_EMBEDDING));
 
+    // PROUI AML
+    cap_line(F("PROUI_AML"), ENABLED(PROUI_EX));
+
     // Machine Geometry
     #if ENABLED(M115_GEOMETRY_REPORT)
       TERN(PROUI_EX, const, constexpr) xyz_pos_t bmin{0},
@@ -271,3 +277,5 @@ void GcodeSuite::M115() {
 
   #endif // EXTENDED_CAPABILITIES_REPORT
 }
+
+#endif // CAPABILITIES_REPORT
