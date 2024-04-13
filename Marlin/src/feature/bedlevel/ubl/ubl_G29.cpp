@@ -313,7 +313,7 @@ void unified_bed_leveling::G29() {
     #if ENABLED(DWIN_LCD_PROUI)
       save_ubl_active_state_and_disable();
       gcode.process_subcommands_now(F("G28Z"));
-      restore_ubl_active_state_and_leave();
+      restore_ubl_active_state(false); // ...without telling ExtUI "done"
     #else
       // Send 'N' to force homing before G29 (internal only)
       if (axes_should_home() || parser.seen_test('N')) gcode.home_all_axes();
@@ -369,6 +369,7 @@ void unified_bed_leveling::G29() {
         if (closest.pos.x < 0) { invalidate_all = true; break; }
         z_values[closest.pos.x][closest.pos.y] = NAN;
         TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(closest.pos, 0.0f));
+        TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(closest.pos.x, closest.pos.y, 0.0f);)
       }
     }
     if (invalidate_all) {
@@ -398,6 +399,7 @@ void unified_bed_leveling::G29() {
                       p2 = 0.5f * (GRID_MAX_POINTS_Y) - y;
           z_values[x][y] += 2.0f * HYPOT(p1, p2);
           TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+          TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
         }
         break;
 
@@ -409,6 +411,8 @@ void unified_bed_leveling::G29() {
           #if ENABLED(EXTENSIBLE_UI)
             ExtUI::onMeshUpdate(x, x, z_values[x][x]);
             ExtUI::onMeshUpdate(x, x2, z_values[x][x2]);
+          #elif ENABLED(DWIN_LCD_PROUI)
+            DWIN_MeshUpdate(x, x2, z_values[x][x2]);
           #endif
         }
         break;
@@ -419,6 +423,7 @@ void unified_bed_leveling::G29() {
           for (uint8_t y = (GRID_MAX_POINTS_Y) / 3; y < 2 * (GRID_MAX_POINTS_Y) / 3; y++) { // the center of the bed
             z_values[x][y] += parser.seen_test('C') ? param.C_constant : 9.99f;
             TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+            TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
           }
         break;
     }
@@ -429,7 +434,7 @@ void unified_bed_leveling::G29() {
     if (parser.seen_test('J')) {
       save_ubl_active_state_and_disable();
       tilt_mesh_based_on_probed_grid(param.J_grid_size == 0); // Zero size does 3-Point
-      restore_ubl_active_state_and_leave();
+      restore_ubl_active_state();
       #if ENABLED(UBL_G29_J_RECENTER)
         do_blocking_move_to_xy(0.5f * ((MESH_MIN_X) + (MESH_MAX_X)), 0.5f * ((MESH_MIN_Y) + (MESH_MAX_Y)));
       #endif
@@ -555,6 +560,7 @@ void unified_bed_leveling::G29() {
               else {
                 z_values[cpos.x][cpos.y] = param.C_constant;
                 TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(cpos, param.C_constant));
+                TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(cpos.x, cpos.y, param.C_constant);)
               }
             }
           }
@@ -733,6 +739,7 @@ void unified_bed_leveling::adjust_mesh_to_mean(const bool cflag, const_float_t o
       if (!isnan(z_values[x][y])) {
         z_values[x][y] -= mean + offset;
         TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+        TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
       }
 }
 
@@ -744,6 +751,7 @@ void unified_bed_leveling::shift_mesh_height() {
     if (!isnan(z_values[x][y])) {
       z_values[x][y] += param.C_constant;
       TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+      TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
     }
 }
 
@@ -782,8 +790,7 @@ void unified_bed_leveling::shift_mesh_height() {
           ui.quick_feedback();
           ui.release();
           probe.stow(); // Release UI before stow to allow for PAUSE_BEFORE_DEPLOY_STOW
-          TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
-          return restore_ubl_active_state_and_leave();
+          return restore_ubl_active_state();
         }
       #endif
 
@@ -822,8 +829,6 @@ void unified_bed_leveling::shift_mesh_height() {
 
     TERN_(Z_AFTER_PROBING, probe.move_z_after_probing());
 
-    restore_ubl_active_state_and_leave();
-
     #if ENABLED(DWIN_LCD_PROUI)//PROUI_EX
       bedlevel.smart_mesh_fill();
     #else
@@ -833,7 +838,7 @@ void unified_bed_leveling::shift_mesh_height() {
       );
     #endif
 
-    TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
+    restore_ubl_active_state();
     TERN_(DWIN_LCD_PROUI, EXIT_PROBE_MESH: DWIN_LevelingDone());
   }
 
@@ -943,7 +948,7 @@ void set_message_with_feedback(FSTR_P const fstr) {
     if (param.V_verbosity > 1)
       SERIAL_ECHOLNPGM("Business Card is ", p_float_t(thickness, 4), "mm thick.");
 
-    restore_ubl_active_state_and_leave();
+    restore_ubl_active_state();
 
     return thickness;
   }
@@ -998,7 +1003,7 @@ void set_message_with_feedback(FSTR_P const fstr) {
       if (_click_and_hold([]{
         SERIAL_ECHOLNPGM("\nMesh only partially populated.");
         do_z_clearance(Z_CLEARANCE_DEPLOY_PROBE);
-      })) return restore_ubl_active_state_and_leave();
+      })) return restore_ubl_active_state();
 
       // Store the Z position minus the shim height
       z_values[lpos.x][lpos.y] = current_position.z - thick;
@@ -1013,10 +1018,8 @@ void set_message_with_feedback(FSTR_P const fstr) {
 
     if (do_ubl_mesh_map) display_map(param.T_map_type);  // show user where we're probing
 
-    restore_ubl_active_state_and_leave();
+    restore_ubl_active_state();
     do_blocking_move_to_xy_z(pos, Z_CLEARANCE_DEPLOY_PROBE);
-
-    TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
   }
 
   /**
@@ -1122,7 +1125,7 @@ void set_message_with_feedback(FSTR_P const fstr) {
     } while (lpos.x >= 0 && --param.R_repetition > 0);
 
     if (do_ubl_mesh_map) display_map(param.T_map_type);
-    restore_ubl_active_state_and_leave();
+    restore_ubl_active_state();
 
     do_blocking_move_to_xy_z(pos, Z_TWEEN_SAFE_CLEARANCE);
 
@@ -1274,17 +1277,21 @@ void unified_bed_leveling::save_ubl_active_state_and_disable() {
   set_bed_leveling_enabled(false);
 }
 
-void unified_bed_leveling::restore_ubl_active_state_and_leave() {
+void unified_bed_leveling::restore_ubl_active_state(const bool is_done/*=true*/) {
   TERN_(HAS_MARLINUI_MENU, ui.release());
   #if ENABLED(UBL_DEVEL_DEBUGGING)
     if (--ubl_state_recursion_chk) {
-      SERIAL_ECHOLNPGM("restore_ubl_active_state_and_leave() called too many times.");
+      SERIAL_ECHOLNPGM("restore_ubl_active_state() called too many times.");
       set_message_with_feedback(GET_TEXT_F(MSG_UBL_RESTORE_ERROR));
       return;
     }
   #endif
   set_bed_leveling_enabled(ubl_state_at_invocation);
-  TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
+
+  if (is_done) {
+    TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
+    TERN_(DWIN_LCD_PROUI, DWIN_LevelingDone());
+  }
 }
 
 mesh_index_pair unified_bed_leveling::find_furthest_invalid_mesh_point() {
@@ -1442,6 +1449,7 @@ bool unified_bed_leveling::smart_fill_one(const uint8_t x, const uint8_t y, cons
       if (!isnan(v2)) {
         z_values[x][y] = v1 < v2 ? v1 : v1 + v1 - v2;
         TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(x, y, z_values[x][y]));
+        TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(x, y, z_values[x][y]);)
         return true;
       }
     }
@@ -1532,14 +1540,20 @@ void unified_bed_leveling::smart_mesh_fill() {
       }
     }
     else { // !do_3_pt_leveling
-
-      #ifndef G29J_MESH_TILT_MARGIN
-        #define G29J_MESH_TILT_MARGIN 0
+      #if PROUI_EX
+        const float x_min = probe.min_x(),
+                    x_max = probe.max_x(),
+                    y_min = probe.min_y(),
+                    y_max = probe.max_y(),
+      #else
+        #ifndef G29J_MESH_TILT_MARGIN
+          #define G29J_MESH_TILT_MARGIN 0
+        #endif
+        const float x_min = _MAX((X_MIN_POS) + (G29J_MESH_TILT_MARGIN), MESH_MIN_X, probe.min_x()),
+                    x_max = _MIN((X_MAX_POS) - (G29J_MESH_TILT_MARGIN), MESH_MAX_X, probe.max_x()),
+                    y_min = _MAX((Y_MIN_POS) + (G29J_MESH_TILT_MARGIN), MESH_MIN_Y, probe.min_y()),
+                    y_max = _MIN((Y_MAX_POS) - (G29J_MESH_TILT_MARGIN), MESH_MAX_Y, probe.max_y()),
       #endif
-      const float x_min = _MAX((X_MIN_POS) + (G29J_MESH_TILT_MARGIN), MESH_MIN_X, probe.min_x()),
-                  x_max = _MIN((X_MAX_POS) - (G29J_MESH_TILT_MARGIN), MESH_MAX_X, probe.max_x()),
-                  y_min = _MAX((Y_MIN_POS) + (G29J_MESH_TILT_MARGIN), MESH_MIN_Y, probe.min_y()),
-                  y_max = _MIN((Y_MAX_POS) - (G29J_MESH_TILT_MARGIN), MESH_MAX_Y, probe.max_y()),
                   dx = (x_max - x_min) / (param.J_grid_size - 1),
                   dy = (y_max - y_min) / (param.J_grid_size - 1);
 
@@ -1641,6 +1655,7 @@ void unified_bed_leveling::smart_mesh_fill() {
 
       z_values[i][j] = mz - lsf_results.D;
       TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(i, j, z_values[i][j]));
+      TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(i, j, z_values[i][j]);)
     }
 
     if (DEBUGGING(LEVELING)) {
@@ -1732,6 +1747,7 @@ void unified_bed_leveling::smart_mesh_fill() {
           const float ez = -lsf_results.D - lsf_results.A * ppos.x - lsf_results.B * ppos.y;
           z_values[ix][iy] = ez;
           TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(ix, iy, z_values[ix][iy]));
+          TERN_(DWIN_LCD_PROUI, DWIN_MeshUpdate(ix, iy, z_values[ix][iy]);)
           idle(); // housekeeping
         }
       }

@@ -18,7 +18,7 @@ HERE=`dirname $0`
 
 . "$HERE/mfutil"
 
-GITREPO=https://github.com/MarlinFirmware/Configurations.git
+GITREPO=https://github.com/classicrocker883/MRiscoCProUI.git
 STAT_FILE=./.pio/.buildall
 
 usage() { echo "
@@ -31,7 +31,7 @@ Usage: $SELF [-b|--branch=<branch>] [-d|--debug] [-i|--ini] [-r|--resume=<path>]
 }
 
 # Assume the most recent configs
-BRANCH=import-2.1.x
+BRANCH="2024-April"
 unset FIRST_CONF
 EXIT_USAGE=
 LIMIT=1000
@@ -121,11 +121,11 @@ echo -e "Start build...\n====================="
 shopt -s nullglob
 IFS='
 '
-CONF_TREE=$( ls -d "$TMP"/config/examples/*/ "$TMP"/config/examples/*/*/ "$TMP"/config/examples/*/*/*/ "$TMP"/config/examples/*/*/*/*/ | grep -vE ".+\.(\w+)$" )
+CONF_TREE=$( ls -d "$TMP"/configurations/*/ "$TMP"/configurations/*/*/ "$TMP"/configurations/*/*/*/ "$TMP"/configurations/*/*/*/*/ | grep -vE ".+\.(\w+)$" )
 for CONF in $CONF_TREE ; do
 
   # Get a config's directory name
-  DIR=$( echo $CONF | "$SED" "s|$TMP/config/examples/||" )
+  DIR=$( echo $CONF | "$SED" "s|$TMP/configurations/||" )
 
   # If looking for a config, skip others
   [[ $FIRST_CONF ]] && [[ $FIRST_CONF != $DIR && "$FIRST_CONF/" != $DIR ]] && continue
@@ -163,7 +163,7 @@ done
 [[ $PAUSE ]] || rm "$STAT_FILE"
 
 # Delete the temp folder if not preserving generated INI files
-if [[ -e "$TMP/config/examples" ]]; then
+if [[ -e "$TMP/configurations" ]]; then
   if [[ $COPY_INI ]]; then
     OPEN=$( which gnome-open xdg-open open | head -n1 )
     $OPEN "$TMP"

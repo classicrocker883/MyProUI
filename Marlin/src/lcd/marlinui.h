@@ -200,16 +200,12 @@ public:
     static float screw_pos; // bed corner screw inset
   #endif
 
-  #if ALL(DWIN_LCD_PROUI, HAS_MESH) // workaround for mesh inset not saving on restart
-    static float mesh_inset_min_x;
-    static float mesh_inset_max_x;
-    static float mesh_inset_min_y;
-    static float mesh_inset_max_y;
-  #endif
-
-  #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+  #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
     static uint16_t enc_rateA;
     static uint16_t enc_rateB;
+  #endif
+  #if ENABLED(PROUI_ITEM_ENC)
+    static bool rev_rate;
   #endif
 
   static void init();
@@ -312,14 +308,6 @@ public:
   static void sleep_display(const bool=true) IF_DISABLED(HAS_DISPLAY_SLEEP, {});
   static void wake_display() { sleep_display(false); }
 
-  #if HAS_DWIN_E3V2_BASIC
-    static void refresh();
-  #else
-    FORCE_INLINE static void refresh() {
-      TERN_(HAS_WIRED_LCD, refresh(LCDVIEW_CLEAR_CALL_REDRAW));
-    }
-  #endif
-
   #if HAS_PRINT_PROGRESS_PERMYRIAD
     typedef uint16_t progress_t;
     #define PROGRESS_SCALE 100U
@@ -409,6 +397,7 @@ public:
 
     #if ENABLED(STATUS_MESSAGE_SCROLLING)
       static uint8_t status_scroll_offset;
+      static void reset_status_scroll() { status_scroll_offset = 0; }
       static void advance_status_scroll();
       static char* status_and_len(uint8_t &len);
     #endif
@@ -519,13 +508,15 @@ public:
    *
    * @param pfmt    A constant format P-string
    */
-  static void status_printf_P(int8_t level, PGM_P const pfmt, ...);
-
-  template<typename... Args>
-  static void status_printf(int8_t level, FSTR_P const ffmt, Args... more) { status_printf_P(level, FTOP(ffmt), more...); }
+  static void status_printf(int8_t level, FSTR_P const pfmt, ...);
 
   // Periodic or as-needed display update
   static void update() IF_DISABLED(HAS_UI_UPDATE, {});
+
+  // Tell the screen to redraw on the next call
+  FORCE_INLINE static void refresh() {
+    TERN_(HAS_WIRED_LCD, refresh(LCDVIEW_CLEAR_CALL_REDRAW));
+  }
 
   #if HAS_DISPLAY
 

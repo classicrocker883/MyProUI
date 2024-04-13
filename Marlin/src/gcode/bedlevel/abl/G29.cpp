@@ -329,6 +329,7 @@ G29_TYPE GcodeSuite::G29() {
           bedlevel.z_values[i][j] = rz;
           bedlevel.refresh_bed_level();
           TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(i, j, rz));
+          TERN_(DWIN_LCD_PROUI, MeshViewer.DrawMeshPoint(i, j, rz));
           if (abl.reenable) {
             set_bed_leveling_enabled(true);
             report_current_position();
@@ -445,6 +446,8 @@ G29_TYPE GcodeSuite::G29() {
         if (!abl.dryrun) probe.preheat_for_probing(LEVELING_NOZZLE_TEMP,
           #if ALL(DWIN_LCD_PROUI, HAS_HEATED_BED)
             HMI_data.BedLevT
+          #elif ENABLED(EXTENSIBLE_UI)
+            ExtUI::getLevelingBedTemp()
           #else
             LEVELING_BED_TEMP
           #endif
@@ -576,6 +579,7 @@ G29_TYPE GcodeSuite::G29() {
         const float newz = abl.measured_z + abl.Z_offset;
         abl.z_values[abl.meshCount.x][abl.meshCount.y] = newz;
         TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(abl.meshCount, newz));
+        TERN_(DWIN_LCD_PROUI, MeshViewer.DrawMeshPoint(abl.meshCount.x, abl.meshCount.y, newz));
 
         if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM_P(PSTR("Save X"), abl.meshCount.x, SP_Y_STR, abl.meshCount.y, SP_Z_STR, abl.measured_z + abl.Z_offset);
 

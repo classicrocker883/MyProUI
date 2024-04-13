@@ -62,75 +62,29 @@ enum processID : uint8_t {
   PlotProcess,
   WaitResponse,
   Homing,
-  PidProcess,
+  PIDProcess,
   MPCProcess,
   NothingToDo
 };
 
-#if ANY(HAS_PID_HEATING, MPC_AUTOTUNE)
+#if ANY(HAS_PID_HEATING, MPCTEMP)
   enum tempcontrol_t : uint8_t {
+    AUTOTUNE_DONE,
     #if HAS_PID_HEATING
-      PID_EXTR_START,
-      PID_BED_START,
+      OPTITEM(PIDTEMP, PID_EXTR_START)
+      OPTITEM(PIDTEMPBED, PID_BED_START)
+      OPTITEM(PIDTEMPCHAMBER, PID_CHAMBER_START)
       PID_BAD_HEATER_ID,
       PID_TEMP_TOO_HIGH,
       PID_TUNING_TIMEOUT,
     #endif
-    #if ENABLED(MPC_AUTOTUNE)
+    #if ENABLED(MPCTEMP)
       MPCTEMP_START,
       MPC_TEMP_ERROR,
       MPC_INTERRUPTED,
     #endif
-    AUTOTUNE_DONE
   };
 #endif
-
-typedef struct {
-  uint16_t Background_Color;
-  uint16_t Cursor_Color;
-  uint16_t TitleBg_Color;
-  uint16_t TitleTxt_Color;
-  uint16_t Text_Color;
-  uint16_t Selected_Color;
-  uint16_t SplitLine_Color;
-  uint16_t Highlight_Color;
-  uint16_t StatusBg_Color;
-  uint16_t StatusTxt_Color;
-  uint16_t PopupBg_Color;
-  uint16_t PopupTxt_Color;
-  uint16_t AlertBg_Color;
-  uint16_t AlertTxt_Color;
-  uint16_t PercentTxt_Color;
-  uint16_t Barfill_Color;
-  uint16_t Indicator_Color;
-  uint16_t Coordinate_Color;
-  uint16_t Bottom_Color;
-  int16_t PidCycles;
-  celsius_t HotendPidT;
-  celsius_t BedPidT;
-  celsius_t ExtMinT;
-  celsius_t BedLevT;
-  bool Baud250K;
-  bool CalcAvg;
-  bool SpdInd;
-  bool FullManualTramming;
-  bool MediaSort;
-  bool MediaAutoMount;
-  bool AdaptiveStepSmoothing;
-  bool EnablePreview;
-  uint8_t z_after_homing;
-  uint32_t Led_Color;
-  float ManualZOffset;
-#if !PROUI_EX
-  TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points;)
-  IF_DISABLED(BD_SENSOR, uint8_t multiple_probing;)
-  uint16_t zprobeFeed;
-#endif
-} HMI_data_t;
-
-extern HMI_data_t HMI_data;
-
-static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) + TERN0(PROUI_EX, sizeof(PRO_data_t));
 
 typedef struct {
   int8_t r, g, b;
@@ -173,7 +127,7 @@ inline bool Host_Printing() { return Printing() && !IS_SD_FILE_OPEN(); }
 
 // Popups
 #if HAS_HOTEND || HAS_HEATED_BED
-  void DWIN_Popup_Temperature(const int_fast8_t heater_id, const bool toohigh);
+  void DWIN_Popup_Temperature(const int_fast8_t heater_id, const uint8_t state);
 #endif
 #if ENABLED(POWER_LOSS_RECOVERY)
   void Popup_PowerLossRecovery();
@@ -194,10 +148,14 @@ uint32_t GetHash(char * str);
   void dwinDrawPlot(tempcontrol_t result);
   void drawHPlot();
   void drawBPlot();
+  void drawCPlot();
 #endif
 #if ENABLED(ENC_MENU_ITEM)
   void SetEncRateA();
   void SetEncRateB();
+#endif
+#if ENABLED(PROUI_ITEM_ENC)
+  void SetRevRate();
 #endif
 #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
   void SetHSMode();
@@ -397,7 +355,7 @@ void Draw_MaxAccel_Menu();
 #if HAS_PID_HEATING
   #include "../../../module/temperature.h"
   void DWIN_M303(const int c, const heater_id_t hid, const celsius_t temp);
-  void DWIN_PidTuning(tempcontrol_t result);
+  void DWIN_PIDTuning(tempcontrol_t result);
   void Draw_PID_Menu();
   #if ENABLED(PIDTEMP)
     #if ENABLED(PID_AUTOTUNE_MENU)
@@ -414,6 +372,12 @@ void Draw_MaxAccel_Menu();
     #if ANY(PID_AUTOTUNE_MENU, PID_EDIT_MENU)
       void Draw_BedPID_Menu();
     #endif
+  #endif
+  #if ENABLED(PIDTEMPCHAMBER)
+    #if ENABLED(PID_AUTOTUNE_MENU)
+      void ChamberPID();
+    #endif
+    void Draw_ChamberPID_Menu();
   #endif
 #endif
 
@@ -444,31 +408,4 @@ void Draw_MaxAccel_Menu();
 
 #if DEBUG_DWIN
   void DWIN_Debug(PGM_P msg);
-#endif
-
-#if !PROUI_EX
-  #if PROUI_GRID_PNTS
-    #undef  GRID_MAX_POINTS_X
-    #undef  GRID_MAX_POINTS_Y
-    #undef  GRID_MAX_POINTS
-    #define GRID_MAX_POINTS_X HMI_data.grid_max_points
-    #define GRID_MAX_POINTS_Y HMI_data.grid_max_points
-    #define GRID_MAX_POINTS  (HMI_data.grid_max_points * HMI_data.grid_max_points)
-  #endif
-  #if HAS_BED_PROBE
-    #undef Z_PROBE_FEEDRATE_SLOW
-    #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobeFeed
-  #endif
-#endif
-
-#if HAS_MESH
-  #undef  MESH_MIN_X
-  #undef  MESH_MAX_X
-  #undef  MESH_MIN_Y
-  #undef  MESH_MAX_Y
-  #include "../../marlinui.h"
-  #define MESH_MIN_X ui.mesh_inset_min_x
-  #define MESH_MAX_X ui.mesh_inset_max_x
-  #define MESH_MIN_Y ui.mesh_inset_min_y
-  #define MESH_MAX_Y ui.mesh_inset_max_y
 #endif

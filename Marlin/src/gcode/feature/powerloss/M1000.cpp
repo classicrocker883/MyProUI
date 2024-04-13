@@ -72,10 +72,12 @@ void GcodeSuite::M1000() {
     if (!force_resume && parser.seen_test('S')) {
       #if HAS_MARLINUI_MENU
         ui.goto_screen(menu_job_recovery);
-      #elif HAS_DWIN_E3V2_BASIC
-        recovery.dwin_flag = true;
       #elif ENABLED(EXTENSIBLE_UI)
         ExtUI::onPowerLossResume();
+      #elif HAS_PLR_UI_FLAG
+        recovery.ui_flag_resume = true;
+      #elif ENABLED(DWIN_CREALITY_LCD_JYERSUI) // Temporary fix until it can be better implemented
+        jyersDWIN.popupHandler(Popup_Resume);
       #else
         SERIAL_ECHO_MSG("Resume requires LCD.");
       #endif

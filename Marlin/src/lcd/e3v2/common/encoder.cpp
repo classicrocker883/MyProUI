@@ -48,6 +48,11 @@
 
 EncoderRate encoderRate;
 
+#if ENABLED(PROUI_ITEM_ENC)
+  EncoderState direction1;
+  EncoderState direction2;
+#endif
+
 // TODO: Replace with ui.quick_feedback
 void Encoder_tick() {
   TERN_(HAS_BEEPER, if (ui.tick_on) buzzer.click(10);)
@@ -85,7 +90,7 @@ EncoderState encoderReceiveAnalyze() {
       next_click_update_ms = millis() + 300;
       Encoder_tick();
       #if PIN_EXISTS(LCD_LED)
-        //LED_Action();
+        LED_Action();
       #endif
       TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
       if (!ui.backlight) {
@@ -120,9 +125,20 @@ EncoderState encoderReceiveAnalyze() {
     lastEncoderBits = newbutton;
   }
 
+  #if ENABLED(PROUI_ITEM_ENC)
+    if (ui.rev_rate == true) {
+      direction1 = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CW, ENCODER_DIFF_CCW);
+      direction2 = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CCW, ENCODER_DIFF_CW);
+    }
+    else {
+      direction1 = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CCW, ENCODER_DIFF_CW);
+      direction2 = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CW, ENCODER_DIFF_CCW);
+    }
+  #endif
+
   if (ABS(temp_diff) >= ENCODER_PULSES_PER_STEP) {
-    if (temp_diff > 0) { temp_diffState = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CCW, ENCODER_DIFF_CW); }
-    else { temp_diffState = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CW, ENCODER_DIFF_CCW); }
+    if (temp_diff > 0) { temp_diffState = TERN(PROUI_ITEM_ENC, direction1, TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CCW, ENCODER_DIFF_CW)); }
+    else { temp_diffState = TERN(PROUI_ITEM_ENC, direction2, TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CW, ENCODER_DIFF_CCW)); }
 
     #if ENABLED(ENCODER_RATE_MULTIPLIER)
       #if ENABLED(ENC_MENU_ITEM)
@@ -172,13 +188,15 @@ EncoderState encoderReceiveAnalyze() {
 #if PIN_EXISTS(LCD_LED)
 
   // Take the low 24 valid bits  24Bit: G7 G6 G5 G4 G3 G2 G1 G0 R7 R6 R5 R4 R3 R2 R1 R0 B7 B6 B5 B4 B3 B2 B1 B0
-  uint16_t LED_DataArray[LED_NUM];
+  uint32_t LED_DataArray[LED_NUM];
 
   // LED light operation
   void LED_Action() {
     LED_Control(RGB_SCALE_WARM_WHITE, 0x0F);
+    //LED_GraduallyControl(RGB_SCALE_COOL_WHITE, 0x0F, 1000);
     delay(30);
     LED_Control(RGB_SCALE_WARM_WHITE, 0x00);
+    //LED_GraduallyControl(RGB_SCALE_COOL_WHITE, 0x00, 1000);
   }
 
   // LED initialization
@@ -213,9 +231,9 @@ EncoderState encoderReceiveAnalyze() {
     for (uint8_t i = 0; i < LED_NUM; i++) {
       LED_DataArray[i] = 0;
       switch (RGB_Scale) {
-        case RGB_SCALE_R10_G7_B5: LED_DataArray[i] = (luminance * 10/10) << 8 | (luminance * 7/10) << 16 | luminance * 5/10; break;
-        case RGB_SCALE_R10_G7_B4: LED_DataArray[i] = (luminance * 10/10) << 8 | (luminance * 7/10) << 16 | luminance * 4/10; break;
-        case RGB_SCALE_R10_G8_B7: LED_DataArray[i] = (luminance * 10/10) << 8 | (luminance * 8/10) << 16 | luminance * 7/10; break;
+        case RGB_SCALE_R10_G7_B5: LED_DataArray[i] = uint8_t(luminance * 10/10) << 8 | uint8_t(luminance * 7/10) << 16 | uint8_t(luminance * 5/10); break;
+        case RGB_SCALE_R10_G7_B4: LED_DataArray[i] = uint8_t(luminance * 10/10) << 8 | uint8_t(luminance * 7/10) << 16 | uint8_t(luminance * 4/10); break;
+        case RGB_SCALE_R10_G8_B7: LED_DataArray[i] = uint8_t(luminance * 10/10) << 8 | uint8_t(luminance * 8/10) << 16 | uint8_t(luminance * 7/10); break;
       }
     }
     LED_WriteData();
@@ -230,13 +248,13 @@ EncoderState encoderReceiveAnalyze() {
     for (uint8_t i = 0; i < LED_NUM; i++) {
       switch (RGB_Scale) {
         case RGB_SCALE_R10_G7_B5:
-          led_data[i] = { luminance * 7/10, luminance * 10/10, luminance * 5/10 };
+          led_data[i] = { uint8_t(luminance * 7/10), uint8_t(luminance * 10/10), uint8_t(luminance * 5/10) };
           break;
         case RGB_SCALE_R10_G7_B4:
-          led_data[i] = { luminance * 7/10, luminance * 10/10, luminance * 4/10 };
+          led_data[i] = { uint8_t(luminance * 7/10), uint8_t(luminance * 10/10), uint8_t(luminance * 4/10) };
           break;
         case RGB_SCALE_R10_G8_B7:
-          led_data[i] = { luminance * 8/10, luminance * 10/10, luminance * 7/10 };
+          led_data[i] = { uint8_t(luminance * 8/10), uint8_t(luminance * 10/10), uint8_t(luminance * 7/10) };
           break;
       }
     }

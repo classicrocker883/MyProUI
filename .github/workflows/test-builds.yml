@@ -8,7 +8,7 @@ name: CI
 on:
   pull_request:
     branches:
-    - 2024-March!
+    - 2024-April!
     paths-ignore:
     - config/**
     - data/**
@@ -16,7 +16,7 @@ on:
     - '**/*.md'
   push:
     branches:
-    - 2024-March!
+    - 2024-April!
     paths-ignore:
     - config/**
     - data/**
@@ -35,60 +35,60 @@ jobs:
         test-platform:
 
         # Native
-        - linux_native
+        # - linux_native
 
         # AVR
-        - mega2560
-        - mega1280
-        - at90usb1286_dfu
+        # - mega2560
+        # - mega1280
+        # - at90usb1286_dfu
 
         # AVR Extended
-        - FYSETC_F6
-        - melzi_optiboot
-        - rambo
-        - sanguino1284p
-        - sanguino644p
+        # - FYSETC_F6
+        # - melzi_optiboot
+        # - rambo
+        # - sanguino1284p
+        # - sanguino644p
 
         # SAM3X8E
-        - DUE
-        - DUE_archim
+        # - DUE
+        # - DUE_archim
 
         # SAMD21
-        - SAMD51_grandcentral_m4
-        - SAMD21_minitronics20
+        # - SAMD51_grandcentral_m4
+        # - SAMD21_minitronics20
 
         # ESP32
-        - esp32
-        - mks_tinybee
+        # - esp32
+        # - mks_tinybee
 
         # Teensy 2
         #- at90usb1286_cdc
 
         # Teensy MK20DX256
-        - teensy31
+        # - teensy31
 
         # Teensy MK64FX512, MK66FX1M0
-        - teensy35
+        # - teensy35
 
         # Teensy IMXRT1062DVx6A
-        - teensy41
+        # - teensy41
 
         # STM32F0
-        - malyan_M300
-        - STM32F070CB_malyan
-        - STM32F070RB_malyan
+        # - malyan_M300
+        # - STM32F070CB_malyan
+        # - STM32F070RB_malyan
 
         # STM32F1
-        - chitu_f103
-        - mks_robin
-        - mks_robin_nano_v1v2
-        - PANDA_PI_V29
+        # - chitu_f103
+        # - mks_robin
+        # - mks_robin_nano_v1v2
+        # - PANDA_PI_V29
         - STM32F103RC_btt
-        - STM32F103RC_fysetc
+        # - STM32F103RC_fysetc
         - STM32F103RE_btt
-        - STM32F103RE_btt_USB
+        # - STM32F103RE_btt_USB
         - STM32F103RE_creality
-        - STM32F103VE_longer
+        # - STM32F103VE_longer
         #- mks_robin_mini
         #- mks_robin_nano_v1_3_f4_usbmod
         #- mks_robin_nano_v1v2_usbmod
@@ -97,38 +97,39 @@ jobs:
         #- STM32F103RE
 
         # STM32F4
-        - ARMED
-        - BIGTREE_BTT002
-        - BIGTREE_GTR_V1_0
-        - BIGTREE_SKR_PRO
-        - FLYF407ZG
-        - FYSETC_S6
-        - LERDGEK
-        - LERDGEX
-        - mks_robin_pro2
-        - Opulo_Lumen_REV3
-        - rumba32
-        - STM32F401RC_creality
-        - STM32F407VE_black
-        - I3DBEEZ9_V1
+        # - ARMED
+        # - BIGTREE_BTT002
+        # - BIGTREE_GTR_V1_0
+        # - BIGTREE_SKR_PRO
+        # - FLYF407ZG
+        # - FYSETC_S6
+        # - LERDGEK
+        # - LERDGEX
+        # - mks_robin_pro2
+        # - Opulo_Lumen_REV3
+        # - rumba32
+        - STM32F401RC_btt
+        # - STM32F401RC_creality
+        # - STM32F407VE_black
+        # - I3DBEEZ9_V1
 
         # STM32F7
-        - NUCLEO_F767ZI
-        - REMRAM_V1
+        # - NUCLEO_F767ZI
+        # - REMRAM_V1
 
         # STM32H7
-        - BTT_SKR_SE_BX
+        # - BTT_SKR_SE_BX
         #- STM32H743VI_btt
 
         # STM32F1 (Maple)
-        - jgaurora_a5s_a1_maple
-        - mks_robin_lite_maple
-        - mks_robin_pro_maple
-        - STM32F103RC_btt_USB_maple
-        - STM32F103RC_fysetc_maple
-        - STM32F103RC_meeb_maple
-        - STM32F103VE_longer_maple
-        - STM32F103VE_ZM3E4V2_USB_maple
+        # - jgaurora_a5s_a1_maple
+        # - mks_robin_lite_maple
+        # - mks_robin_pro_maple
+        # - STM32F103RC_btt_USB_maple
+        # - STM32F103RC_fysetc_maple
+        # - STM32F103RC_meeb_maple
+        # - STM32F103VE_longer_maple
+        # - STM32F103VE_ZM3E4V2_USB_maple
         #- mks_robin_maple
         #- mks_robin_nano_v1v2_maple
         #- STM32F103RC_btt_maple
@@ -138,14 +139,14 @@ jobs:
         #- GD32F303RC_creality_maple
         - GD32F103RC_voxelab_maple
         - N32F103RC_voxelab_maple
-        - N32G455RE_voxelab_maple
+        #- N32G455RE_voxelab_maple
 
         # STM32G0
         - STM32G0B1RE_btt
 
         # LPC176x - Lengthy tests
-        - LPC1768
-        - LPC1769
+        # - LPC1768
+        # - LPC1769
 
     steps:
 

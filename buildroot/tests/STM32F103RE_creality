@@ -9,9 +9,9 @@ set -e
 #
 # Build with configs included in the PR
 #
-use_example_configs "Creality/Ender-3 V2/CrealityV422/CrealityUI"
+use_example_configs "configurations/Voxelab Aquila/UBL"
 opt_enable MARLIN_DEV_MODE BUFFER_MONITORING BLTOUCH AUTO_BED_LEVELING_BILINEAR Z_SAFE_HOMING
-exec_test $1 $2 "Ender-3 V2 - CrealityUI" "$3"
+exec_test $1 $2 "Aquila UBL - ProUI" "$3"
 
 use_example_configs "Creality/Ender-3 V2/CrealityV422/CrealityUI"
 opt_disable DWIN_CREALITY_LCD
