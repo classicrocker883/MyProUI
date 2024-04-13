@@ -1038,6 +1038,10 @@ namespace LanguageWide_en {
     LSTR MSG_OPTION_DISABLED                = _UxGT("Option Disabled");
     LSTR MSG_DISABLE_MANUAL_TRAMMING        = _UxGT("Disable manual tramming");
     LSTR MSG_TRAMMING_WIZARD_START          = _UxGT("Tramming Wizard Start");
+    LSTR MSG_TMC_ASTEALTH                   = _UxGT(STR_A " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_BSTEALTH                   = _UxGT(STR_B " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_CSTEALTH                   = _UxGT(STR_C " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_ESTEALTH                   = _UxGT(STR_E " " STR_TMC_STEALTH);
   #endif // LCD_WIDTH >= 20 || HAS_DWIN_E3V2
 }
 
