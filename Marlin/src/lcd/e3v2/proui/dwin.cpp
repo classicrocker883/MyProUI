@@ -3618,6 +3618,7 @@ void Draw_Tune_Menu() {
 #endif
 
 #if HAS_TRINAMIC_CONFIG
+
   #if AXIS_IS_TMC(X)
     void SetXTMCCurrent() { SetPIntOnClick(MIN_TMC_CURRENT, MAX_TMC_CURRENT, []{ stepperX.refresh_stepper_current(); }); }
     #if AXIS_HAS_STEALTHCHOP(X)
@@ -3641,15 +3642,6 @@ void Draw_Tune_Menu() {
     #if AXIS_HAS_STEALTHCHOP(E0)
       void SetETMCStealth() { Show_Chkb_Line(stepperE0.toggle_stepping_mode()); }
     #endif
-  #endif
-
-  #if ANY_AXIS_HAS(STEALTHCHOP)
-    namespace GET_LANG(LCD_LANGUAGE) {
-      LSTR MSG_TMC_ASTEALTH           = _UxGT(STR_A " " STR_TMC_STEALTH);
-      LSTR MSG_TMC_BSTEALTH           = _UxGT(STR_B " " STR_TMC_STEALTH);
-      LSTR MSG_TMC_CSTEALTH           = _UxGT(STR_C " " STR_TMC_STEALTH);
-      LSTR MSG_TMC_ESTEALTH           = _UxGT(STR_E " " STR_TMC_STEALTH);
-    }
   #endif
 
   void Draw_TrinamicConfig_menu() {
