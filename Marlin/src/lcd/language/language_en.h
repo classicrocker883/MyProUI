@@ -52,7 +52,7 @@ namespace LanguageNarrow_en {
   constexpr uint8_t CHARSIZE              = 2;
   LSTR LANGUAGE                           = _UxGT("English");
 
-  // These strings should be translated
+  //These strings should be translated
   LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" Ready");
   LSTR MSG_YES                            = _UxGT("YES");
   LSTR MSG_NO                             = _UxGT("NO");
