@@ -1,8 +1,8 @@
 /**
  * Bed Level Tools for Pro UI
  * Extended by: Miguel A. Risco-Castillo (MRISCOC)
- * Version: 4.1.0
- * Date: 2023/07/12
+ * Version: 5.1.0
+ * Date: 2023/08/22
  *
  * Based on the original work of: Henri-J-Norden
  * https://github.com/Jyers/Marlin/pull/126
@@ -30,10 +30,6 @@
 
 class BedLevelTools {
 public:
-  #if ENABLED(USE_GRID_MESHVIEWER)
-    static bool viewer_asymmetric_range;
-    static bool viewer_print_value;
-  #endif
   static bool goto_mesh_value;
   static uint8_t mesh_x, mesh_y;
   static uint8_t tilt_grid;
@@ -50,13 +46,7 @@ public:
   static void moveToZ();
   static void probeXY();
   static void meshReset();
-  static float getMaxValue();
-  static float getMinValue();
   static bool meshValidate();
-  #if ENABLED(USE_GRID_MESHVIEWER)
-    static void drawBedMesh(int16_t selected=-1, uint8_t gridline_width=1, uint16_t padding_x=8, uint16_t padding_y_top=(40 + 53 - 7));
-    static void setMeshViewerStatus();
-  #endif
 };
 
 extern BedLevelTools bedLevelTools;

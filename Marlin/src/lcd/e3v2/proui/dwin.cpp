@@ -1,8 +1,8 @@
 /**
  * DWIN Enhanced implementation for PRO UI
  * Author: Miguel A. Risco-Castillo (MRISCOC)
- * Version: 4.1.3
- * Date: 2023/07/12
+ * Version: 4.2.3
+ * Date: 2023/08/04
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -122,7 +122,7 @@
   #include "lockscreen.h"
 #endif
 
-#if ENABLED(LCD_BED_TRAMMING)
+#if ALL(PROUI_EX, LCD_BED_TRAMMING)
   #include "bed_tramming.h"
 #endif
 
@@ -228,9 +228,6 @@ char dateTime[16+1] =
 // New menu system pointers
 Menu *fileMenu = nullptr;
 Menu *prepareMenu = nullptr;
-#if ENABLED(LCD_BED_TRAMMING)
-  Menu *trammingMenu = nullptr;
-#endif
 Menu *moveMenu = nullptr;
 Menu *controlMenu = nullptr;
 Menu *advancedSettings = nullptr;
@@ -287,6 +284,9 @@ Menu *stepsMenu = nullptr;
 #if PROUI_EX
   #if ENABLED(NOZZLE_PARK_FEATURE)
      Menu *parkPosMenu = nullptr;
+  #endif
+  #if ENABLED(LCD_BED_TRAMMING)
+    Menu *trammingMenu = nullptr;
   #endif
   Menu *phySetMenu = nullptr;
 #endif
@@ -571,9 +571,9 @@ void drawPrintDone() {
   DWINUI::clearMainArea();
   dwinPrintHeader(nullptr);
   #if HAS_GCODE_PREVIEW
-    const bool haspreview = previewValid();
+    const bool haspreview = gPreview.isValid();
     if (haspreview) {
-      previewShow();
+      gPreview.show();
       DWINUI::drawButton(BTN_Continue, 86, 295);
     }
   #else
@@ -655,12 +655,12 @@ void _drawIconBlink(bool &flag, const bool sensor, const uint8_t icon1, const ui
     if (flag != sensor) {
       flag = sensor;
       if (!flag) {
-        dwinDrawBox(1, hmiData.colorBackground, x-1, y-1, 21, 21);
+        dwinDrawBox(1, hmiData.colorBackground, x-1, y-1, 22, 22);
         DWINUI::drawIcon(icon1, x, y);
       }
     }
     if (flag) {
-      dwinDrawBox(1, blink ? hmiData.colorSplitLine : hmiData.colorBackground, x-1, y-1, 21, 21);
+      dwinDrawBox(1, blink ? hmiData.colorSplitLine : hmiData.colorBackground, x-1, y-1, 22, 22);
       DWINUI::drawIcon(icon2, x, y);
     }
   #else
@@ -809,7 +809,9 @@ bool DWIN_lcd_sd_status = false;
   }
 #endif
 
-void setMediaAutoMount() { toggleCheckboxLine(hmiData.mediaAutoMount); }
+#if DISABLED(HAS_SD_EXTENDER)
+  void setMediaAutoMount() { toggleCheckboxLine(hmiData.mediaAutoMount); }
+#endif
 
 inline uint16_t nr_sd_menu_items() {
   return _MIN(card.get_num_items() + !card.flag.workDirIsRoot, MENU_MAX_ITEMS);
@@ -1075,7 +1077,7 @@ void hmiMainMenu() {
   else if (encoder_diffState == ENCODER_DIFF_ENTER) {
     switch (select_page.now) {
       case PAGE_PRINT:
-        if (hmiData.mediaAutoMount) {
+        if (ENABLED(HAS_SD_EXTENDER) || hmiData.mediaAutoMount) {
           card.mount();
           safe_delay(800);
         };
@@ -1447,7 +1449,7 @@ void dwinLevelingStart() {
     TERN_(PROUI_EX,hmiFlag.cancel_abl = 0);
     title.showCaption(GET_TEXT_F(MSG_BED_LEVELING));
     #if PROUI_EX
-      meshViewer.drawMeshGrid(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y);
+      meshViewer.drawBackground(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y);
       DWINUI::drawButton(BTN_Cancel, 86, 305);
     #else
       dwinShowPopup(ICON_AutoLeveling, GET_TEXT_F(MSG_BED_LEVELING), GET_TEXT_F(MSG_PLEASE_WAIT), TERN(PROUI_EX, BTN_Cancel, 0));
@@ -1656,7 +1658,7 @@ void dwinLevelingDone() {
 // Started a Print Job
 void dwinPrintStarted() {
   DEBUG_ECHOLNPGM("dwinPrintStarted: ", sdPrinting());
-  TERN_(HAS_GCODE_PREVIEW, if (hostPrinting()) previewInvalidate());
+  TERN_(HAS_GCODE_PREVIEW, if (hostPrinting()) gPreview.invalidate());
   TERN_(SET_PROGRESS_PERCENT, ui.progress_reset());
   TERN_(SET_REMAINING_TIME, ui.reset_remaining_time());
   hmiFlag.pause_flag = false;
@@ -1698,13 +1700,8 @@ void dwinPrintFinished() {
 // Print was aborted
 void dwinPrintAborted() {
   DEBUG_ECHOLNPGM("dwinPrintAborted");
-  #if PROUI_EX
-    if (all_axes_homed()) {
-      const int16_t zpos = current_position.z + PRO_data.Park_point.z;
-      MString<25> cmd;
-      cmd.setf(cmd, F("G0Z%i\nG0F2000Y%i"), zpos, PRO_data.Park_point.y);
-      queue.inject(&cmd);
-    }
+  #ifdef SD_FINISHED_RELEASECOMMAND
+    queue.inject(SD_FINISHED_RELEASECOMMAND);
   #endif
   hostui.notify("Print Aborted");
   dwinPrintFinished();
@@ -1790,6 +1787,8 @@ void dwinSetDataDefaults() {
       PRO_data.mesh_max_x = DEF_MESH_MAX_X;
       PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
       PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
+      meshViewer.meshmode = ENABLED(USE_GRID_MESHVIEWER);
+      meshViewer.meshfont = TERN(TJC_DISPLAY, font8x16, font6x12);
     #endif
     #if HAS_BED_PROBE
       PRO_data.probezfix = DEF_PROBEZFIX;
@@ -1801,6 +1800,7 @@ void dwinSetDataDefaults() {
       PRO_data.Park_point = DEF_NOZZLE_PARK_POINT;
     #endif
     #if HAS_FILAMENT_SENSOR
+      runout.enabled = false;
       PRO_data.Runout_active_state = FIL_RUNOUT_STATE;
       PRO_data.FilamentMotionSensor = DEF_FIL_MOTION_SENSOR;
     #endif
@@ -1826,7 +1826,11 @@ void dwinCopySettingsTo(char * const buff) {
 void dwinCopySettingsFrom(const char * const buff) {
   DEBUG_ECHOLNPGM("dwinCopySettingsFrom");
   memcpy(&hmiData, buff, sizeof(hmi_data_t));
-  TERN_(PROUI_EX, memcpy(&PRO_data, buff + sizeof(hmi_data_t), sizeof(PRO_data)));
+  #if PROUI_EX
+    memcpy(&PRO_data, buff + sizeof(hmi_data_t), sizeof(PRO_data));
+    proUIEx.loadSettings();
+    TERN_(HAS_MESH, meshViewer.meshfont = TERN(TJC_DISPLAY, font8x16, font6x12));
+  #endif
   if (hmiData.colorText == hmiData.colorBackground) dwinSetColorDefaults();
   DWINUI::setColors(hmiData.colorText, hmiData.colorBackground, hmiData.colorStatusBg);
   TERN_(PREVENT_COLD_EXTRUSION, applyExtMinT());
@@ -1841,7 +1845,6 @@ void dwinCopySettingsFrom(const char * const buff) {
       OPTARG(HAS_WHITE_LED, (hmiData.ledColor >> 24) & 0xFF)
     );
   #endif
-  TERN_(PROUI_EX, proUIEx.loadSettings());
 }
 
 // Initialize or re-initialize the LCD
@@ -1974,7 +1977,7 @@ void dwinRedrawScreen() {
       dwinPopupContinue(ICON_BLTouch, GET_TEXT_F(MSG_MESH_VIEWER), GET_TEXT_F(MSG_NO_VALID_MESH));
     else {
       hmiSaveProcessID(ID_WaitResponse);
-      meshViewer.draw(false, true);
+      meshViewer.drawViewer(false, true);
     }
   }
 #endif // HAS_MESH
@@ -2006,7 +2009,7 @@ void dwinRedrawScreen() {
 
 #endif // HAS_LOCKSCREEN
 
-#if HAS_GCODE_PREVIEW
+#if ALL(HAS_GCODE_PREVIEW, PREVIEW_MENU_ITEM)
   void setPreview() { toggleCheckboxLine(hmiData.enablePreview); }
 #endif
 
@@ -2046,7 +2049,7 @@ void gotoConfirmToPrint() {
       laserOn(false); // If it is not laser file turn off laser mode
   #endif
   #if HAS_GCODE_PREVIEW
-    if (hmiData.enablePreview) return gotoPopup(previewDrawFromSD, onClickConfirmToPrint);
+    if (hmiData.enablePreview) return gotoPopup(gPreview.draw, onClickConfirmToPrint);
   #endif
   #if ENABLED(ONE_CLICK_PRINT)
     return gotoPopup(confirmToPrintPopup, onClickConfirmToPrint);
@@ -2539,7 +2542,7 @@ void applyMaxAccel() { planner.set_max_acceleration(hmiValue.axis, menuData.valu
 #endif
 
 #if ENABLED(FWRETRACT)
-  void doRetract() { 
+  void doRetract() {
     current_position.e-=fwretract.settings.retract_length;
     axisMove(E_AXIS);
   }
@@ -2636,7 +2639,7 @@ void drawPrepareMenu() {
       MENU_ITEM(ICON_FilMan, MSG_FILAMENT_MAN, onDrawSubMenu, drawFilamentManMenu);
     #endif
     MENU_ITEM(ICON_Axis, MSG_MOVE_AXIS, onDrawSubMenu, drawMoveMenu);
-    #if ENABLED(LCD_BED_TRAMMING)
+    #if ALL(PROUI_EX, LCD_BED_TRAMMING)
       MENU_ITEM(ICON_Tram, MSG_BED_TRAMMING, onDrawSubMenu, drawTrammingMenu);
     #endif
     MENU_ITEM(ICON_CloseMotor, MSG_DISABLE_STEPPERS, onDrawMenuItem, disableMotors);
@@ -2667,7 +2670,7 @@ void drawPrepareMenu() {
   updateMenu(prepareMenu);
 }
 
-#if ENABLED(LCD_BED_TRAMMING)
+#if ALL(PROUI_EX, LCD_BED_TRAMMING)
 
   void setManualTramming() {
     toggleCheckboxLine(hmiData.fullManualTramming);
@@ -2778,13 +2781,15 @@ void drawAdvancedSettingsMenu() {
     #if ENABLED(POWER_LOSS_RECOVERY)
       EDIT_ITEM(ICON_Pwrlossr, MSG_OUTAGE_RECOVERY, onDrawChkbMenu, setPwrLossr, &recovery.enabled);
     #endif
-    #if HAS_GCODE_PREVIEW
+    #if ALL(HAS_GCODE_PREVIEW, PREVIEW_MENU_ITEM)
       EDIT_ITEM(ICON_File, MSG_HAS_PREVIEW, onDrawChkbMenu, setPreview, &hmiData.enablePreview);
     #endif
     #if ENABLED(MEDIASORT_MENU_ITEM)
       EDIT_ITEM(ICON_File, MSG_MEDIA_SORT, onDrawChkbMenu, setMediaSort, &hmiData.mediaSort);
     #endif
-    EDIT_ITEM(ICON_File, MSG_MEDIA_UPDATE, onDrawChkbMenu, setMediaAutoMount, &hmiData.mediaAutoMount);
+    #if DISABLED(HAS_SD_EXTENDER)
+      EDIT_ITEM(ICON_File, MSG_MEDIA_UPDATE, onDrawChkbMenu, setMediaAutoMount, &hmiData.mediaAutoMount);
+    #endif
     #if ENABLED(BAUD_RATE_GCODE)
       EDIT_ITEM_F(ICON_SetBaudRate, "115K baud", onDrawChkbMenu, setBaudRate, &hmiData.baud115K);
     #endif

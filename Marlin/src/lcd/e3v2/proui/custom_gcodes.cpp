@@ -1,8 +1,8 @@
 /**
  * Custom G-code implementation for PRO UI
  * Author: Miguel A. Risco-Castillo (MRISCOC)
- * Version: 2.2.0
- * Date: 2023/08/04
+ * Version: 2.3.0
+ * Date: 2023/09/07
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -61,7 +61,7 @@ void cError() {
   }
 #endif
 
-#if ENABLED(LCD_BED_TRAMMING)
+#if ALL(PROUI_EX, LCD_BED_TRAMMING)
   // Bed tramming
   void C35() {
     if (parser.seenval('T')) {
@@ -87,7 +87,7 @@ void C108() {
 }
 
 // Enable or disable preview screen
-#if ENABLED(HAS_GCODE_PREVIEW)
+#if ALL(PROUI_EX, HAS_GCODE_PREVIEW, PREVIEW_MENU_ITEM)
 void C250() {
   if (parser.seenval('P')) {
     hmiData.enablePreview = !!parser.value_byte();
@@ -119,13 +119,10 @@ void customGcode(const int16_t codenum) {
     #if HAS_CUSTOM_COLORS
       case 11: C11(); break;            // Set color for UI element E
     #endif
-    #if ENABLED(LCD_BED_TRAMMING)
+    #if ALL(PROUI_EX, LCD_BED_TRAMMING)
       case 35: C35(); break; // Launch bed tramming wizard
     #endif
     case 108: C108(); break;            // Cancel a Wait for User without an Emergecy Parser
-    #if ENABLED(HAS_GCODE_PREVIEW)
-      case 250: C250(); break;          // Enable or disable preview screen
-    #endif
     #if HAS_LOCKSCREEN
       case 510: C510(); break;          // lock screen
     #endif
@@ -146,6 +143,9 @@ void customGcode(const int16_t codenum) {
       case 115: proUIEx.C115(); break;    // ProUI Info
       #if ENABLED(NOZZLE_PARK_FEATURE)
         case 125: proUIEx.C125(); break;  // Set park position
+      #endif
+      #if ALL(HAS_GCODE_PREVIEW, PREVIEW_MENU_ITEM)
+        case 250: C250(); break;          // Enable or disable preview screen
       #endif
       #if HAS_PROUI_RUNOUT_SENSOR
         case 412: proUIEx.C412(); break;  // Set runout sensor active mode

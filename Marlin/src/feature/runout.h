@@ -336,24 +336,18 @@ class FilamentSensorBase {
 
 #endif // HAS_FILAMENT_SWITCH
 
-#if ENABLED(HAS_PROUI_RUNOUT_SENSOR)
-
+#if HAS_PROUI_RUNOUT_SENSOR
   /**
    * This is a selectable sensor between a configurable endstop switch in
    * the path of the filament, and a magnetic encoder disc with a Hall effect
    * sensor (or a slotted disc and optical sensor).
    */
-
   class FilamentSensorProUI : public FilamentSensorBase {
     private:
       static uint8_t motion_detected;
-    public:    
-      #if HAS_FILAMENT_MOTION
-        static void poll_motion_sensor();
-      #endif
-      #if HAS_FILAMENT_RUNOUT_DISTANCE
-        static void block_completed(const block_t * const b);
-      #endif
+    public:
+      static void poll_motion_sensor();
+      static void block_completed(const block_t * const b);
       static void run();
   };
 

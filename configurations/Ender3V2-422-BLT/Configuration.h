@@ -1916,7 +1916,7 @@
     // Enable this option to use an encoder disc that toggles the runout pin
     // as the filament moves. (Be sure to set FILAMENT_RUNOUT_DISTANCE_MM
     // large enough to avoid false positives.)
-    #define FILAMENT_MOTION_SENSOR  // MRiscoC Enabled runout sensor support
+    //#define FILAMENT_MOTION_SENSOR
 
     #if ENABLED(FILAMENT_MOTION_SENSOR)
       //#define FILAMENT_SWITCH_AND_MOTION
@@ -3384,6 +3384,10 @@
 #if PROUI_EX
   #define HAS_GCODE_PREVIEW 1
   #define HAS_TOOLBAR 1
+  #if ENABLED(FILAMENT_RUNOUT_SENSOR)
+    #define HAS_PROUI_RUNOUT_SENSOR 1
+  #endif
+  #define DEF_PROBEZFIX 0
 #endif
 #define HAS_CUSTOM_COLORS 1
 #define HAS_PLOT 1
@@ -3392,6 +3396,7 @@
 #define HAS_LOCKSCREEN 1
 //#define HAS_SD_EXTENDER 1  // Enable to support SD card extender cables
 #define MESH_EDIT_MENU
+//#define PREVIEW_MENU_ITEM  // Allows enable/disable Thumbnail preview via menu and C250
 #define SHOW_REAL_POS
 //#define ACTIVATE_MESH_ITEM  // Allows temporary enabling of mesh leveling
 #define RUNOUT_TUNE_ITEM

@@ -30,7 +30,6 @@ typedef struct {
   uint16_t thumbsize;
   uint8_t thumbheight;
   uint8_t thumbwidth;
-  uint8_t *thumbdata;
   float time;
   float filament;
   float layer;

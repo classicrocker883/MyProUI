@@ -1,8 +1,8 @@
 /**
  * Mesh Viewer for PRO UI
  * Author: Miguel A. Risco-Castillo (MRISCOC)
- * version: 5.1.1
- * Date: 2023/07/12
+ * version: 5.2.1
+ * Date: 2023/08/19
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,7 +21,7 @@
 
 #include "../../../inc/MarlinConfigPre.h"
 
-#if ALL(DWIN_LCD_PROUI, HAS_MESH)
+#if ALL(DWIN_LCD_PROUI, HAS_MESH) && DISABLED(PROUI_EX)
 
 #include "../../../core/types.h"
 #include "../../marlinui.h"
@@ -29,10 +29,6 @@
 #include "dwin_popup.h"
 #include "../../../feature/bedlevel/bedlevel.h"
 #include "meshviewer.h"
-
-#if ENABLED(USE_GRID_MESHVIEWER)
-  #include "bedlevel_tools.h"
-#endif
 
 bool meshredraw;                            // Redraw mesh points
 uint8_t sizex, sizey;                       // Mesh XY size
@@ -56,7 +52,7 @@ MeshViewer meshViewer;
 
 float MeshViewer::max, MeshViewer::min;
 
-void MeshViewer::drawMeshGrid(const uint8_t csizex, const uint8_t csizey) {
+void MeshViewer::drawBackground(const uint8_t csizex, const uint8_t csizey) {
   sizex = csizex;
   sizey = csizey;
   rmax = _MIN(margin - 2, 0.5*(width)/(sizex - 1));
@@ -68,7 +64,7 @@ void MeshViewer::drawMeshGrid(const uint8_t csizex, const uint8_t csizey) {
   for (uint8_t y = 1; y < sizey - 1; ++y) dwinDrawHLine(hmiData.colorSplitLine, px(0), py(y), width);
 }
 
-void MeshViewer::drawMeshPoint(const uint8_t x, const uint8_t y, const float z) {
+void MeshViewer::drawPoint(const uint8_t x, const uint8_t y, const float z) {
   if (isnan(z)) return;
   #if LCD_BACKLIGHT_TIMEOUT_MINS
     ui.refresh_backlight_timeout();
@@ -83,70 +79,51 @@ void MeshViewer::drawMeshPoint(const uint8_t x, const uint8_t y, const float z) 
     else DWINUI::drawSignedFloat(meshfont, 1, 2, px(x) - 3*fs, py(y) - fs, z);
   }
   else {
-    char str_1[9];
-    str_1[0] = 0;
+    char str_1[9] = "0";
     switch (v) {
-      case -999 ... -100:  // -9.99 .. -1.00 mm
-        DWINUI::drawSignedFloat(meshfont, 1, 1, px(x) - 3*fs, py(y) - fs, z);
-        break;
-      case -99 ... -1:  // -0.99 .. -0.01 mm
+      case -99 ... -1:  // -.99 .. -.01 mm
         sprintf_P(str_1, PSTR("-.%02i"), -v);
         break;
-      case 0:
-        dwinDrawString(false, meshfont, DWINUI::textColor, DWINUI::backColor, px(x) - 4, py(y) - fs, "0");
-        break;
-      case 1 ... 99:  // 0.01 .. 0.99 mm
+      case 1 ... 99:  // .01 .. .99 mm
         sprintf_P(str_1, PSTR(".%02i"), v);
         break;
-      case 100 ... 999:  // 1.00 .. 9.99 mm
-        DWINUI::drawSignedFloat(meshfont, 1, 1, px(x) - 3 * fs, py(y) - fs, z);
+      case -999 ... -100:  // -9.9 .. -1.0 mm
+      case  100 ...  999:  // 1.0 .. 9.9 mm
+        dtostrf(z, 1, 1, str_1);
         break;
     }
-    if (str_1[0])
-      dwinDrawString(false, meshfont, DWINUI::textColor, DWINUI::backColor, px(x) - 2 * fs, py(y) - fs, str_1);
+    dwinDrawString(false, meshfont, DWINUI::textColor, DWINUI::backColor, px(x) - 2 * fs, py(y) - fs, str_1);
   }
   SERIAL_FLUSH();
   TERN_(TJC_DISPLAY, delay(100));
 }
 
 void MeshViewer::drawMesh(const bed_mesh_t zval, const uint8_t csizex, const uint8_t csizey) {
-  drawMeshGrid(csizex, csizey);
+  drawBackground(csizex, csizey);
   for (uint8_t y = 0; y < csizey; ++y) {
     hal.watchdog_refresh();
-    for (uint8_t x = 0; x < csizex; ++x) drawMeshPoint(x, y, zval[x][y]);
+    for (uint8_t x = 0; x < csizex; ++x) drawPoint(x, y, zval[x][y]);
   }
 }
 
-void MeshViewer::draw(const bool withsave/*=false*/, const bool redraw/*=true*/) {
+void MeshViewer::drawViewer(const bool withsave/*=false*/, const bool redraw/*=true*/) {
   title.showCaption(GET_TEXT_F(MSG_MESH_VIEWER));
-  #if ENABLED(USE_GRID_MESHVIEWER)
-    DWINUI::clearMainArea();
-    bedLevelTools.viewer_print_value = true;
-    bedLevelTools.drawBedMesh(-1, 1, 8, 10 + TITLE_HEIGHT);
-  #else
-    if (redraw) drawMesh(bedlevel.z_values, GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y); // Draw complete mesh viewer
-    else DWINUI::drawBox(1, hmiData.colorBackground, { 89, 305, 99, 38 }); // Erase "Continue" button
-  #endif
+  if (redraw) drawMesh(bedlevel.z_values, GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y); // Draw complete mesh viewer
+  else DWINUI::drawBox(1, hmiData.colorBackground, { 89, 305, 99, 38 }); // Erase "Continue" button
   if (withsave) {
     DWINUI::drawButton(BTN_Save, 26, 305);
     DWINUI::drawButton(BTN_Continue, 146, 305);
     drawSelectHighlight(hmiFlag.select_flag, 305);
   }
-  else
-    DWINUI::drawButton(BTN_Continue, 86, 305);
-
-  #if ENABLED(USE_GRID_MESHVIEWER)
-    bedLevelTools.setMeshViewerStatus();
-  #else
-    char str_1[6], str_2[6] = "";
-    ui.status_printf(0, F("Mesh minZ: %s, maxZ: %s"),
-      dtostrf(min, 1, 2, str_1),
-      dtostrf(max, 1, 2, str_2)
-    );
-  #endif
+  else DWINUI::drawButton(BTN_Continue, 86, 305);
+  char str_1[6], str_2[6] = "";
+  ui.status_printf(0, F("Mesh minZ: %s, maxZ: %s"),
+    dtostrf(min, 1, 2, str_1),
+    dtostrf(max, 1, 2, str_2)
+  );
 }
 
-void drawMeshViewer() { meshViewer.draw(true, meshredraw); }
+void drawMeshViewer() { meshViewer.drawViewer(true, meshredraw); }
 
 void onClick_MeshViewer() { if (hmiFlag.select_flag) saveMesh(); hmiReturnScreen(); }
 
@@ -156,4 +133,4 @@ void gotoMeshViewer(const bool redraw) {
   else hmiReturnScreen();
 }
 
-#endif // DWIN_LCD_PROUI && HAS_MESH
+#endif // DWIN_LCD_PROUI && HAS_MESH && DISABLED(PROUI_EX)

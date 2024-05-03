@@ -36,7 +36,7 @@
  */
 
 // Change EEPROM version if the structure changes
-#define EEPROM_VERSION "V88"
+#define EEPROM_VERSION "P89"
 #define EEPROM_OFFSET 100
 
 // Check the integrity of data offsets.
@@ -80,6 +80,10 @@
 #elif ENABLED(DWIN_LCD_PROUI)
   #include "../lcd/e3v2/proui/dwin.h"
   #include "../lcd/e3v2/proui/bedlevel_tools.h"
+#endif
+
+#if ALL(PROUI_EX, HAS_MESH)
+  #include "../lcd/e3v2/proui/meshviewer.h"
 #endif
 
 #if ENABLED(HOST_PROMPT_SUPPORT)
@@ -270,7 +274,7 @@ typedef struct SettingsDataStruct {
   //
   float mbl_z_offset;                                   // bedlevel.z_offset
   uint8_t mesh_num_x, mesh_num_y;                       // GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y
-  uint16_t mesh_check; 
+  uint16_t mesh_check;
   #if PROUI_EX
     float mbl_z_values[TERN(MESH_BED_LEVELING, GRID_LIMIT, 3)]   // bedlevel.z_values
                       [TERN(MESH_BED_LEVELING, GRID_LIMIT, 3)];
@@ -301,6 +305,13 @@ typedef struct SettingsDataStruct {
     bed_mesh_t z_values;                                // G29
   #else
     float z_values[3][3];
+  #endif
+
+  //
+  // Mesh Viewer mode
+  //
+  #if ALL(PROUI_EX, HAS_MESH)
+    bool meshmode;
   #endif
 
   //
@@ -1047,6 +1058,13 @@ void MarlinSettings::postprocess() {
         for (uint16_t q = grid_max_x * grid_max_y; q--;) EEPROM_WRITE(dummyf);
       #endif
     }
+
+    //
+    // Mesh Viewer mode
+    //
+    #if ALL(PROUI_EX, HAS_MESH)
+      EEPROM_WRITE(meshViewer.meshmode);
+    #endif
 
     //
     // X Axis Twist Compensation
@@ -2077,6 +2095,13 @@ void MarlinSettings::postprocess() {
             for (uint16_t q = grid_max_x * grid_max_y; q--;) EEPROM_READ(dummyf);
           }
       }
+
+      //
+      // Mesh Viewer mode
+      //
+      #if ALL(PROUI_EX, HAS_MESH)
+        EEPROM_READ(meshViewer.meshmode);
+      #endif
 
       //
       // X Axis Twist Compensation

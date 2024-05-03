@@ -168,7 +168,7 @@ class CreateJPEGThumbnail(Script):
                     "description": "Width of the generated thumbnail",
                     "unit": "px",
                     "type": "int",
-                    "default_value": 200,
+                    "default_value": 190,
                     "minimum_value": "0",
                     "minimum_value_warning": "12",
                     "maximum_value_warning": "800"
@@ -179,7 +179,7 @@ class CreateJPEGThumbnail(Script):
                     "description": "Height of the generated thumbnail",
                     "unit": "px",
                     "type": "int",
-                    "default_value": 200,
+                    "default_value": 190,
                     "minimum_value": "0",
                     "minimum_value_warning": "12",
                     "maximum_value_warning": "600"
