@@ -41,7 +41,7 @@
 #ifndef __BYTE_GRABBING_DEFINED__
 #define __BYTE_GRABBING_DEFINED__ 1
 #ifdef BROKEN_OPTIMIZER_LITTLE_ENDIAN
-// Note: Use this if your compiler generates horrible assembler!
+/// NOTE: Use this if your compiler generates horrible assembler!
 #define BGRAB0(__usi__)  (((uint8_t *)&(__usi__))[0])
 #define BGRAB1(__usi__)  (((uint8_t *)&(__usi__))[1])
 #define BGRAB2(__usi__)  (((uint8_t *)&(__usi__))[2])
@@ -51,7 +51,7 @@
 #define BGRAB6(__usi__)  (((uint8_t *)&(__usi__))[6])
 #define BGRAB7(__usi__)  (((uint8_t *)&(__usi__))[7])
 #else
-// Note: The cast alone to uint8_t is actually enough.
+/// NOTE: The cast alone to uint8_t is actually enough.
 // GCC throws out the "& 0xFF", and the size is no different.
 // Some compilers need it.
 #define BGRAB0(__usi__)  ((uint8_t)((__usi__) & 0xFF ))

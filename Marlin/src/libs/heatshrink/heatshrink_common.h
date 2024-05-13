@@ -6,7 +6,7 @@
 #define HEATSHRINK_AUTHOR "Scott Vokes <vokes.s@gmail.com>"
 #define HEATSHRINK_URL "github.com/atomicobject/heatshrink"
 
-/* Version 0.4.1 */
+// Version 0.4.1
 #define HEATSHRINK_VERSION_MAJOR 0
 #define HEATSHRINK_VERSION_MINOR 4
 #define HEATSHRINK_VERSION_PATCH 1

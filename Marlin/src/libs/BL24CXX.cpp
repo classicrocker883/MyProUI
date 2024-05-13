@@ -181,22 +181,22 @@ uint8_t BL24CXX::readOneByte(uint16_t ReadAddr) {
   uint8_t temp = 0;
   IIC::start();
   if (EE_TYPE > BL24C16) {
-    IIC::send_byte(EEPROM_DEVICE_ADDRESS);        // Send write command
+    IIC::send_byte(EEPROM_DEVICE_ADDRESS); // Send write command
     IIC::wait_ack();
-    IIC::send_byte(ReadAddr >> 8);                // Send high address
+    IIC::send_byte(ReadAddr >> 8);         // Send high address
     IIC::wait_ack();
   }
   else
     IIC::send_byte(EEPROM_DEVICE_ADDRESS + ((ReadAddr >> 8) << 1)); // Send device address 0xA0, write data
 
   IIC::wait_ack();
-  IIC::send_byte(ReadAddr & 0xFF);                // Send low address
+  IIC::send_byte(ReadAddr & 0xFF);              // Send low address
   IIC::wait_ack();
   IIC::start();
-  IIC::send_byte(EEPROM_DEVICE_ADDRESS | 0x01);   // Send byte
+  IIC::send_byte(EEPROM_DEVICE_ADDRESS | 0x01); // Send byte
   IIC::wait_ack();
   temp = IIC::read_byte(0);
-  IIC::stop();                                    // Generate a stop condition
+  IIC::stop();                                  // Generate a stop condition
   return temp;
 }
 
@@ -206,19 +206,19 @@ uint8_t BL24CXX::readOneByte(uint16_t ReadAddr) {
 void BL24CXX::writeOneByte(uint16_t WriteAddr, uint8_t DataToWrite) {
   IIC::start();
   if (EE_TYPE > BL24C16) {
-    IIC::send_byte(EEPROM_DEVICE_ADDRESS);        // Send write command
+    IIC::send_byte(EEPROM_DEVICE_ADDRESS); // Send write command
     IIC::wait_ack();
-    IIC::send_byte(WriteAddr >> 8);               // Send high address
+    IIC::send_byte(WriteAddr >> 8);        // Send high address
   }
   else
     IIC::send_byte(EEPROM_DEVICE_ADDRESS + ((WriteAddr >> 8) << 1)); // Send device address 0xA0, write data
 
   IIC::wait_ack();
-  IIC::send_byte(WriteAddr & 0xFF);               // Send low address
+  IIC::send_byte(WriteAddr & 0xFF); // Send low address
   IIC::wait_ack();
-  IIC::send_byte(DataToWrite);                    // Receiving mode
+  IIC::send_byte(DataToWrite);      // Receiving mode
   IIC::wait_ack();
-  IIC::stop();                                    // Generate a stop condition
+  IIC::stop();                      // Generate a stop condition
   delay(10);
 }
 

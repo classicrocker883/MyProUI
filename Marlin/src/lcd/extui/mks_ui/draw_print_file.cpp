@@ -237,7 +237,7 @@ static char test_public_buf_l[40];
 void disp_gcode_icon(uint8_t file_num) {
   uint8_t i;
 
-  // TODO: set current media title?!
+  /// TODO: set current media title?!
   scr = lv_screen_create(PRINT_FILE_UI, "");
 
   // Create image buttons

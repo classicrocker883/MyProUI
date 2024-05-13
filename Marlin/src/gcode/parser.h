@@ -57,13 +57,13 @@
 class GCodeParser {
 
 private:
-  static char *value_ptr;           // Set by seen, used to fetch the value
+  static char *value_ptr;      // Set by seen, used to fetch the value
 
   #if ENABLED(FASTER_GCODE_PARSER)
-    static uint32_t codebits;       // Parameters pre-scanned
-    static uint8_t param[26];       // For A-Z, offsets into command args
+    static uint32_t codebits;  // Parameters pre-scanned
+    static uint8_t param[26];  // For A-Z, offsets into command args
   #else
-    static char *command_args;      // Args start here, for slow scan
+    static char *command_args; // Args start here, for slow scan
   #endif
 
 public:
@@ -81,12 +81,12 @@ public:
   #endif
 
   // Command line state
-  static char *command_ptr,               // The command, so it can be echoed
-              *string_arg,                // string of command line
-              command_letter;             // G, M, or T
-  static uint16_t codenum;                // 123
+  static char *command_ptr,   // The command, so it can be echoed
+              *string_arg,    // string of command line
+              command_letter; // G, M, or T
+  static uint16_t codenum;    // 123
   #if USE_GCODE_SUBCODES
-    static uint8_t subcode;               // .1
+    static uint8_t subcode;   // .1
   #endif
 
   #if ENABLED(GCODE_MOTION_MODES)
@@ -115,7 +115,7 @@ public:
   }
 
   FORCE_INLINE static bool valid_number(const char * const p) {
-    // TODO: With MARLIN_DEV_MODE allow HEX values starting with "x"
+    /// TODO: With MARLIN_DEV_MODE allow HEX values starting with "x"
     return valid_float(p);
   }
 
@@ -128,9 +128,9 @@ public:
     // Set the flag and pointer for a parameter
     static void set(const char c, char * const ptr) {
       const uint8_t ind = LETTER_BIT(c);
-      if (ind >= COUNT(param)) return;           // Only A-Z
-      SBI32(codebits, ind);                      // parameter exists
-      param[ind] = ptr ? ptr - command_ptr : 0;  // parameter offset or 0
+      if (ind >= COUNT(param)) return;          // Only A-Z
+      SBI32(codebits, ind);                     // parameter exists
+      param[ind] = ptr ? ptr - command_ptr : 0; // parameter offset or 0
       #if ENABLED(DEBUG_GCODE_PARSER)
         if (codenum == 800) {
           SERIAL_ECHOPGM("Set bit ", ind, " of codebits (", hex_address((void*)(codebits >> 16)));

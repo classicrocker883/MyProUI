@@ -208,7 +208,7 @@ void SPIFlashStorage::flushPage() {
     }
 
     // Part of the m_pageData was compressed, so adjust the pointers, freeing what was processed, shift the buffer
-    // TODO: To avoid this copy, use a circular buffer
+    /// TODO: To avoid this copy, use a circular buffer
     memmove(m_pageData, m_pageData + inputProcessed, m_pageDataUsed - inputProcessed);
     m_pageDataUsed -= inputProcessed;
 
@@ -246,7 +246,7 @@ void SPIFlashStorage::readPage() {
       outpuProcessed *= 2;
       if (outpuProcessed < pageDataFree()) {
         m_pageDataUsed = SPI_FLASH_PageSize - outpuProcessed;
-        // TODO: To avoid this copy, use a circular buffer
+        /// TODO: To avoid this copy, use a circular buffer
         memmove(m_pageData + m_pageDataUsed, m_pageData, outpuProcessed);
       }
 

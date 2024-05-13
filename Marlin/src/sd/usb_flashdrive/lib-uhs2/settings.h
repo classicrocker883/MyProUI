@@ -150,7 +150,7 @@
 
 // To use some other locking (e.g. freertos),
 // define XMEM_ACQUIRE_SPI and XMEM_RELEASE_SPI to point to your lock and unlock.
-// NOTE: NO argument is passed. You have to do this within your routine for
+/// NOTE: NO argument is passed. You have to do this within your routine for
 // whatever you are using to lock and unlock.
 #ifndef XMEM_ACQUIRE_SPI
   #if USE_XMEM_SPI_LOCK || defined(USE_MULTIPLE_APP_API)

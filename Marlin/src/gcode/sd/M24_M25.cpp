@@ -75,11 +75,11 @@ void GcodeSuite::M24() {
   #endif
 
   #if ENABLED(CV_LASER_MODULE)
-    if(laser_device.is_laser_device()) // 107011-20210925 激光模式。
+    if (laser_device.is_laser_device()) // 107011-20210925 激光模式。
     {
       cutter.apply_power(laser_device.save_power); // 恢复激光功率
       //暂停后恢复时先跑到之前的位置。专业固件是最好的
-      //if(print_job_timer.isPaused()) do_blocking_move_to_xy(laser_device.pause_before_position_x, laser_device.pause_before_position_y, homing_feedrate(X_AXIS));//107011- 20211105 暂停逻辑改为了，停在最后执行位置， 因此屏蔽掉此行
+      //if (print_job_timer.isPaused()) do_blocking_move_to_xy(laser_device.pause_before_position_x, laser_device.pause_before_position_y, homing_feedrate(X_AXIS));//107011- 20211105 暂停逻辑改为了，停在最后执行位置， 因此屏蔽掉此行
     }
   #endif
 
@@ -112,7 +112,7 @@ void GcodeSuite::M25() {
 
     //107011 -20210926
     #if ENABLED(CV_LASER_MODULE)
-      if(laser_device.is_laser_device()) {
+      if (laser_device.is_laser_device()) {
         if (print_job_timer.isPaused()) return;
         laser_device.save_power = cutter.power;
         cutter.apply_power(0);
@@ -142,7 +142,7 @@ void GcodeSuite::M25() {
 
     //107011 -20210926
     #if ENABLED(CV_LASER_MODULE)
-      if(laser_device.is_laser_device()) {
+      if (laser_device.is_laser_device()) {
         laser_device.save_power = cutter.power;
         cutter.apply_power(0);
       }

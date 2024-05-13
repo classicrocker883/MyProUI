@@ -39,7 +39,7 @@
 
 /**
  * G76: calibrate probe and/or bed temperature offsets
- *  Notes:
+ *  NOTES:
  *  - When calibrating probe, bed temperature is held constant.
  *    Compensation values are deltas to first probe measurement at probe temp. = 30°C.
  *  - When calibrating bed, probe temperature is held constant.
@@ -292,7 +292,7 @@
 
 /**
  * M871: Report / reset temperature compensation offsets.
- *       Note: This does not affect values in EEPROM until M500.
+ *       NOTE: This does not affect values in EEPROM until M500.
  *
  *   M871 [ R | B | P | E ]
  *
@@ -330,7 +330,8 @@ void GcodeSuite::M871() {
     else
       SERIAL_ECHOLNPGM("!Invalid index. Failed to set value (note: value at index 0 is constant).");
   }
-  else // Print current Z-probe adjustments. Note: Values in EEPROM might differ.
+  else // Print current Z-probe adjustments.
+  /// NOTE: Values in EEPROM might differ.
     ptc.print_offsets();
 }
 

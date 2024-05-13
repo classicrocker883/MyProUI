@@ -169,13 +169,13 @@ public:
         virtual void UHS_NI suspend_host() {
                 // Used on MCU that lack control of IRQ priority (AVR).
                 // Suspends ISRs, for critical code. IRQ will be serviced after it is resumed.
-                // NOTE: you must track the state yourself!
+                /// NOTE: you must track the state yourself!
         };
 
         virtual void UHS_NI resume_host() {
                 // Used on MCU that lack control of IRQ priority (AVR).
                 // Resumes ISRs.
-                // NOTE: you must track the state yourself!
+                /// NOTE: you must track the state yourself!
         };
 
         /////////////////////////////////////////////

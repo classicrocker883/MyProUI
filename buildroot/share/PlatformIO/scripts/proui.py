@@ -57,10 +57,10 @@ if "MARLIN_FEATURES" in env:
       if (marlin_manualmesh):
          print("Manual Mesh Bed Leveling detected")
          shutil.copy(libpath+arch+'libproui_mbl.a', libfile)
-      elif(marlin_abl):
+      elif (marlin_abl):
          print("Auto Mesh Bed Leveling detected")
          shutil.copy(libpath+arch+'libproui_abl.a', libfile)
-      elif(marlin_ubl):
+      elif (marlin_ubl):
          print("Unified Mesh Bed Leveling detected")
          shutil.copy(libpath+arch+'libproui_ubl.a', libfile)
       else:

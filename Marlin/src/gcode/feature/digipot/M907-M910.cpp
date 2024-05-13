@@ -54,7 +54,7 @@ void GcodeSuite::M907() {
     if (parser.seenval('S')) for (uint8_t i = 0; i < MOTOR_CURRENT_COUNT; ++i) stepper.set_digipot_current(i, parser.value_int());
     LOOP_LOGICAL_AXES(i) if (parser.seenval(IAXIS_CHAR(i))) stepper.set_digipot_current(i, parser.value_int());    // X Y Z (I J K U V W) E (map to drivers according to DIGIPOT_CHANNELS. Default with NUM_AXES 3: map X Y Z E to X Y Z E0)
     // Additional extruders use B,C.
-    // TODO: Change these parameters because 'E' is used and D should be reserved for debugging. B<index>?
+    /// TODO: Change these parameters because 'E' is used and D should be reserved for debugging. B<index>?
     #if E_STEPPERS >= 2
       if (parser.seenval('B')) stepper.set_digipot_current(E_AXIS + 1, parser.value_int());
       #if E_STEPPERS >= 3
@@ -107,7 +107,7 @@ void GcodeSuite::M907() {
     if (parser.seenval('S')) for (uint8_t q = 0; q < DIGIPOT_I2C_NUM_CHANNELS; ++q) digipot_i2c.set_current(q, parser.value_float());
       LOOP_LOGICAL_AXES(i) if (parser.seenval(IAXIS_CHAR(i))) digipot_i2c.set_current(i, parser.value_float());      // X Y Z (I J K U V W) E (map to drivers according to pots adresses. Default with NUM_AXES 3 X Y Z E: map to X Y Z E0)
     // Additional extruders use B,C,D.
-    // TODO: Change these parameters because 'E' is used and because 'D' should be reserved for debugging. B<index>?
+    /// TODO: Change these parameters because 'E' is used and because 'D' should be reserved for debugging. B<index>?
     #if E_STEPPERS >= 2
       for (uint8_t i = E_AXIS + 1; i < _MAX(DIGIPOT_I2C_NUM_CHANNELS, (NUM_AXES + 3)); i++)
         if (parser.seenval('B' + i - (E_AXIS + 1))) digipot_i2c.set_current(i, parser.value_float());
@@ -133,7 +133,9 @@ void GcodeSuite::M907() {
       SERIAL_ECHOLNPGM_P(                                     // PWM-based has 3 values:
           PSTR("  M907 X"), stepper.motor_current_setting[0]  // X, Y, (I, J, K, U, V, W)
         , SP_Z_STR,         stepper.motor_current_setting[1]  // Z
-        , SP_E_STR,         stepper.motor_current_setting[2]  // E
+        #if PIN_EXISTS(MOTOR_CURRENT_PWM_E)
+          , SP_E_STR,       stepper.motor_current_setting[2]  // E
+        #endif
       );
     #elif HAS_MOTOR_CURRENT_SPI
       SERIAL_ECHOPGM("  M907");                               // SPI-based has 5 values:

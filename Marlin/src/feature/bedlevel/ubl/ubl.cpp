@@ -39,6 +39,8 @@ unified_bed_leveling bedlevel;
 
 #if ENABLED(EXTENSIBLE_UI)
   #include "../../../lcd/extui/ui_api.h"
+#elif ENABLED(DWIN_LCD_PROUI)
+  #include "../../../lcd/e3v2/proui/dwin.h"
 #endif
 
 #include "math.h"
@@ -66,21 +68,23 @@ int8_t unified_bed_leveling::storage_slot;
 
 bed_mesh_t unified_bed_leveling::z_values;
 
-#define _GRIDPOS(A,N) (MESH_MIN_##A + N * (MESH_##A##_DIST))
+#if DISABLED(DWIN_LCD_PROUI)
+  #define _GRIDPOS(A,N) (MESH_MIN_##A + N * (MESH_##A##_DIST))
 
-const bed_mesh_t
-unified_bed_leveling::_mesh_index_to_xpos PROGMEM = ARRAY_N(TERN(DWIN_LCD_PROUI, GRID_LIMIT, GRID_MAX_POINTS_X),
-  _GRIDPOS(X,  0), _GRIDPOS(X,  1), _GRIDPOS(X,  2), _GRIDPOS(X,  3),
-  _GRIDPOS(X,  4), _GRIDPOS(X,  5), _GRIDPOS(X,  6), _GRIDPOS(X,  7),
-  _GRIDPOS(X,  8), _GRIDPOS(X,  9), _GRIDPOS(X, 10), _GRIDPOS(X, 11),
-  _GRIDPOS(X, 12), _GRIDPOS(X, 13), _GRIDPOS(X, 14), _GRIDPOS(X, 15)
-),
-unified_bed_leveling::_mesh_index_to_ypos PROGMEM = ARRAY_N(TERN(DWIN_LCD_PROUI, GRID_LIMIT, GRID_MAX_POINTS_Y),
-  _GRIDPOS(Y,  0), _GRIDPOS(Y,  1), _GRIDPOS(Y,  2), _GRIDPOS(Y,  3),
-  _GRIDPOS(Y,  4), _GRIDPOS(Y,  5), _GRIDPOS(Y,  6), _GRIDPOS(Y,  7),
-  _GRIDPOS(Y,  8), _GRIDPOS(Y,  9), _GRIDPOS(Y, 10), _GRIDPOS(Y, 11),
-  _GRIDPOS(Y, 12), _GRIDPOS(Y, 13), _GRIDPOS(Y, 14), _GRIDPOS(Y, 15)
-);
+  const bed_mesh_t
+  unified_bed_leveling::_mesh_index_to_xpos PROGMEM = ARRAY_N(GRID_MAX_POINTS_X,
+    _GRIDPOS(X,  0), _GRIDPOS(X,  1), _GRIDPOS(X,  2), _GRIDPOS(X,  3),
+    _GRIDPOS(X,  4), _GRIDPOS(X,  5), _GRIDPOS(X,  6), _GRIDPOS(X,  7),
+    _GRIDPOS(X,  8), _GRIDPOS(X,  9), _GRIDPOS(X, 10), _GRIDPOS(X, 11),
+    _GRIDPOS(X, 12), _GRIDPOS(X, 13), _GRIDPOS(X, 14), _GRIDPOS(X, 15)
+  ),
+  unified_bed_leveling::_mesh_index_to_ypos PROGMEM = ARRAY_N(GRID_MAX_POINTS_Y,
+    _GRIDPOS(Y,  0), _GRIDPOS(Y,  1), _GRIDPOS(Y,  2), _GRIDPOS(Y,  3),
+    _GRIDPOS(Y,  4), _GRIDPOS(Y,  5), _GRIDPOS(Y,  6), _GRIDPOS(Y,  7),
+    _GRIDPOS(Y,  8), _GRIDPOS(Y,  9), _GRIDPOS(Y, 10), _GRIDPOS(Y, 11),
+    _GRIDPOS(Y, 12), _GRIDPOS(Y, 13), _GRIDPOS(Y, 14), _GRIDPOS(Y, 15)
+  );
+#endif
 
 volatile int16_t unified_bed_leveling::encoder_diff;
 
@@ -166,8 +170,8 @@ static void serial_echo_column_labels(const uint8_t sp) {
 void unified_bed_leveling::display_map(const uint8_t map_type) {
   const bool was = gcode.set_autoreport_paused(true);
 
-  IF_DISABLED(DWIN_LCD_PROUI, constexpr) uint8_t eachsp = 1 + 6 + 1,    // [-3.567]
-                    twixt = eachsp * (GRID_MAX_POINTS_X) - 9 * 2; // Leading 4sp, Coordinates 9sp each
+  constexpr uint8_t eachsp = 1 + 6 + 1; // [-3.567]
+  IF_DISABLED(DWIN_LCD_PROUI, constexpr) uint8_t twixt = eachsp * (GRID_MAX_POINTS_X) - 9 * 2; // Leading 4sp, Coordinates 9sp each
 
   const bool human = !(map_type & 0x3), csv = map_type == 1, lcd = map_type == 2, comp = map_type & 0x4;
 
@@ -207,7 +211,8 @@ void unified_bed_leveling::display_map(const uint8_t map_type) {
       // Z Value at current I, J
       const float f = z_values[i][j];
       if (lcd) {
-        // TODO: Display on Graphical LCD
+        /// TODO: Display on Graphical LCD
+        TERN_(DWIN_LCD_PROUI, DWIN_MeshViewer();)
       }
       else if (isnan(f))
         SERIAL_ECHO(human ? F("  .   ") : F("NAN"));

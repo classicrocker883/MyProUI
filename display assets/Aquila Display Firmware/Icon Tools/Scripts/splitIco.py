@@ -18,7 +18,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #----------------------------------------------------------------
 
-import os
 import os.path
 import argparse
 import DWIN_ICO
@@ -50,4 +49,3 @@ if __name__ == '__main__':
 
     except Exception as e:
         print('Error: ', e)
-

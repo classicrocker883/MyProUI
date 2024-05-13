@@ -142,13 +142,13 @@ void GcodeSuite::D(const int16_t dcode) {
       //const uint8_t pin = parser.byteval('P'),
       //              val = parser.byteval('V', LOW);
       if (parser.seenval('X')) {
-        // TODO: Write the hex bytes after the X
+        /// TODO: Write the hex bytes after the X
         //while (len--) {
         //}
       }
       else {
         //while (len--) {
-        //// TODO: Read bytes from EEPROM
+        /// TODO: Read bytes from EEPROM
         //  print_hex_byte(eeprom_read_byte(adr++));
         //}
         SERIAL_EOL();
@@ -164,12 +164,12 @@ void GcodeSuite::D(const int16_t dcode) {
       NOMORE(addr, size_t(ONBOARD_FLASH_SIZE - 1));
       NOMORE(len, ONBOARD_FLASH_SIZE - addr);
       if (parser.seenval('X')) {
-        // TODO: Write the hex bytes after the X
+        /// TODO: Write the hex bytes after the X
         //while (len--) {}
       }
       else {
         //while (len--) {
-        //// TODO: Read bytes from FLASH
+        /// TODO: Read bytes from FLASH
         //  print_hex_byte(flash_read_byte(adr++));
         //}
         SERIAL_EOL();

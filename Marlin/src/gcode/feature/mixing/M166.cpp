@@ -50,7 +50,7 @@ inline void echo_zt(const int t, const_float_t z) {
  *   J[index] - V-Tool to use as the ending mix.
  *
  *   T[index] - A V-Tool index to use as an alias for the Gradient (Requires GRADIENT_VTOOL)
- *              T with no index clears the setting. Note: This can match the I or J value.
+ *              T with no index clears the setting. NOTE: This can match the I or J value.
  *
  * Example: M166 S1 A0 Z20 I0 J1
  */

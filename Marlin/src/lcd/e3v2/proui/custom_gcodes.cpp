@@ -47,7 +47,10 @@ void CError() {
       HMI_value.Color.g = parser.seenval('G') ? parser.value_byte() : 0;
       HMI_value.Color.b = parser.seenval('B') ? parser.value_byte() : 0;
       DWIN_ApplyColor(E);
-    } else DWIN_RedrawScreen();
+    }
+    else { // Set default colors
+      DWIN_ApplyColor(1);
+    }
   }
 #endif
 

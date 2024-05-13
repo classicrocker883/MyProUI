@@ -50,7 +50,7 @@
 
 #define TEMP_TIMER_FREQUENCY 1000   // Temperature::isr() is expected to be called at around 1kHz
 
-// TODO: get rid of manual rate/prescale/ticks/cycles taken for procedures in stepper.cpp
+/// TODO: get rid of manual rate/prescale/ticks/cycles taken for procedures in stepper.cpp
 #define STEPPER_TIMER_RATE 2000000 // 2 Mhz
 extern uint32_t GetStepperTimerClkFreq();
 #define STEPPER_TIMER_PRESCALE (GetStepperTimerClkFreq() / (STEPPER_TIMER_RATE))
@@ -104,7 +104,7 @@ FORCE_INLINE static hal_timer_t HAL_timer_get_count(const uint8_t timer_num) {
   return HAL_timer_initialized(timer_num) ? timer_instance[timer_num]->getCount() : 0;
 }
 
-// NOTE: Method name may be misleading.
+/// NOTE: Method name may be misleading.
 // STM32 has an Auto-Reload Register (ARR) as opposed to a "compare" register
 FORCE_INLINE static void HAL_timer_set_compare(const uint8_t timer_num, const hal_timer_t overflow) {
   if (HAL_timer_initialized(timer_num)) {

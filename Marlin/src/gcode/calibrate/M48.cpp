@@ -58,7 +58,7 @@
 
 void GcodeSuite::M48() {
 
-  #if ENABLED(BLTOUCH)
+  #if HAS_BLTOUCH_HS_MODE
     // Store the original value of bltouch.high_speed_mode
     const bool prev_high_speed_mode = bltouch.high_speed_mode;
     // Set bltouch.high_speed_mode to 0
@@ -66,7 +66,6 @@ void GcodeSuite::M48() {
   #endif
   #if ENABLED(DWIN_LCD_PROUI)
     TERN_(ADVANCED_PAUSE_FEATURE, DWIN_Popup_Pause(GET_TEXT_F(MSG_M48_TEST));)
-    HMI_SaveProcessID(NothingToDo);
   #endif
 
   if (homing_needed_error()) TERN(DWIN_LCD_PROUI, return HMI_ReturnScreen(), return);
@@ -160,7 +159,7 @@ void GcodeSuite::M48() {
     for (uint8_t n = 0; n < n_samples; ++n) {
       #if HAS_STATUS_MESSAGE
         // Display M48 progress in the status bar
-        ui.status_printf(0, F(S_FMT ": %d/%d"), GET_TEXT(MSG_M48_POINT), int(n + 1), int(n_samples));
+        ui.status_printf(0, F(S_FMT ": %d/%d"), GET_TEXT_F(MSG_M48_POINT), int(n + 1), int(n_samples));
       #endif
 
       // When there are "legs" of movement move around the point before probing
@@ -287,7 +286,7 @@ void GcodeSuite::M48() {
   report_current_position();
 
   // Restore the previous value of bltouch.high_speed_mode
-  TERN_(BLTOUCH, bltouch.high_speed_mode = prev_high_speed_mode;)
+  TERN_(HAS_BLTOUCH_HS_MODE, bltouch.high_speed_mode = prev_high_speed_mode;)
   TERN_(DWIN_LCD_PROUI, HMI_ReturnScreen();)
 }
 

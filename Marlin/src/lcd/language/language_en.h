@@ -162,6 +162,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_SPINDLE_REVERSE                = _UxGT("Spindle Reverse");
   LSTR MSG_SWITCH_PS_ON                   = _UxGT("Switch Power On");
   LSTR MSG_SWITCH_PS_OFF                  = _UxGT("Switch Power Off");
+  LSTR MSG_POWER_EDM_FAULT                = _UxGT("Power EDM Fault");
   LSTR MSG_EXTRUDE                        = _UxGT("Extrude");
   LSTR MSG_RETRACT                        = _UxGT("Retract");
   LSTR MSG_MOVE_AXIS                      = _UxGT("Move Axis");
@@ -248,7 +249,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_G26_CANCELED                   = _UxGT("G26 Canceled");
   LSTR MSG_G26_LEAVING                    = _UxGT("Leaving G26");
   LSTR MSG_UBL_CONTINUE_MESH              = _UxGT("Continue Bed Mesh");
-  LSTR MSG_UBL_MESH_LEVELING              = _UxGT("Mesh Leveling");
   LSTR MSG_UBL_3POINT_MESH_LEVELING       = _UxGT("3-Point Leveling");
   LSTR MSG_UBL_GRID_MESH_LEVELING         = _UxGT("Grid Mesh Leveling");
   LSTR MSG_UBL_MESH_LEVEL                 = _UxGT("Level Mesh");
@@ -358,19 +358,32 @@ namespace LanguageNarrow_en {
   LSTR MSG_MAX                            = " " LCD_STR_THERMOMETER _UxGT(" Max");
   LSTR MSG_FACTOR                         = " " LCD_STR_THERMOMETER _UxGT(" Fact");
   LSTR MSG_AUTOTEMP                       = _UxGT("Autotemp");
+  LSTR MSG_TIMEOUT                        = _UxGT("Timeout");
   LSTR MSG_LCD_ON                         = _UxGT("On");
   LSTR MSG_LCD_OFF                        = _UxGT("Off");
+
   LSTR MSG_PID_AUTOTUNE                   = _UxGT("PID Autotune");
   LSTR MSG_PID_AUTOTUNE_E                 = _UxGT("Autotune * PID");
   LSTR MSG_PID_CYCLE                      = _UxGT("PID Cycles");
   LSTR MSG_PID_AUTOTUNE_DONE              = _UxGT("PID tuning done");
   LSTR MSG_PID_AUTOTUNE_FAILED            = _UxGT("PID Autotune failed!");
+
+  LSTR MSG_PID_FOR_NOZZLE                 = _UxGT("for Nozzle is running.");
+  LSTR MSG_PID_FOR_BED                    = _UxGT("for BED is running.");
+  LSTR MSG_PID_FOR_CHAMBER                = _UxGT("for CHAMBER is running.");
+
+  LSTR MSG_TEMP_NOZZLE                    = _UxGT("Nozzle Temperature");
+  LSTR MSG_TEMP_BED                       = _UxGT("Bed Temperature");
+  LSTR MSG_TEMP_CHAMBER                   = _UxGT("Chamber Temperature");
+
   LSTR MSG_BAD_HEATER_ID                  = _UxGT("Bad extruder.");
   LSTR MSG_TEMP_TOO_HIGH                  = _UxGT("Temperature too high.");
-  LSTR MSG_TIMEOUT                        = _UxGT("Timeout");
+  LSTR MSG_TEMP_TOO_LOW                   = _UxGT("Temperature too low");
+
   LSTR MSG_PID_BAD_HEATER_ID              = _UxGT("Autotune failed! Bad extruder.");
   LSTR MSG_PID_TEMP_TOO_HIGH              = _UxGT("Autotune failed! Temperature too high.");
   LSTR MSG_PID_TIMEOUT                    = _UxGT("Autotune failed! Timeout.");
+
   LSTR MSG_MPC_MEASURING_AMBIENT          = _UxGT("Testing heat loss");
   LSTR MSG_MPC_HEATING_PAST_200           = _UxGT("Heating to >200C");
   LSTR MSG_MPC_COOLING_TO_AMBIENT         = _UxGT("Cooling to ambient");
@@ -386,6 +399,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_E       = _UxGT("Ambient Co. *");
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_FAN     = _UxGT("Fan coeff.");
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_FAN_E   = _UxGT("Fan coeff. *");
+
   LSTR MSG_SELECT_E                       = _UxGT("Select *");
   LSTR MSG_ACC                            = _UxGT("Acceleration (mm/s2)");
   LSTR MSG_JERK                           = _UxGT("Jerk");
@@ -566,7 +580,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_PARK_YPOSITION                 = _UxGT("Park Y Position");
   LSTR MSG_PARK_ZRAISE                    = _UxGT("Park Z Raise");
   LSTR MSG_PARK_FAILED                    = _UxGT("Head cannot be parked");
-  LSTR MSG_PHY_SET                        = _UxGT("Physical settings");
+  LSTR MSG_PHY_SET                        = _UxGT("Physical Settings");
   LSTR MSG_PHY_XBEDSIZE                   = _UxGT("X Bed Size");
   LSTR MSG_PHY_YBEDSIZE                   = _UxGT("Y Bed Size");
   LSTR MSG_PHY_XMINPOS                    = _UxGT("X Min Position");
@@ -676,9 +690,10 @@ namespace LanguageNarrow_en {
   LSTR MSG_LINEAR_LEVELING                = _UxGT("Linear Leveling");
   LSTR MSG_BILINEAR_LEVELING              = _UxGT("Bilinear Leveling");
   LSTR MSG_UBL_LEVELING                   = _UxGT("Unified Bed Leveling");
-  LSTR MSG_MESH_LEVELING                  = _UxGT("Mesh Settings");
+  LSTR MSG_MESH_LEVELING                  = _UxGT("Mesh Leveling");
   LSTR MSG_MESH_DONE                      = _UxGT("Mesh probing done");
   LSTR MSG_MESH_POINTS                    = _UxGT("Mesh Points");
+  LSTR MSG_MESH_SETTINGS                  = _UxGT("Mesh Settings");
   LSTR MSG_INFO_STATS_MENU                = _UxGT("Printer Stats");
   LSTR MSG_RESET_STATS                    = _UxGT("Reset Print Stats?");
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("Board Info");
@@ -848,11 +863,17 @@ namespace LanguageNarrow_en {
   #endif
   LSTR MSG_TMC_DRIVERS                    = _UxGT("TMC Drivers");
   LSTR MSG_TMC_CURRENT                    = _UxGT("Driver Current");
-  LSTR MSG_TMC_ACURRENT                   = STR_A _UxGT("Driver Current");
-  LSTR MSG_TMC_BCURRENT                   = STR_B _UxGT("Driver Current");
-  LSTR MSG_TMC_CCURRENT                   = STR_C _UxGT("Driver Current");
-  LSTR MSG_TMC_ECURRENT                   = _UxGT("E Driver Current");
+  LSTR MSG_TMC_ACURRENT                   = _UxGT(STR_A " Driver Current");
+  LSTR MSG_TMC_BCURRENT                   = _UxGT(STR_B " Driver Current");
+  LSTR MSG_TMC_CCURRENT                   = _UxGT(STR_C " Driver Current");
+  LSTR MSG_TMC_ECURRENT                   = _UxGT(STR_E " Driver Current");
+  LSTR MSG_TMC_ENCURRENT                  = _UxGT("* Driver Current");
   LSTR MSG_TMC_HYBRID_THRS                = _UxGT("Hybrid Threshold");
+  LSTR MSG_TMC_AHYBRID_THRS               = _UxGT(STR_A " Hybrid Threshold");
+  LSTR MSG_TMC_BHYBRID_THRS               = _UxGT(STR_B " Hybrid Threshold");
+  LSTR MSG_TMC_CHYBRID_THRS               = _UxGT(STR_C " Hybrid Threshold");
+  LSTR MSG_TMC_EHYBRID_THRS               = _UxGT(STR_E " Hybrid Threshold");
+  LSTR MSG_TMC_ENHYBRID_THRS              = _UxGT("* Hybrid Threshold");
   LSTR MSG_TMC_HOMING_THRS                = _UxGT("Sensorless Homing");
   LSTR MSG_TMC_STEPPING_MODE              = _UxGT("Stepping Mode");
   LSTR MSG_TMC_STEALTH_ENABLED            = _UxGT("StealthChop Enabled");
@@ -936,7 +957,6 @@ namespace LanguageNarrow_en {
   LSTR DGUS_MSG_NOT_WHILE_PRINTING        = _UxGT("Not allowed during print");
   LSTR DGUS_MSG_NOT_WHILE_IDLE            = _UxGT("Not allowed while idle");
   LSTR DGUS_MSG_NO_FILE_SELECTED          = _UxGT("No file selected");
-  LSTR DGUS_MSG_TEMP_TOO_LOW              = _UxGT("Temperature too low");
   LSTR DGUS_MSG_EXECUTING_COMMAND         = _UxGT("Executing command...");
   LSTR DGUS_MSG_BED_PID_DISABLED          = _UxGT("Bed PID disabled");
   LSTR DGUS_MSG_PID_DISABLED              = _UxGT("PID disabled");
@@ -991,8 +1011,10 @@ namespace LanguageWide_en {
     LSTR MSG_MPC_SETTINGS                   = _UxGT("MPC Settings");
     LSTR MSG_HOTEND_PID_SETTINGS            = _UxGT(STR_HOTEND_PID " Settings");
     LSTR MSG_BED_PID_SETTINGS               = _UxGT(STR_BED_PID " Settings");
+    LSTR MSG_CHAMBER_PID_SETTINGS           = _UxGT(STR_CHAMBER_PID " Settings");
     LSTR MSG_HOTEND_TUNE                    = _UxGT("Tune " STR_HOTEND_PID);
     LSTR MSG_BED_TUNE                       = _UxGT("Tune " STR_BED_PID);
+    LSTR MSG_CHAMBER_TUNE                   = _UxGT("Tune " STR_CHAMBER_PID);
     LSTR MSG_PID_SETTINGS                   = _UxGT("PID Settings");
     LSTR MSG_PID_SET_KP                     = _UxGT("Set" STR_KP);
     LSTR MSG_PID_SET_KI                     = _UxGT("Set" STR_KI);
@@ -1002,14 +1024,17 @@ namespace LanguageWide_en {
     LSTR MSG_TARGET                         = _UxGT("Target:     Celsius");
     LSTR MSG_FOR_NOZZLE                     = _UxGT("for NOZZLE");
     LSTR MSG_FOR_BED                        = _UxGT("for BED");
+    LSTR MSG_FOR_CHAMBER                    = _UxGT("for CHAMBER");
     LSTR MSG_NOZZLE_RUN                     = _UxGT("for NOZZLE is running");
     LSTR MSG_BED_RUN                        = _UxGT("for BED is running");
+    LSTR MSG_CHAMBER_RUN                    = _UxGT("for CHAMBER is running");
     LSTR MSG_250K_BAUD                      = _UxGT("250K baud");
     LSTR MSG_SCREW_INSET                    = _UxGT("Bed Screw Inset");
     LSTR MSG_SPEED_IND                      = _UxGT("Speed Indicator");
     LSTR MSG_ZERO_MESH                      = _UxGT("Zero Current Point");
     LSTR MSG_HOTEND_TEMP_GRAPH              = _UxGT("Hotend Temp Graph");
     LSTR MSG_BED_TEMP_GRAPH                 = _UxGT("Bed Temp Graph");
+    LSTR MSG_CHAMBER_TEMP_GRAPH             = _UxGT("Chamber Temp Graph");
     LSTR MSG_EXIT_MENU                      = _UxGT("Exit to Main Menu");
     LSTR MSG_TRAMWIZ_CALC                   = _UxGT("Calculate Average");
     LSTR MSG_TRAMWIZ_LOWER                  = _UxGT("Lower");
@@ -1019,6 +1044,11 @@ namespace LanguageWide_en {
     LSTR MSG_OPTION_DISABLED                = _UxGT("Option Disabled");
     LSTR MSG_DISABLE_MANUAL_TRAMMING        = _UxGT("Disable manual tramming");
     LSTR MSG_TRAMMING_WIZARD_START          = _UxGT("Tramming Wizard Start");
+    LSTR MSG_TMC_ASTEALTH                   = _UxGT(STR_A " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_BSTEALTH                   = _UxGT(STR_B " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_CSTEALTH                   = _UxGT(STR_C " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_ESTEALTH                   = _UxGT(STR_E " " STR_TMC_STEALTH);
+    LSTR MSG_TMC_ENSTEALTH                  = _UxGT("* " STR_TMC_STEALTH);
   #endif // LCD_WIDTH >= 20 || HAS_DWIN_E3V2
 }
 

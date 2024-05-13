@@ -43,7 +43,7 @@ struct DGUS_VP_Variable {
   template<typename T>
   DGUS_VP_Variable& operator =(T &o) {
     *(T*)memadr = o;  // warning this is not typesafe.
-    // TODO: Call out the display or mark as dirty for the next update.
+    /// TODO: Call out the display or mark as dirty for the next update.
     return *this;
   }
 };

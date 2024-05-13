@@ -54,7 +54,7 @@
   #include "ft_types.h"
 #endif
 
-// TODO: Review and ensure proper handling for special E axes with commands like M17/M18, stepper timeout, etc.
+/// TODO: Review and ensure proper handling for special E axes with commands like M17/M18, stepper timeout, etc.
 #if ENABLED(MIXING_EXTRUDER)
   #define E_STATES EXTRUDERS  // All steppers are set together for each mixer. (Currently limited to 1.)
 #elif HAS_SWITCHING_EXTRUDER
@@ -121,7 +121,7 @@ constexpr bool any_enable_overlap(const uint8_t a=0) {
 }
 
 // Array of axes that overlap with each
-// TODO: Consider cases where >=2 steppers are used by a linear axis or extruder
+/// TODO: Consider cases where >=2 steppers are used by a linear axis or extruder
 //       (e.g., CoreXY, Dual XYZ, or E with multiple steppers, etc.).
 constexpr ena_mask_t enable_overlap[] = {
   #define _OVERLAP(N) ena_overlap(INDEX_OF_AXIS(AxisEnum(N))),
@@ -159,10 +159,10 @@ constexpr ena_mask_t enable_overlap[] = {
   #endif
 
   #ifndef SHAPING_MIN_FREQ
-    #define SHAPING_MIN_FREQ _MIN(0x7FFFFFFFL OPTARG(INPUT_SHAPING_X, SHAPING_FREQ_X) OPTARG(INPUT_SHAPING_Y, SHAPING_FREQ_Y))
+    #define SHAPING_MIN_FREQ _MIN(__FLT_MAX__ OPTARG(INPUT_SHAPING_X, SHAPING_FREQ_X) OPTARG(INPUT_SHAPING_Y, SHAPING_FREQ_Y))
   #endif
-  constexpr uint16_t shaping_min_freq = SHAPING_MIN_FREQ,
-                     shaping_echoes = max_step_rate / shaping_min_freq / 2 + 3;
+  constexpr float shaping_min_freq = SHAPING_MIN_FREQ;
+  constexpr uint16_t shaping_echoes = FLOOR(max_step_rate / shaping_min_freq / 2) + 3;
 
   typedef hal_timer_t shaping_time_t;
   enum shaping_echo_t { ECHO_NONE = 0, ECHO_FWD = 1, ECHO_BWD = 2 };
@@ -336,6 +336,12 @@ class Stepper {
       static ne_coeff_t ne;
     #endif
 
+    #if ENABLED(ADAPTIVE_STEP_SMOOTHING_TOGGLE)
+      static bool adaptive_step_smoothing_enabled;
+    #else
+      static constexpr bool adaptive_step_smoothing_enabled = true;
+    #endif
+
   private:
 
     static block_t* current_block;        // A pointer to the block currently being traced
@@ -377,7 +383,7 @@ class Stepper {
     #if ENABLED(ADAPTIVE_STEP_SMOOTHING)
       static uint8_t oversampling_factor; // Oversampling factor (log2(multiplier)) to increase temporal resolution of axis
     #else
-      static constexpr uint8_t oversampling_factor = 0;
+      static constexpr uint8_t oversampling_factor = 0; // Without smoothing apply no shift
     #endif
 
     // Delta error variables for the Bresenham line tracer
@@ -547,7 +553,8 @@ class Stepper {
     // The direction of a single motor. A true result indicates forward or positive motion.
     FORCE_INLINE static bool motor_direction(const AxisEnum axis) { return last_direction_bits[axis]; }
 
-    // The last movement direction was not null on the specified axis. Note that motor direction is not necessarily the same.
+    // The last movement direction was not null on the specified axis.
+    /// NOTE: motor direction is not necessarily the same.
     FORCE_INLINE static bool axis_is_moving(const AxisEnum axis) { return axis_did_move[axis]; }
 
     // Handle a triggered endstop
@@ -677,6 +684,9 @@ class Stepper {
 
     // Calculate timing interval and steps-per-ISR for the given step rate
     static hal_timer_t calc_multistep_timer_interval(uint32_t step_rate);
+
+    // Evaluate axis motions and set bits in axis_did_move
+    static void set_axis_moved_for_current_block();
 
     #if ENABLED(NONLINEAR_EXTRUSION)
       static void calc_nonlinear_e(uint32_t step_rate);

@@ -49,7 +49,7 @@ void MarlinHAL::set_pwm_duty(const pin_t pin, const uint16_t v, const uint16_t v
     if (needs_freq && timer_freq[index] == 0)     // If the timer is unconfigured and no freq is set then default PWM_FREQUENCY
       set_pwm_frequency(pin_name, PWM_FREQUENCY); // Set the frequency and save the value to the assigned index no.
 
-    // Note the resolution is sticky here, the input can be upto 16 bits and that would require RESOLUTION_16B_COMPARE_FORMAT (16)
+    /// NOTE: the resolution is sticky here, the input can be upto 16 bits and that would require RESOLUTION_16B_COMPARE_FORMAT (16)
     // If such a need were to manifest then we would need to calc the resolution based on the v_size parameter and add code for it.
     HT->setCaptureCompare(channel, duty, RESOLUTION_8B_COMPARE_FORMAT); // Set the duty, the calc is done in the library :)
     pinmap_pinout(pin_name, PinMap_PWM); // Make sure the pin output state is set.

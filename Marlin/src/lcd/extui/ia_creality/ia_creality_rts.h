@@ -177,7 +177,7 @@
 
 #define StatusMessageString 0x2064
 
-// TODO: Use LCD_SERIAL 1 or 3 (?) by configuration, not overriding here
+/// TODO: Use LCD_SERIAL 1 or 3 (?) by configuration, not overriding here
 #ifdef TARGET_STM32F4
   #define DWIN_SERIAL Serial1
 #else

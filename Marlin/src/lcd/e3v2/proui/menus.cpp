@@ -396,15 +396,15 @@ CustomMenuItemClass::CustomMenuItemClass(OnDrawItem ondraw, OnClickItem onclick)
   onDraw =  ondraw;
 }
 
-MenuItemClass::MenuItemClass(uint8_t cicon, PGM_P const text, OnDrawItem ondraw, OnClickItem onclick) : CustomMenuItemClass(ondraw, onclick) {
-  icon = cicon;
-  SetCaption(text);
-}
-
 void MenuItemClass::SetCaption(PGM_P const text) {
   const uint8_t len = _MIN(sizeof(caption) - 1, strlen(text));
   memcpy(&caption[0], text, len);
   caption[len] = '\0';
+}
+
+MenuItemClass::MenuItemClass(uint8_t cicon, PGM_P const text, OnDrawItem ondraw, OnClickItem onclick) : CustomMenuItemClass(ondraw, onclick) {
+  icon = cicon;
+  SetCaption(text);
 }
 
 MenuItemPtrClass::MenuItemPtrClass(uint8_t cicon, PGM_P const text, OnDrawItem ondraw, OnClickItem onclick, void* val) : MenuItemClass(cicon, text, ondraw, onclick) {
@@ -507,5 +507,20 @@ void ReDrawMenu(bool force/*=false*/) {
 void ReDrawItem() {
   static_cast<MenuItemPtrClass*>(CurrentMenu->SelectedItem())->value;
 }
+
+#if HAS_MESH
+  void DrawMeshPoints(bool selected, int8_t line, int8_t value) {
+    char mpmsg[10];
+    sprintf_P(mpmsg, PSTR("%ix%i"), value, value);
+    if (selected) { DWINUI::Draw_String(DWINUI::textcolor, HMI_data.Selected_Color, VALX + MENU_CHR_H, MBASE(line), mpmsg); }
+    else { DWINUI::Draw_String(VALX + MENU_CHR_H, MBASE(line), mpmsg); }
+  }
+
+  void onDrawMeshPoints(MenuItemClass* menuitem, int8_t line) {
+    onDrawMenuItem(menuitem, line);
+    DrawMeshPoints(false, line, TERN(PROUI_EX, PRO_data, HMI_data).grid_max_points);
+    ReDrawItem();
+  }
+#endif
 
 #endif // DWIN_LCD_PROUI

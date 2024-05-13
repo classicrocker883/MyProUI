@@ -42,7 +42,7 @@
 #define W25X_ManufactDeviceID   0x90
 #define W25X_JedecDeviceID      0x9F
 
-#define WIP_Flag                0x01  /* Write In Progress (WIP) flag */
+#define WIP_Flag                0x01  // Write In Progress (WIP) flag
 
 #define Dummy_Byte              0xA5
 

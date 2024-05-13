@@ -59,14 +59,14 @@ protected:
 
 class BL24CXX {
 private:
-  static bool _check();                                                             // Check the device
+  static bool _check();                                                            // Check the device
 public:
-  static void init();                                                               // Initialize IIC
-  static bool check();                                                              // Check / recheck the device
-  static uint8_t readOneByte(uint16_t ReadAddr);                                    // Read a byte at the specified address
-  static void writeOneByte(uint16_t WriteAddr, uint8_t DataToWrite);                // Write a byte at the specified address
-  static void writeLenByte(uint16_t WriteAddr, uint32_t DataToWrite, uint8_t Len);  // The specified address begins to write the data of the specified length
-  static uint32_t readLenByte(uint16_t ReadAddr, uint8_t Len);                      // The specified address starts to read the data of the specified length
-  static void write(uint16_t WriteAddr, uint8_t *pBuffer, uint16_t NumToWrite);     // Write the specified length of data from the specified address
-  static void read(uint16_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead);        // Read the data of the specified length from the specified address
+  static void init();                                                              // Initialize IIC
+  static bool check();                                                             // Check / recheck the device
+  static uint8_t readOneByte(uint16_t ReadAddr);                                   // Read a byte at the specified address
+  static void writeOneByte(uint16_t WriteAddr, uint8_t DataToWrite);               // Write a byte at the specified address
+  static void writeLenByte(uint16_t WriteAddr, uint32_t DataToWrite, uint8_t Len); // The specified address begins to write the data of the specified length
+  static uint32_t readLenByte(uint16_t ReadAddr, uint8_t Len);                     // The specified address starts to read the data of the specified length
+  static void write(uint16_t WriteAddr, uint8_t *pBuffer, uint16_t NumToWrite);    // Write the specified length of data from the specified address
+  static void read(uint16_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead);       // Read the data of the specified length from the specified address
 };

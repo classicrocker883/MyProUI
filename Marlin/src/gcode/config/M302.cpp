@@ -25,6 +25,11 @@
 #if ENABLED(PREVENT_COLD_EXTRUSION)
 
 #include "../gcode.h"
+
+#if ENABLED(EXTENSIBLE_UI)
+  #include "../../lcd/extui/ui_api.h"
+#endif
+
 #include "../../module/temperature.h"
 
 #if ENABLED(DWIN_LCD_PROUI)
@@ -51,6 +56,7 @@ void GcodeSuite::M302() {
   if (seen_S) {
     thermalManager.extrude_min_temp = parser.value_celsius();
     TERN_(DWIN_LCD_PROUI, HMI_data.ExtMinT = thermalManager.extrude_min_temp);
+    TERN_(EXTENSIBLE_UI, ExtUI::onSetMinExtrusionTemp(thermalManager.extrude_min_temp));
   }
 
   const bool seen_P = parser.seen('P');

@@ -59,7 +59,7 @@ pause_msg_def                pause_msg_menu;
 eeprom_def                   eeprom_menu;
 media_select_menu_def        media_select_menu;
 
-// TODO: Make all strings PSTR and update accessors for the benefit of AVR
+/// TODO: Make all strings PSTR and update accessors for the benefit of AVR
 
 machine_common_def machine_menu;
 void machine_setting_disp() {

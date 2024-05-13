@@ -52,9 +52,6 @@ bool FilamentMonitorBase::enabled = true,
     uint8_t FilamentSensorDevice::motion_detected;
     countdown_t RunoutResponseDelayed::mm_countdown;
   #else
-    #if ENABLED(FILAMENT_MOTION_SENSOR)
-      uint8_t FilamentSensorDevice::motion_detected;
-    #endif
     countdown_t RunoutResponseDelayed::mm_countdown;
     #if ENABLED(FILAMENT_MOTION_SENSOR)
       uint8_t FilamentSensorEncoder::motion_detected;

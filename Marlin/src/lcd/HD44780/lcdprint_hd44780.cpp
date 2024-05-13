@@ -1002,7 +1002,7 @@ int lcd_put_lchar_max(const lchar_t &c, const pixel_len_t max_length) {
 
   if (max_length < 1) return 0;
 
-  // TODO: fix the '\\' that doesn't exist in the HD44870
+  /// TODO: fix the '\\' that doesn't exist in the HD44870
   if (c < 128) {
     lcd.write((uint8_t)c);
     return 1;

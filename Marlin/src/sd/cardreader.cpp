@@ -1325,7 +1325,7 @@ void CardReader::cdroot() {
               #endif
             ) {
               // Reorder the index, indicate that sorting happened
-              // Note that the next o1 will be the current o1. No new fetch needed.
+              /// NOTE: that the next o1 will be the current o1. No new fetch needed.
               sort_order[j] = o2;
               sort_order[j + 1] = o1;
               didSwap = true;

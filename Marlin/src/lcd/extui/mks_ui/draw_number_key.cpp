@@ -191,7 +191,7 @@ static void disp_key_value() {
       case z_offset: dtostrf(probe.offset.z, 1, 3, public_buf_m); break;
     #endif
 
-    // TODO: Use built-in filament change instead of the MKS UI implementation
+    /// TODO: Use built-in filament change instead of the MKS UI implementation
     case load_length:   itoa(gCfgItems.filamentchange_load_length,   public_buf_m, 10); break;
     case load_speed:    itoa(gCfgItems.filamentchange_load_speed,    public_buf_m, 10); break;
     case unload_length: itoa(gCfgItems.filamentchange_unload_length, public_buf_m, 10); break;

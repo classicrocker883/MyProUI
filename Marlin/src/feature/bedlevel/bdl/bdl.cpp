@@ -199,7 +199,7 @@ void BDS_Leveling::process() {
         SERIAL_ECHOLNPGM("c_z0:", planner.get_axis_position_mm(Z_AXIS), "-", pos_zero_offset);
 
         // Move the z axis instead of enabling the Z axis with M17
-        // TODO: Use do_blocking_move_to_z for synchronized move.
+        /// TODO: Use do_blocking_move_to_z for synchronized move.
         current_position.z = 0;
         sync_plan_position();
         gcode.process_subcommands_now(F("G1Z0.05"));
@@ -230,7 +230,7 @@ void BDS_Leveling::process() {
         }
         else {
           char tmp_1[32];
-          // TODO: Use prepare_internal_move_to_destination to guarantee machine space
+          /// TODO: Use prepare_internal_move_to_destination to guarantee machine space
           sprintf_P(tmp_1, PSTR("G1Z%d.%d"), int(zpos), int(zpos * 10) % 10);
           gcode.process_subcommands_now(tmp_1);
           SERIAL_ECHO(tmp_1); SERIAL_ECHOLNPGM(", Z:", current_position.z);

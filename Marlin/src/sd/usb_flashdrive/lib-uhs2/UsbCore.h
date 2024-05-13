@@ -159,7 +159,8 @@ public:
 
   virtual void ResetHubPort(uint8_t port __attribute__((unused))) {
     return;
-  } // Note used for hubs only!
+  /// NOTE: used for hubs only!
+  }
 
   virtual bool VIDPIDOK(uint16_t vid __attribute__((unused)), uint16_t pid __attribute__((unused))) {
     return false;

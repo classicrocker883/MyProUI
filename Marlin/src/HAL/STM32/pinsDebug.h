@@ -283,6 +283,6 @@ void pwm_details(const pin_t Ard_num) {
       }
     }
   #else
-    // TODO: F1 doesn't support changing pins function, so we need to check the function of the PIN and if it's enabled
+    /// TODO: F1 doesn't support changing pins function, so we need to check the function of the PIN and if it's enabled
   #endif
 } // pwm_details

@@ -233,7 +233,7 @@ e-mail   :  support@circuitsathome.com
 #define UHS_MAX3421E_SS UHS_MAX3421E_SS_
 #endif
 
-// NOTE: On the max3421e the irq enable and irq bits are in the same position.
+/// NOTE: On the max3421e the irq enable and irq bits are in the same position.
 
 // IRQs used if CPU polls
 #define   ENIBITSPOLLED (bmCONDETIE | bmBUSEVENTIE  | bmFRAMEIE)
@@ -248,7 +248,7 @@ e-mail   :  support@circuitsathome.com
 #endif
 
 #if IRQ_IS_EDGE
-// Note: UNO32 Interrupts can only be RISING, or FALLING.
+/// NOTE: UNO32 Interrupts can only be RISING, or FALLING.
 // This poses an interesting problem, since we want to use a LOW level.
 // The MAX3421E provides for pulse width control for an IRQ.
 // We do need to watch the timing on this, as a second IRQ could cause
@@ -491,7 +491,7 @@ public:
         virtual void UHS_NI suspend_host() {
                 // Used on MCU that lack control of IRQ priority (AVR).
                 // Suspends ISRs, for critical code. IRQ will be serviced after it is resumed.
-                // NOTE: you must track the state yourself!
+                /// NOTE: you must track the state yourself!
 #ifdef __AVR__
                 noInterrupts();
                 detachInterrupt(UHS_GET_DPI(irq_pin));

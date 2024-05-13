@@ -38,7 +38,7 @@
 #include "../core/boards.h"
 #include "../../Configuration.h"
 //#include "../../../configurations/_Undef_Configuration.h"   //**EXPERIMENTAL** Uncomment to use
-//#include "../../../configurations/_Defines_Configuration.h" //**EXPERIMENTAL** Uncomment to use
+//#include "../../../configurations/_Define_Configuration.h" //**EXPERIMENTAL** Uncomment to use
 
 #ifdef CUSTOM_VERSION_FILE
   #if __has_include(STRINGIFY(../../CUSTOM_VERSION_FILE))
@@ -57,7 +57,7 @@
 #include "../core/drivers.h"
 #include "../../Configuration_adv.h"
 //#include "../../../configurations/_Undef_Configuration_adv.h"   //**EXPERIMENTAL** Uncomment to use
-//#include "../../../configurations/_Defines_Configuration_adv.h" //**EXPERIMENTAL** Uncomment to use
+//#include "../../../configurations/_Define_Configuration_adv.h" //**EXPERIMENTAL** Uncomment to use
 
 #include "Conditionals_adv.h"
 

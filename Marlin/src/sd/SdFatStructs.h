@@ -503,7 +503,7 @@ struct directoryEntry {
   uint16_t creationDate;    // Date file was created.
 
   /**
-   * Last access date. Note that there is no last access time, only
+   * Last access date. NOTE: that there is no last access time, only
    * a date.  This is the date of last read or write. In the case of
    * a write, this should be set to the same date as lastWriteDate.
    */

@@ -150,7 +150,7 @@ struct __attribute__((packed)) ContextSavedFrame {
       void __attribute__((naked, alias("CommonHandler_ASM"), nothrow)) __stm32reservedexception10();
       void __attribute__((naked, alias("CommonHandler_ASM"), nothrow)) __stm32reservedexception13();
     }
-    //TODO When going off from libmaple, you'll need to replace those by the one from STM32/HAL_MinSerial.cpp
+    /// TODO: When going off from libmaple, you'll need to replace those by the one from STM32/HAL_MinSerial.cpp
   #endif
 #endif
 

@@ -183,7 +183,7 @@ void AnycubicTFT::onUserConfirmRequired(const char * const msg) {
     else if (strcmp_P(msg, PSTR("Filament Purging...")) == 0) {
       mediaPrintingState = AMPRINTSTATE_PAUSED;
       mediaPauseState    = AMPAUSESTATE_PARKING;
-      // TODO: JBA I don't think J05 just disables the continue button, i think it injects a rogue M25. So taking this out
+      /// TODO: JBA I don't think J05 just disables the continue button, i think it injects a rogue M25. So taking this out
       // disable continue button
       // SENDLINE_DBG_PGM("J05", "TFT Serial Debug: UserConfirm SD Filament Purging... J05"); // J05 printing pause
 
@@ -283,7 +283,7 @@ void AnycubicTFT::handleSpecialMenu() {
             break;
 
           case '9': // "<09HtBedPID>"
-            SERIAL_ECHOLNPGM("Special Menu: ", F("Auto Tune Hotbed Pid"));
+            SERIAL_ECHOLNPGM("Special Menu: ", F("Auto Tune Hotbed PID"));
             injectCommands(F("M303 E-1 S65 C6 U1"));
             break;
         }
@@ -328,7 +328,7 @@ void AnycubicTFT::handleSpecialMenu() {
             break;
 
           case '4': // "<04HtbedPID>"
-            SERIAL_ECHOLNPGM("Special Menu: ", F("Auto Tune Hotbed Pid"));
+            SERIAL_ECHOLNPGM("Special Menu: ", F("Auto Tune Hotbed PID"));
             injectCommands(F("M303 E-1 S65 C6 U1"));
             break;
 
@@ -667,7 +667,7 @@ void AnycubicTFT::getCommandFromTFT() {
           break;
 
         case 15: // A15 RESUMING FROM OUTAGE
-          // TODO: JBA implement resume form outage
+          /// TODO: JBA implement resume form outage
           break;
 
         case 16: { // A16 set hotend temp
@@ -822,8 +822,8 @@ void AnycubicTFT::getCommandFromTFT() {
 
         case 25: // A25 cool down
           if (!isPrinting()) {
-            setTargetTemp_celsius(0, (heater_t) BED);
-            setTargetTemp_celsius(0, (extruder_t) E0);
+            setTargetTemp_celsius(0, (heater_t)BED);
+            setTargetTemp_celsius(0, (extruder_t)E0);
 
             SENDLINE_DBG_PGM("J12", "TFT Serial Debug: Cooling down... J12"); // J12 cool down
           }
@@ -895,7 +895,7 @@ void AnycubicTFT::doSDCardStateCheck() {
 
 void AnycubicTFT::doFilamentRunoutCheck() {
   #if ENABLED(FILAMENT_RUNOUT_SENSOR)
-    // NOTE: getFilamentRunoutState() only returns the runout state if the job is printing
+    /// NOTE: getFilamentRunoutState() only returns the runout state if the job is printing
     // we want to actually check the status of the pin here, regardless of printstate
     if (READ(FIL_RUNOUT1_PIN) == FIL_RUNOUT1_STATE) {
       if (mediaPrintingState == AMPRINTSTATE_PRINTING || mediaPrintingState == AMPRINTSTATE_PAUSED || mediaPrintingState == AMPRINTSTATE_PAUSE_REQUESTED) {
@@ -954,7 +954,7 @@ void AnycubicTFT::resumePrint() {
 
     if (mediaPauseState == AMPAUSESTATE_HEATER_TIMEOUT) {
       mediaPauseState = AMPAUSESTATE_REHEATING;
-      // TODO: JBA I don't think J05 just disables the continue button, i think it injects a rogue M25. So taking this out
+      /// TODO: JBA I don't think J05 just disables the continue button, i think it injects a rogue M25. So taking this out
       // // disable the continue button
       // SENDLINE_DBG_PGM("J05", "TFT Serial Debug: Resume called with heater timeout... J05"); // J05 printing pause
 

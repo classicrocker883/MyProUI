@@ -237,7 +237,7 @@ public:
   static int16_t write(void *buf, uint16_t nbyte) { return file.isOpen() ? file.write(buf, nbyte) : -1; }
   static void setIndex(const uint32_t index)      { file.seekSet((sdpos = index)); }
 
-  // TODO: rename to diskIODriver()
+  /// TODO: rename to diskIODriver()
   static DiskIODriver* diskIODriver() { return driver; }
 
   #if ENABLED(AUTO_REPORT_SD_STATUS)

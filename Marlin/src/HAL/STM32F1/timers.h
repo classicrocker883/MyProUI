@@ -52,7 +52,7 @@ typedef uint16_t hal_timer_t;
 #endif
 
 /**
- * Note: Timers may be used by platforms and libraries
+ * NOTE: Timers may be used by platforms and libraries
  *
  * FAN PWMs:
  *   With FAN_SOFT_PWM disabled the Temperature class uses
@@ -158,13 +158,13 @@ bool HAL_timer_interrupt_enabled(const uint8_t timer_num);
  * so we can change the ARR value on the fly (without calling refresh), and not get an interrupt right there because we caused an UEV.
  * This mode pretty much makes 2 timers unusable for PWM since they have their counts updated all the time on ISRs.
  * The way Marlin manages timer interrupts doesn't make for an efficient usage in STM32F1
- * Todo: Look at that possibility later.
+ * TODO: Look at that possibility later.
  */
 
 FORCE_INLINE static void HAL_timer_set_compare(const uint8_t timer_num, const hal_timer_t compare) {
   switch (timer_num) {
   case MF_TIMER_STEP:
-    // NOTE: WE have set ARPE = 0, which means the Auto reload register is not preloaded
+    /// NOTE: WE have set ARPE = 0, which means the Auto reload register is not preloaded
     // and there is no need to use any compare, as in the timer mode used, setting ARR to the compare value
     // will result in exactly the same effect, ie triggering an interrupt, and on top, set counter to 0
     timer_set_reload(STEP_TIMER_DEV, compare); // We reload direct ARR as needed during counting up

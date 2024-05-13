@@ -214,9 +214,10 @@ typedef struct PlannerBlock {
 
   volatile block_flags_t flag;              // Block flags
 
-  bool is_fan_sync() { return TERN0(LASER_SYNCHRONOUS_M106_M107, flag.sync_fans); }
-  bool is_pwr_sync() { return TERN0(LASER_POWER_SYNC, flag.sync_laser_pwr); }
-  bool is_sync() { return flag.sync_position || is_fan_sync() || is_pwr_sync(); }
+  bool is_sync_pos() { return flag.sync_position; }
+  bool is_sync_fan() { return TERN0(LASER_SYNCHRONOUS_M106_M107, flag.sync_fans); }
+  bool is_sync_pwr() { return TERN0(LASER_POWER_SYNC, flag.sync_laser_pwr); }
+  bool is_sync() { return is_sync_pos() || is_sync_fan() || is_sync_pwr(); }
   bool is_page() { return TERN0(DIRECT_STEPPING, flag.page); }
   bool is_move() { return !(is_sync() || is_page()); }
 
@@ -684,7 +685,8 @@ class Planner {
 
       FORCE_INLINE static void set_filament_size(const uint8_t e, const_float_t v) {
         filament_size[e] = v;
-        if (v > 0) volumetric_area_nominal = CIRCLE_AREA(v * 0.5); //TODO: should it be per extruder
+        if (v > 0) volumetric_area_nominal = CIRCLE_AREA(v * 0.5);
+        /// TODO: should it be per extruder
         // make sure all extruders have some sane value for the filament size
         for (uint8_t i = 0; i < COUNT(filament_size); ++i)
           if (!filament_size[i]) filament_size[i] = DEFAULT_NOMINAL_FILAMENT_DIA;
@@ -849,8 +851,8 @@ class Planner {
      */
     static bool _buffer_steps(const xyze_long_t &target
       OPTARG(HAS_POSITION_FLOAT, const xyze_pos_t &target_float)
-      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-      , feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
+      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+      feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
     );
 
     /**
@@ -871,9 +873,9 @@ class Planner {
      */
     static bool _populate_block(block_t * const block, const xyze_long_t &target
       OPTARG(HAS_POSITION_FLOAT, const xyze_pos_t &target_float)
-      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-      , feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
-      , float &minimum_planner_speed_sqr
+      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+      feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints,
+      float &minimum_planner_speed_sqr
     );
 
     /**
@@ -904,10 +906,10 @@ class Planner {
      *  hints       - optional parameters to aid planner calculations
      */
     static bool buffer_segment(const abce_pos_t &abce
-      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-      , const_feedRate_t fr_mm_s
-      , const uint8_t extruder=active_extruder
-      , const PlannerHints &hints=PlannerHints()
+      OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+      const_feedRate_t fr_mm_s,
+      const uint8_t extruder=active_extruder,
+      const PlannerHints &hints=PlannerHints()
     );
 
   public:
@@ -922,9 +924,9 @@ class Planner {
      *  extruder     - optional target extruder (otherwise active_extruder)
      *  hints        - optional parameters to aid planner calculations
      */
-    static bool buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s
-      , const uint8_t extruder=active_extruder
-      , const PlannerHints &hints=PlannerHints()
+    static bool buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s,
+      const uint8_t extruder=active_extruder,
+      const PlannerHints &hints=PlannerHints()
     );
 
     #if ENABLED(DIRECT_STEPPING)
@@ -985,7 +987,7 @@ class Planner {
 
     #if ENABLED(REALTIME_REPORTING_COMMANDS)
       // Force a quick pause of the machine (e.g., when a pause is required in the middle of move).
-      // NOTE: Hard-stops will lose steps so encoders are highly recommended if using these!
+      /// NOTE: Hard-stops will lose steps so encoders are highly recommended if using these!
       static void quick_pause();
       static void quick_resume();
     #endif
@@ -1122,5 +1124,11 @@ class Planner {
 };
 
 #define PLANNER_XY_FEEDRATE() _MIN(planner.settings.max_feedrate_mm_s[X_AXIS], planner.settings.max_feedrate_mm_s[Y_AXIS])
+
+#define ANY_AXIS_MOVES(BLOCK)  \
+  (false NUM_AXIS_GANG(        \
+  || BLOCK->steps.a, || BLOCK->steps.b, || BLOCK->steps.c, \
+  || BLOCK->steps.i, || BLOCK->steps.j, || BLOCK->steps.k, \
+  || BLOCK->steps.u, || BLOCK->steps.v, || BLOCK->steps.w))
 
 extern Planner planner;

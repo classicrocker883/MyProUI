@@ -58,7 +58,7 @@
    *
    *    M605 W  : IDEX What? command.
    *
-   *    Note: the X axis should be homed after changing Dual X-carriage mode.
+   *    NOTE: the X axis should be homed after changing Dual X-carriage mode.
    */
   void GcodeSuite::M605() {
     planner.synchronize();

@@ -376,7 +376,7 @@ void MarlinUI::draw_status_screen() {
   #endif
 
   // Progress bar
-  // TODO: print percentage text for SHOW_PROGRESS_PERCENT
+  /// TODO: print percentage text for SHOW_PROGRESS_PERCENT
   tft.canvas(PROGRESS_BAR_X, PROGRESS_BAR_Y, PROGRESS_BAR_W, PROGRESS_BAR_H);
   tft.set_background(COLOR_PROGRESS_BG);
   tft.add_rectangle(0, 0, PROGRESS_BAR_W, PROGRESS_BAR_H, COLOR_PROGRESS_FRAME);

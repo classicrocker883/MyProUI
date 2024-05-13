@@ -188,8 +188,8 @@
 #define IF_0(O, A) IF(O, A, 0)
 #define IF_1(O, A) IF(O, A, 1)
 
-#define HAS_ARGS(V...) _BOOL(FIRST(_END_OF_ARGUMENTS_ V)())
 #define _END_OF_ARGUMENTS_() 0
+#define HAS_ARGS(V...) _BOOL(FIRST(_END_OF_ARGUMENTS_ V)())
 
 // Use NUM_ARGS(__VA_ARGS__) to get the number of variadic arguments
 #define _NUM_ARGS(_,n,m,l,k,j,i,h,g,f,e,d,c,b,a,Z,Y,X,W,V,U,T,S,R,Q,P,O,N,M,L,K,J,I,H,G,F,E,D,C,B,A,OUT,...) OUT
@@ -241,8 +241,8 @@
 #define _DO_39(W,C,A,V...) (_##W##_1(A) C _DO_38(W,C,V))
 #define _DO_40(W,C,A,V...) (_##W##_1(A) C _DO_39(W,C,V))
 #define __DO_N(W,C,N,V...) _DO_##N(W,C,V)
-#define _DO_N( W,C,N,V...) __DO_N(W,C,N,V)
-#define DO(W,C,V...)       (_DO_N(W,C,NUM_ARGS(V),V))
+#define _DO_N( W,C,N,V...)  __DO_N(W,C,N,V)
+#define DO(W,C,V...)        (_DO_N(W,C,NUM_ARGS(V),V))
 
 // Recognize "true" values: blank, 1, 0x1, true
 #define _ISENA_     ~,1

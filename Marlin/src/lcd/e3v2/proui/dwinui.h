@@ -190,7 +190,7 @@
 #define DWIN_FONT_HEAD  font10x20
 #define DWIN_FONT_ALERT font10x20
 #define STATUS_Y 354
-#define LCD_WIDTH (DWIN_WIDTH / 8)  // only if the default fontid is font8x16
+#define LCD_WIDTH (DWIN_WIDTH / 8) // Only if the default fontid is font8x16
 
 // Minimum unit (0.1) : multiple (10)
 #define UNITFDIGITS 1
@@ -208,7 +208,6 @@
  * @param VALX Menu item value X position
  * @param MENU_CHR_W/MENU_CHR_H Menu font 8x16
  * @param STAT_CHR_W Menu Stats character width
- *
  */
 constexpr uint8_t  TITLE_HEIGHT = 30,
                    MLINE = 53,

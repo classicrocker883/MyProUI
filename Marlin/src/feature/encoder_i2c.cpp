@@ -20,12 +20,12 @@
  *
  */
 
-//todo:  add support for multiple encoders on a single axis
-//todo:    add z axis auto-leveling
-//todo:  consolidate some of the related M codes?
-//todo:  add endstop-replacement mode?
-//todo:  try faster I2C speed; tweak TWI_FREQ (400000L, or faster?); or just TWBR = ((CPU_FREQ / 400000L) - 16) / 2;
-//todo:    consider Marlin-optimized Wire library; i.e. MarlinWire, like MarlinSerial
+/// TODO:  add support for multiple encoders on a single axis
+/// TODO:  add z axis auto-leveling
+/// TODO:  consolidate some of the related M codes?
+/// TODO:  add endstop-replacement mode?
+/// TODO:  try faster I2C speed; tweak TWI_FREQ (400000L, or faster?); or just TWBR = ((CPU_FREQ / 400000L) - 16) / 2;
+/// TODO:  consider Marlin-optimized Wire library; i.e. MarlinWire, like MarlinSerial
 
 #include "../inc/MarlinConfig.h"
 

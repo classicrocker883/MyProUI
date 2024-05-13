@@ -1950,7 +1950,7 @@
 /**
  * Endstop and probe flags
  * - Set USE_(AXIS)_(MIN|MAX) flags for each used endstop that has a pin, including those for DIAG0 state.
- *   - Note: Dual X Carriage uses "X" and "X2" steppers, but X_MIN and X_MAX endstop states (i.e., not X2_MAX).
+ * - NOTE: Dual X Carriage uses "X" and "X2" steppers, but X_MIN and X_MAX endstop states (i.e., not X2_MAX).
  * - Set a HAS_(AXIS)_(MIN|MAX)_STATE flag for each endstop that has a state, including SPI Sensorless which don't use a pin.
  * - Set a HAS_(AXIS)_STATE flag for each axis that has at least one state.
  * - Consider (AXIS)_SAFETY_STOP for the case where the axis has a second endstop.
@@ -2956,7 +2956,7 @@
   #define HAS_ZOFFSET_ITEM 1
 #endif
 
-#if ANY(PROBE_SELECTED, HAS_ZOFFSET_ITEM)
+#if HAS_ZOFFSET_ITEM
   #ifndef PROBE_OFFSET_ZMIN
     #define PROBE_OFFSET_ZMIN -20
   #endif
@@ -3053,7 +3053,7 @@
  */
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   #if ANY(HAS_MARLINUI_MENU, EXTENSIBLE_UI, DWIN_LCD_PROUI) || ALL(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT)
-    #define M600_PURGE_MORE_RESUMABLE 1
+    #define M600_PURGE_MORE_RESUMABLE 1 // UI provides some way to Purge More / Resume
   #endif
   #ifndef FILAMENT_CHANGE_SLOW_LOAD_LENGTH
     #define FILAMENT_CHANGE_SLOW_LOAD_LENGTH 0
@@ -3261,13 +3261,14 @@
 #ifndef MANUAL_PROBE_START_Z
   #if ANY(MESH_BED_LEVELING, PROBE_MANUALLY)
     // Leave MANUAL_PROBE_START_Z undefined so the prior Z height will be used.
-    // Note: If Z_CLEARANCE_BETWEEN_MANUAL_PROBES is 0 there will be no raise between points
+    /// NOTE: If Z_CLEARANCE_BETWEEN_MANUAL_PROBES is 0 there will be no raise between points
   #elif ENABLED(AUTO_BED_LEVELING_UBL) && defined(Z_CLEARANCE_BETWEEN_PROBES)
     #define MANUAL_PROBE_START_Z Z_CLEARANCE_BETWEEN_PROBES
   #endif
 #endif
 
-#ifndef __SAM3X8E__ //todo: hal: broken hal encapsulation
+#ifndef __SAM3X8E__
+  /// TODO: hal: broken hal encapsulation
   #undef UI_VOLTAGE_LEVEL
   #undef RADDS_DISPLAY
   #undef MOTOR_CURRENT

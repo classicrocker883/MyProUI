@@ -659,7 +659,7 @@ void menu_configuration() {
   #endif
 
   // Debug Menu when certain options are enabled
-  // Note: it is at the end of the list, so a more commonly used items should be placed above
+  /// NOTE: it is at the end of the list, so a more commonly used items should be placed above
   #if HAS_DEBUG_MENU
     SUBMENU(MSG_DEBUG_MENU, menu_debug);
   #endif

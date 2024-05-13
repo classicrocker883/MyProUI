@@ -237,7 +237,7 @@ void SPIClass::setDataSize(uint32_t datasize) {
 
 void SPIClass::setDataMode(uint8_t dataMode) {
   /**
-   * Notes:
+   * NOTES:
    * As far as we know the AVR numbers for dataMode match the numbers required by the STM32.
    * From the AVR doc https://www.atmel.com/images/doc2585.pdf section 2.4
    *
@@ -713,7 +713,7 @@ static const spi_baud_rate baud_rates[8] __FLASH__ = {
 };
 
 /**
- * Note: This assumes you're on a LeafLabs-style board
+ * NOTE: This assumes you're on a LeafLabs-style board
  * (CYCLES_PER_MICROSECOND == 72, APB2 at 72MHz, APB1 at 36MHz).
  */
 static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {

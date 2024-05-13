@@ -29,7 +29,7 @@
 
 #if ENABLED(LCD_I2C_TYPE_PCF8575)
 
-  // NOTE: These are register-mapped pins on the PCF8575 controller, not Arduino pins.
+  /// NOTE: These are register-mapped pins on the PCF8575 controller, not Arduino pins.
   #define LCD_I2C_PIN_BL  3
   #define LCD_I2C_PIN_EN  2
   #define LCD_I2C_PIN_RW  1

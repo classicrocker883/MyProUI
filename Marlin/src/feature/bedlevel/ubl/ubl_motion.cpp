@@ -41,7 +41,7 @@
 
 #if !UBL_SEGMENTED
 
-  // TODO: The first and last parts of a move might result in very short segment(s)
+  /// TODO: The first and last parts of a move might result in very short segment(s)
   //       after getting split on the cell boundary, so moves like that should not
   //       get split. This will be most common for moves that start/end near the
   //       corners of cells. To fix the issue, simply check if the start/end of the line
@@ -73,7 +73,7 @@
         // For a move off the UBL mesh, use a constant Z raise
         if (!cell_index_x_valid(end.x) || !cell_index_y_valid(end.y)) {
 
-          // Note: There is no Z Correction in this case. We are off the mesh and don't know what
+          /// NOTE: There is no Z Correction in this case. We are off the mesh and don't know what
           // a reasonable correction would be, UBL_Z_RAISE_WHEN_OFF_MESH will be used instead of
           // a calculated (Bi-Linear interpolation) correction.
 
@@ -381,7 +381,7 @@
 
     xyze_float_t diff = total * inv_segments;
 
-    // Note that E segment distance could vary slightly as z mesh height
+    /// NOTE: that E segment distance could vary slightly as z mesh height
     // changes for each segment, but small enough to ignore.
 
     xyze_pos_t raw = current_position;
@@ -408,7 +408,7 @@
     for (;;) {  // for each mesh cell encountered during the move
 
       // Compute mesh cell invariants that remain constant for all segments within cell.
-      // Note for cell index, if point is outside the mesh grid (in MESH_INSET perimeter)
+      /// NOTE: for cell index, if point is outside the mesh grid (in MESH_INSET perimeter)
       // the bilinear interpolation from the adjacent cell within the mesh will still work.
       // Inner loop will exit each time (because out of cell bounds) but will come back
       // in top of loop and again re-find same adjacent cell and use it, just less efficient

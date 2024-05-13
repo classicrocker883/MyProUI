@@ -265,7 +265,7 @@ void TFT_Queue::add_text(uint16_t x, uint16_t y, uint16_t color, const uint16_t 
   end_of_queue += sizeof(parametersCanvasText_t);
 
   uint16_t *character = (uint16_t *)end_of_queue;
-  // TODO: Deal with maxWidth
+  /// TODO: Deal with maxWidth
   while ((*character++ = *pointer++) != 0);
   end_of_queue = (uint8_t *)character;
 

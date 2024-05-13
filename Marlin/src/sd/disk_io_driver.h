@@ -37,7 +37,8 @@ public:
    *
    * \return true for success or false for failure.
    */
-  virtual bool init(const uint8_t sckRateID, const pin_t chipSelectPin) = 0; //TODO: only for SPI
+  virtual bool init(const uint8_t sckRateID, const pin_t chipSelectPin) = 0;
+  /// TODO: only for SPI
 
   /**
    * Read a card's CSD register. The CSD contains Card-Specific Data that

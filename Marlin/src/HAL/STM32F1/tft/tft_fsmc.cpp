@@ -242,7 +242,7 @@ void TFT_FSMC::abort() {
 }
 
 void TFT_FSMC::transmitDMA(uint32_t memoryIncrease, uint16_t *data, uint16_t count) {
-  // TODO: HAL STM32 uses DMA2_Channel1 for FSMC on STM32F1
+  /// TODO: HAL STM32 uses DMA2_Channel1 for FSMC on STM32F1
   dma_setup_transfer(FSMC_DMA_DEV, FSMC_DMA_CHANNEL, data, DMA_SIZE_16BITS, &LCD->RAM, DMA_SIZE_16BITS, DMA_MEM_2_MEM | memoryIncrease);
   dma_set_num_transfers(FSMC_DMA_DEV, FSMC_DMA_CHANNEL, count);
   dma_clear_isr_bits(FSMC_DMA_DEV, FSMC_DMA_CHANNEL);

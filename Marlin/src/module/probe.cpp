@@ -183,7 +183,7 @@ xyz_pos_t Probe::offset; // Initialized by settings.load()
   }
 
   // Move down to the bed to stow the probe
-  // TODO: Handle cases where it would be a bad idea to move down.
+  /// TODO: Handle cases where it would be a bad idea to move down.
   inline void run_stow_moves() {
     const float oldz = current_position.z;
     endstops.enable_z_probe(false);
@@ -561,7 +561,7 @@ bool Probe::set_deployed(const bool deploy, const bool no_return/*=false*/) {
   #endif
 
   // If preheating is required before any probing...
-  // TODO: Consider skipping this for things like M401, G34, etc.
+  /// TODO: Consider skipping this for things like M401, G34, etc.
   TERN_(PREHEAT_BEFORE_PROBING, if (deploy) preheat_for_probing(PROBING_NOZZLE_TEMP, PROBING_BED_TEMP));
 
   if (!no_return) do_blocking_move_to(old_xy); // Return to the original location unless handled externally

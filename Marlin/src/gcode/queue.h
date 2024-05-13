@@ -57,10 +57,10 @@ public:
    * command and hands off execution to individual handler functions.
    */
   struct CommandLine {
-    char buffer[MAX_CMD_SIZE];      //!< The command buffer
-    bool skip_ok;                   //!< Skip sending ok when command is processed?
+    char buffer[MAX_CMD_SIZE]; //!< The command buffer
+    bool skip_ok;              //!< Skip sending ok when command is processed?
     #if HAS_MULTI_SERIAL
-      serial_index_t port;          //!< Serial port the command was received on
+      serial_index_t port;     //!< Serial port the command was received on
     #endif
   };
 
@@ -68,10 +68,10 @@ public:
    * A handy ring buffer type
    */
   struct RingBuffer {
-    uint8_t length,                 //!< Number of commands in the queue
-            index_r,                //!< Ring buffer's read position
-            index_w;                //!< Ring buffer's write position
-    CommandLine commands[BUFSIZE];  //!< The ring buffer of commands
+    uint8_t length,                //!< Number of commands in the queue
+            index_r,               //!< Ring buffer's read position
+            index_w;               //!< Ring buffer's write position
+    CommandLine commands[BUFSIZE]; //!< The ring buffer of commands
 
     inline serial_index_t command_port() const { return TERN0(HAS_MULTI_SERIAL, commands[index_r].port); }
 

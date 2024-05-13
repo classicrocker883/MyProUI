@@ -144,7 +144,7 @@ void _lcd_ubl_custom_mesh() {
  * UBL Adjust Mesh Height Command
  */
 void _lcd_ubl_adjust_height_cmd() {
-  char ubl_lcd_gcode[13];
+  char ubl_lcd_gcode[14];
   const int ind = ubl_height_amount > 0 ? 6 : 7;
   strcpy_P(ubl_lcd_gcode, PSTR("G29P6C-"));
   sprintf_P(&ubl_lcd_gcode[ind], PSTR(".%i"), ABS(ubl_height_amount));
@@ -462,7 +462,8 @@ void ubl_map_screen() {
 
     // Determine number of points to edit
     #if IS_KINEMATIC
-      n_edit_pts = 9; // TODO: Delta accessible edit points
+      n_edit_pts = 9;
+      /// TODO: Delta accessible edit points
     #else
       const bool xc = WITHIN(x, 1, (GRID_MAX_POINTS_X) - 2),
                  yc = WITHIN(y, 1, (GRID_MAX_POINTS_Y) - 2);
@@ -550,7 +551,7 @@ void _menu_ubl_tools() {
     SUBMENU(MSG_UBL_VALIDATE_MESH_MENU, _lcd_ubl_validate_mesh);
   #endif
   SUBMENU(MSG_EDIT_MESH, _lcd_ubl_edit_mesh);
-  SUBMENU(MSG_UBL_MESH_LEVELING, _lcd_ubl_mesh_leveling);
+  SUBMENU(MSG_MESH_LEVELING, _lcd_ubl_mesh_leveling);
   END_MENU();
 }
 

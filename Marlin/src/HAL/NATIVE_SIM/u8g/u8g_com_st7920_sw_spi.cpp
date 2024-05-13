@@ -137,7 +137,8 @@ uint8_t u8g_com_ST7920_sw_spi_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, void 
       break;
 
     case U8G_COM_MSG_CHIP_SELECT:
-      if (U8G_PIN_NONE != u8g->pin_list[U8G_PI_CS]) u8g_SetPILevel(u8g, U8G_PI_CS, arg_val);  //note: the st7920 has an active high chip select
+      if (U8G_PIN_NONE != u8g->pin_list[U8G_PI_CS]) u8g_SetPILevel(u8g, U8G_PI_CS, arg_val);
+      /// NOTE: the st7920 has an active high chip select
       break;
 
     case U8G_COM_MSG_WRITE_BYTE:

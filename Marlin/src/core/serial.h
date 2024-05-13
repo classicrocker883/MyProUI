@@ -175,9 +175,9 @@ template<> void SERIAL_ECHO(  const FSTR_P fstr);
 template<> void SERIAL_ECHOLN(const FSTR_P fstr);
 
 // Print any number of items with arbitrary types (except loose PROGMEM strings)
-template <typename T, typename ... Args>
+template <typename T, typename  ... Args>
 void SERIAL_ECHO(  T arg1, Args ... args) { SERIAL_ECHO(arg1); SERIAL_ECHO(args ...); }
-template <typename T, typename ... Args>
+template <typename T, typename  ... Args>
 void SERIAL_ECHOLN(T arg1, Args ... args) { SERIAL_ECHO(arg1); SERIAL_ECHO(args ...); SERIAL_EOL(); }
 
 //
@@ -186,40 +186,40 @@ void SERIAL_ECHOLN(T arg1, Args ... args) { SERIAL_ECHO(arg1); SERIAL_ECHO(args 
 //
 
 // Print up to 20 pairs of values. Odd elements must be literal strings.
-#define __SEP_N(N,V...)           _SEP_##N(V)
-#define _SEP_N(N,V...)            __SEP_N(N,V)
-#define _SEP_N_REF()              _SEP_N
-#define _SEP_1(s)                 SERIAL_ECHO(F(s));
-#define _SEP_2(s,v)               SERIAL_ECHO(F(s),v);
-#define _SEP_3(s,v,V...)          _SEP_2(s,v); DEFER2(_SEP_N_REF)()(TWO_ARGS(V),V);
-#define SERIAL_ECHOPGM(V...)      do{ EVAL(_SEP_N(TWO_ARGS(V),V)); }while(0)
+#define __SEP_N(N,V...)          _SEP_##N(V)
+#define _SEP_N(N,V...)           __SEP_N(N,V)
+#define _SEP_N_REF()             _SEP_N
+#define _SEP_1(s)                SERIAL_ECHO(F(s));
+#define _SEP_2(s,v)              SERIAL_ECHO(F(s),v);
+#define _SEP_3(s,v,V...)         _SEP_2(s,v); DEFER2(_SEP_N_REF)()(TWO_ARGS(V),V);
+#define SERIAL_ECHOPGM(V...)     do{ EVAL(_SEP_N(TWO_ARGS(V),V)); }while(0)
 
 // Print up to 20 pairs of values followed by newline. Odd elements must be literal strings.
-#define __SELP_N(N,V...)          _SELP_##N(V)
-#define _SELP_N(N,V...)           __SELP_N(N,V)
-#define _SELP_N_REF()             _SELP_N
-#define _SELP_1(s)                SERIAL_ECHO(  F(s "\n"));
-#define _SELP_2(s,v)              SERIAL_ECHOLN(F(s),v);
-#define _SELP_3(s,v,V...)         _SEP_2(s,v); DEFER2(_SELP_N_REF)()(TWO_ARGS(V),V);
-#define SERIAL_ECHOLNPGM(V...)    do{ EVAL(_SELP_N(TWO_ARGS(V),V)); }while(0)
+#define __SELP_N(N,V...)         _SELP_##N(V)
+#define _SELP_N(N,V...)          __SELP_N(N,V)
+#define _SELP_N_REF()            _SELP_N
+#define _SELP_1(s)               SERIAL_ECHO(  F(s "\n"));
+#define _SELP_2(s,v)             SERIAL_ECHOLN(F(s),v);
+#define _SELP_3(s,v,V...)        _SEP_2(s,v); DEFER2(_SELP_N_REF)()(TWO_ARGS(V),V);
+#define SERIAL_ECHOLNPGM(V...)   do{ EVAL(_SELP_N(TWO_ARGS(V),V)); }while(0)
 
 // Print up to 20 pairs of values. Odd elements must be PSTR pointers.
-#define __SEP_N_P(N,V...)         _SEP_##N##_P(V)
-#define _SEP_N_P(N,V...)          __SEP_N_P(N,V)
-#define _SEP_N_P_REF()            _SEP_N_P
-#define _SEP_1_P(p)               SERIAL_ECHO(FPSTR(p));
-#define _SEP_2_P(p,v)             SERIAL_ECHO(FPSTR(p),v);
-#define _SEP_3_P(p,v,V...)        _SEP_2_P(p,v); DEFER2(_SEP_N_P_REF)()(TWO_ARGS(V),V);
-#define SERIAL_ECHOPGM_P(V...)    do{ EVAL(_SEP_N_P(TWO_ARGS(V),V)); }while(0)
+#define __SEP_N_P(N,V...)        _SEP_##N##_P(V)
+#define _SEP_N_P(N,V...)         __SEP_N_P(N,V)
+#define _SEP_N_P_REF()           _SEP_N_P
+#define _SEP_1_P(p)              SERIAL_ECHO(FPSTR(p));
+#define _SEP_2_P(p,v)            SERIAL_ECHO(FPSTR(p),v);
+#define _SEP_3_P(p,v,V...)       _SEP_2_P(p,v); DEFER2(_SEP_N_P_REF)()(TWO_ARGS(V),V);
+#define SERIAL_ECHOPGM_P(V...)   do{ EVAL(_SEP_N_P(TWO_ARGS(V),V)); }while(0)
 
 // Print up to 20 pairs of values followed by newline. Odd elements must be PSTR pointers.
-#define __SELP_N_P(N,V...)        _SELP_##N##_P(V)
-#define _SELP_N_P(N,V...)         __SELP_N_P(N,V)
-#define _SELP_N_P_REF()           _SELP_N_P
-#define _SELP_1_P(p)              SERIAL_ECHOLN(FPSTR(p));
-#define _SELP_2_P(p,v)            SERIAL_ECHOLN(FPSTR(p),v);
-#define _SELP_3_P(p,v,V...)       { _SEP_2_P(p,v); DEFER2(_SELP_N_P_REF)()(TWO_ARGS(V),V); }
-#define SERIAL_ECHOLNPGM_P(V...)  do{ EVAL(_SELP_N_P(TWO_ARGS(V),V)); }while(0)
+#define __SELP_N_P(N,V...)       _SELP_##N##_P(V)
+#define _SELP_N_P(N,V...)        __SELP_N_P(N,V)
+#define _SELP_N_P_REF()          _SELP_N_P
+#define _SELP_1_P(p)             SERIAL_ECHOLN(FPSTR(p));
+#define _SELP_2_P(p,v)           SERIAL_ECHOLN(FPSTR(p),v);
+#define _SELP_3_P(p,v,V...)      { _SEP_2_P(p,v); DEFER2(_SELP_N_P_REF)()(TWO_ARGS(V),V); }
+#define SERIAL_ECHOLNPGM_P(V...) do{ EVAL(_SELP_N_P(TWO_ARGS(V),V)); }while(0)
 
 #define SERIAL_ECHO_MSG(V...)  do{ SERIAL_ECHO_START();  SERIAL_ECHOLNPGM(V); }while(0)
 #define SERIAL_ERROR_MSG(V...) do{ SERIAL_ERROR_START(); SERIAL_ECHOLNPGM(V); }while(0)
@@ -241,16 +241,16 @@ void serial_offset(const_float_t v, const uint8_t sp=0); // For v==0 draw space 
 void print_bin(const uint16_t val);
 
 void print_xyz(NUM_AXIS_ARGS_(const_float_t) FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr);
-inline void print_xyz( const xyz_pos_t &xyz, FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr) {
+inline void print_xyz(const xyz_pos_t &xyz,  FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr) {
   print_xyz(NUM_AXIS_ELEM_(xyz) prefix, suffix);
 }
 
 void print_xyze(LOGICAL_AXIS_ARGS_(const_float_t) FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr);
-inline void print_xyze(   const xyze_pos_t &xyze, FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr) {
+inline void print_xyze(const xyze_pos_t &xyze,    FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr) {
   print_xyze(LOGICAL_AXIS_ELEM_(xyze) prefix, suffix);
 }
 
-#define SERIAL_POS(SUFFIX,VAR) do  { print_xyz(VAR, F("  " STRINGIFY(VAR) "="), F(" : " SUFFIX "\n")); }while(0)
+#define SERIAL_POS(SUFFIX,VAR)  do { print_xyz(VAR, F("  " STRINGIFY(VAR) "="), F(" : " SUFFIX "\n")); }while(0)
 #define SERIAL_XYZ(PREFIX,V...) do { print_xyz(V, F(PREFIX)); }while(0)
 
 /**
@@ -271,13 +271,13 @@ public:
   SString& set() { super::set(); return *this; }
 
   template<typename... Args>
-  SString& setf_P(PGM_P const fmt, Args... more) { super::setf_P(fmt, more...); return *this; }
+  SString& setf_P(PGM_P const pfmt, Args... more) { super::setf_P(pfmt, more...); return *this; }
 
   template<typename... Args>
-  SString& setf(const char *fmt, Args... more)   { super::setf(fmt, more...); return *this; }
+  SString& setf(const char *fmt, Args... more)    { super::setf(fmt, more...); return *this; }
 
   template<typename... Args>
-  SString& setf(FSTR_P const fmt, Args... more)  { super::setf(fmt, more...); return *this; }
+  SString& setf(FSTR_P const ffmt, Args... more)  { super::setf(ffmt, more...); return *this; }
 
   template <typename T>
   SString& set(const T &v)                       { super::set(v); return *this; }
@@ -291,7 +291,7 @@ public:
   template<typename T, typename... Args>
   SString& append(T arg1, Args... more)          { append(arg1).append(more...); return *this; }
 
-  SString& clear() { set(); return *this; }
+  SString& clear() { set();        return *this; }
   SString& eol()   { append('\n'); return *this; }
   SString& trunc(const int &i) { super::trunc(i); return *this; }
 

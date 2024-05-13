@@ -29,7 +29,7 @@
  * A servo is activated by creating an instance of the Servo class passing the desired pin to the attach() method.
  * The servos are pulsed in the background using the value most recently written using the write() method
  *
- * Note that analogWrite of PWM on pins associated with the timer are disabled when the first servo is attached.
+ * NOTE: analogWrite of PWM on pins associated with the timer are disabled when the first servo is attached.
  * Timers are seized as needed in groups of 12 servos - 24 servos use two timers, 48 servos will use four.
  *
  * The methods are:
@@ -96,7 +96,7 @@ int8_t Servo::attach(const int inPin, const int inMin, const int inMax) {
   if (inPin > 0) servo_info[servoIndex].Pin.nbr = inPin;
   pinMode(servo_info[servoIndex].Pin.nbr, OUTPUT); // set servo pin to output
 
-  // TODO: min/max check: ABS(min - MIN_PULSE_WIDTH) / 4 < 128
+  /// TODO: min/max check: ABS(min - MIN_PULSE_WIDTH) / 4 < 128
   min = (MIN_PULSE_WIDTH - inMin) / 4; //resolution of min/max is 4 uS
   max = (MAX_PULSE_WIDTH - inMax) / 4;
 

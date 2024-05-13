@@ -33,7 +33,7 @@
  * G6: Direct Stepper Move
  */
 void GcodeSuite::G6() {
-  // TODO: feedrate support?
+  /// TODO: feedrate support?
   if (parser.seen('R'))
     planner.last_page_step_rate = parser.value_ulong();
 

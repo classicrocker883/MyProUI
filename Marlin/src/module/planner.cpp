@@ -1065,7 +1065,7 @@ void Planner::reverse_pass(const_float_t safe_exit_speed_sqr) {
 
   // Reverse Pass: Coarsely maximize all possible deceleration curves back-planning from the last
   // block in buffer. Cease planning when the last optimal planned or tail pointer is reached.
-  // NOTE: Forward pass will later refine and correct the reverse pass to create an optimal plan.
+  /// NOTE: Forward pass will later refine and correct the reverse pass to create an optimal plan.
   const block_t *next = nullptr;
   while (block_index != planned_block_index) {
 
@@ -1146,24 +1146,25 @@ void Planner::forward_pass_kernel(const block_t * const previous, block_t * cons
 
 /**
  * recalculate() needs to go over the current plan twice.
- * Once in reverse and once forward. This implements the forward pass.
+ * Once in reverse and once forward. This implements forward_pass().
  */
 void Planner::forward_pass() {
 
   // Forward Pass: Forward plan the acceleration curve from the planned pointer onward.
   // Also scans for optimal plan breakpoints and appropriately updates the planned pointer.
 
-  // Begin at buffer planned pointer. Note that block_buffer_planned can be modified
-  //  by the stepper ISR,  so read it ONCE. It it guaranteed that block_buffer_planned
-  //  will never lead head, so the loop is safe to execute. Also note that the forward
-  //  pass will never modify the values at the tail.
+  // Begin at buffer planned pointer.
+  /// NOTE: block_buffer_planned can be modified by the stepper ISR,
+  //  so read it ONCE. It is guaranteed that block_buffer_planned
+  //  will never lead head, so the loop is safe to execute.
+  /// NOTE: forward_pass() will never modify the values at the tail.
   uint8_t block_index = block_buffer_planned;
 
   block_t *block;
   const block_t * previous = nullptr;
   while (block_index != block_buffer_head) {
 
-    // Perform the forward pass
+    // Perform the Forward Pass
     block = &block_buffer[block_index];
 
     // Only process movement blocks
@@ -1234,7 +1235,7 @@ void Planner::recalculate_trapezoids(const_float_t safe_exit_speed_sqr) {
           if (!stepper.is_block_busy(block)) {
             // Block is not BUSY, we won the race against the Stepper ISR:
 
-            // NOTE: Entry and exit factors always > 0 by all previous logic operations.
+            /// NOTE: Entry and exit factors always > 0 by all previous logic operations.
             const float nomr = 1.0f / block->nominal_speed;
             calculate_trapezoid_for_block(block, current_entry_speed * nomr, next_entry_speed * nomr);
           }
@@ -1684,9 +1685,10 @@ void Planner::check_axes_activity() {
 
 void Planner::quick_stop() {
 
-  // Remove all the queued blocks. Note that this function is NOT
-  // called from the Stepper ISR, so we must consider tail as readonly!
-  // that is why we set head to tail - But there is a race condition that
+  // Remove all the queued blocks.
+  /// NOTE: this function is NOT called from the Stepper ISR,
+  // so we must consider tail as readonly!
+  // That is why we set head to tail - But there is a race condition that
   // must be handled: The tail could change between the read and the assignment
   // so this must be enclosed in a critical section
 
@@ -1825,8 +1827,8 @@ void Planner::synchronize() { while (busy()) idle(); }
  */
 bool Planner::_buffer_steps(const xyze_long_t &target
   OPTARG(HAS_POSITION_FLOAT, const xyze_pos_t &target_float)
-  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-  , feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
+  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+  feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
 ) {
 
   // Wait for the next available block
@@ -1842,9 +1844,9 @@ bool Planner::_buffer_steps(const xyze_long_t &target
   float minimum_planner_speed_sqr;
   if (!_populate_block(block, target
         OPTARG(HAS_POSITION_FLOAT, target_float)
-        OPTARG(HAS_DIST_MM_ARG, cart_dist_mm)
-        , fr_mm_s, extruder, hints
-        , minimum_planner_speed_sqr
+        OPTARG(HAS_DIST_MM_ARG, cart_dist_mm),
+        fr_mm_s, extruder, hints,
+        minimum_planner_speed_sqr
       )
   ) {
     // Movement was not queued, probably because it was too short.
@@ -1898,9 +1900,9 @@ bool Planner::_populate_block(
   block_t * const block,
   const abce_long_t &target
   OPTARG(HAS_POSITION_FLOAT, const xyze_pos_t &target_float)
-  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-  , feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints
-  , float &minimum_planner_speed_sqr
+  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+  feedRate_t fr_mm_s, const uint8_t extruder, const PlannerHints &hints,
+  float &minimum_planner_speed_sqr
 ) {
   xyze_long_t dist = target - position;
 
@@ -1976,32 +1978,35 @@ bool Planner::_populate_block(
 
   // Compute direction bit-mask for this block
   AxisBits dm;
-  #if ANY(CORE_IS_XY, MARKFORGED_XY, MARKFORGED_YX)
-    dm.hx = (dist.a > 0);                       // Save the toolhead's true direction in X
-    dm.hy = (dist.b > 0);                       // ...and Y
-    TERN_(HAS_Z_AXIS, dm.z = (dist.c > 0));
+  #if ANY(CORE_IS_XY, CORE_IS_XZ, MARKFORGED_XY, MARKFORGED_YX)
+    dm.hx = (dist.a > 0);                       // True direction in X
+  #endif
+  #if ANY(CORE_IS_XY, CORE_IS_YZ, MARKFORGED_XY, MARKFORGED_YX)
+    dm.hy = (dist.b > 0);                       // True direction in Y
+  #endif
+  #if ANY(CORE_IS_XZ, CORE_IS_YZ)
+    dm.hz = (dist.c > 0);                       // True direction in Z
   #endif
   #if CORE_IS_XY
-    dm.a = (dist.a + dist.b > 0);               // Motor A direction
-    dm.b = (CORESIGN(dist.a - dist.b) > 0);     // Motor B direction
+    dm.a  = (dist.a + dist.b > 0);              // Motor A direction
+    dm.b  = (CORESIGN(dist.a - dist.b) > 0);    // Motor B direction
+    TERN_(HAS_Z_AXIS, dm.z = (dist.c > 0));     // Axis  Z direction
   #elif CORE_IS_XZ
-    dm.hx = (dist.a > 0);                       // Save the toolhead's true direction in X
-    dm.y  = (dist.b > 0);
-    dm.hz = (dist.c > 0);                       // ...and Z
     dm.a  = (dist.a + dist.c > 0);              // Motor A direction
+    dm.y  = (dist.b > 0);                       // Axis  Y direction
     dm.c  = (CORESIGN(dist.a - dist.c) > 0);    // Motor C direction
   #elif CORE_IS_YZ
-    dm.x  = (dist.a > 0);
-    dm.hy = (dist.b > 0);                       // Save the toolhead's true direction in Y
-    dm.hz = (dist.c > 0);                       // ...and Z
+    dm.x  = (dist.a > 0);                       // Axis  X direction
     dm.b  = (dist.b + dist.c > 0);              // Motor B direction
     dm.c  = (CORESIGN(dist.b - dist.c) > 0);    // Motor C direction
   #elif ENABLED(MARKFORGED_XY)
     dm.a = (dist.a TERN(MARKFORGED_INVERSE, -, +) dist.b > 0); // Motor A direction
     dm.b = (dist.b > 0);                        // Motor B direction
+    TERN_(HAS_Z_AXIS, dm.z = (dist.c > 0));     // Axis  Z direction
   #elif ENABLED(MARKFORGED_YX)
     dm.a = (dist.a > 0);                        // Motor A direction
     dm.b = (dist.b TERN(MARKFORGED_INVERSE, -, +) dist.a > 0); // Motor B direction
+    TERN_(HAS_Z_AXIS, dm.z = (dist.c > 0));     // Axis  Z direction
   #else
     XYZ_CODE(
       dm.x = (dist.a > 0),
@@ -2142,9 +2147,9 @@ bool Planner::_populate_block(
   #endif
 
   if (true NUM_AXIS_GANG(
-      && block->steps.a < MIN_STEPS_PER_SEGMENT, && block->steps.b < MIN_STEPS_PER_SEGMENT, && block->steps.c < MIN_STEPS_PER_SEGMENT,
-      && block->steps.i < MIN_STEPS_PER_SEGMENT, && block->steps.j < MIN_STEPS_PER_SEGMENT, && block->steps.k < MIN_STEPS_PER_SEGMENT,
-      && block->steps.u < MIN_STEPS_PER_SEGMENT, && block->steps.v < MIN_STEPS_PER_SEGMENT, && block->steps.w < MIN_STEPS_PER_SEGMENT
+      && (block->steps.a < MIN_STEPS_PER_SEGMENT), && (block->steps.b < MIN_STEPS_PER_SEGMENT), && (block->steps.c < MIN_STEPS_PER_SEGMENT),
+      && (block->steps.i < MIN_STEPS_PER_SEGMENT), && (block->steps.j < MIN_STEPS_PER_SEGMENT), && (block->steps.k < MIN_STEPS_PER_SEGMENT),
+      && (block->steps.u < MIN_STEPS_PER_SEGMENT), && (block->steps.v < MIN_STEPS_PER_SEGMENT), && (block->steps.w < MIN_STEPS_PER_SEGMENT)
     )
   ) {
     block->millimeters = TERN0(HAS_EXTRUDERS, ABS(dist_mm.e));
@@ -2401,7 +2406,7 @@ bool Planner::_populate_block(
       const feedRate_t max_vfr = volumetric_extruder_feedrate_limit[extruder]
                                  * TERN(HAS_MIXER_SYNC_CHANNEL, MIXING_STEPPERS, 1);
 
-      // TODO: Doesn't work properly for joined segments. Set MIN_STEPS_PER_SEGMENT 1 as workaround.
+      /// TODO: Doesn't work properly for joined segments. Set MIN_STEPS_PER_SEGMENT 1 as workaround.
 
       if (block->steps.a || block->steps.b || block->steps.c) {
 
@@ -2465,11 +2470,7 @@ bool Planner::_populate_block(
   #if ENABLED(LIN_ADVANCE)
     bool use_advance_lead = false;
   #endif
-  if (true NUM_AXIS_GANG(
-      && !block->steps.a, && !block->steps.b, && !block->steps.c,
-      && !block->steps.i, && !block->steps.j, && !block->steps.k,
-      && !block->steps.u, && !block->steps.v, && !block->steps.w)
-  ) {                                                             // Is this a retract / recover move?
+  if (!ANY_AXIS_MOVES(block)) {                                   // Is this a retract / recover move?
     accel = CEIL(settings.retract_acceleration * steps_per_mm);   // Convert to: acceleration steps/sec^2
   }
   else {
@@ -2641,7 +2642,7 @@ bool Planner::_populate_block(
     // Skip first block or when previous_nominal_speed is used as a flag for homing and offset cycles.
     if (moves_queued && !UNEAR_ZERO(previous_nominal_speed)) {
       // Compute cosine of angle between previous and current path. (prev_unit_vec is negative)
-      // NOTE: Max junction velocity is computed without sin() or acos() by trig half angle identity.
+      /// NOTE: Max junction velocity is computed without sin() or acos() by trig half angle identity.
       float junction_cos_theta = LOGICAL_AXIS_GANG(
                                  + (-prev_unit_vec.e * unit_vec.e),
                                  + (-prev_unit_vec.x * unit_vec.x),
@@ -2655,7 +2656,7 @@ bool Planner::_populate_block(
                                  + (-prev_unit_vec.w * unit_vec.w)
                                );
 
-      // NOTE: Computed without any expensive trig, sin() or acos(), by trig half angle identity of cos(theta).
+      /// NOTE: Computed without any expensive trig, sin() or acos(), by trig half angle identity of cos(theta).
       if (junction_cos_theta > 0.999999f) {
         // For a 0 degree acute junction, just set minimum junction speed.
         vmax_junction_sqr = minimum_planner_speed_sqr;
@@ -2755,7 +2756,7 @@ bool Planner::_populate_block(
                                   + t * ( 84.31466202f ) ))))),
                             junction_theta = RADIANS(90) + neg * asinx; // acos(-t)
 
-                // NOTE: junction_theta bottoms out at 0.033 which avoids divide by 0.
+                /// NOTE: junction_theta bottoms out at 0.033 which avoids divide by 0.
 
               #endif
 
@@ -2902,10 +2903,12 @@ void Planner::buffer_sync_block(const BlockFlagBit sync_flag/*=BLOCK_BIT_SYNC_PO
   block->flag.apply(sync_flag);
 
   block->position = position;
+
   #if ENABLED(BACKLASH_COMPENSATION)
     LOOP_NUM_AXES(axis) block->position[axis] += backlash.get_applied_steps((AxisEnum)axis);
   #endif
-  #if ALL(HAS_FAN, LASER_SYNCHRONOUS_M106_M107)
+
+  #if ENABLED(LASER_SYNCHRONOUS_M106_M107)
     FANS_LOOP(i) block->fan_speed[i] = thermalManager.fan_speed[i];
   #endif
 
@@ -2945,10 +2948,10 @@ void Planner::buffer_sync_block(const BlockFlagBit sync_flag/*=BLOCK_BIT_SYNC_PO
  * @return  false if no segment was queued due to cleaning, cold extrusion, full queue, etc.
  */
 bool Planner::buffer_segment(const abce_pos_t &abce
-  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-  , const_feedRate_t fr_mm_s
-  , const uint8_t extruder/*=active_extruder*/
-  , const PlannerHints &hints/*=PlannerHints()*/
+  OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
+  const_feedRate_t fr_mm_s,
+  const uint8_t extruder/*=active_extruder*/,
+  const PlannerHints &hints/*=PlannerHints()*/
 ) {
 
   // If we are cleaning, do not accept queuing of movements
@@ -3053,8 +3056,8 @@ bool Planner::buffer_segment(const abce_pos_t &abce
   // Queue the movement. Return 'false' if the move was not queued.
   if (!_buffer_steps(target
       OPTARG(HAS_POSITION_FLOAT, target_float)
-      OPTARG(HAS_DIST_MM_ARG, cart_dist_mm)
-      , fr_mm_s, extruder, hints
+      OPTARG(HAS_DIST_MM_ARG, cart_dist_mm),
+      fr_mm_s, extruder, hints
   )) return false;
 
   stepper.wake_up();
@@ -3071,9 +3074,9 @@ bool Planner::buffer_segment(const abce_pos_t &abce
  *  extruder        - optional target extruder (otherwise active_extruder)
  *  hints           - optional parameters to aid planner calculations
  */
-bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s
-  , const uint8_t extruder/*=active_extruder*/
-  , const PlannerHints &hints/*=PlannerHints()*/
+bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s,
+  const uint8_t extruder/*=active_extruder*/,
+  const PlannerHints &hints/*=PlannerHints()*/
 ) {
   xyze_pos_t machine = cart;
   TERN_(HAS_POSITION_MODIFIERS, apply_modifiers(machine));
@@ -3234,6 +3237,10 @@ bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s
  * The provided ABCE position is in machine units.
  */
 void Planner::set_machine_position_mm(const abce_pos_t &abce) {
+
+  // When FT Motion is enabled, call synchronize() here instead of generating a sync block
+  if (TERN0(FT_MOTION, ftMotion.cfg.mode)) synchronize();
+
   TERN_(DISTINCT_E_FACTORS, last_extruder = active_extruder);
   TERN_(HAS_POSITION_FLOAT, position_float = abce);
   position.set(

@@ -228,7 +228,7 @@ typedef struct {
     }
   }
 
-  // TODO: Parameterize the Z lift with a define
+  /// TODO: Parameterize the Z lift with a define
   void retract_lift_move(const xyz_pos_t &s) {
     retract_filament(destination);
     move_to(current_position.x, current_position.y, current_position.z + 0.5f, 0.0f);  // Z lift to minimize scraping
@@ -249,7 +249,7 @@ typedef struct {
    * We first need to move the nozzle to the start of line segment where we want to print. Once
    * there, we can use the two coordinates supplied to draw the line.
    *
-   * Note:  Although we assume the first set of coordinates is the start of the line and the second
+   * NOTE:  Although we assume the first set of coordinates is the start of the line and the second
    * set of coordinates is the end of the line, it does not always work out that way. This function
    * optimizes the movement to minimize the travel distance before it can start printing. This saves
    * a lot of time and eliminates a lot of nonsensical movement of the nozzle. However, it does

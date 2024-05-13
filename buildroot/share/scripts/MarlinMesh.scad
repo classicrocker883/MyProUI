@@ -44,7 +44,7 @@ mesh_bounds = [
 
 mesh_size = mesh_bounds[1] - mesh_bounds[0];
 
-                      // NOTE: Marlin meshes already subtract the probe offset
+                      /// NOTE: Marlin meshes already subtract the probe offset
 NAN         = 0;      // Z to use for un-measured points
 
 //

@@ -87,7 +87,7 @@ void FWRetract::reset() {
  *
  * To simplify the logic, doubled retract/recover moves are ignored.
  *
- * Note: Auto-retract will apply the set Z hop in addition to any Z hop
+ * NOTE: Auto-retract will apply the set Z hop in addition to any Z hop
  *       included in the G-code. Use M207 Z0 to to prevent double hop.
  */
 void FWRetract::retract(const bool retracting E_OPTARG(bool swapping/*=false*/)) {
@@ -215,10 +215,10 @@ void FWRetract::M207_report() {
   TERN_(MARLIN_SMALL_BUILD, return);
 
   SERIAL_ECHOLNPGM_P(
-      PSTR("  M207 S"), LINEAR_UNIT(settings.retract_length)
-    , PSTR(" W"), LINEAR_UNIT(settings.swap_retract_length)
-    , PSTR(" F"), LINEAR_UNIT(MMS_TO_MMM(settings.retract_feedrate_mm_s))
-    , SP_Z_STR, LINEAR_UNIT(settings.retract_zraise)
+    PSTR("  M207 S"), LINEAR_UNIT(settings.retract_length),
+    PSTR(" W"), LINEAR_UNIT(settings.swap_retract_length),
+    PSTR(" F"), LINEAR_UNIT(MMS_TO_MMM(settings.retract_feedrate_mm_s)),
+    SP_Z_STR, LINEAR_UNIT(settings.retract_zraise)
   );
 }
 
@@ -242,9 +242,9 @@ void FWRetract::M208_report() {
   TERN_(MARLIN_SMALL_BUILD, return);
 
   SERIAL_ECHOLNPGM(
-      "  M208 S", LINEAR_UNIT(settings.retract_recover_extra)
-    , " W", LINEAR_UNIT(settings.swap_retract_recover_extra)
-    , " F", LINEAR_UNIT(MMS_TO_MMM(settings.retract_recover_feedrate_mm_s))
+    "  M208 S", LINEAR_UNIT(settings.retract_recover_extra),
+    " W", LINEAR_UNIT(settings.swap_retract_recover_extra),
+    " F", LINEAR_UNIT(MMS_TO_MMM(settings.retract_recover_feedrate_mm_s))
   );
 }
 

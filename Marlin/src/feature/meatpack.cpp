@@ -167,7 +167,7 @@ void MeatPack::handle_command(const MeatPack_Command c) {
 }
 
 void MeatPack::report_state() {
-  // NOTE: if any configuration vars are added below, the outgoing sync text for host plugin
+  /// NOTE: if any configuration vars are added below, the outgoing sync text for host plugin
   // should not contain the "PV' substring, as this is used to indicate protocol version
   SERIAL_ECHOPGM("[MP] " MeatPack_ProtocolVersion " ");
   serialprint_onoff(TEST(state, MPConfig_Bit_Active));

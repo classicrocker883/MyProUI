@@ -48,8 +48,8 @@ uint8_t PrintJobRecovery::queue_index_r;
 uint32_t PrintJobRecovery::cmd_sdpos, // = 0
          PrintJobRecovery::sdpos[BUFSIZE];
 
-#if HAS_DWIN_E3V2_BASIC
-  bool PrintJobRecovery::dwin_flag; // = false
+#if HAS_PLR_UI_FLAG
+  bool PrintJobRecovery::ui_flag_resume; // = false
 #endif
 
 #include "../sd/cardreader.h"
@@ -131,7 +131,7 @@ bool PrintJobRecovery::check() {
 
   // 激光暂不做断电续打 107011 -20211015
   #if ENABLED(CV_LASER_MODULE)
-    if(laser_device.is_laser_device()) {// 激光模式下不做断电续打
+    if (laser_device.is_laser_device()) {// 激光模式下不做断电续打
       purge();
       return false;
     }
@@ -286,7 +286,7 @@ void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POW
 
         #if POWER_LOSS_RETRACT_LEN
           // Retract filament now
-          gcode.process_subcommands_now(F("G1 F3000 E-" STRINGIFY(POWER_LOSS_RETRACT_LEN)));
+          gcode.process_subcommands_now(F("G1F3000E-" STRINGIFY(POWER_LOSS_RETRACT_LEN)));
         #endif
 
         #if POWER_LOSS_ZRAISE
@@ -419,7 +419,7 @@ void PrintJobRecovery::resume() {
     HOTEND_LOOP() {
       const celsius_t et = _MAX(info.target_temperature[e], 180);
       if (et) {
-        TERN_(HAS_MULTI_HOTEND, PROCESS_SUBCOMMANDS_NOW(TS('T', e, 'S')));
+        TERN_(HAS_MULTI_HOTEND, PROCESS_SUBCOMMANDS_NOW(TS(F("T"), e, F("S"))));
         PROCESS_SUBCOMMANDS_NOW(TS(F("M109S"), et));
       }
     }
@@ -446,9 +446,9 @@ void PrintJobRecovery::resume() {
 
     // If Z homing goes to max then just move back to the "raised" position
     PROCESS_SUBCOMMANDS_NOW(TS(
-      F( "G28R0\n"    // Home all axes (no raise)
-         "G1F1200Z")  // Move Z down to (raised) height
-      , p_float_t(z_now, 3)
+      F("G28R0\n"    // Home all axes (no raise)
+        "G1F1200Z"), // Move Z down to (raised) height
+        p_float_t(z_now, 3)
     ));
 
   #elif DISABLED(BELTPRINTER)
@@ -478,7 +478,7 @@ void PrintJobRecovery::resume() {
   #if HOMING_Z_DOWN
     // Move to a safe XY position and home Z while avoiding the print.
     const xy_pos_t p = xy_pos_t(POWER_LOSS_ZHOME_POS) TERN_(HOMING_Z_WITH_PROBE, - probe.offset_xy);
-    PROCESS_SUBCOMMANDS_NOW(TS(F("G1F1000X"), p_float_t(p.x, 3), 'Y', p_float_t(p.y, 3), F("\nG28HZ")));
+    PROCESS_SUBCOMMANDS_NOW(TS(F("G1F1000X"), p_float_t(p.x, 3), F("Y"), p_float_t(p.y, 3), F("\nG28HZ")));
   #endif
 
   // Mark all axes as having been homed (no effect on current_position)
@@ -487,8 +487,8 @@ void PrintJobRecovery::resume() {
   #if HAS_LEVELING
     // Restore Z fade and possibly re-enable bed leveling compensation.
     // Leveling may already be enabled due to the ENABLE_LEVELING_AFTER_G28 option.
-    // TODO: Add a G28 parameter to leave leveling disabled.
-    PROCESS_SUBCOMMANDS_NOW(TS(F("M420S"), '0' + (char)info.flag.leveling, 'Z', p_float_t(info.fade, 1)));
+    /// TODO: Add a G28 parameter to leave leveling disabled.
+    PROCESS_SUBCOMMANDS_NOW(TS(F("M420S"), F('0' + (char)info.flag.leveling), F("Z"), p_float_t(info.fade, 1)));
 
     #if !HOMING_Z_DOWN
       // The physical Z was adjusted at power-off so undo the M420S1 correction to Z with G92.9.
@@ -528,7 +528,7 @@ void PrintJobRecovery::resume() {
     HOTEND_LOOP() {
       const celsius_t et = info.target_temperature[e];
       if (et) {
-        TERN_(HAS_MULTI_HOTEND, PROCESS_SUBCOMMANDS_NOW(TS('T', e, 'S')));
+        TERN_(HAS_MULTI_HOTEND, PROCESS_SUBCOMMANDS_NOW(TS(F("T"), e, F("S"))));
         PROCESS_SUBCOMMANDS_NOW(TS(F("M109S"), et));
       }
     }
@@ -536,14 +536,14 @@ void PrintJobRecovery::resume() {
 
   // Restore the previously active tool (with no_move)
   #if HAS_MULTI_EXTRUDER || HAS_MULTI_HOTEND
-    PROCESS_SUBCOMMANDS_NOW(TS('T', info.active_extruder, 'S'));
+    PROCESS_SUBCOMMANDS_NOW(TS(F("T"), info.active_extruder, F("S")));
   #endif
 
   // Restore print cooling fan speeds
   #if HAS_FAN
     FANS_LOOP(i) {
       const int f = info.fan_speed[i];
-      if (f) PROCESS_SUBCOMMANDS_NOW(TS(F("M106P"), i, 'S', f));
+      if (f) PROCESS_SUBCOMMANDS_NOW(TS(F("M106P"), i, F("S"), f));
     }
   #endif
 
@@ -578,7 +578,7 @@ void PrintJobRecovery::resume() {
 
   // Move back over to the saved XY
   PROCESS_SUBCOMMANDS_NOW(TS(
-    F("G1F3000X"), p_float_t(resume_pos.x, 3), 'Y', p_float_t(resume_pos.y, 3)
+    F("G1F3000X"), p_float_t(resume_pos.x, 3), F("Y"), p_float_t(resume_pos.y, 3)
   ));
   DEBUG_ECHOLNPGM("Move XY : ",cmd);
 
@@ -606,7 +606,7 @@ void PrintJobRecovery::resume() {
 
   // Resume the SD file from the last position
   PROCESS_SUBCOMMANDS_NOW(MString<MAX_CMD_SIZE>(F("M23 "), info.sd_filename));
-  PROCESS_SUBCOMMANDS_NOW(TS(F("M24S"), resume_sdpos, 'T', info.print_job_elapsed));
+  PROCESS_SUBCOMMANDS_NOW(TS(F("M24S"), resume_sdpos, F("T"), info.print_job_elapsed));
 }
 
 #if ENABLED(DEBUG_POWER_LOSS_RECOVERY)

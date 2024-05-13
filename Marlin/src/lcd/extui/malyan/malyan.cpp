@@ -33,7 +33,7 @@
  * Not currently implemented:
  * {E:} when sent by LCD. Meaning unknown.
  *
- * Notes for connecting to boards that are not Malyan:
+ * NOTE: for connecting to boards that are not Malyan:
  * The LCD is 3.3v, so if powering from a RAMPS 1.4 board or
  * other 5v/12v board, use a buck converter to power the LCD and
  * the 3.3v side of a logic level shifter. Aux1 on the RAMPS board
@@ -236,7 +236,7 @@ void process_lcd_j_command(const char *command) {
  * T:-2526.8 E:0
  * T:-2533.0 E:0
  * T:-2537.4 E:0
- * Note only the curly brace stuff matters.
+ * NOTE: only the curly brace stuff matters.
  */
 void process_lcd_p_command(const char *command) {
 

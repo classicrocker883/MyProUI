@@ -333,7 +333,8 @@ bool StatusScreen::onTouchHeld(uint8_t tag) {
   switch (tag) {
     case 1: jog({-s,  0,  0}); break;
     case 2: jog({ s,  0,  0}); break;
-    case 4: jog({ 0, -s,  0}); break; // NOTE: Y directions inverted because bed rather than needle moves
+    case 4: jog({ 0, -s,  0}); break;
+    /// NOTE: Y directions inverted because bed rather than needle moves
     case 3: jog({ 0,  s,  0}); break;
     case 5: jog({ 0,  0, -s}); break;
     case 6: jog({ 0,  0,  s}); break;

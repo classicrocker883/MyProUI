@@ -201,7 +201,7 @@ class Protocol(object):
 
     def transmit_packet(self, packet):
         packet = bytearray(packet)
-        if(self.simulate_errors > 0 and random.random() > (1.0 - self.simulate_errors)):
+        if (self.simulate_errors > 0 and random.random() > (1.0 - self.simulate_errors)):
             if random.random() > 0.9:
                 #random data drop
                 start = random.randint(0, len(packet))

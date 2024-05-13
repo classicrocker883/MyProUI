@@ -44,7 +44,7 @@
  * A servo is activated by creating an instance of the Servo class passing the desired pin to the attach() method.
  * The servos are pulsed in the background using the value most recently written using the write() method
  *
- * Note that analogWrite of PWM on pins associated with the timer are disabled when the first servo is attached.
+ * NOTE: analogWrite of PWM on pins associated with the timer are disabled when the first servo is attached.
  * Timers are seized as needed in groups of 12 servos - 24 servos use two timers, 48 servos will use four.
  * The sequence used to seize timers is defined in timers.h
  *

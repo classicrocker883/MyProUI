@@ -43,7 +43,7 @@ void lcd_power_loss_recovery_cancel() {
   ui.return_to_status();
 }
 
-// TODO: Display long filename with Cancel/Resume buttons
+/// TODO: Display long filename with Cancel/Resume buttons
 //       Requires supporting methods in PLR class.
 void menu_job_recovery() {
   ui.defer_status_screen();

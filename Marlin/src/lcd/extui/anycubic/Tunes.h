@@ -26,7 +26,7 @@
  */
 
 /**************************************************************************
- * Notes definition from https://pages.mtu.edu/~suits/NoteFreqCalcs.html  *
+ * NOTE: definition from https://pages.mtu.edu/~suits/NoteFreqCalcs.html  *
  *                                                                        *
  * The format of a tune is:                                               *
  * {<whole note time>,<note1>,<length1>, <note2>,<length2>, ... <END>}    *
@@ -41,12 +41,12 @@
 
 #define MAX_TUNE_LENGTH 128
 
-// Note duration divisors
+/// NOTE: duration divisors
 enum { l_T1=1, l_T2 =2, l_T3=3, l_T4 =4, l_T8=8, l_T16=16 };
 
-// Note Frequency
+/// NOTE: Frequency
 enum {
-n_P =   0,  // silence or pause
+n_P =   0, // silence or pause
 n_C0=  16, n_CS0=  17, n_D0=  18, n_DS0=  19, n_E0=  21, n_F0=  22, n_FS0=  23, n_G0=  25, n_GS0=  26, n_A0=  28, n_AS0=  29, n_B0=  31,
 n_C1=  33, n_CS1=  35, n_D1=  37, n_DS1=  39, n_E1=  41, n_F1=  44, n_FS1=  46, n_G1=  49, n_GS1=  52, n_A1=  55, n_AS1=  58, n_B1=  62,
 n_C2=  65, n_CS2=  69, n_D2=  73, n_DS2=  78, n_E2=  82, n_F2=  87, n_FS2=  93, n_G2=  98, n_GS2= 104, n_A2= 110, n_AS2= 117, n_B2= 123,

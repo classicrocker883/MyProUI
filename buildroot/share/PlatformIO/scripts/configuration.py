@@ -127,10 +127,10 @@ def disable_all_options():
 def fetch_example(url):
     if url.endswith("/"): url = url[:-1]
     if not url.startswith('http'):
-        brch = "bugfix-2.1.x"
+        brch = "HEAD"
         if '@' in url: url, brch = map(str.strip, url.split('@'))
-        if url == 'examples/default': url = 'default'
-        url = f"https://raw.githubusercontent.com/MarlinFirmware/Configurations/{brch}/config/{url}"
+        if url == 'examples/default': url = 'Andrew427'
+        url = f"https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/{brch}/configurations/{url}"
     url = url.replace("%", "%25").replace(" ", "%20")
 
     # Find a suitable fetch command

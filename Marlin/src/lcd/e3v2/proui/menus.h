@@ -124,6 +124,8 @@ void Draw_Chkb_Line(const uint8_t line, const bool checked);
 void Show_Chkb_Line(const bool checked);
 void Toggle_Chkb_Line(bool &checked);
 void Draw_Menu_IntValue(uint16_t bcolor, const uint8_t line, uint8_t iNum, const int32_t value=0);
+void DrawMeshPoints(bool selected, int8_t line, int8_t value);
+void onDrawMeshPoints(MenuItemClass* menuitem, int8_t line);
 void onDrawMenuItem(MenuItemClass* menuitem, int8_t line);
 void onDrawSubMenu(MenuItemClass* menuitem, int8_t line);
 void onDrawIntMenu(MenuItemClass* menuitem, int8_t line, int32_t value);

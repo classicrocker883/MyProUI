@@ -117,7 +117,7 @@ e-mail   :  support@circuitsathome.com
 #define UHS_PIN_WRITE(p, v) digitalWriteFast(p, v)
 #define UHS_PIN_READ(p) digitalReadFast(p)
 #endif
-// TODO: Fast inline code for AVR and SAM based microcontrollers
+/// TODO: Fast inline code for AVR and SAM based microcontrollers
 //       This can be done pretty easily.
 //       For now, this will just work out-of-the-box.
 #ifndef UHS_PIN_WRITE
@@ -167,7 +167,7 @@ e-mail   :  support@circuitsathome.com
 #ifndef __BYTE_GRABBING_DEFINED__
 #define __BYTE_GRABBING_DEFINED__ 1
 #ifdef BROKEN_OPTIMIZER_LITTLE_ENDIAN
-// Note: Use this if your compiler generates horrible assembler!
+/// NOTE: Use this if your compiler generates horrible assembler!
 #define UHS_UINT8_BYTE0(__usi__)  (((uint8_t *)&(__usi__))[0])
 #define UHS_UINT8_BYTE1(__usi__)  (((uint8_t *)&(__usi__))[1])
 #define UHS_UINT8_BYTE2(__usi__)  (((uint8_t *)&(__usi__))[2])
@@ -177,7 +177,7 @@ e-mail   :  support@circuitsathome.com
 #define UHS_UINT8_BYTE6(__usi__)  (((uint8_t *)&(__usi__))[6])
 #define UHS_UINT8_BYTE7(__usi__)  (((uint8_t *)&(__usi__))[7])
 #else
-// Note: The cast alone to uint8_t is actually enough.
+/// NOTE: The cast alone to uint8_t is actually enough.
 // GCC throws out the "& 0xFF", and the size is no different.
 // Some compilers need it.
 #define UHS_UINT8_BYTE0(__usi__)  ((uint8_t)((__usi__) & 0xFF ))

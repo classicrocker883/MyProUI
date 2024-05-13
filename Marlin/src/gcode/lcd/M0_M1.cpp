@@ -66,15 +66,19 @@ void GcodeSuite::M0_M1() {
     }
 
   #elif ENABLED(EXTENSIBLE_UI)
+
     if (parser.string_arg)
       ExtUI::onUserConfirmRequired(parser.string_arg); // String in an SRAM buffer
     else
       ExtUI::onUserConfirmRequired(GET_TEXT_F(MSG_USERWAIT));
+
   #elif ENABLED(DWIN_LCD_PROUI)
+
     if (parser.string_arg)
       DWIN_Popup_Continue(ICON_Continue_1, parser.string_arg, GET_TEXT_F(MSG_USERWAIT));
     else
       DWIN_Popup_Continue(ICON_Stop_1, GET_TEXT_F(MSG_STOPPED), GET_TEXT_F(MSG_USERWAIT));
+
   #else
 
     if (parser.string_arg) {

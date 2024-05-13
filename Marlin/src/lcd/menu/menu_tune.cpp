@@ -46,8 +46,7 @@
     #include "../dogm/marlinui_DOGM.h"
   #endif
 
-  // TODO: Replace fmsg with MSG_BABYSTEP_N and index substitution
-
+  /// TODO: Replace fmsg with MSG_BABYSTEP_N and index substitution
   void _lcd_babystep(const AxisEnum axis, FSTR_P const fmsg) {
     if (ui.use_click()) return ui.goto_previous_screen_no_defer();
     if (ui.encoderPosition) {

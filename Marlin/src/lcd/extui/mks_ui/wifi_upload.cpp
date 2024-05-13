@@ -102,7 +102,7 @@ const char *resultMessages[] = {
 };
 
 /**
- * Baud Rate Notes:
+ * Baud Rate NOTE:
  * The ESP8266 supports 921600, 460800, 230400, 115200, 74880 and some lower baud rates.
  * 921600b is not reliable because even though it sometimes succeeds in connecting, we get a bad response during uploading after a few blocks.
  * Probably our UART ISR cannot receive bytes fast enough, perhaps because of the latency of the system tick ISR.
@@ -231,8 +231,9 @@ void writeByteSlip(const uint8_t b) {
 /**
  * Wait for a data packet to be returned.  If the body of the packet is
  * non-zero length, return an allocated buffer indirectly containing the
- * data and return the data length. Note that if the pointer for returning
- * the data buffer is nullptr, the response is expected to be two bytes of zero.
+ * data and return the data length.
+ * NOTE: if the pointer for returning the data buffer is nullptr,
+ * the response is expected to be two bytes of zero.
  *
  * If an error occurs, return a negative value.  Otherwise, return the number
  * of bytes in the response (or zero if the response was not the standard "two bytes of zero").

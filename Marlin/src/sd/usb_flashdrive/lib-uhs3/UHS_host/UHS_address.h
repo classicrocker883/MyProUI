@@ -40,7 +40,7 @@ e-mail   :  support@circuitsathome.com
 #define bmUSB_DEV_ADDR_PARENT           0x78
 #define bmUSB_DEV_ADDR_HUB              0x40
 
-// TODO: embed parent?
+/// TODO: embed parent?
 struct UHS_EpInfo {
         uint8_t epAddr; // Endpoint address
         uint8_t bIface;
@@ -58,7 +58,7 @@ struct UHS_EpInfo {
         };
 } __attribute__((packed));
 
-// TODO: embed parent address and port into epinfo struct,
+/// TODO: embed parent address and port into epinfo struct,
 // and nuke this address stupidity.
 // This is a compact scheme. Should also support full spec.
 // This produces a 7 hub limit, 49 devices + 7 hubs, 56 total.

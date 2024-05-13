@@ -22,14 +22,24 @@
 
 #include "../../../inc/MarlinConfigPre.h"
 
-// #define DEBUG_DWIN 1
+//#define DEBUG_DWIN 1
+//#define TJC_DISPLAY         // Enable for TJC display
+//#define DACAI_DISPLAY       // Enable for DACAI display
+//#define TITLE_CENTERED      // Center Menu Title Text
 
 #if HAS_MESH
   #define PROUI_MESH_EDIT     // Add a menu to edit mesh inset + points
   #if ENABLED(PROUI_MESH_EDIT)
-    #define Z_OFFSET_MIN -3.0
-    #define Z_OFFSET_MAX  3.0
+    #define Z_OFFSET_MIN -3.0 // (mm)
+    #define Z_OFFSET_MAX  3.0 // (mm)
   #endif
+#endif
+
+#if ENABLED(HYBRID_THRESHOLD)
+  #define HYBRID_THRESHOLD_MENU // Enable Hybrid Threshold menu
+#endif
+#if HAS_STEALTHCHOP
+  #define STEALTHCHOP_MENU      // Enable StealthChop menu (352 bytes)
 #endif
 
 #if defined(__STM32F1__) || defined(STM32F1) || defined(ARDUINO_ARCH_HC32)//#if MB(CREALITY_V24S1_301, CREALITY_V24S1_301F4)
@@ -68,13 +78,25 @@
 #if CASELIGHT_USES_BRIGHTNESS
   #define Def_CaseLight_Brightness 255
 #endif
+
 #ifdef Z_AFTER_HOMING
   #define DEF_Z_AFTER_HOMING Z_AFTER_HOMING
-#else
-  #define DEF_Z_AFTER_HOMING 0
+#elif ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
+  #define DEF_Z_AFTER_HOMING 10
+#endif
+
+#ifndef PREHEAT_1_TEMP_HOTEND
+  #define PREHEAT_1_TEMP_HOTEND 210
+#endif
+#ifndef PREHEAT_1_TEMP_BED
+  #define PREHEAT_1_TEMP_BED 60
+#endif
+#ifndef PREHEAT_1_TEMP_CHAMBER
+  #define PREHEAT_1_TEMP_CHAMBER 35
 #endif
 #define DEF_HOTENDPIDT PREHEAT_1_TEMP_HOTEND
 #define DEF_BEDPIDT PREHEAT_1_TEMP_BED
+#define DEF_CHAMBERPIDT PREHEAT_1_TEMP_CHAMBER
 #define DEF_PIDCYCLES 5
 #define EXT active_extruder
 
@@ -82,9 +104,6 @@
 // Only for Professional Firmware UI extensions
 //=============================================================================
 
-// #if HAS_GCODE_PREVIEW && !PROUI_EX
-//   #error "HAS_GCODE_PREVIEW requires PROUI_EX."
-// #endif
 #if HAS_TOOLBAR && !PROUI_EX
   #error "HAS_TOOLBAR requires PROUI_EX."
 #endif
@@ -97,12 +116,13 @@
   #include <stddef.h>
   #include "../../../core/types.h"
 
+  #define HAS_TOOLBAR 1
   #if HAS_TOOLBAR
-    constexpr uint8_t TBMaxOpt = 5;       // Amount of shortcuts on screen
+    constexpr uint8_t TBMaxOpt = 5;      // Amount of shortcuts on screen
     #if HAS_BED_PROBE
-      #define DEF_TBOPT {1, 7, 6, 2, 4}   // Default shorcuts for ALB/UBL
+      #define DEF_TBOPT {1, 7, 6, 2, 4}  // Default shorcuts for ALB/UBL
     #else
-      #define DEF_TBOPT {1, 5, 4, 2, 3};  // Default shortcuts for MM
+      #define DEF_TBOPT {1, 5, 4, 2, 3}; // Default shortcuts for MM
     #endif
   #endif
 
@@ -116,20 +136,6 @@
   #undef Y_MAX_POS
   #undef Z_MAX_POS
   #undef NOZZLE_PARK_POINT
-  #if HAS_MESH
-    #undef GRID_MAX_POINTS_X
-    #undef GRID_MAX_POINTS_Y
-    #undef GRID_MAX_POINTS
-    // #undef MESH_MIN_X
-    // #undef MESH_MAX_X
-    // #undef MESH_MIN_Y
-    // #undef MESH_MAX_Y
-  #endif
-  #if HAS_BED_PROBE
-    #undef Z_PROBE_FEEDRATE_SLOW
-  #endif
-  #undef INVERT_E0_DIR
-
   #define X_BED_SIZE (float)PRO_data.x_bed_size
   #define Y_BED_SIZE (float)PRO_data.y_bed_size
   #define X_MIN_POS  (float)PRO_data.x_min_pos
@@ -139,23 +145,33 @@
   #define Z_MAX_POS  (float)PRO_data.z_max_pos
   #define NOZZLE_PARK_POINT {(float)PRO_data.Park_point.x, (float)PRO_data.Park_point.y, (float)PRO_data.Park_point.z}
   #if HAS_MESH
+    #undef GRID_MAX_POINTS_X
+    #undef GRID_MAX_POINTS_Y
+    #undef GRID_MAX_POINTS
     #define GRID_MAX_POINTS_X PRO_data.grid_max_points
     #define GRID_MAX_POINTS_Y PRO_data.grid_max_points
-    #define GRID_MAX_POINTS (PRO_data.grid_max_points * PRO_data.grid_max_points)
-    // #define MESH_MIN_X PRO_data.mesh_min_x
-    // #define MESH_MAX_X PRO_data.mesh_max_x
-    // #define MESH_MIN_Y PRO_data.mesh_min_y
-    // #define MESH_MAX_Y PRO_data.mesh_max_y
+    #define GRID_MAX_POINTS  (PRO_data.grid_max_points * PRO_data.grid_max_points)
   #endif
   #if HAS_BED_PROBE
+    #undef Z_PROBE_FEEDRATE_SLOW
     #define Z_PROBE_FEEDRATE_SLOW PRO_data.zprobefeedslow
   #endif
-  #define INVERT_E0_DIR PRO_data.Invert_E0
+  #if HAS_EXTRUDERS
+    #undef INVERT_E0_DIR
+    #define INVERT_E0_DIR PRO_data.Invert_E0
+  #endif
+
 #else
+
+  #if HAS_MESH
+    #define PROUI_GRID_PNTS 1
+  #endif
+
   #include <stddef.h>
   #include "../../../core/types.h"
   #include "proui.h"
 
+// ProUI extra feature redefines
   #if PROUI_GRID_PNTS
     #undef  GRID_MAX_POINTS_X
     #undef  GRID_MAX_POINTS_Y
@@ -168,7 +184,19 @@
     #undef Z_PROBE_FEEDRATE_SLOW
     #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobeFeed
   #endif
-  #undef INVERT_E0_DIR
-  #define INVERT_E0_DIR HMI_data.Invert_E0
-
+  #if HAS_EXTRUDERS
+    #undef INVERT_E0_DIR
+    #define INVERT_E0_DIR HMI_data.Invert_E0
+  #endif
 #endif // PROUI_EX
+
+ #if ENABLED(PROUI_MESH_EDIT)
+   #undef  MESH_MIN_X
+   #undef  MESH_MAX_X
+   #undef  MESH_MIN_Y
+   #undef  MESH_MAX_Y
+   #define MESH_MIN_X HMI_data.mesh_min_x
+   #define MESH_MAX_X HMI_data.mesh_max_x
+   #define MESH_MIN_Y HMI_data.mesh_min_y
+   #define MESH_MAX_Y HMI_data.mesh_max_y
+ #endif

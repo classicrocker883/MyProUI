@@ -263,7 +263,7 @@ void GcodeSuite::M493() {
     if (parser.seenval('A')) {
       if (ftMotion.cfg.modeHasShaper()) {
         const float val = parser.value_float();
-        // TODO: Frequency minimum is dependent on the shaper used; the above check isn't always correct.
+        /// TODO: Frequency minimum is dependent on the shaper used; the above check isn't always correct.
         if (WITHIN(val, FTM_MIN_SHAPE_FREQ, (FTM_FS) / 2)) {
           ftMotion.cfg.baseFreq[X_AXIS] = val;
           flag.update_n = flag.reset_ft = flag.report_h = true;

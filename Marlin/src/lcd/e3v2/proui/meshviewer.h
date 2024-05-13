@@ -32,4 +32,5 @@ public:
 
 extern MeshViewerClass MeshViewer;
 
+void SaveMesh();
 void Goto_MeshViewer(const bool redraw);

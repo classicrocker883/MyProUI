@@ -264,14 +264,14 @@ PGMSTR(M112_KILL_STR, "M112 Shutdown");
 MarlinState marlin_state = MF_INITIALIZING;
 
 // For M109 and M190, this flag may be cleared (by M108) to exit the wait loop
-bool wait_for_heatup = true;
+bool wait_for_heatup = false;
 
 // For M0/M1, this flag may be cleared (by M108) to exit the wait-for-user loop
 #if HAS_RESUME_CONTINUE
   bool wait_for_user; // = false;
 
   void wait_for_user_response(millis_t ms/*=0*/, const bool no_sleep/*=false*/) {
-    UNUSED(no_sleep);
+    IF_DISABLED(ADVANCED_PAUSE_FEATURE, UNUSED(no_sleep);)
     KEEPALIVE_STATE(PAUSED_FOR_USER);
     wait_for_user = true;
     if (ms) ms += millis(); // expire time
@@ -472,11 +472,16 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
 
   #if HAS_KILL
 
-    // Check if the kill button was pressed and wait just in case it was an accidental
-    // key kill key press
+    // Check if the kill button was pressed and wait to ensure the signal is not noise
+    // typically caused by poor insulation and grounding on LCD cables.
+    // Lower numbers here will increase response time and therefore safety rating.
+    // It is recommended to set this as low as possibe without false triggers.
     // -------------------------------------------------------------------------------
+    #ifndef KILL_DELAY
+      #define KILL_DELAY 250
+    #endif
+
     static int killCount = 0;   // make the inactivity button a bit less responsive
-    const int KILL_DELAY = 750;
     if (kill_state())
       killCount++;
     else if (killCount > 0)
@@ -667,6 +672,12 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
 
   TERN_(HOTEND_IDLE_TIMEOUT, hotend_idle.check());
 
+  #if ANY(PSU_CONTROL, AUTO_POWER_CONTROL) && PIN_EXISTS(PS_ON_EDM)
+    if ( ELAPSED(ms, powerManager.last_state_change_ms + PS_EDM_RESPONSE)
+      && (READ(PS_ON_PIN) != READ(PS_ON_EDM_PIN) || TERN0(PSU_OFF_REDUNDANT, extDigitalRead(PS_ON1_PIN) != extDigitalRead(PS_ON1_EDM_PIN)))
+    ) kill(GET_TEXT_F(MSG_POWER_EDM_FAULT));
+  #endif
+
   #if ENABLED(EXTRUDER_RUNOUT_PREVENT)
     if (thermalManager.degHotend(active_extruder) > (EXTRUDER_RUNOUT_MINTEMP)
       && ELAPSED(ms, gcode.previous_move_ms + SEC_TO_MS(EXTRUDER_RUNOUT_SECONDS))
@@ -773,7 +784,7 @@ void idle(const bool no_stepper_sleep/*=false*/) {
   // Return if setup() isn't completed
   if (marlin_state == MF_INITIALIZING) goto IDLE_DONE;
 
-  // TODO: Still causing errors
+  /// TODO: Still causing errors
   TERN_(TOOL_SENSOR, (void)check_tool_sensor_stats(active_extruder, true));
 
   // Handle filament runout sensors
@@ -1660,7 +1671,7 @@ void setup() {
  * The main Marlin program loop
  *
  *  - Call idle() to handle all tasks between G-code commands
- *      Note that no G-codes from the queue can be executed during idle()
+ *      NOTE: no G-codes from the queue can be executed during idle()
  *      but many G-codes can be called directly anytime like macros.
  *  - Check whether SD card auto-start is needed now.
  *  - Check whether SD print finishing is needed now.

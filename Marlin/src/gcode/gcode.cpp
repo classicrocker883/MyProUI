@@ -233,7 +233,7 @@ void GcodeSuite::get_destination_from_command() {
           cutter.last_feedrate_mm_m = 0;
           if (WITHIN(parser.codenum, 1, TERN(ARC_SUPPORT, 3, 1)) || TERN0(BEZIER_CURVE_SUPPORT, parser.codenum == 5)) {
             planner.laser_inline.status.isPowered = true;
-            if (parser.seen('I')) cutter.set_enabled(true);       // This is set for backward LightBurn compatibility.
+            if (parser.seen('I')) cutter.set_enabled(true); // This is set for backward LightBurn compatibility.
             if (parser.seenval('S')) {
               const float v = parser.value_float(),
               #if ENABLED(CV_LASER_MODULE)
@@ -977,7 +977,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #if ENABLED(ADVANCED_PAUSE_FEATURE)
         case 600: M600(); break;                                  // M600: Pause for Filament Change
         #if ENABLED(CONFIGURE_FILAMENT_CHANGE)
-          case 603: M603(); break;                                  // M603: Configure Filament Change
+          case 603: M603(); break;                                // M603: Configure Filament Change
         #endif
       #endif
 
@@ -1210,32 +1210,32 @@ void GcodeSuite::process_next_command() {
  */
 void GcodeSuite::process_subcommands_now(FSTR_P fgcode) {
   PGM_P pgcode = FTOP(fgcode);
-  char * const saved_cmd = parser.command_ptr;        // Save the parser state
+  char * const saved_cmd = parser.command_ptr;  // Save the parser state
   for (;;) {
-    PGM_P const delim = strchr_P(pgcode, '\n');       // Get address of next newline
+    PGM_P const delim = strchr_P(pgcode, '\n'); // Get address of next newline
     const size_t len = delim ? delim - pgcode : strlen_P(pgcode); // Get the command length
     parser.parse(MString<MAX_CMD_SIZE>().setn_P(pgcode, len));    // Parse the command
-    process_parsed_command(true);                     // Process it (no "ok")
-    if (!delim) break;                                // Last command?
-    pgcode = delim + 1;                               // Get the next command
+    process_parsed_command(true);               // Process it (no "ok")
+    if (!delim) break;                          // Last command?
+    pgcode = delim + 1;                         // Get the next command
   }
-  parser.parse(saved_cmd);                            // Restore the parser state
+  parser.parse(saved_cmd);                      // Restore the parser state
 }
 
 #pragma GCC diagnostic pop
 
 void GcodeSuite::process_subcommands_now(char * gcode) {
-  char * const saved_cmd = parser.command_ptr;        // Save the parser state
+  char * const saved_cmd = parser.command_ptr; // Save the parser state
   for (;;) {
-    char * const delim = strchr(gcode, '\n');         // Get address of next newline
-    if (delim) *delim = '\0';                         // Replace with nul
-    parser.parse(gcode);                              // Parse the current command
-    process_parsed_command(true);                     // Process it (no "ok")
-    if (!delim) break;                                // Last command?
-    *delim = '\n';                                    // Put back the newline
-    gcode = delim + 1;                                // Get the next command
+    char * const delim = strchr(gcode, '\n');  // Get address of next newline
+    if (delim) *delim = '\0';                  // Replace with nul
+    parser.parse(gcode);                       // Parse the current command
+    process_parsed_command(true);              // Process it (no "ok")
+    if (!delim) break;                         // Last command?
+    *delim = '\n';                             // Put back the newline
+    gcode = delim + 1;                         // Get the next command
   }
-  parser.parse(saved_cmd);                            // Restore the parser state
+  parser.parse(saved_cmd);                     // Restore the parser state
 }
 
 #if ENABLED(HOST_KEEPALIVE_FEATURE)

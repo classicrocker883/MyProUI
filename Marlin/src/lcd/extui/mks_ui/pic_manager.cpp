@@ -87,12 +87,13 @@ static FSTR_P const assets[] = {
   // Select file screen
   F("bmp_pageUp.bin"),
   F("bmp_pageDown.bin"),
-  F("bmp_back.bin"), // TODO: why two back buttons? Why not just one? (return / back)
+  F("bmp_back.bin"),
+  /// TODO: why two back buttons? Why not just one? (return / back)
   F("bmp_dir.bin"),
   F("bmp_file.bin"),
 
   // Move motor screen
-  // TODO: 6 equal icons, just in diffenct rotation... it may be optimized too
+  /// TODO: 6 equal icons, just in diffenct rotation... it may be optimized too
   F("bmp_xAdd.bin"),
   F("bmp_xDec.bin"),
   F("bmp_yAdd.bin"),

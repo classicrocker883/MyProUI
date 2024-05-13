@@ -14,7 +14,7 @@ With dynamic inline power mode, F-Value feedrate sets are processed with cutter.
 
 Irrespective of what laser power value source is used, the final laser output pin is always updated using the laser/spindle code. Specifically the apply_power(value) call is used to set the laser or spindle output. This call permits safe power control in the event that a sensor fault occurs.
 
-Note: Spindle operation is not selectable with G-Codes at this time.
+**Note**: Spindle operation is not selectable with G-Codes at this time.
 
 The following flow charts depict the flow control logic for spindle and laser operations in the code base.
 
@@ -81,7 +81,7 @@ A reduced entry laser power factor is based on the entry step rate to cruise ste
 
     block entry laser power = laser power * ( entry step rate / cruise step rate )
 
-The initial power will be set to no less than the laser_power_floor or the inital power calculation.
+The initial power will be set to no less than the laser_power_floor or the initial power calculation.
 
 The reduced final power factor is based on the final step rate to cruise step rate ratio for deceleration.
 

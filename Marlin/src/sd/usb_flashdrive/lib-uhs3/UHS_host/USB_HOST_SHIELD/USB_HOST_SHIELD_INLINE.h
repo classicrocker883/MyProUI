@@ -49,7 +49,7 @@
 void UHS_NI MAX3421E_HOST::resume_host() {
   // Used on MCU that lack control of IRQ priority (AVR).
   // Resumes ISRs.
-  // NOTE: you must track the state yourself!
+  /// NOTE: you must track the state yourself!
   #ifdef __AVR__
     noInterrupts();
     if (irq_pin & 1) {
@@ -163,7 +163,8 @@ uint16_t UHS_NI MAX3421E_HOST::reset() {
   }
   now = (int32_t)(micros() - expires);
   if (now < 0L) {
-    i = 65535 + now; // Note this subtracts, as now is negative
+    i = 65535 + now;
+    /// NOTE: this subtracts, as now is negative
   }
   return (i);
 }

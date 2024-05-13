@@ -1,7 +1,7 @@
 /**
  * Base64 encoder/decoder for arduino repo
  * Uses common web conventions - '+' for 62, '/' for 63, '=' for padding.
- * Note that invalid base64 characters are interpreted as padding.
+ * NOTE: that invalid base64 characters are interpreted as padding.
  * Author: Densaugeo
  * Maintainer: Densaugeo
  * Version: 1.2.1.1

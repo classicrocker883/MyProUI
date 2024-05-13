@@ -85,7 +85,7 @@ void WifiSerial::begin(uint32 baud) { begin(baud, SERIAL_8N1); }
 
 /**
  * Roger Clark.
- * Note. The config parameter is not currently used. This is a work in progress.
+ * NOTE: The config parameter is not currently used. This is a work in progress.
  * Code needs to be written to set the config of the hardware serial control register in question.
  */
 

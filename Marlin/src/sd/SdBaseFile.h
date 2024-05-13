@@ -142,7 +142,7 @@ static inline uint8_t FAT_MINUTE(const uint16_t fatTime) { return (fatTime >> 5)
 
 /**
  * second part of FAT directory time field
- * Note second/2 is stored in packed time.
+ * NOTE: second/2 is stored in packed time.
  *
  * \param[in] fatTime Time in packed dir format.
  *

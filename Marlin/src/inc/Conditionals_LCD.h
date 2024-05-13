@@ -118,7 +118,7 @@
   #define E_STEPPERS      2
   #define E_MANUAL        1
 
-#elif HAS_SWITCHING_EXTRUDER        // One stepper for every two EXTRUDERS
+#elif HAS_SWITCHING_EXTRUDER // One stepper for every two EXTRUDERS
 
   #if EXTRUDERS > 4
     #define E_STEPPERS    3
@@ -128,7 +128,7 @@
     #define E_STEPPERS    1
   #endif
 
-#elif ENABLED(MIXING_EXTRUDER)      // Multiple feeds are mixed proportionally
+#elif ENABLED(MIXING_EXTRUDER) // Multiple feeds are mixed proportionally
 
   #define E_STEPPERS      MIXING_STEPPERS
   #define E_MANUAL        1
@@ -139,12 +139,12 @@
     #define MIXING_VIRTUAL_TOOLS 1
   #endif
 
-#elif ENABLED(SWITCHING_TOOLHEAD)   // Toolchanger
+#elif ENABLED(SWITCHING_TOOLHEAD) // Toolchanger
 
   #define E_STEPPERS      EXTRUDERS
   #define E_MANUAL        EXTRUDERS
 
-#elif HAS_PRUSA_MMU2                // Průša Multi-Material Unit v2
+#elif HAS_PRUSA_MMU2 // Průša Multi-Material Unit v2
 
   #define E_STEPPERS      1
   #define E_MANUAL        1
@@ -694,7 +694,7 @@
 #elif ENABLED(RA_CONTROL_PANEL)
 
   #define LCD_I2C_TYPE_PCA8574
-  #define LCD_I2C_ADDRESS 0x27   // I2C Address of the port expander
+  #define LCD_I2C_ADDRESS 0x27 // I2C Address of the port expander
   #define IS_ULTIPANEL 1
 
 #elif ENABLED(REPRAPWORLD_GRAPHICAL_LCD)
@@ -749,7 +749,7 @@
 
   #define IS_ULTIPANEL 1
   #define U8GLIB_SSD1309
-  #define LCD_RESET_PIN LCD_PINS_D6 //  This controller need a reset pin
+  #define LCD_RESET_PIN LCD_PINS_D6 // This controller need a reset pin
   #define STD_ENCODER_PULSES_PER_STEP 4
   #define STD_ENCODER_STEPS_PER_MENU_ITEM 1
   #ifndef PCA9632
@@ -765,19 +765,20 @@
 #elif ANY(TFTGLCD_PANEL_SPI, TFTGLCD_PANEL_I2C)
 
   #define IS_TFTGLCD_PANEL 1
-  #define IS_ULTIPANEL 1                    // Note that IS_ULTIPANEL leads to HAS_WIRED_LCD
+  #define IS_ULTIPANEL 1
+  /// NOTE: that IS_ULTIPANEL leads to HAS_WIRED_LCD
 
   #if HAS_MEDIA && DISABLED(LCD_PROGRESS_BAR)
     #define LCD_PROGRESS_BAR
   #endif
   #if ENABLED(TFTGLCD_PANEL_I2C)
-    #define LCD_I2C_ADDRESS           0x33  // Must be 0x33 for STM32 main boards and equal to panel's I2C slave address
+    #define LCD_I2C_ADDRESS           0x33 // Must be 0x33 for STM32 main boards and equal to panel's I2C slave address
   #endif
-  #define LCD_USE_I2C_BUZZER                // Enable buzzer on LCD, used for both I2C and SPI buses (LiquidTWI2 not required)
+  #define LCD_USE_I2C_BUZZER // Enable buzzer on LCD, used for both I2C and SPI buses (LiquidTWI2 not required)
   #define STD_ENCODER_PULSES_PER_STEP 2
   #define STD_ENCODER_STEPS_PER_MENU_ITEM 1
-  #define LCD_WIDTH                   20    // 20 or 24 chars in line
-  #define LCD_HEIGHT                  10    // Character lines
+  #define LCD_WIDTH                   20 // 20 or 24 chars in line
+  #define LCD_HEIGHT                  10 // Character lines
   #define LCD_CONTRAST_MIN            127
   #define LCD_CONTRAST_MAX            255
   #define LCD_CONTRAST_DEFAULT        250
@@ -806,7 +807,7 @@
 
 #elif ENABLED(REPRAP_DISCOUNT_SMART_CONTROLLER)
 
-  #define IS_RRD_SC 1   // RepRapDiscount LCD or Graphical LCD with rotary click encoder
+  #define IS_RRD_SC 1 // RepRapDiscount LCD or Graphical LCD with rotary click encoder
 
 #elif ENABLED(K3D_242_OLED_CONTROLLER)
 
@@ -893,10 +894,11 @@
   #endif
 #endif
 
-// FSMC/SPI TFT Panels (LVGL)
+// FSMC/SPI TFT Panels (LVGL) with encoder click wheel
 #if ENABLED(TFT_LVGL_UI)
   #define HAS_TFT_LVGL_UI 1
   #define SERIAL_RUNTIME_HOOK 1
+  #define STD_ENCODER_PULSES_PER_STEP 4
 #endif
 
 // FSMC/SPI TFT Panels
@@ -936,8 +938,8 @@
 
 #elif ANY(LCD_SAINSMART_I2C_1602, LCD_SAINSMART_I2C_2004)
 
-  #define LCD_I2C_TYPE_PCF8575    // I2C Character-based 12864 display
-  #define LCD_I2C_ADDRESS 0x27    // I2C Address of the port expander
+  #define LCD_I2C_TYPE_PCF8575 // I2C Character-based 12864 display
+  #define LCD_I2C_ADDRESS 0x27 // I2C Address of the port expander
   #define IS_ULTIPANEL 1
 
   #if ENABLED(LCD_SAINSMART_I2C_2004)
@@ -952,7 +954,7 @@
    *
    * This uses the LiquidTWI2 library v1.2.3 or later ( https://github.com/lincomatic/LiquidTWI2 )
    * Make sure the LiquidTWI2 directory is placed in the Arduino or Sketchbook libraries subdirectory.
-   * Note: The pause/stop/resume LCD button pin should be connected to the Arduino
+   * NOTE: The pause/stop/resume LCD button pin should be connected to the Arduino
    *       BTN_ENC pin (or set BTN_ENC to -1 if not used)
    */
   #define LCD_I2C_TYPE_MCP23017
@@ -976,6 +978,15 @@
   #define DETECT_I2C_LCD_DEVICE 1
 #endif
 
+/**
+ * Ender-3 V2 DWIN with Encoder
+ */
+#if ENABLED(DWIN_LCD_PROUI)
+  #define HAS_DWIN_E3V2_BASIC 1
+  #define HAS_DWIN_E3V2 1
+  #define STD_ENCODER_PULSES_PER_STEP 4
+#endif
+
 // Encoder behavior
 #ifndef STD_ENCODER_PULSES_PER_STEP
   #if ENABLED(TOUCH_SCREEN)
@@ -997,15 +1008,17 @@
   #define ENCODER_FEEDRATE_DEADZONE 6
 #endif
 
-// Shift register panels
-// ---------------------
-// 2 wire Non-latching LCD SR from:
-// https://github.com/fmalpartida/New-LiquidCrystal/wiki/schematics#user-content-ShiftRegister_connection
+/**
+ * Shift register panels
+ * ---------------------
+ * 2 wire Non-latching LCD SR from:
+ * https://github.com/fmalpartida/New-LiquidCrystal/wiki/schematics#user-content-ShiftRegister_connection
+ */
 #if ENABLED(FF_INTERFACEBOARD)
-  #define SR_LCD_3W_NL    // Non latching 3 wire shift register
+  #define SR_LCD_3W_NL // Non latching 3 wire shift register
   #define IS_ULTIPANEL 1
 #elif ENABLED(SAV_3DLCD)
-  #define SR_LCD_2W_NL    // Non latching 2 wire shift register
+  #define SR_LCD_2W_NL // Non latching 2 wire shift register
   #define IS_ULTIPANEL 1
 #elif ENABLED(ULTIPANEL)
   #define IS_ULTIPANEL 1
@@ -1035,15 +1048,9 @@
 #endif
 
 // Extensible UI serial touch screens. (See src/lcd/extui)
-#if ANY(HAS_DGUS_LCD, MALYAN_LCD, ANYCUBIC_LCD_I3MEGA, ANYCUBIC_LCD_CHIRON, NEXTION_TFT, TOUCH_UI_FTDI_EVE)
+#if ANY(HAS_DGUS_LCD, MALYAN_LCD, ANYCUBIC_LCD_I3MEGA, ANYCUBIC_LCD_CHIRON, NEXTION_TFT, TOUCH_UI_FTDI_EVE)//, DWIN_LCD_PROUI) not yet ready
   #define IS_EXTUI 1 // Just for sanity check.
   #define EXTENSIBLE_UI
-#endif
-
-// Aliases for LCD features
-#if ANY(DWIN_CREALITY_LCD, DWIN_LCD_PROUI)
-  #define HAS_DWIN_E3V2_BASIC 1
-  #define HAS_DWIN_E3V2 1
 #endif
 
 // E3V2 extras
@@ -1065,6 +1072,7 @@
   #else
     #define LCD_BRIGHTNESS_DEFAULT 100
   #endif
+  #define STATUS_DO_CLEAR_EMPTY
 #endif
 
 // Serial Controllers require LCD_SERIAL_PORT
@@ -1099,6 +1107,7 @@
    *  - draw_kill_screen
    *  - kill_screen
    *  - draw_status_message
+   *    (calling advance_status_scroll, status_and_len for a scrolling status message)
    */
   #define HAS_DISPLAY 1
 #endif
@@ -1600,8 +1609,6 @@
 #endif
 #if CORE_IS_XY || CORE_IS_XZ || CORE_IS_YZ
   #define IS_CORE 1
-#endif
-#if IS_CORE
   #if CORE_IS_XY
     #define CORE_AXIS_1 A_AXIS
     #define CORE_AXIS_2 B_AXIS
@@ -1639,9 +1646,9 @@
   #undef DELTA_HOME_TO_SAFE_ZONE
 #endif
 
-//
-// Serial Port Info
-//
+/**
+ * Serial Port Info
+ */
 #ifdef SERIAL_PORT_2
   #define HAS_MULTI_SERIAL 1
   #ifdef SERIAL_PORT_3
@@ -1690,21 +1697,21 @@
  *  - TFT_COLOR
  *  - GRAPHICAL_TFT_UPSCALE
  */
-#if ANY(MKS_TS35_V2_0, BTT_TFT35_SPI_V1_0)                                    // ST7796
+#if ANY(MKS_TS35_V2_0, BTT_TFT35_SPI_V1_0)                                   // ST7796
   #define TFT_DEFAULT_DRIVER ST7796
   #define TFT_DEFAULT_ORIENTATION TFT_EXCHANGE_XY
   #define TFT_RES_480x320
   #define TFT_INTERFACE_SPI
   #define NO_LCD_SDCARD
-#elif ANY(LERDGE_TFT35, ANET_ET5_TFT35)                                       // ST7796
+#elif ANY(LERDGE_TFT35, ANET_ET5_TFT35)                                      // ST7796
   #define TFT_DEFAULT_ORIENTATION TFT_EXCHANGE_XY
   #define TFT_RES_480x320
   #define TFT_INTERFACE_FSMC
-#elif ANY(ANET_ET4_TFT28, MKS_ROBIN_TFT24, MKS_ROBIN_TFT28, MKS_ROBIN_TFT32)  // ST7789
+#elif ANY(ANET_ET4_TFT28, MKS_ROBIN_TFT24, MKS_ROBIN_TFT28, MKS_ROBIN_TFT32) // ST7789
   #define TFT_DEFAULT_ORIENTATION (TFT_EXCHANGE_XY | TFT_INVERT_Y)
   #define TFT_RES_320x240
   #define TFT_INTERFACE_FSMC
-#elif ANY(MKS_ROBIN_TFT35, TFT_TRONXY_X5SA, ANYCUBIC_TFT35)                   // ILI9488
+#elif ANY(MKS_ROBIN_TFT35, TFT_TRONXY_X5SA, ANYCUBIC_TFT35)                  // ILI9488
   #define TFT_DRIVER ILI9488
   #define TFT_DEFAULT_ORIENTATION (TFT_EXCHANGE_XY | TFT_INVERT_X | TFT_INVERT_Y)
   #define TFT_RES_480x320
@@ -1714,11 +1721,11 @@
   #define TFT_DEFAULT_ORIENTATION 0
   #define TFT_RES_480x272
   #define TFT_INTERFACE_FSMC
-#elif ANY(MKS_ROBIN_TFT_V1_1R, LONGER_LK_TFT28)                               // ILI9328 or R61505
+#elif ANY(MKS_ROBIN_TFT_V1_1R, LONGER_LK_TFT28)                              // ILI9328 or R61505
   #define TFT_DEFAULT_ORIENTATION (TFT_EXCHANGE_XY | TFT_INVERT_X | TFT_INVERT_Y)
   #define TFT_RES_320x240
   #define TFT_INTERFACE_FSMC
-#elif ENABLED(BIQU_BX_TFT70)                                                  // RGB
+#elif ENABLED(BIQU_BX_TFT70)                                                 // RGB
   #define TFT_DEFAULT_ORIENTATION TFT_EXCHANGE_XY
   #define TFT_RES_1024x600
   #define TFT_INTERFACE_LTDC
@@ -1820,7 +1827,7 @@
     #if ENABLED(TFT_INTERFACE_LTDC)
       #define TFT_1024x600_LTDC
     #else
-      #define TFT_1024x600_SIM  // "Simulation" - for testing purposes only
+      #define TFT_1024x600_SIM // "Simulation" - for testing purposes only
     #endif
   #endif
 #endif
@@ -1856,11 +1863,7 @@
 // This emulated DOGM has 'touch/xpt2046', not 'tft/xpt2046'
 #if ENABLED(TOUCH_SCREEN)
   #if NONE(TFT_TOUCH_DEVICE_GT911, TFT_TOUCH_DEVICE_XPT2046)
-    #define TFT_TOUCH_DEVICE_XPT2046          // ADS7843/XPT2046 ADC Touchscreen such as ILI9341 2.8
-  #endif
-  #if ENABLED(TFT_TOUCH_DEVICE_GT911)         // GT911 Capacitive touch screen such as BIQU_BX_TFT70
-    #undef TOUCH_SCREEN_CALIBRATION
-    #undef TOUCH_CALIBRATION_AUTO_SAVE
+    #define TFT_TOUCH_DEVICE_XPT2046 // ADS7843/XPT2046 ADC Touchscreen such as ILI9341 2.8
   #endif
   #if !HAS_GRAPHICAL_TFT
     #undef TOUCH_SCREEN

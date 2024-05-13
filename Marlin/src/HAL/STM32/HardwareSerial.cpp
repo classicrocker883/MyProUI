@@ -75,7 +75,7 @@
   #define PIN_SERIAL6_RX  PC7
 #endif
 
-// TODO: Get from include file
+/// TODO: Get from include file
 
 #if ANY(STM32F2xx, STM32F4xx, STM32F7xx)
 

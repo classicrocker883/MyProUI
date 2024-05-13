@@ -294,6 +294,7 @@ namespace LanguageNarrow_ru {
   LSTR MSG_MAX                              = " " LCD_STR_THERMOMETER ", " LCD_STR_DEGREE _UxGT("С макс");
   LSTR MSG_FACTOR                           = " " LCD_STR_THERMOMETER _UxGT(" Фактор");
   LSTR MSG_AUTOTEMP                         = _UxGT("Автотемпература");
+  LSTR MSG_TIMEOUT                          = _UxGT("Таймаут.");
   LSTR MSG_LCD_ON                           = _UxGT("Вкл");
   LSTR MSG_LCD_OFF                          = _UxGT("Выкл");
 
@@ -630,7 +631,17 @@ namespace LanguageNarrow_ru {
 
   LSTR MSG_TMC_DRIVERS                      = _UxGT("Драйвера TMC");
   LSTR MSG_TMC_CURRENT                      = _UxGT("Ток двигателей");
+  LSTR MSG_TMC_ACURRENT                     = _UxGT(STR_A " Ток двигателя");
+  LSTR MSG_TMC_BCURRENT                     = _UxGT(STR_B " Ток двигателя");
+  LSTR MSG_TMC_CCURRENT                     = _UxGT(STR_C " Ток двигателя");
+  LSTR MSG_TMC_ECURRENT                     = _UxGT(STR_E " Ток двигателя");
+  LSTR MSG_TMC_ENCURRENT                    = _UxGT("* Ток двигателя");
   LSTR MSG_TMC_HYBRID_THRS                  = _UxGT("Гибридный режим");
+  LSTR MSG_TMC_AHYBRID_THRS                 = _UxGT(STR_A " Гибридный режим");
+  LSTR MSG_TMC_BHYBRID_THRS                 = _UxGT(STR_B " Гибридный режим");
+  LSTR MSG_TMC_CHYBRID_THRS                 = _UxGT(STR_C " Гибридный режим");
+  LSTR MSG_TMC_EHYBRID_THRS                 = _UxGT(STR_E " Гибридный режим");
+  LSTR MSG_TMC_ENHYBRID_THRS                = _UxGT("* Гибридный режим");
   LSTR MSG_TMC_HOMING_THRS                  = _UxGT("Чувствительность");
   LSTR MSG_TMC_STEPPING_MODE                = _UxGT("Режим драйвера");
   LSTR MSG_TMC_STEALTH_ENABLED              = _UxGT("Тихий режим вкл");
@@ -707,7 +718,6 @@ namespace LanguageNarrow_ru {
   LSTR MSG_PID_AUTOTUNE_FAILED              = _UxGT("Автонастройка PID не удалась!");
   LSTR MSG_BAD_HEATER_ID                    = _UxGT("Неверный экструдер.");
   LSTR MSG_TEMP_TOO_HIGH                    = _UxGT("Слишком высокая температура.");
-  LSTR MSG_TIMEOUT                          = _UxGT("Таймаут.");
   LSTR MSG_MPC_MEASURING_AMBIENT            = _UxGT("Тест потери тепла");
   LSTR MSG_MPC_HEATING_PAST_200             = _UxGT("Нагрев выше >200C");
   LSTR MSG_MPC_COOLING_TO_AMBIENT           = _UxGT("Охлаждение до окружающей");

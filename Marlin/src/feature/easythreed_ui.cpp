@@ -217,7 +217,7 @@ void EasythreedUI::printButton() {
       else {                                                        // Register a longer press
         if (print_key_flag == PF_START && !printingIsActive())  {   // While not printing, this moves Z up 10mm
           blink_interval_ms = LED_ON;
-          queue.inject(F("G91\nG0 Z10 F600\nG90"));                 // Raise Z soon after returning to main loop
+          queue.inject(F("G91\nG0Z10F600\nG90"));                   // Raise Z soon after returning to main loop
         }
         else {                                                      // While printing, cancel print
           card.abortFilePrintSoon();                                // There is a delay while the current steps play out

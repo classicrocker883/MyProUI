@@ -137,6 +137,17 @@ void MeshViewerClass::Draw(const bool withsave/*=false*/, const bool redraw/*=tr
   }
 }
 
+void SaveMesh() {
+  #if ENABLED(MESH_BED_LEVELING)
+    ManualMeshSave();
+  #elif ENABLED(AUTO_BED_LEVELING_UBL)
+    UBLMeshSave();
+  #elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
+    WriteEeprom();
+    TERN_(EEPROM_SETTINGS, safe_delay(500); (void)settings.load();)
+  #endif
+}
+
 void Draw_MeshViewer() { MeshViewer.Draw(true, meshredraw); }
 
 void OnClick_MeshViewer() { if (HMI_flag.select_flag) SaveMesh(); HMI_ReturnScreen(); }

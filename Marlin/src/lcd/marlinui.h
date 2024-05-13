@@ -48,7 +48,7 @@
 #endif
 
 #if ENABLED(DWIN_LCD_PROUI)
-  #include "e3v2/proui/dwin.h"
+  #include "e3v2/proui/dwin_popup.h"
 #endif
 
 typedef bool (*statusResetFunc_t)();
@@ -175,7 +175,7 @@ typedef bool (*statusResetFunc_t)();
       static bool constexpr processing = false;
     #endif
     static void task();
-    static void soon(const AxisEnum axis OPTARG(MULTI_E_MANUAL, const int8_t eindex=active_extruder));
+    static void soon(const AxisEnum move_axis OPTARG(MULTI_E_MANUAL, const int8_t eindex=active_extruder));
   };
 
   void lcd_move_axis(const AxisEnum);
@@ -200,16 +200,12 @@ public:
     static float screw_pos; // bed corner screw inset
   #endif
 
-  #if ALL(DWIN_LCD_PROUI, HAS_MESH) // workaround for mesh inset not saving on restart
-    static float mesh_inset_min_x;
-    static float mesh_inset_max_x;
-    static float mesh_inset_min_y;
-    static float mesh_inset_max_y;
-  #endif
-
-  #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+  #if ALL(ENCODER_RATE_MULTIPLIER, ENC_MENU_ITEM)
     static uint16_t enc_rateA;
     static uint16_t enc_rateB;
+  #endif
+  #if ENABLED(PROUI_ITEM_ENC)
+    static bool rev_rate;
   #endif
 
   static void init();
@@ -265,6 +261,11 @@ public:
     }
   #endif
 
+  #if (HAS_WIRED_LCD && HAS_ENCODER_ACTION && HAS_MARLINUI_ENCODER) || HAS_DWIN_E3V2 || HAS_TFT_LVGL_UI
+    #define MARLINUI_ENCODER_DELTA 1
+    static int8_t get_encoder_delta(const millis_t &now=millis());
+  #endif
+
   #if HAS_MEDIA
     #define MEDIA_MENU_GATEWAY TERN(PASSWORD_ON_SD_PRINT_MENU, password.media_gatekeeper, menu_media)
     static void media_changed(const uint8_t old_stat, const uint8_t stat);
@@ -311,14 +312,6 @@ public:
 
   static void sleep_display(const bool=true) IF_DISABLED(HAS_DISPLAY_SLEEP, {});
   static void wake_display() { sleep_display(false); }
-
-  #if HAS_DWIN_E3V2_BASIC
-    static void refresh();
-  #else
-    FORCE_INLINE static void refresh() {
-      TERN_(HAS_WIRED_LCD, refresh(LCDVIEW_CLEAR_CALL_REDRAW));
-    }
-  #endif
 
   #if HAS_PRINT_PROGRESS_PERMYRIAD
     typedef uint16_t progress_t;
@@ -384,7 +377,7 @@ public:
     static constexpr uint8_t get_progress_percent() { return 0; }
   #endif
 
-  static void host_notify_P(PGM_P const fstr);
+  static void host_notify_P(PGM_P const pstr);
   static void host_notify(FSTR_P const fstr) { host_notify_P(FTOP(fstr)); }
   static void host_notify(const char * const cstr);
 
@@ -409,6 +402,7 @@ public:
 
     #if ENABLED(STATUS_MESSAGE_SCROLLING)
       static uint8_t status_scroll_offset;
+      static void reset_status_scroll() { status_scroll_offset = 0; }
       static void advance_status_scroll();
       static char* status_and_len(uint8_t &len);
     #endif
@@ -517,15 +511,17 @@ public:
   /**
    * @brief Set a status with a format string and parameters.
    *
-   * @param pfmt    A constant format P-string
+   * @param ffmt    A constant format F-string
    */
-  static void status_printf_P(int8_t level, PGM_P const pfmt, ...);
-
-  template<typename... Args>
-  static void status_printf(int8_t level, FSTR_P const ffmt, Args... more) { status_printf_P(level, FTOP(ffmt), more...); }
+  static void status_printf(int8_t level, FSTR_P const ffmt, ...);
 
   // Periodic or as-needed display update
   static void update() IF_DISABLED(HAS_UI_UPDATE, {});
+
+  // Tell the screen to redraw on the next call
+  FORCE_INLINE static void refresh() {
+    TERN_(HAS_WIRED_LCD, refresh(LCDVIEW_CLEAR_CALL_REDRAW));
+  }
 
   #if HAS_DISPLAY
 

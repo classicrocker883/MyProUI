@@ -74,19 +74,19 @@ If you want to edit the individual icons stored in an ICO file (or add more imag
 In this example we're extracting the constituent JPEG files from `9.ICO` and storing them in a folder named `icons-9`. As each file is extracted the script reports its index number, byte offset, size, dimensions, and filename:
 
 ```
-  $ cd buildroot/share/dwin
-  $ ./bin/splitIco.py 9.ICO icons-9
-    Splitting 9.ICO into dir icons
-    Splitting Entry Data...
-    00: offset: 0x001000 len: 0x10a2 width: 130 height: 17
-     Wrote 4258 bytes to icons/000-ICON_LOGO.jpg
-    01: offset: 0x0020a2 len: 0x0eac width: 110 height: 100
-    Wrote 3756 bytes to icons/001-ICON_Print_0.jpg
-    02: offset: 0x002f4e len: 0x0eaa width: 110 height: 100
-    Wrote 3754 bytes to icons/002-ICON_Print_1.jpg
-    ...
-    91: offset: 0x0345fc len: 0x0d89 width: 110 height: 100
-    Wrote 3465 bytes to icons/091-ICON_Info_1.jpg
+$ cd buildroot/share/dwin
+$ ./bin/splitIco.py 9.ICO icons-9
+  Splitting 9.ICO into dir icons
+  Splitting Entry Data...
+  00: offset: 0x001000 len: 0x10a2 width: 130 height: 17
+   Wrote 4258 bytes to icons/000-ICON_LOGO.jpg
+  01: offset: 0x0020a2 len: 0x0eac width: 110 height: 100
+  Wrote 3756 bytes to icons/001-ICON_Print_0.jpg
+  02: offset: 0x002f4e len: 0x0eaa width: 110 height: 100
+  Wrote 3754 bytes to icons/002-ICON_Print_1.jpg
+  ...
+  91: offset: 0x0345fc len: 0x0d89 width: 110 height: 100
+  Wrote 3465 bytes to icons/091-ICON_Info_1.jpg
 ```
 
 Once the individual JPEG files have been saved they can be edited using common graphics applications like Photoshop. JPEG files are inherently lossy and will usually contain ugly artifacts, so cleanup may be needed before they are re-exported. Keep the limits of bank size in mind when exporting images and try to find the best balance between compressed size and image quality.
@@ -112,10 +112,10 @@ If you want to create an ICO file you'll need to use `makeIco.py`.
 After editing images you'll create a new `9.ICO` archive with `makeIco.py` like so:
 
 ```
-  $ cd buildroot/share/dwin
-  $ ./bin/makeIco.py icons-9 9.ICO
-    Making .ico file '9.ICO' from contents of 'icons-9'
-    Scanning icon directory icons-9
-    ...Scanned 16 icon files
-    Scanning done. 16 icons included.
+$ cd buildroot/share/dwin
+$ ./bin/makeIco.py icons-9 9.ICO
+  Making .ico file '9.ICO' from contents of 'icons-9'
+  Scanning icon directory icons-9
+  ...Scanned 16 icon files
+  Scanning done. 16 icons included.
 ```

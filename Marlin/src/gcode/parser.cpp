@@ -60,8 +60,8 @@ uint16_t GCodeParser::codenum;
 
 #if ENABLED(FASTER_GCODE_PARSER)
   // Optimized Parameters
-  uint32_t GCodeParser::codebits;  // found bits
-  uint8_t GCodeParser::param[26];  // parameter offsets from command_ptr
+  uint32_t GCodeParser::codebits; // found bits
+  uint8_t GCodeParser::param[26]; // parameter offsets from command_ptr
 #else
   char *GCodeParser::command_args; // start of parameters
 #endif
@@ -76,13 +76,13 @@ GCodeParser parser;
  * this may be optimized by commenting out ZERO(param)
  */
 void GCodeParser::reset() {
-  string_arg = nullptr;                 // No whole line argument
-  command_letter = '?';                 // No command letter
-  codenum = 0;                          // No command code
+  string_arg = nullptr; // No whole line argument
+  command_letter = '?'; // No command letter
+  codenum = 0;          // No command code
   TERN_(USE_GCODE_SUBCODES, subcode = 0); // No command sub-code
   #if ENABLED(FASTER_GCODE_PARSER)
-    codebits = 0;                       // No codes yet
-    //ZERO(param);                      // No parameters (should be safe to comment out this line)
+    codebits = 0;       // No codes yet
+    //ZERO(param);      // No parameters (should be safe to comment out this line)
   #endif
 }
 
@@ -90,11 +90,11 @@ void GCodeParser::reset() {
 
   // Pass the address after the first quote (if any)
   char* GCodeParser::unescape_string(char* &src) {
-    if (*src == '"') ++src;     // Skip the leading quote
-    char * const out = src;     // Start of the string
-    char *dst = src;            // Prepare to unescape and terminate
+    if (*src == '"') ++src; // Skip the leading quote
+    char * const out = src; // Start of the string
+    char *dst = src;        // Prepare to unescape and terminate
     for (;;) {
-      char c = *src++;          // Get the next char
+      char c = *src++;      // Get the next char
       switch (c) {
         case '\\': c = *src++; break; // Get the escaped char
         case '"' : c = '\0'; break;   // Convert bare quote to nul
@@ -140,8 +140,8 @@ void GCodeParser::parse(char *p) {
   // Nullify asterisk and trailing whitespace
   char *starpos = strchr(p, '*');
   if (starpos) {
-    --starpos;                          // *
-    while (*starpos == ' ') --starpos;  // spaces...
+    --starpos;                         // *
+    while (*starpos == ' ') --starpos; // spaces...
     starpos[1] = '\0';
   }
 
@@ -298,14 +298,14 @@ void GCodeParser::parse(char *p) {
     bool quoted_string_arg = false;
   #endif
   string_arg = nullptr;
-  while (const char param = uppercase(*p++)) {  // Get the next parameter. A NUL ends the loop
+  while (const char param = uppercase(*p++)) { // Get the next parameter. A NUL ends the loop
 
     // Special handling for M32 [P] !/path/to/file.g#
     // The path must be the last parameter
     if (param == '!' && is_command('M', 32)) {
-      string_arg = p;                           // Name starts after '!'
-      char * const lb = strchr(p, '#');         // Already seen '#' as SD char (to pause buffering)
-      if (lb) *lb = '\0';                       // Safe to mark the end of the filename
+      string_arg = p;                   // Name starts after '!'
+      char * const lb = strchr(p, '#'); // Already seen '#' as SD char (to pause buffering)
+      if (lb) *lb = '\0';               // Safe to mark the end of the filename
       return;
     }
 
@@ -325,7 +325,7 @@ void GCodeParser::parse(char *p) {
 
     if (PARAM_OK(param)) {
 
-      while (*p == ' ') p++;                    // Skip spaces between parameters & values
+      while (*p == ' ') p++; // Skip spaces between parameters & values
 
       #if ENABLED(GCODE_QUOTED_STRINGS)
         const bool is_str = (*p == '"'), has_val = is_str || valid_float(p);
@@ -355,16 +355,16 @@ void GCodeParser::parse(char *p) {
 
       TERN_(FASTER_GCODE_PARSER, set(param, valptr)); // Set parameter exists and pointer (nullptr for no value)
     }
-    else if (!string_arg) {                     // Not A-Z? First time, keep as the string_arg
+    else if (!string_arg) { // Not A-Z? First time, keep as the string_arg
       string_arg = p - 1;
       #if ENABLED(DEBUG_GCODE_PARSER)
         if (debug) SERIAL_ECHOPGM(" string_arg: ", hex_address((void*)string_arg)); // DEBUG
       #endif
     }
 
-    if (!WITHIN(*p, 'A', 'Z')) {                // Another parameter right away?
-      while (*p && DECIMAL_SIGNED(*p)) p++;     // Skip over the value section of a parameter
-      while (*p == ' ') p++;                    // Skip over all spaces
+    if (!WITHIN(*p, 'A', 'Z')) {            // Another parameter right away?
+      while (*p && DECIMAL_SIGNED(*p)) p++; // Skip over the value section of a parameter
+      while (*p == ' ') p++;                // Skip over all spaces
     }
   }
 }

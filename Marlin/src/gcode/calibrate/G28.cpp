@@ -378,9 +378,9 @@ void GcodeSuite::G28() {
                    homeV = needV || parser.seen_test(AXIS8_NAME), homeW = needW || parser.seen_test(AXIS9_NAME)
                  )
                  home_all = NUM_AXIS_GANG_(  // Home-all if all or none are flagged
-                      homeX == homeX, && homeY == homeX, && homeZ == homeX,
-                   && homeI == homeX, && homeJ == homeX, && homeK == homeX,
-                   && homeU == homeX, && homeV == homeX, && homeW == homeX
+                      (homeX == homeX), && (homeY == homeX), && (homeZ == homeX),
+                   && (homeI == homeX), && (homeJ == homeX), && (homeK == homeX),
+                   && (homeU == homeX), && (homeV == homeX), && (homeW == homeX)
                  )
                  NUM_AXIS_LIST(
                    doX = home_all || homeX, doY = home_all || homeY, doZ = home_all || homeZ,

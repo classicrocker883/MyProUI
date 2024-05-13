@@ -131,7 +131,8 @@ void GcodeSuite::M115() {
     cap_line(F("SERIAL_XON_XOFF"), ENABLED(SERIAL_XON_XOFF));
 
     // BINARY_FILE_TRANSFER (M28 B1)
-    cap_line(F("BINARY_FILE_TRANSFER"), ENABLED(BINARY_FILE_TRANSFER)); // TODO: Use SERIAL_IMPL.has_feature(port, SerialFeature::BinaryFileTransfer) once implemented
+    cap_line(F("BINARY_FILE_TRANSFER"), ENABLED(BINARY_FILE_TRANSFER));
+    /// TODO: Use SERIAL_IMPL.has_feature(port, SerialFeature::BinaryFileTransfer) once implemented
 
     // EEPROM (M500, M501)
     cap_line(F("EEPROM"), ENABLED(EEPROM_SETTINGS));
@@ -244,6 +245,9 @@ void GcodeSuite::M115() {
 
     // CONFIG_EXPORT
     cap_line(F("CONFIG_EXPORT"), ENABLED(CONFIGURATION_EMBEDDING));
+
+    // PROUI EX
+    cap_line(F("PROUI_EX"), ENABLED(PROUI_EX));
 
     // Machine Geometry
     #if ENABLED(M115_GEOMETRY_REPORT)

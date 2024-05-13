@@ -55,7 +55,7 @@ void Goto_Popup(const popupDrawFunc_t fnDraw, const popupClickFunc_t fnClick/*=n
   ClickPopup = fnClick;
   PopupChange = fnChange;
   HMI_SaveProcessID(Popup);
-  HMI_flag.select_flag = 0;
+  HMI_flag.select_flag = false;
   Draw_Popup();
 }
 
@@ -73,5 +73,19 @@ void HMI_Popup() {
     }
   }
 }
+
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
+  void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button/*=0*/) {
+    HMI_SaveProcessID(button ? WaitResponse : NothingToDo);
+    DWIN_Show_Popup(ICON_Pause_1, GET_TEXT_F(MSG_ADVANCED_PAUSE), fmsg, button);
+  }
+
+  void Draw_Popup_FilamentPurge() {
+    DWIN_Draw_Popup(ICON_AutoLeveling, GET_TEXT_F(MSG_ADVANCED_PAUSE), GET_TEXT_F(MSG_FILAMENT_CHANGE_PURGE_CONTINUE));
+    DWINUI::Draw_Button(BTN_Purge, 26, 280);
+    DWINUI::Draw_Button(BTN_Continue, 146, 280);
+    Draw_Select_Highlight(true);
+  }
+#endif
 
 #endif // DWIN_LCD_PROUI

@@ -33,7 +33,8 @@
 #undef sq             // Redefined by teensy3/wiring.h
 #undef UNUSED         // Redefined by stm32f4xx_hal_def.h
 
-#include <Arduino.h>  // NOTE: If included earlier then this line is a NOOP
+#include <Arduino.h>
+/// NOTE: If included earlier then this line is a NOOP
 
 #undef DISABLED
 #define DISABLED(V...) DO(DIS,&&,V)

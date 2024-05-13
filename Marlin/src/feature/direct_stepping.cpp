@@ -111,7 +111,7 @@ namespace DirectStepping {
             return false;
         }
       case State::ADDRESS:
-        //TODO: 16 bit address, State::ADDRESS2
+        /// TODO: 16 bit address, State::ADDRESS2
         write_page_idx = c;
         write_byte_idx = 0;
         checksum = 0;
