@@ -100,14 +100,15 @@ body:
 
   - type: dropdown
     attributes:
-      label: ProUI?
+      label: ProUI-EX | Extra Features?
       description: >-
-        Are you using ProUI or NoPro?
+        Are you using ProUI-EX?
       options:
-        - ProUI
-        - NoPro
+        - "Yes"
+        - "No (formerly NoPro)"
     validations:
       required: true
+
 
   - type: dropdown
     attributes:

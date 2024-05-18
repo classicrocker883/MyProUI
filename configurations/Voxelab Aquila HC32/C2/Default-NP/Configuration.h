@@ -84,7 +84,7 @@
  * Select the serial port on the board to use for communication with the host.
  * This allows the connection of wireless adapters (for instance) to non-default port pins.
  * Serial port -1 is the USB emulated serial port, if available.
- * Note: The first serial port (-1 or 0) will always be used by the Arduino bootloader.
+ * NOTE: The first serial port (-1 or 0) will always be used by the Arduino bootloader.
  *
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
@@ -153,9 +153,9 @@
  * Options: A4988, A5984, DRV8825, LV8729, TB6560, TB6600, TMC2100,
  *          TMC2130, TMC2130_STANDALONE, TMC2160, TMC2160_STANDALONE,
  *          TMC2208, TMC2208_STANDALONE, TMC2209, TMC2209_STANDALONE,
- *          TMC26X,  TMC26X_STANDALONE,  TMC2660, TMC2660_STANDALONE,
- *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
- * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
+ *          TMC2660, TMC2660_STANDALONE, TMC5130, TMC5130_STANDALONE,
+ *          TMC5160, TMC5160_STANDALONE
+ * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
 #define X_DRIVER_TYPE TMC2208_STANDALONE
 #define Y_DRIVER_TYPE TMC2208_STANDALONE
@@ -419,9 +419,18 @@
   //#define PS_OFF_SOUND            // Beep 1s when power off
   #define PSU_ACTIVE_STATE LOW      // Set 'LOW' for ATX, 'HIGH' for X-Box
 
-  //#define PSU_DEFAULT_OFF               // Keep power off until enabled directly with M80
-  //#define PSU_POWERUP_DELAY      250    // (ms) Delay for the PSU to warm up to full power
-  //#define LED_POWEROFF_TIMEOUT 10000    // (ms) Turn off LEDs after power-off, with this amount of delay
+  //#define PSU_DEFAULT_OFF             // Keep power off until enabled directly with M80
+  //#define PSU_POWERUP_DELAY      250  // (ms) Delay for the PSU to warm up to full power
+  //#define LED_POWEROFF_TIMEOUT 10000  // (ms) Turn off LEDs after power-off, with this amount of delay
+
+  //#define PSU_OFF_REDUNDANT           // Second pin for redundant power control
+  //#define PSU_OFF_REDUNDANT_INVERTED  // Redundant pin state is the inverse of PSU_ACTIVE_STATE
+
+  //#define PS_ON1_PIN               6  // Redundant pin required to enable power in combination with PS_ON_PIN
+
+  //#define PS_ON_EDM_PIN            8  // External Device Monitoring pins for external power control relay feedback. Fault on mismatch.
+  //#define PS_ON1_EDM_PIN           9
+  #define PS_EDM_RESPONSE          250  // (ms) Time to allow for relay action
 
   //#define POWER_OFF_TIMER               // Enable M81 D<seconds> to power off after a delay
   //#define POWER_OFF_WAIT_FOR_COOLDOWN   // Enable M81 S to power off only after cooldown
@@ -682,7 +691,7 @@
  * MPCTEMP : Predictive Model temperature control. (~1.8K without auto-tune)
  */
 #define PIDTEMP           // See the PID Tuning Guide at https://reprap.org/wiki/PID_Tuning
-//#define MPCTEMP         // ** EXPERIMENTAL ** See https://marlinfw.org/docs/features/model_predictive_control.html
+//#define MPCTEMP         // See https://marlinfw.org/docs/features/model_predictive_control.html
 
 #define PID_MAX  255      // Limit hotend current while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #define PID_K1     0.95   // Smoothing factor within any PID loop
@@ -871,7 +880,7 @@
 
 /**
  * Prevent a single extrusion longer than EXTRUDE_MAXLENGTH.
- * Note: For Bowden Extruders make this large enough to allow load/unload.
+ * NOTE: For Bowden Extruders make this large enough to allow load/unload.
  */
 #define PREVENT_LENGTHY_EXTRUDE
 #define EXTRUDE_MAXLENGTH 1000
@@ -1232,7 +1241,7 @@
  *
  * These settings can be reset by M502
  *
- * Note that if EEPROM is enabled, saved values will override these.
+ * NOTE: if EEPROM is enabled, saved values will override these.
  */
 
 /**
@@ -1966,7 +1975,7 @@
 
   // Commands to execute on filament runout.
   // With multiple runout sensors use the %c placeholder for the current tool in commands (e.g., "M600 T%c")
-  // NOTE: After 'M412 H1' the host handles filament runout and this script does not apply.
+  /// NOTE: After 'M412 H1' the host handles filament runout and this script does not apply.
   #define FILAMENT_RUNOUT_SCRIPT "M600"
 
   // After a runout is detected, continue printing this length of filament
@@ -2240,9 +2249,9 @@
 
 #if ENABLED(LCD_BED_TRAMMING)
   #define BED_TRAMMING_HEIGHT      0.0        // (mm) Z height of nozzle at tramming points
-  #define BED_TRAMMING_Z_HOP       5.0        // (mm) Z height of nozzle between tramming points
-  #define BED_TRAMMING_INCLUDE_CENTER       // Move to the center after the last corner
-  #define BED_TRAMMING_USE_PROBE
+  #define BED_TRAMMING_Z_HOP       5.0        // (mm) Z raise between tramming points
+  #define BED_TRAMMING_INCLUDE_CENTER         // Move to the center after the last corner
+  //#define BED_TRAMMING_USE_PROBE
   #if ENABLED(BED_TRAMMING_USE_PROBE)
     #define BED_TRAMMING_INSET_LFRB { 35, 35, 35, 35 } // (mm) Left, Front, Right, Back insets
     #define BED_TRAMMING_PROBE_TOLERANCE 0.05f  // (mm)
@@ -2656,7 +2665,7 @@
 /**
  * LCD Character Set
  *
- * Note: This option is NOT applicable to Graphical Displays.
+ * NOTE: This option is NOT applicable to Graphical Displays.
  *
  * All character-based LCDs provide ASCII plus one of these
  * language extensions:
@@ -2678,9 +2687,9 @@
 #define DISPLAY_CHARSET_HD44780 JAPANESE
 
 /**
- * Info Screen Style (0:Classic, 1:Průša)
+ * Info Screen Style (0:Classic, 1:Průša, 2:CNC)
  *
- * :[0:'Classic', 1:'Průša']
+ * :[0:'Classic', 1:'Průša', 2:'CNC']
  */
 #define LCD_INFO_SCREEN_STYLE 0
 
@@ -2785,7 +2794,7 @@
 // The duration and frequency for the UI feedback sound.
 // Set these to 0 to disable audio feedback in the LCD menus.
 //
-// Note: Test audio output with the G-Code:
+/// NOTE: Test audio output with the G-Code:
 //  M300 S<frequency Hz> P<duration ms>
 //
 #define LCD_FEEDBACK_FREQUENCY_DURATION_MS 2
@@ -2813,7 +2822,7 @@
 // RepRapDiscount Smart Controller.
 // https://reprap.org/wiki/RepRapDiscount_Smart_Controller
 //
-// Note: Usually sold with a white PCB.
+/// NOTE: Usually sold with a white PCB.
 //
 //#define REPRAP_DISCOUNT_SMART_CONTROLLER
 
@@ -2851,7 +2860,7 @@
 // GADGETS3D G3D LCD/SD Controller
 // https://reprap.org/wiki/RAMPS_1.3/1.4_GADGETS3D_Shield_with_Panel
 //
-// Note: Usually sold with a blue PCB.
+/// NOTE: Usually sold with a blue PCB.
 //
 //#define G3D_PANEL
 
@@ -2887,7 +2896,7 @@
 //
 // CONTROLLER TYPE: I2C
 //
-// Note: These controllers require the installation of Arduino's LiquidCrystal_I2C
+/// NOTE: These controllers require the installation of Arduino's LiquidCrystal_I2C
 // library. For more info: https://github.com/kiyoshigawa/LiquidCrystal_I2C
 //
 
@@ -2916,10 +2925,10 @@
 // PANELOLU2 LCD with status LEDs,
 // separate encoder and click inputs.
 //
-// Note: This controller requires Arduino's LiquidTWI2 library v1.2.3 or later.
+/// NOTE: This controller requires Arduino's LiquidTWI2 library v1.2.3 or later.
 // For more info: https://github.com/lincomatic/LiquidTWI2
 //
-// Note: The PANELOLU2 encoder click input can either be directly connected to
+/// NOTE: The PANELOLU2 encoder click input can either be directly connected to
 // a pin (if BTN_ENC defined to != -1) or read through I2C (when BTN_ENC == -1).
 //
 //#define LCD_I2C_PANELOLU2
@@ -2966,7 +2975,7 @@
 // IMPORTANT: The U8glib library is required for Graphical Display!
 //            https://github.com/olikraus/U8glib_Arduino
 //
-// NOTE: If the LCD is unresponsive you may need to reverse the plugs.
+/// NOTE: If the LCD is unresponsive you may need to reverse the plugs.
 //
 
 //
@@ -3448,12 +3457,8 @@
 
 #if ENABLED(DWIN_LCD_PROUI)
 // Professional firmware features:
-  //#define PROUI_EX 1          // Extended UI features (15152 bytes of flash)
-  #ifdef PROUI_EX
-    #define HAS_TOOLBAR 1
-  #else
-    #define PROUI_GRID_PNTS 1
-  #endif
+  #define PROUI_EX 1            // Extended UI features (15152 bytes of flash)
+  //#define CV_LASER_MODULE
   #define HAS_GCODE_PREVIEW 1
   #define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)
   #define HAS_ESDIAG 1          // View End-stop switch continuity (560 bytes of flash)
@@ -3476,8 +3481,10 @@
   //#define CCLOUD_PRINT_SUPPORT// Menu item: enable/disable Creality Cloud Print Support (192 bytes of flash)
   #define PROUI_ITEM_TRAM       // Menu item: enable Tramming Wizard (2304 bytes of flash)
   #define PROUI_MEDIASORT       // Menu item: enable/disable file list sorting (104 bytes of flash)
+  #define PROUI_ITEM_ENC        // Menu item: enable to reverse encoder direction (144 bytes of flash)
   //#define ENC_MENU_ITEM       // Menu item: faster/slower encoder rate (272 bytes of flash)
   #define SHOW_SPEED_IND        // Menu item: blink speed in mm/s along with speed percentage (296 bytes of flash)
+  #define PROUI_ITEM_ABRT       // Menu item: enable/disable preconfigured abort commands (88 bytes of flash)
   //#define NO_BLINK_IND        // Disables dashboard icon blink indicator highlighted background
 
 #endif
@@ -3688,7 +3695,8 @@
  * Set this manually if there are extra servos needing manual control.
  * Set to 0 to turn off servo support.
  */
-//#define NUM_SERVOS 3 // Note: Servo index starts with 0 for M280-M282 commands
+//#define NUM_SERVOS 3
+/// NOTE: Servo index starts with 0 for M280-M282 commands
 
 // (ms) Delay before the next move will start, to give the servo time to reach its target angle.
 // 300ms is a good value but you can try less delay.

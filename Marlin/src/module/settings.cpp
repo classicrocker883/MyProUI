@@ -282,7 +282,7 @@ typedef struct SettingsDataStruct {
   //
   // HAS_BED_PROBE
   //
-  #if NUM_AXES && HAS_BED_PROBE
+  #if NUM_AXES
     xyz_pos_t probe_offset;                             // M851 X Y Z
   #endif
 
@@ -317,10 +317,8 @@ typedef struct SettingsDataStruct {
   //
   // AUTO_BED_LEVELING_UBL
   //
-  #if ENABLED(AUTO_BED_LEVELING_UBL)
-    bool planner_leveling_active;                       // M420 S  planner.leveling_active
-    int8_t ubl_storage_slot;                            // bedlevel.storage_slot
-  #endif
+  bool planner_leveling_active;                         // M420 S  planner.leveling_active
+  int8_t ubl_storage_slot;                              // bedlevel.storage_slot
 
   //
   // SERVO_ANGLES
@@ -1052,10 +1050,14 @@ void MarlinSettings::postprocess() {
     //
     // Probe XYZ Offsets
     //
-    #if NUM_AXES && HAS_BED_PROBE
+    #if NUM_AXES
     {
       _FIELD_TEST(probe_offset);
-      const xyz_pos_t &zpo = probe.offset;
+      #if HAS_BED_PROBE
+        const xyz_pos_t &zpo = probe.offset;
+      #else
+        constexpr xyz_pos_t zpo{0};
+      #endif
       EEPROM_WRITE(zpo);
     }
     #endif
@@ -1132,15 +1134,13 @@ void MarlinSettings::postprocess() {
     //
     // Unified Bed Leveling
     //
-    #if ENABLED(AUTO_BED_LEVELING_UBL)
     {
       _FIELD_TEST(planner_leveling_active);
-      const bool ubl_active = planner.leveling_active;
-      const int8_t storage_slot = bedlevel.storage_slot;
+      const bool ubl_active = TERN(AUTO_BED_LEVELING_UBL, planner.leveling_active, false);
+      const int8_t storage_slot = TERN(AUTO_BED_LEVELING_UBL, bedlevel.storage_slot, -1);
       EEPROM_WRITE(ubl_active);
       EEPROM_WRITE(storage_slot);
     }
-    #endif
 
     //
     // Servo Angles
@@ -2112,10 +2112,14 @@ void MarlinSettings::postprocess() {
       //
       // Probe XYZ Offsets
       //
-      #if NUM_AXES && HAS_BED_PROBE
+      #if NUM_AXES
       {
         _FIELD_TEST(probe_offset);
-        const xyz_pos_t &zpo = probe.offset;
+        #if HAS_BED_PROBE
+          const xyz_pos_t &zpo = probe.offset;
+        #else
+          xyz_pos_t zpo;
+        #endif
         EEPROM_READ(zpo);
       }
       #endif

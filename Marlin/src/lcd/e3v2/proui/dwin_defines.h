@@ -1,6 +1,6 @@
 /**
  * DWIN general defines and data structs for PRO UI
- * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * Based on the original work of: Miguel A. Risco-Castillo (MRISCOC)
  * Version: 3.13.3
  * Date: 2022/05/18
  *

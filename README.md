@@ -1,13 +1,14 @@
 # Professional Firmware for the Voxelab Aquila and Creality Ender-3 3D Printers
-(or any other compatible 3D Printer)
+**_<sup>(or any other compatible 3D Printer)</sup>_**
 
 ![GitHub contributors](https://img.shields.io/github/contributors/classicrocker883/MriscocProUI.svg)
-![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MriscocProUI.svg)
-[![Build Status](https://github.com/classicrocker883/MriscocProUI/workflows/CI/badge.svg)](https://github.com/classicrocker883/MriscocProUI/actions)
-[![Build Configs](https://github.com/classicrocker883/MriscocProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MriscocProUI/releases/latest)
+![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MriscocProUI.svg)  
+[![Aquila Build](https://github.com/classicrocker883/MriscocProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MriscocProUI/releases/latest)  
+![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)  
+![Ender Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs_Ender.yml/badge.svg)
 
-#### Don't forget to checkout the [thingiverse](https://www.thingiverse.com/classicrocker883/designs) models I designed
-[Minimalist Dual Cooling Fan Shroud](https://www.thingiverse.com/thing:5263939) for Aquila / Ender 3 V2
+**Don't forget to checkout the [thingiverse](https://www.thingiverse.com/classicrocker883/designs) models I designed
+[Minimalist Dual Cooling Fan Shroud](https://www.thingiverse.com/thing:5263939) for Aquila / Ender 3 V2**
 <img src="https://cdn.thingiverse.com/assets/1a/21/e9/e9/f5/card_preview_c60b15d6-69cf-469a-8641-40f6bef37992.png" style="float:left;width:40px;height:40px;" align="left"/>
 
 [Tool Box for Middle Extrusion](https://www.thingiverse.com/thing:5181522) "**VOXELAB**" engraved
@@ -35,15 +36,20 @@ New ICON's have been added, and old ones enhanced. Whoever edited them before sa
 <br>
 
 #### Important Info regarding HC32:
-* H32->HC32 support is currently only in the branch **HC32-&lt;Month&gt;**. You can find the original repo here [@shadow578/Marlin-H32](https://github.com/shadow578/Marlin-H32)
-* HC32 support has recently been added to the [Marlin Firmware](https://github.com/MarlinFirmware/Marlin) repository. Please post any [Issues](https://github.com/MarlinFirmware/Marlin/issues) there first, otherwise if there are any ProUI specific issues or anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues) here.
-* I have created a second build using the JyersUI as a workaround for the save/store settings issue with ProUI. However, that is also a work-in-progress. I will have both build types available.
-* * > [!NOTE]
-    > <ins>**FOREWARNING**</ins>: So far everything has been working great - as normal - except there are reports of it restarting after saving with no other negative effects. So far, that is the only issue. I just wanted to give advance notice.
-  * > Previous Issue of it restarting when saving/store settings has been fixed in the more recent ProUI version (October Rev.1). HOWEVER, now there is a current Issue to be addressed:<br>
-The screen <b>freezes and restarts</b> when SD card is inserted. This means that everything <i>so far</i> seems to work correctly as it should, except for when an <b>SD card is inserted</b>, so printing may not be possible <i>unless</i> you use USB serial interface to upload the file (through a slicer or something like Pronterface).
-    > This issue is now the main focus to be fixed.
-    > If this is an inconvenience then you can use an earlier version which can allow the **SD Card** to be used.
+> [!WARNING]
+>
+> <ins>**FOREWARNING**</ins>: So far everything has been working great - as normal - except there are reports of it restarting after saving with no other negative effects. So far, that is the only issue. I just wanted to give advance notice.
+
+> [!TIP]
+> H32->HC32 support is currently only in the branch **HC32-&lt;Month&gt;**. You can find the original repo here [@shadow578/Marlin-H32](https://github.com/shadow578/Marlin-H32)
+>
+> HC32 support has recently been added to the [Marlin Firmware](https://github.com/MarlinFirmware/Marlin) repository. Please post any [Issues](https://github.com/MarlinFirmware/Marlin/issues) there first, otherwise if there are any ProUI specific issues or anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues) here.
+
+> [!NOTE]
+> Previous Issue of it restarting when saving/store settings has been fixed in the more recent ProUI version (October Rev.1).  
+_HOWEVER_, now there is a current Issue to be addressed:  
+The screen may **freeze and restart** when the SD card is inserted. This means that everything *so far* seems to work correctly as it should, except for when an **SD card is inserted**, so printing may not be possible *unless* you use USB serial interface to upload the file (through a slicer or something like Pronterface).  
+If this is an inconvenience then you can use an earlier version which can allow the **SD Card** to be used.
 <br>
 
 #### Other Information:
@@ -62,10 +68,15 @@ General information about the firmware and updates is located in the _Wiki_ page
      * far enough past the right edge).
      */
 If you start printing and it says `Advance Pause` while **Runout** is enabled, you may have to change state it triggers no filament to **HIGH**, or **LOW** (depending on what is already selected). This is found in the _Prepare_ menu/ _Filament Management_/ _Filament Settings_ -> _Runout Active_. <br>
-A small issue which may occur is if you are in the <i>Print</i> menu and you quickly select to print between several printable *Gcode* files in a short amount of time. The screen can freeze for a moment and the printer will restart - that is it.<br><br>
+A small issue which may occur is if you are in the <i>Print</i> menu and you quickly select to print between several printable *Gcode* files in a short amount of time. The screen can freeze for a moment and the printer will restart - that is it.
+
+<br>
+
 If you encounter any issues, suggestions, or feature requests please feel free to post it on the [Issues tab](https://github.com/classicrocker883/MriscocProUI/issues), otherwise if everything is going well please leave a comment.
 
 I will be working on more upgrades and features and tweaks along the way. Enjoy using this fork of Marlin as I intend it to be the best; easy to use and convenient. So far I really enjoy the new settings and toolbar for the main menu. There is a variety of parameters and options that can be changed without having to reflash the firmware - like with other versions.
+
+<br>
 
 ### MarlinSimulator.exe Instructions
 
@@ -103,7 +114,8 @@ The Precompiled binary files of this firmware can work with STM32 (STM32F103RET6
 <img height=260 src="https://enfss.voxelab3dp.com/10001/picture/2021/09/677b721574efca3daa5c0d39e438fee6.jpg" align="middle" />
 <img height=260 src="buildroot/share/pixmaps/Ender-3V2.jpg" align="left" />
 <img height=300 src="buildroot/share/pixmaps/Ender-3S1.jpg" align="middle"  />
-<BR/>
+
+<br>
 
 ## Donations
 
@@ -115,11 +127,15 @@ Thank you for your support, I receive donations through
 
 [<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/donate/?business=PFNSKQX9WQQ8W&no_recurring=0&currency_code=USD)  **PayPal**
 
+<br>
+
 ## Wiki
  - [How to install the firmware](https://github.com/mriscoc/Ender3V2S1/wiki/How-to-install-the-firmware)
  - [Installing a 3D/BLTouch](https://github.com/mriscoc/Ender3V2S1/wiki/3D-BLTouch)
  - [Color themes](https://github.com/mriscoc/Ender3V2S1/wiki/Color-Themes)
  - [How to use with Octoprint](https://github.com/mriscoc/Ender3V2S1/wiki/Octoprint)
+
+<br>
 
 ## Community links
 * [Voxelab Aquila Facebook Group](https://www.facebook.com/groups/voxelabaquila/?ref=share&mibextid=NSMWBT)
@@ -132,6 +148,8 @@ Thank you for your support, I receive donations through
 
 <!--[](https://raw.githubusercontent.com/mriscoc/Ender3V2S1/Ender3V2S1-Released/screenshots/main.jpg)-->
 
+<br>
+
 ## Marlin Support
 
 The Issue Queue is reserved for Bug Reports and Feature Requests. Please use the following resources for help with configuration and troubleshooting:
@@ -142,6 +160,8 @@ The Issue Queue is reserved for Bug Reports and Feature Requests. Please use the
 - RepRap.org [Marlin Forum](https://forums.reprap.org/list.php?415)
 - Facebook Group ["Marlin Firmware for 3D Printers"](https://www.facebook.com/groups/3Dtechtalk/)
 - [Marlin Configuration](https://www.youtube.com/results?search_query=marlin+configuration) on YouTube
+
+<br>
 
 ## Credits
 
@@ -175,9 +195,13 @@ Marlin firmware is an Open Source project hosted on Github, [Marlin](https://mar
 
 VS Code is an IDE program owned and maintained by Microsoft.
 
+<br>
+
 ## Disclaimer
 
 THIS FIRMWARE AND ALL OTHER FILES IN THE DOWNLOAD ARE PROVIDED FREE OF CHARGE WITH NO WARRANTY OR GUARANTEE. SUPPORT IS NOT INCLUDED JUST BECAUSE YOU DOWNLOADED THE FIRMWARE. WE ARE NOT LIABLE FOR ANY DAMAGE TO YOUR PRINTER, PERSON, OR ANY OTHER PROPERTY DUE TO USE OF THIS FIRMWARE. IF YOU DO NOT AGREE TO THESE TERMS THEN DO NOT USE THE FIRMWARE.
+
+<br>
 
 ## LICENSE
 For the license, check the header of each file, if the license is not specified there, the project license will be used. Marlin is licensed under the GPL.
