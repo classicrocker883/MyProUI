@@ -868,6 +868,6 @@
 /**
  * HC32 clock speed is hard-coded in Marlin
  */
-#if defined(ARDUINO_ARCH_HC32) && F_CPU == 200000000
-  #warning "HC32 clock is assumed to be 200MHz. If this isn't the case for your board please submit a report so we can add support."
+#if defined(ARDUINO_ARCH_HC32) && F_CPU != 200000000
+  #error "HC32 clock is assumed to be 200MHz. If this isn't the case for your board please submit a report so we can add support."
 #endif
