@@ -3543,9 +3543,16 @@ void Draw_Tune_Menu() {
     void SetShapingYZeta() { HMI_value.axis = Y_AXIS; SetFloatOnClick(0, 1, 2, stepper.get_shaping_damping_ratio(Y_AXIS), ApplyShapingZeta); }
   #endif
 
+  #if ENABLED(INPUT_SHAPING_Z)
+    void onDrawShapingZFreq(MenuItemClass* menuitem, int8_t line) { onDrawFloatMenu(menuitem, line, 2, stepper.get_shaping_frequency(Z_AXIS)); }
+    void onDrawShapingZZeta(MenuItemClass* menuitem, int8_t line) { onDrawFloatMenu(menuitem, line, 2, stepper.get_shaping_damping_ratio(Z_AXIS)); }
+    void SetShapingZFreq() { HMI_value.axis = Z_AXIS; SetFloatOnClick(0, 200, 2, stepper.get_shaping_frequency(Z_AXIS), ApplyShapingFreq); }
+    void SetShapingZZeta() { HMI_value.axis = Z_AXIS; SetFloatOnClick(0, 1, 2, stepper.get_shaping_damping_ratio(Z_AXIS), ApplyShapingZeta); }
+  #endif
+
   void Draw_InputShaping_Menu() {
     checkkey = Menu;
-    if (SET_MENU(InputShapingMenu, MSG_INPUT_SHAPING, 1 PLUS_TERN0(INPUT_SHAPING_X, 2) PLUS_TERN0(INPUT_SHAPING_Y, 2))) {
+    if (SET_MENU(InputShapingMenu, MSG_INPUT_SHAPING, 1 PLUS_TERN0(INPUT_SHAPING_X, 2) PLUS_TERN0(INPUT_SHAPING_Y, 2) PLUS_TERN0(INPUT_SHAPING_Z, 2))) {
       BACK_ITEM(Draw_Motion_Menu);
       #if ENABLED(INPUT_SHAPING_X)
         MENU_ITEM(ICON_ShapingX, MSG_SHAPING_A_FREQ, onDrawShapingXFreq, SetShapingXFreq);
@@ -3554,6 +3561,10 @@ void Draw_Tune_Menu() {
       #if ENABLED(INPUT_SHAPING_Y)
         MENU_ITEM(ICON_ShapingY, MSG_SHAPING_B_FREQ, onDrawShapingYFreq, SetShapingYFreq);
         MENU_ITEM(ICON_ShapingY, MSG_SHAPING_B_ZETA, onDrawShapingYZeta, SetShapingYZeta);
+      #endif
+      #if ENABLED(INPUT_SHAPING_Z)
+        MENU_ITEM(ICON_ShapingZ, MSG_SHAPING_C_FREQ, onDrawShapingZFreq, SetShapingZFreq);
+        MENU_ITEM(ICON_ShapingZ, MSG_SHAPING_C_ZETA, onDrawShapingZZeta, SetShapingZZeta);
       #endif
     }
     UpdateMenu(InputShapingMenu);
