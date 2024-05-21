@@ -28,13 +28,13 @@
 /**
  * Marlin release version identifier
  */
-#define SHORT_BUILD_VERSION "2.1.3f-5"
+#define SHORT_BUILD_VERSION "2.1.3f-5-HC32"
 
 /**
  * Verbose version identifier which should contain a reference to the location
  * from where the binary was downloaded or the source code was compiled.
  */
-#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION "Aquila-X2 (HC32)"
+#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION "Aquila-HC32"
 
 /**
  * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
