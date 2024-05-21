@@ -13,7 +13,7 @@ body:
     attributes:
       label: Did you test the latest release build?
       description: >-
-        Always try the [latest](https://github.com/classicrocker883/MriscocProUI/releases/latest) - most recently updated firmware
+        Always try the [latest](https://github.com/classicrocker883/MRiscoCProUI/releases/latest) - most recently updated firmware
       options:
         - Yes, and the problem still exists.
         - No, but I will try it!

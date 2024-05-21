@@ -249,7 +249,7 @@ constexpr ena_mask_t enable_overlap[] = {
       #endif
       #if ENABLED(INPUT_SHAPING_Z)
         static shaping_time_t peek_z() { return _peek_z; }
-        static bool dequeue_z() { SHAPING_QUEUE_DEQUEUE(z) }
+        static bool __O0 dequeue_z() { SHAPING_QUEUE_DEQUEUE(z) }
         static bool empty_z() { return head_z == tail; }
         static uint16_t free_count_z() { return _free_count_z; }
       #endif

@@ -22,7 +22,7 @@
 #pragma once
 
 // Edited by classicrocker883 for ProUI
-// https://github.com/classicrocker883/MriscocProUI
+// https://github.com/classicrocker883/MRiscoCProUI
 
 // Created by configs generator for Professional firmware
 // https://github.com/mriscoc/Ender3V2S1
