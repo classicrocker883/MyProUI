@@ -413,6 +413,7 @@ void unified_bed_leveling::G29() {
             ExtUI::onMeshUpdate(x, x, z_values[x][x]);
             ExtUI::onMeshUpdate(x, x2, z_values[x][x2]);
           #elif ENABLED(DWIN_LCD_PROUI)
+            DWIN_MeshUpdate(x, x, z_values[x][x]);
             DWIN_MeshUpdate(x, x2, z_values[x][x2]);
           #endif
         }
@@ -1708,7 +1709,7 @@ void unified_bed_leveling::smart_mesh_fill() {
     // the point being extrapolated.  Then extrapolate the mesh point from WLSF.
 
     #if ANY(PROUI_EX, PROUI_GRID_PNTS)
-      static_assert((GRID_LIMIT) <= 16, "GRID_MAX_POINTS_Y too big");
+      static_assert((GRID_LIMIT) <= 9, "GRID_MAX_POINTS_Y too big");
     #else
       static_assert((GRID_MAX_POINTS_Y) <= 16, "GRID_MAX_POINTS_Y too big");
     #endif

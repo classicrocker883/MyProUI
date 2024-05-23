@@ -1507,6 +1507,9 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
   #ifdef Z_AFTER_PROBING
     static_assert(Z_AFTER_PROBING >= 0, "Probes require Z_AFTER_PROBING >= 0.");
   #endif
+  #ifdef Z_AFTER_HOMING
+    static_assert(Z_AFTER_HOMING >= 5, "Z_AFTER_HOMING must be >= 5.");
+  #endif
 
   #if DISABLED(DWIN_LCD_PROUI)
     #if MULTIPLE_PROBING > 0 || EXTRA_PROBING > 0
@@ -1743,20 +1746,13 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
 #endif
 
 /**
- * Make sure Z_CLEARANCE_FOR_HOMING is below Z_MAX_POS
+ * Make sure Z_CLEARANCE_FOR_HOMING is below Z_MAX_POS and above or equal to 2
  */
 #if HAS_Z_AXIS && !PROUI_EX
   static_assert(Z_CLEARANCE_FOR_HOMING <= Z_MAX_POS, "Z_CLEARANCE_FOR_HOMING must be smaller than or equal to Z_MAX_POS.");
 #endif
-
-/**
- * Make sure Z_AFTER_HOMING or Z_POST_CLEARANCE is greater than or equal to 5
- */
-#ifdef Z_AFTER_HOMING
-  static_assert(Z_AFTER_HOMING >= 5, "Z_AFTER_HOMING must be greater than or equal to 5.");
-#endif
 #ifdef Z_CLEARANCE_FOR_HOMING
-  static_assert(Z_CLEARANCE_FOR_HOMING >= 5, "Z_CLEARANCE_FOR_HOMING must be greater than or equal to 5.");
+  static_assert(Z_CLEARANCE_FOR_HOMING >= 2, "Z_CLEARANCE_FOR_HOMING must be >= 2.");
 #endif
 
 // Check Safe Bed Leveling settings
