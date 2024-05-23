@@ -22,7 +22,7 @@
 #pragma once
 
 // Edited by classicrocker883 for ProUI
-// https://github.com/classicrocker883/MriscocProUI
+// https://github.com/classicrocker883/MRiscoCProUI
 
 // Created by configs generator for Professional firmware
 // https://github.com/mriscoc/Ender3V2S1
@@ -2258,7 +2258,7 @@
  * LCD Backlight Timeout
  * Requires a display with a controllable backlight
  */
-#define LCD_BACKLIGHT_TIMEOUT_MINS 10   // (minutes) Timeout before turning off the backlight
+//#define LCD_BACKLIGHT_TIMEOUT_MINS 10   // (minutes) Timeout before turning off the backlight
 
 #if defined(DISPLAY_SLEEP_MINUTES) || defined(LCD_BACKLIGHT_TIMEOUT_MINS)
   #define EDITABLE_DISPLAY_TIMEOUT      // Edit sleep / backlight timeout with M255 S<minutes> and a menu item
@@ -3949,7 +3949,7 @@
 #define CAPABILITIES_REPORT
 #if ENABLED(CAPABILITIES_REPORT)
   // Include capabilities in M115 output
-  #define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
+  //#define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
   #if ENABLED(EXTENDED_CAPABILITIES_REPORT)
     #define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
   #endif

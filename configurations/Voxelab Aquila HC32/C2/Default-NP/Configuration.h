@@ -22,7 +22,7 @@
 #pragma once
 
 // Edited by classicrocker883 for ProUI
-// https://github.com/classicrocker883/MriscocProUI
+// https://github.com/classicrocker883/MRiscoCProUI
 
 // Created from Mriscoc's Professional Firmware
 // https://github.com/mriscoc/Ender3V2S1
@@ -2746,7 +2746,7 @@
 //
 //  Set this option if CLOCKWISE causes values to DECREASE
 //
-#define REVERSE_ENCODER_DIRECTION   //Aquila enable -- Ender disable
+//#define REVERSE_ENCODER_DIRECTION   //Aquila enable -- Ender disable
 
 //
 // This option reverses the encoder direction for navigating LCD menus.
@@ -3451,13 +3451,13 @@
 //
 // DWIN / DACAI LCD 4.3" 480x272
 
-#define DWIN_LCD_PROUI          // Pro UI by MRiscoC
+//#define DWIN_LCD_PROUI        // Pro UI by MRiscoC
 //#define DACAI_DISPLAY
 //#define TJC_DISPLAY
 
 #if ENABLED(DWIN_LCD_PROUI)
 // Professional firmware features:
-  #define PROUI_EX 1            // Extended UI features (15152 bytes of flash)
+  //#define PROUI_EX 1          // Extended UI features (15152 bytes of flash)
   //#define CV_LASER_MODULE
   #define HAS_GCODE_PREVIEW 1
   #define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)
@@ -3500,7 +3500,7 @@
 // 2.4" 128x64 LCD
 //
 
-//#define CR10_STOCKDISPLAY    //For Ender-3 / Aquila C2 blue/white monochrome LCD
+#define CR10_STOCKDISPLAY      //For Ender-3 / Aquila C2 blue/white monochrome LCD
 #if ENABLED(CR10_STOCKDISPLAY) //BTT_SKR_MINI_E3
   #define RET6_12864_LCD
 #endif
