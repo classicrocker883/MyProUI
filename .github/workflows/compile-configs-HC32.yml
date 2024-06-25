@@ -47,7 +47,7 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=HC32_Default-NP-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=HC32_Default${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -82,8 +82,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-MM:
-    name: Build MM Files
+  Build-MM-EX:
+    name: Build MM EX Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -121,7 +121,7 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=HC32_MM-ProUI${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=HC32_MM-ProUI-EX${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -164,13 +164,14 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL:
+  Build-UBL-PROUI-EX:
     name: Build UBL ProUI/ProUI-EX Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
         temp: [true,false]
         pro: [true,false]
+        bmp: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -203,7 +204,8 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($PRO); then PRTMP=; else PRTMP=-ProUI-EX; fi;
-        echo "filename=HC32_UBL${PRTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
+        echo "filename=HC32${MPTMP}_UBL${PRTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -222,12 +224,21 @@ jobs:
         sed -i "s/.*#define EEPROM_CHITCHAT/\/\/#define EEPROM_CHITCHAT/" Marlin/Configuration.h
         sed -i "s/.*#define USE_GRID_MESHVIEWER 1/\/\/#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
         fi;
+        if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/${MPDEMP}#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
       env:
         TP: ${{ matrix.temp }}
         PRO: ${{ matrix.pro }}
+        BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -243,11 +254,12 @@ jobs:
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
   Build-UBL-IS:
-    name: Build UBL ProUI IS Files
+    name: Build UBL IS Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
         inshape: [true]
+        bmp: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -279,7 +291,8 @@ jobs:
       id: build_configs
       run: |
         if ($IS); then ISTMP=-IS; fi;
-        echo "filename=HC32_UBL-NoPro${ISTMP}.bin" >> $GITHUB_OUTPUT
+        if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
+        echo "filename=HC32${MPTMP}_UBL${ISTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -291,11 +304,20 @@ jobs:
         sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Z/${STEMP}#define INPUT_SHAPING_Z/" Marlin/Configuration_adv.h
+        if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/${MPDEMP}#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
       env:
         IS: ${{ matrix.inshape }}
+        BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -310,12 +332,13 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-BLTouch:
-    name: Build BL-Touch ProUI-EX Files
+  Build-BLT-EX:
+    name: Build BLT EX Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
         inshape: [true,false]
+        bmp: [true,false]
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
@@ -347,7 +370,8 @@ jobs:
       id: build_configs
       run: |
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=HC32_BLT-ProUI${ISTMP}.bin" >> $GITHUB_OUTPUT
+        if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
+        echo "filename=HC32${MPTMP}_BLT-ProUI-EX${ISTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -359,11 +383,20 @@ jobs:
         sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Z/${STEMP}#define INPUT_SHAPING_Z/" Marlin/Configuration_adv.h
+        if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/${MPDEMP}#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/HC32F460C_aquila_101/*.bin temp/build.bin
       env:
         IS: ${{ matrix.inshape }}
+        BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -378,8 +411,8 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-C2-NoProbe:            # CR10 LCD C2 MM/Default
-    name: Build C2 NoProbe Files
+  Build-C2-Default-MM:            # CR10 LCD C2 Default/MM
+    name: Build C2 Default/MM Files
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -423,9 +456,9 @@ jobs:
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         if [ "$ABL" = Default ]; then
-        cp configurations/Voxelab\ Aquila\ HC32/C2/Default-NP/Configuration.h Marlin/Configuration.h
-        cp configurations/Voxelab\ Aquila\ HC32/C2/Default-NP/Configuration_adv.h Marlin/Configuration_adv.h
-        cp configurations/Voxelab\ Aquila\ HC32/C2/Default-NP/Version.h Marlin/Version.h
+        cp configurations/Voxelab\ Aquila\ HC32/C2/Default/Configuration.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila\ HC32/C2/Default/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila\ HC32/C2/Default/Version.h Marlin/Version.h
         elif [ "$ABL" = MM ]; then
         cp configurations/Voxelab\ Aquila\ HC32/C2/MM/Configuration.h Marlin/Configuration.h
         cp configurations/Voxelab\ Aquila\ HC32/C2/MM/Configuration_adv.h Marlin/Configuration_adv.h
