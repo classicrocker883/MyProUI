@@ -1613,7 +1613,7 @@ void HMI_ReturnScreen() {
         case MPC_STARTED:
           DWINUI::Draw_CenteredString(2,HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_MPC_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_MPC_TARGET));
-          DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_FOR_NOZZLE));
+          DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_TEMP_NOZZLE));
           _maxtemp = thermalManager.hotend_max_target(EXT);
           _target = 200;
           break;
