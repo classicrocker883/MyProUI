@@ -1017,7 +1017,7 @@ void onClickSDItem() {
 void onDrawFileName(MenuItemClass* menuitem, int8_t line) {
   const bool is_subdir = !card.flag.workDirIsRoot;
   if (is_subdir && menuitem->pos == 1) {
-    Draw_Menu_Line(line, ICON_ReadEEPROM, ".. Back");
+    Draw_Menu_Line(line, ICON_ReadEEPROM, GET_TEXT_F(MSG_BACK));
   }
   else {
     uint8_t icon;
@@ -1032,7 +1032,7 @@ void Draw_Print_File_Menu() {
   checkkey = Menu;
   if (card.isMounted()) {
     if (SET_MENU(FileMenu, MSG_MEDIA_MENU, nr_sd_menu_items() + 1)) {
-      MenuItemAdd(ICON_Back, GET_TEXT_F(MSG_EXIT_MENU), onDrawMenuItem, Goto_Main_Menu);
+      MenuItemAdd(ICON_Back, GET_TEXT_F(MSG_EXIT_TO_MAIN_MENU), onDrawMenuItem, Goto_Main_Menu);
       for (uint8_t i = 0; i < nr_sd_menu_items(); ++i) {
         MenuItemAdd(onDrawFileName, onClickSDItem);
       }
@@ -1073,7 +1073,7 @@ void DWIN_Draw_Dashboard() {
   DWINUI::Draw_Icon(ICON_MaxSpeedZ, 180, 454);
   _draw_xyz_position(true);
 
-  DWIN_Draw_Rectangle(1, HMI_data.Bottom_Color, 0, 478, DWIN_WIDTH, 479); //changed added 2nd line
+  DWIN_Draw_Rectangle(1, HMI_data.Bottom_Color, 0, 478, DWIN_WIDTH, 479);
 
   TERN_(CV_LASER_MODULE, if (laser_device.is_laser_device()) return;)
 
@@ -1293,7 +1293,7 @@ void HMI_WaitForUser() {
       #if HAS_BED_PROBE
         case Leveling:
           HMI_flag.cancel_lev = true;
-          LCD_MESSAGE_F("Canceling auto leveling...");
+          LCD_MESSAGE(MSG_CANCEL_ABL);
           DWIN_UpdateLCD();
           break;
       #endif
@@ -1443,8 +1443,8 @@ void EachMomentUpdate() {
     DWINUI::ClearMainArea();
     Draw_Popup_Bkgd();
     DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_OUTAGE_RECOVERY));
-    DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 147, F("It looks like the last"));
-    DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 167, F("file was interrupted."));
+    DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 147, GET_TEXT_F(MSG_OUTAGE_RECOVERY2));
+    DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 167, GET_TEXT_F(MSG_OUTAGE_RECOVERY2));
     DWINUI::Draw_Button(BTN_Cancel, 26, 280);
     DWINUI::Draw_Button(BTN_Continue, 146, 280);
     MediaFile *dir = nullptr;
@@ -1622,7 +1622,7 @@ void HMI_ReturnScreen() {
         case PID_EXTR_START:
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_PID_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_PID_TARGET));
-          DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_FOR_NOZZLE));
+          DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_TEMP_NOZZLE));
           _maxtemp = thermalManager.hotend_max_target(EXT);
           _target = HMI_data.HotendPIDT;
           break;
@@ -1631,7 +1631,7 @@ void HMI_ReturnScreen() {
         case PID_BED_START:
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_PID_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_PID_TARGET));
-          DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_FOR_BED));
+          DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_TEMP_BED));
           _maxtemp = BED_MAX_TARGET;
           _target = HMI_data.BedPIDT;
           break;
@@ -1640,7 +1640,7 @@ void HMI_ReturnScreen() {
         case PID_CHAMBER_START:
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_PID_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_PID_TARGET));
-          DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_FOR_CHAMBER));
+          DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_TEMP_CHAMBER));
           _maxtemp = CHAMBER_MAX_TARGET;
           _target = HMI_data.ChamberPIDT;
           break;
@@ -1667,14 +1667,14 @@ void HMI_ReturnScreen() {
           case PID_EXTR_START:
         #endif
             Title.ShowCaption(GET_TEXT_F(MSG_HOTEND_TEMP_GRAPH));
-            DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_NOZZLE_TEMPERATURE));
+            DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_TEMP_NOZZLE));
             _maxtemp = thermalManager.hotend_max_target(EXT);
             _target = thermalManager.degTargetHotend(EXT);
             break;
         #if ENABLED(PIDTEMPBED)
           case PID_BED_START:
             Title.ShowCaption(GET_TEXT_F(MSG_BED_TEMP_GRAPH));
-            DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_BED_TEMPERATURE));
+            DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_TEMP_BED));
             _maxtemp = BED_MAX_TARGET;
             _target = thermalManager.degTargetBed();
             break;
@@ -1718,23 +1718,23 @@ void HMI_ReturnScreen() {
   void DWIN_PIDTuning(tempcontrol_t result) {
     HMI_value.tempControl = result;
     switch (result) {
-      #if ENABLED(PIDTEMPBED)
-        case PID_BED_START:
-          HMI_SaveProcessID(PIDProcess);
-          #if PROUI_TUNING_GRAPH
-            DWIN_Draw_PID_MPC_Popup();
-          #else
-            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_BED_RUN));
-          #endif
-          break;
-      #endif
       #if ENABLED(PIDTEMP)
         case PID_EXTR_START:
           HMI_SaveProcessID(PIDProcess);
           #if PROUI_TUNING_GRAPH
             DWIN_Draw_PID_MPC_Popup();
           #else
-            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_NOZZLE_RUN));
+            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_NOZZLE));
+          #endif
+          break;
+      #endif
+      #if ENABLED(PIDTEMPBED)
+        case PID_BED_START:
+          HMI_SaveProcessID(PIDProcess);
+          #if PROUI_TUNING_GRAPH
+            DWIN_Draw_PID_MPC_Popup();
+          #else
+            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_BED));
           #endif
           break;
       #endif
@@ -1744,7 +1744,7 @@ void HMI_ReturnScreen() {
           #if PROUI_TUNING_GRAPH
             DWIN_Draw_PID_MPC_Popup();
           #else
-            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_CHAMBER_RUN));
+            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_CHAMBER));
           #endif
           break;
       #endif
@@ -2563,7 +2563,7 @@ void ApplyMove() {
     queue.inject(F(TERN(AUTO_BED_LEVELING_UBL, "G29P1", "G29")));
   }
   // Mesh Popup
-  void PopUp_StartAutoLev() { DWIN_Popup_ConfirmCancel(ICON_Leveling_1, F("Start Auto Bed Leveling?")); }
+  void PopUp_StartAutoLev() { DWIN_Popup_ConfirmCancel(ICON_Leveling_1, GET_TEXT_F(MSG_START_ABL)); }
   void OnClick_StartAutoLev() {
     if (HMI_flag.select_flag) { AutoLev(); }
     else { HMI_ReturnScreen(); }
@@ -2868,8 +2868,8 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     probe.stow();
 
     if (HMI_data.CalcAvg) {
-      DWINUI::Draw_CenteredString(140, F("Calculating average"));
-      DWINUI::Draw_CenteredString(160, F("and relative heights"));
+      DWINUI::Draw_CenteredString(140, GET_TEXT_F(MSG_CALCULATING_AVERAGE));
+      DWINUI::Draw_CenteredString(160, GET_TEXT_F(MSG_AND_RELATIVE_HEIGHTS));
       safe_delay(1000);
       float avg = 0.0f;
       for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) avg += zval[x][y];
@@ -2877,7 +2877,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
       for (uint8_t x = 0; x < 2; ++x) for (uint8_t y = 0; y < 2; ++y) zval[x][y] -= avg;
       MeshViewer.DrawMesh(zval, 2, 2);
     }
-    else { DWINUI::Draw_CenteredString(100, F("Finding True value")); }
+    else { DWINUI::Draw_CenteredString(100, GET_TEXT_F(MSG_FINDING_TRUE_VALUE)); }
     safe_delay(1000);
     ui.reset_status();
 
@@ -2898,8 +2898,8 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
       }
     }
     if (fabsf(MeshViewer.max - MeshViewer.min) < BED_TRAMMING_PROBE_TOLERANCE || UNEAR_ZERO(max)) {
-      DWINUI::Draw_CenteredString(140, F("Corners leveled"));
-      DWINUI::Draw_CenteredString(160, F("Tolerance achieved!"));
+      DWINUI::Draw_CenteredString(140, GET_TEXT_F(MSG_CORNERS_LEVELED));
+      DWINUI::Draw_CenteredString(160, GET_TEXT_F(MSG_CORNERS_NOT_LEVELED));
     }
     else {
       switch (p) {
@@ -2909,9 +2909,9 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
         case 0b11 : plabel = GET_TEXT_F(MSG_TRAM_BR); break;
         default   : plabel = F(""); break;
       }
-      DWINUI::Draw_CenteredString(120, F("Corners not leveled"));
-      DWINUI::Draw_CenteredString(140, F("Knob adjustment required"));
-      DWINUI::Draw_CenteredString((s ? Color_Green : Color_Error_Red), 160, (s ? GET_TEXT_F(MSG_TRAMWIZ_LOWER) : GET_TEXT_F(MSG_TRAMWIZ_RAISE)));
+      DWINUI::Draw_CenteredString(120, GET_TEXT_F(MSG_CORNERS_NOT_LEVELED));
+      DWINUI::Draw_CenteredString(140, GET_TEXT_F(MSG_KNOB_ADJUSTMENT_REQUIRED));
+      DWINUI::Draw_CenteredString((s ? Color_Green : Color_Error_Red), 160, (s ? GET_TEXT_F(MSG_LOWER) : GET_TEXT_F(MSG_RAISE)));
       DWINUI::Draw_CenteredString(HMI_data.StatusTxt_Color, 180, plabel);
     }
     DWINUI::Draw_Button(BTN_Continue, 86, 305, true);
@@ -2928,7 +2928,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
   }
 
   // Trammingwizard Popup
-  void PopUp_StartTramwiz() { DWIN_Popup_ConfirmCancel(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), F("Start Tramming Wizard?")); }
+  void PopUp_StartTramwiz() { DWIN_Popup_ConfirmCancel(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_TRAMMING_WIZARD_POPUP)); }
   void OnClick_StartTramwiz() {
     if (HMI_flag.select_flag) {
       if (HMI_data.FullManualTramming) {
@@ -3274,7 +3274,7 @@ void Draw_Move_Menu() {
     EDIT_ITEM(ICON_AxisC, MSG_LIVE_MOVE, onDrawChkbMenu, SetLiveMove, &EnableLiveMove);
   }
   UpdateMenu(MoveMenu);
-  if (!all_axes_trusted()) { LCD_MESSAGE_F("..WARNING: Current position is unknown, Home axes."); }
+  if (!all_axes_trusted()) { LCD_MESSAGE(MSG_POSITION_UNKNOWN); }
 }
 
 #if HAS_HOME_OFFSET
@@ -4170,8 +4170,8 @@ void Draw_MaxAccel_Menu() {
     DWINUI::Draw_Icon(ICON_Cancel, ICOX + 206, 92 + 4 * MLINE);
     DWIN_Draw_HLine(HMI_data.SplitLine_Color, 16, MYPOS(4 + 2), 240);
 
-    if (!axis_is_trusted(Z_AXIS)) { LCD_MESSAGE_F("..CAUTION: Unknown Z position, Home Z axis."); }
-    else { LCD_MESSAGE_F("..Center Nozzle - As Nozzle touches bed, save Z-Offset."); }
+    if (!axis_is_trusted(Z_AXIS)) { LCD_MESSAGE(MSG_POSITION_UNKNOWN_Z); }
+    else { LCD_MESSAGE(MSG_CENTER_NOZZLE); }
   }
 #endif
 
@@ -4273,7 +4273,7 @@ void Draw_MaxAccel_Menu() {
     void SetAutoMovToMesh() { Toggle_Chkb_Line(AutoMovToMesh); }
 
     // Zero or Reset Bed Mesh Values
-    void Popup_ResetMesh() { DWIN_Popup_ConfirmCancel(ICON_Info_0, F("Reset Current Mesh?")); }
+    void Popup_ResetMesh() { DWIN_Popup_ConfirmCancel(ICON_Info_0, GET_TEXT_F(MSG_RESET_MESH)); }
     void OnClick_ResetMesh() {
       if (HMI_flag.select_flag) {
         HMI_ReturnScreen();
@@ -4613,7 +4613,7 @@ void Draw_AdvancedSettings_Menu() {
     #endif
     #if ENABLED(SOUND_MENU_ITEM)
       EDIT_ITEM(ICON_Sound, MSG_TICK, onDrawChkbMenu, SetEnableTick, &ui.tick_on);
-      EDIT_ITEM(ICON_Sound, MSG_SOUND, onDrawChkbMenu, SetEnableSound, &ui.sound_on);
+      EDIT_ITEM(ICON_Sound, MSG_SOUND_ENABLE, onDrawChkbMenu, SetEnableSound, &ui.sound_on);
     #endif
     #if HAS_GCODE_PREVIEW
       EDIT_ITEM(ICON_File, MSG_HAS_PREVIEW, onDrawChkbMenu, SetPreview, &HMI_data.EnablePreview);
@@ -4673,7 +4673,7 @@ void Draw_AdvancedSettings_Menu() {
       #endif
       #if ENABLED(SOUND_MENU_ITEM)
         EDIT_ITEM(ICON_Sound, MSG_TICK, onDrawChkbMenu, SetEnableTick, &ui.tick_on);
-        EDIT_ITEM(ICON_Sound, MSG_SOUND, onDrawChkbMenu, SetEnableSound, &ui.sound_on);
+        EDIT_ITEM(ICON_Sound, MSG_SOUND_ENABLE, onDrawChkbMenu, SetEnableSound, &ui.sound_on);
       #endif
       #if HAS_GCODE_PREVIEW
         EDIT_ITEM(ICON_File, MSG_HAS_PREVIEW, onDrawChkbMenu, SetPreview, &HMI_data.EnablePreview);

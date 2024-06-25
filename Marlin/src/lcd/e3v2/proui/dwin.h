@@ -100,22 +100,22 @@ typedef struct {
 } rgb_t;
 
 typedef struct {
-  rgb_t Color;                        // Color
+  rgb_t Color; // Color
   #if ANY(HAS_PID_HEATING, MPCTEMP)
     tempcontrol_t tempControl = AUTOTUNE_DONE;
   #endif
-  uint8_t Select = 0;                 // Auxiliary selector variable
-  AxisEnum axis = X_AXIS;             // Axis Select
+  uint8_t Select = 0;     // Auxiliary selector variable
+  AxisEnum axis = X_AXIS; // Axis Select
 } HMI_value_t;
 
 extern HMI_value_t HMI_value;
 
 typedef struct {
-  bool printing_flag:1; // sd or host printing
-  bool abort_flag:1;    // sd or host was aborted
-  bool pause_flag:1;    // printing is paused
+  bool printing_flag:1; // SD or host printing
+  bool abort_flag:1;    // SD or host was aborted
+  bool pause_flag:1;    // Printing is paused
   bool select_flag:1;   // Popup button selected
-  bool cancel_lev:1;    // cancel current abl
+  bool cancel_lev:1;    // Cancel current ABL
 } HMI_flag_t;
 
 extern HMI_flag_t HMI_flag;

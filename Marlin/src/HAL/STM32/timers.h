@@ -37,7 +37,7 @@
 // implementation is deferred until the desire for a 32-bit range outweighs the cost
 // of adding a run-time check and HAL_TIMER_TYPE_MAX is refactored to allow unique
 // values for each timer.
-#define hal_timer_t uint32_t
+typedef uint32_t hal_timer_t;
 #define HAL_TIMER_TYPE_MAX UINT16_MAX
 
 // Marlin timer_instance[] content (unrelated to timer selection)

@@ -32,13 +32,13 @@
   #include "bedlevel_tools.h"
 #endif
 
-bool meshredraw;                            // Redraw mesh points
-uint8_t sizex, sizey;                       // Mesh XY size
-uint8_t rmax;                               // Maximum radius
-#define margin 25                           // XY Margins
-#define rmin   5                            // Minimum radius
-#define zmin -20                            // rmin at z=-0.20
-#define zmax  20                            // rmax at z= 0.20
+bool meshredraw;      // Redraw mesh points
+uint8_t sizex, sizey; // Mesh XY size
+uint8_t rmax;         // Maximum radius
+#define margin 25     // XY Margins
+#define rmin   5      // Minimum radius
+#define zmin -20      // rmin at z=-0.20
+#define zmax  20      // rmax at z= 0.20
 #define width DWIN_WIDTH - 2 * margin
 #define r(z) ((z - zmin) * (rmax - rmin) / (zmax - zmin) + rmin)
 #define px(xp) (margin + (xp) * (width) / (sizex - 1))
@@ -81,7 +81,7 @@ void MeshViewerClass::DrawMeshPoint(const uint8_t x, const uint8_t y, const floa
   else {
     char msg[9]; msg[0] = '\0';
     switch (v) {
-      case -999 ... -100:  // -9.99 .. -1.00 || 1.00 .. 9.99
+      case -999 ... -100: // -9.99 .. -1.00 || 1.00 .. 9.99
       case  100 ...  999: DWINUI::Draw_Signed_Float(MeshViewer.meshfont, 1, 1, px(x) - 3 * fs, fy, z); break;
       case  -99 ...   -1: sprintf_P(msg, PSTR("-.%2i"), -v); break; // -0.99 .. -0.01 mm
       case    1 ...   99: sprintf_P(msg, PSTR( ".%2i"),  v); break; //  0.01 ..  0.99 mm
@@ -118,7 +118,7 @@ void MeshViewerClass::Draw(const bool withsave/*=false*/, const bool redraw/*=tr
   }
 
   if (withsave) {
-    DWIN_Draw_Box(1, HMI_data.Background_Color, 120, 300, 33, 48); // draw black box to fill previous button select_box
+    DWIN_Draw_Box(1, HMI_data.Background_Color, 120, 300, 33, 48); // Draw black box to fill previous button select_box
     DWINUI::Draw_Button(BTN_Save, 26, 305);
     DWINUI::Draw_Button(BTN_Continue, 146, 305);
     Draw_Select_Highlight(HMI_flag.select_flag, 305);

@@ -145,19 +145,19 @@
   #define Z_MAX_POS  (float)PRO_data.z_max_pos
   #define NOZZLE_PARK_POINT {(float)PRO_data.Park_point.x, (float)PRO_data.Park_point.y, (float)PRO_data.Park_point.z}
   #if HAS_MESH
-    #undef GRID_MAX_POINTS_X
-    #undef GRID_MAX_POINTS_Y
-    #undef GRID_MAX_POINTS
+    #undef  GRID_MAX_POINTS_X
+    #undef  GRID_MAX_POINTS_Y
+    #undef  GRID_MAX_POINTS
     #define GRID_MAX_POINTS_X PRO_data.grid_max_points
     #define GRID_MAX_POINTS_Y PRO_data.grid_max_points
     #define GRID_MAX_POINTS  (PRO_data.grid_max_points * PRO_data.grid_max_points)
   #endif
   #if HAS_BED_PROBE
-    #undef Z_PROBE_FEEDRATE_SLOW
+    #undef  Z_PROBE_FEEDRATE_SLOW
     #define Z_PROBE_FEEDRATE_SLOW PRO_data.zprobefeedslow
   #endif
   #if HAS_EXTRUDERS
-    #undef INVERT_E0_DIR
+    #undef  INVERT_E0_DIR
     #define INVERT_E0_DIR PRO_data.Invert_E0
   #endif
 
@@ -181,22 +181,22 @@
     #define GRID_MAX_POINTS  (HMI_data.grid_max_points * HMI_data.grid_max_points)
   #endif
   #if HAS_BED_PROBE
-    #undef Z_PROBE_FEEDRATE_SLOW
+    #undef  Z_PROBE_FEEDRATE_SLOW
     #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobeFeed
   #endif
   #if HAS_EXTRUDERS
-    #undef INVERT_E0_DIR
+    #undef  INVERT_E0_DIR
     #define INVERT_E0_DIR HMI_data.Invert_E0
   #endif
 #endif // PROUI_EX
 
- #if ENABLED(PROUI_MESH_EDIT)
-   #undef  MESH_MIN_X
-   #undef  MESH_MAX_X
-   #undef  MESH_MIN_Y
-   #undef  MESH_MAX_Y
-   #define MESH_MIN_X HMI_data.mesh_min_x
-   #define MESH_MAX_X HMI_data.mesh_max_x
-   #define MESH_MIN_Y HMI_data.mesh_min_y
-   #define MESH_MAX_Y HMI_data.mesh_max_y
- #endif
+#if ENABLED(PROUI_MESH_EDIT)
+  #undef  MESH_MIN_X
+  #undef  MESH_MAX_X
+  #undef  MESH_MIN_Y
+  #undef  MESH_MAX_Y
+  #define MESH_MIN_X HMI_data.mesh_min_x
+  #define MESH_MAX_X HMI_data.mesh_max_x
+  #define MESH_MIN_Y HMI_data.mesh_min_y
+  #define MESH_MAX_Y HMI_data.mesh_max_y
+#endif

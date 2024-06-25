@@ -164,7 +164,7 @@ float BedLevelToolsClass::get_min_value() {
 
 // Return 'true' if mesh is good and within LCD limits
 bool BedLevelToolsClass::meshValidate() {
-  if ((MESH_MAX_X <= MESH_MIN_X) || (MESH_MAX_Y <= MESH_MIN_Y)) return false;
+  TERN_(PROUI_MESH_EDIT, if ((MESH_MAX_X <= MESH_MIN_X) || (MESH_MAX_Y <= MESH_MIN_Y)) return false;)
   GRID_LOOP(x, y) {
     const float z = bedlevel.z_values[x][y];
     if (isnan(z) || !WITHIN(z, Z_OFFSET_MIN, Z_OFFSET_MAX)) return false;
@@ -212,10 +212,10 @@ bool BedLevelToolsClass::meshValidate() {
       // Draw value text on
       const uint8_t fs = DWINUI::fontWidth(MeshViewer.meshfont);
       const int8_t offset_y = cell_height_px / 2 - fs;
-      if (isnan(z)) { // undefined
+      if (isnan(z)) { // Undefined
         DWIN_Draw_String(false, MeshViewer.meshfont, DWINUI::textcolor, DWINUI::backcolor, start_x_px + cell_width_px / 2 - 5, start_y_px + offset_y, F("X"));
       }
-      else {          // has value
+      else {          // Has value
         MString<12> msg;
         if ((GRID_MAX_POINTS_X) >= TERN(TJC_DISPLAY, 8, 10))
           msg.setf(F("%02i"), uint16_t(z * 100) % 100);
@@ -232,7 +232,7 @@ bool BedLevelToolsClass::meshValidate() {
   }
 
   void BedLevelToolsClass::Set_Mesh_Viewer_Status() {
-    /// TODO: draw gradient with values as a legend instead
+    /// TODO: Draw gradient with values as a legend instead
     float v_max = abs(get_max_value()), v_min = abs(get_min_value()), rmax = _MAX(v_min, v_max), rmin = _MIN(v_min, v_max);
     if (rmax > 3e+10f) { rmax = 0.0000001f; }
     if (rmin > 3e+10f) { rmin = 0.0000001f; }

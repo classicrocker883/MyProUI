@@ -103,8 +103,8 @@ EncoderState encoderReceiveAnalyze() {
 
     #if ENABLED(ENCODER_RATE_MULTIPLIER)
       #if ENABLED(ENC_MENU_ITEM)
-        uint16_t a = ui.enc_rateA;
-        uint16_t b = ui.enc_rateB;
+        uint16_t a = ui.enc_rateA,
+                 b = ui.enc_rateB;
       #endif
       const millis_t ms = millis();
 

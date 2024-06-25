@@ -34,6 +34,10 @@
   #include "../../feature/probe_temp_comp.h"
 #endif
 
+#if ANY(DWIN_LCD_PROUI, EXTENSIBLE_UI)
+  #define VERBOSE_SINGLE_PROBE
+#endif
+
 /**
  * G30: Do a single Z probe at the given XY (default: current)
  *
@@ -66,7 +70,7 @@ void GcodeSuite::G30() {
 
     remember_feedrate_scaling_off();
 
-    TERN_(DWIN_LCD_PROUI, process_subcommands_now(F("G28O"));)
+    TERN_(VERBOSE_SINGLE_PROBE, process_subcommands_now(F("G28O")));
 
     const ProbePtRaise raise_after = parser.boolval('E', true) ? PROBE_PT_STOW : PROBE_PT_NONE;
 
@@ -81,7 +85,7 @@ void GcodeSuite::G30() {
         F(   " Z:"), p_float_t(measured_z, 3)
       );
       msg.echoln();
-      TERN_(DWIN_LCD_PROUI, ui.set_status(msg);)
+      TERN_(VERBOSE_SINGLE_PROBE, ui.set_status(msg));
     }
 
     restore_feedrate_and_scaling();

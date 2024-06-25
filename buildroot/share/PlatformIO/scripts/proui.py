@@ -7,11 +7,9 @@
 # ------------------------------------------------------------------------------
 
 import shutil
-import os
 
 libpath = "Marlin/lib/proui/"
 libfile = libpath+'libproui.a'
-from SCons.Script import Import
 from SCons.Script import DefaultEnvironment
 env = DefaultEnvironment()
 Import("env")

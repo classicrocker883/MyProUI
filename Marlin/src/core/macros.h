@@ -36,13 +36,13 @@
 #define _FORCE_INLINE_ __attribute__((__always_inline__)) __inline__
 #define  FORCE_INLINE  __attribute__((always_inline)) inline
 #define NO_INLINE      __attribute__((noinline))
-#define _UNUSED      __attribute__((unused))
-#define __O0         __attribute__((optimize("O0")))  // No optimization and less debug info
-#define __Og         __attribute__((optimize("Og")))  // Optimize the debugging experience
-#define __Os         __attribute__((optimize("Os")))  // Optimize for size
-#define __O1         __attribute__((optimize("O1")))  // Try to reduce size and cycles; nothing that takes a lot of time to compile
-#define __O2         __attribute__((optimize("O2")))  // Optimize even more
-#define __O3         __attribute__((optimize("O3")))  // Optimize yet more
+#define _UNUSED        __attribute__((unused))
+#define __O0           __attribute__((optimize("O0"))) // No optimization and less debug info
+#define __Og           __attribute__((optimize("Og"))) // Optimize the debugging experience
+#define __Os           __attribute__((optimize("Os"))) // Optimize for size
+#define __O1           __attribute__((optimize("O1"))) // Try to reduce size and cycles; nothing that takes a lot of time to compile
+#define __O2           __attribute__((optimize("O2"))) // Optimize even more
+#define __O3           __attribute__((optimize("O3"))) // Optimize yet more
 
 #define IS_CONSTEXPR(...) __builtin_constant_p(__VA_ARGS__) // Only valid solution with C++14. Should use std::is_constant_evaluated() in C++20 instead
 
@@ -55,12 +55,9 @@
   #define CYCLES_PER_MICROSECOND (F_CPU / 1000000UL) // 16 or 20 on AVR
 #endif
 
-// Nanoseconds per cycle
-#define NANOSECONDS_PER_CYCLE (1000000000.0 / F_CPU)
-
 // Macros to make a string from a macro
 #define STRINGIFY_(M) #M
-#define STRINGIFY(M) STRINGIFY_(M)
+#define STRINGIFY( M) STRINGIFY_(M)
 
 #define A(CODE) " " CODE "\n\t"
 #define L(CODE) CODE ":\n\t"
@@ -142,10 +139,6 @@
 #define SECOND(a,b,...)   b
 #define THIRD( a,b,c,...) c
 
-// Concatenate symbol names, without or with pre-expansion
-#define _CAT(a,V...) a##V
-#define CAT( a,V...) _CAT(a,V)
-
 // Defer expansion
 #define EMPTY()
 #define DEFER( M) M EMPTY()
@@ -154,7 +147,6 @@
 #define DEFER4(M) M EMPTY EMPTY EMPTY EMPTY()()()()
 
 // Force define expansion
-#define EVAL           EVAL16
 #define EVAL1(V...)    V
 #define EVAL2(V...)    EVAL1(EVAL1(V))
 #define EVAL4(V...)    EVAL2(EVAL2(V))
@@ -168,6 +160,11 @@
 #define EVAL1024(V...) EVAL512(EVAL512(V))
 #define EVAL2048(V...) EVAL1024(EVAL1024(V))
 #define EVAL4096(V...) EVAL2048(EVAL2048(V))
+#define EVAL(V...)     EVAL16(V)
+
+// Concatenate symbol names, without or with pre-expansion
+#define _CAT(a,V...) a##V
+#define CAT( a,V...) _CAT(a,V)
 
 #define IS_PROBE(V...) SECOND(V, 0)     // Get the second item passed, or 0
 #define PROBE() ~, 1                    // Second item will be 1 if this is passed
@@ -175,22 +172,22 @@
 #define NOT(x) IS_PROBE(_CAT(_NOT_, x)) //   NOT('0') gets '1'. Anything else gets '0'.
 #define _BOOL(x) NOT(NOT(x))            // _BOOL('0') gets '0'. Anything else gets '1'.
 
+#define _END_OF_ARGUMENTS_() 0
+#define HAS_ARGS(V...) _BOOL(FIRST(_END_OF_ARGUMENTS_ V)())
+
 #define _IF_ELSE(TF) _CAT(_IF_, TF)
 #define IF_ELSE(TF) _IF_ELSE(_BOOL(TF))
 
-#define _IF_1(V...) V _IF_1_ELSE
-#define _IF_0(...)    _IF_0_ELSE
-
 #define _IF_1_ELSE(...)
 #define _IF_0_ELSE(V...) V
+
+#define _IF_1(V...) V _IF_1_ELSE
+#define _IF_0(...)    _IF_0_ELSE
 
 // Simple Inline IF Macros, friendly to use in other macro definitions
 #define IF(O, A, B) ((O) ? (A) : (B))
 #define IF_0(O, A) IF(O, A, 0)
 #define IF_1(O, A) IF(O, A, 1)
-
-#define _END_OF_ARGUMENTS_() 0
-#define HAS_ARGS(V...) _BOOL(FIRST(_END_OF_ARGUMENTS_ V)())
 
 // Use NUM_ARGS(__VA_ARGS__) to get the number of variadic arguments
 #define _NUM_ARGS(_,n,m,l,k,j,i,h,g,f,e,d,c,b,a,Z,Y,X,W,V,U,T,S,R,Q,P,O,N,M,L,K,J,I,H,G,F,E,D,C,B,A,OUT,...) OUT
@@ -258,8 +255,8 @@
 #define ENABLED(V...)       DO(ENA,&&,V)
 #define DISABLED(V...)      DO(DIS,&&,V)
 #define ANY(V...)          !DISABLED(V)
-#define ALL                 ENABLED
-#define NONE                DISABLED
+#define ALL(V...)           ENABLED(V)
+#define NONE(V...)          DISABLED(V)
 #define COUNT_ENABLED(V...) DO(ENA,+,V)
 #define MANY(V...)          (COUNT_ENABLED(V) > 1)
 
@@ -667,6 +664,7 @@
 #define SUB8( N) SUB4(SUB4(N))
 #define SUB9( N) SUB4(SUB5(N))
 #define SUB10(N) SUB5(SUB5(N))
+#define DIFF(A,B) _CAT(SUB,A)(B)
 
 //
 // REPEAT core macros. Recurse N times with ascending I.

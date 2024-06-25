@@ -1670,7 +1670,6 @@ void MarlinSettings::postprocess() {
       xyz_float_t backlash_distance_mm;
       LOOP_NUM_AXES(axis) backlash_distance_mm[axis] = backlash.get_distance_mm((AxisEnum)axis);
       const uint8_t backlash_correction = backlash.get_correction_uint8();
-
       #if ENABLED(BACKLASH_GCODE) && defined(BACKLASH_SMOOTHING_MM)
         const float backlash_smoothing_mm = backlash.get_smoothing_mm();
       #else

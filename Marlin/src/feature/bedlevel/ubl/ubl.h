@@ -122,8 +122,8 @@ public:
   #endif
 
   #if DISABLED(DWIN_LCD_PROUI)
-    static const bed_mesh_t _mesh_index_to_xpos,
-                            _mesh_index_to_ypos;
+    static const float _mesh_index_to_xpos[GRID_MAX_POINTS_X],
+                       _mesh_index_to_ypos[GRID_MAX_POINTS_Y];
   #endif
 
   #if HAS_MARLINUI_MENU

@@ -181,7 +181,7 @@ class Protocol(object):
             except ReadTimeout:
                 self.errors += 1
                 #print("Packetloss detected..")
-            except serial.serialutil.SerialException:
+            except serial.SerialException:
                 return
         self.packet_transit = None
 
