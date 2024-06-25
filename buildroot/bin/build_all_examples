@@ -31,7 +31,7 @@ Usage: $SELF [-b|--branch=<branch>] [-d|--debug] [-i|--ini] [-r|--resume=<path>]
 }
 
 # Assume the most recent configs
-BRANCH="2024-May"
+BRANCH="2024-June"
 unset FIRST_CONF
 EXIT_USAGE=
 LIMIT=1000

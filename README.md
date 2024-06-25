@@ -3,9 +3,9 @@
 
 ![CI Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-unit-tests.yml/badge.svg)
 ![GitHub contributors](https://img.shields.io/github/contributors/classicrocker883/MRiscoCProUI.svg)
-![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MRiscoCProUI.svg)  
-[![Aquila Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)  
-![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)  
+![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MRiscoCProUI.svg)
+[![Aquila Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)
+![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)
 ![Ender Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs_Ender.yml/badge.svg)
 
 **Don't forget to checkout the [thingiverse](https://www.thingiverse.com/classicrocker883/designs) models I designed
@@ -28,7 +28,7 @@
 
 ### - Please read this: -
 > [!NOTE]
-Many Updates have been included in the most recent MRiscoCProUI for the **2024-May** release.
+Many Updates have been included in the most recent MRiscoCProUI for the **2024-June** release.
 This release has many changes to the **UI**.
 New ICON's have been added, and old ones enhanced. Whoever edited them before saved directly as .*JPG* which in many editors lowers the quality of the image. I painstakingly remastered almost every single one; preserving the original quality.
 
@@ -47,9 +47,9 @@ New ICON's have been added, and old ones enhanced. Whoever edited them before sa
 > HC32 support has recently been added to the [Marlin Firmware](https://github.com/MarlinFirmware/Marlin) repository. Please post any [Issues](https://github.com/MarlinFirmware/Marlin/issues) there first, otherwise if there are any ProUI specific issues or anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MRiscoCProUI/issues) here.
 
 > [!NOTE]
-> Previous Issue of it restarting when saving/store settings has been fixed in the more recent ProUI version (October Rev.1).  
-_HOWEVER_, now there is a current Issue to be addressed:  
-The screen may **freeze and restart** when the SD card is inserted. This means that everything *so far* seems to work correctly as it should, except for when an **SD card is inserted**, so printing may not be possible *unless* you use USB serial interface to upload the file (through a slicer or something like Pronterface).  
+> Previous Issue of it restarting when saving/store settings has been fixed in the more recent ProUI version (October Rev.1).
+_HOWEVER_, now there is a current Issue to be addressed:
+The screen may **freeze and restart** when the SD card is inserted. This means that everything *so far* seems to work correctly as it should, except for when an **SD card is inserted**, so printing may not be possible *unless* you use USB serial interface to upload the file (through a slicer or something like Pronterface).
 If this is an inconvenience then you can use an earlier version which can allow the **SD Card** to be used.
 <br>
 

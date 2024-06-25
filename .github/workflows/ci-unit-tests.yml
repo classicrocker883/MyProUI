@@ -9,7 +9,7 @@ on:
   pull_request:
     branches:
     #- HEAD need to be tested
-    - 2024-May
+    - 2024-June
     paths-ignore:
     - config/**
     - data/**
@@ -18,7 +18,7 @@ on:
   push:
     branches:
     #- HEAD need to be tested
-    - 2024-May
+    - 2024-June
     paths-ignore:
     - config/**
     - data/**
