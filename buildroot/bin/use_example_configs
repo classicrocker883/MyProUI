@@ -20,7 +20,7 @@ which wget >/dev/null && TOOL='wget -q -O wgot'
 CURR=$(git branch 2>/dev/null | grep ^* | sed 's/\* //g')
 case "$CURR" in
 2024-* ) BRANCH=$CURR ;;
-* ) BRANCH=2024-June ;;
+* ) BRANCH=2024-July ;;
 
 esac
 

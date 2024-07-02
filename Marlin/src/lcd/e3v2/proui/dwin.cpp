@@ -2269,6 +2269,8 @@ void MarlinUI::init_lcd() {
   DWIN_UpdateLCD();
 }
 
+void MarlinUI::clear_lcd() {}
+
 void MarlinUI::update() {
   HMI_SDCardUpdate();  // SD card update
   EachMomentUpdate();  // Status update
