@@ -1,11 +1,10 @@
 # Professional Firmware for the Voxelab Aquila and Creality Ender-3 3D Printers
 **_<sup>(or any other compatible 3D Printer)</sup>_**
 
-![CI Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-unit-tests.yml/badge.svg)
-![GitHub contributors](https://img.shields.io/github/contributors/classicrocker883/MRiscoCProUI.svg)
-![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MRiscoCProUI.svg)
-[![Aquila Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)
-![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)
+![CI Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-unit-tests.yml/badge.svg)  
+![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MRiscoCProUI.svg)  
+[![Aquila Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)  
+![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)  
 ![Ender Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs_Ender.yml/badge.svg)
 
 **Don't forget to checkout the [thingiverse](https://www.thingiverse.com/classicrocker883/designs) models I designed
@@ -85,25 +84,28 @@ There is a *MarlinSimulator.exe* file provided to test out for yourself. It simu
 
 To create your own MarlinSimulator with you own build, start by changing in Configuration.h **MOTHERBOARD** to *BOARD_SIMULATED*, also disable `ENDSTOP_INTERRUPTS_FEATURE` and `PROUI_EX`, and then in platformio.ini **default_envs =** change to *simulator_windows*. The MarlinSimulator can only compile for Manual Mesh Bed Leveling for now, so make sure your configuration is set for `MESH_BED_LEVELING`.
 
-Then you have to extract **SDL2-devel-2.28.4-mingw.zip** from /**docs**. To install SDL, navigate to the SDL2 directory in *MSYS2 MINGW64* terminal (Run as Administrator)ls and type:
->
->     make cross
->
-If you receive an error, then try the following:
->
->     make install-package arch=x86_64-w64-mingw32 prefix=/usr
->
-You can use instead a 32-bit version by passing:
->
+Then you have to extract **SDL2-devel-2.30.5-mingw.zip** from /**docs**.  
+You can either copy/paste the files directly, or install them.
+
+32-bit files are in \i686-w64-mingw32  
+64-bit files are in \x86_64-w64-mingw32  
+Navigate to the SDL2 directory in an *MSYS2 MINGW64* terminal (Run as Administrator):
+
+To install SDL for native (32-bit) development:
 >     make native
->
 
-32-bit files are in \i686-w64-mingw32 if you use `make native`. Then **copy** the contents of ~\SDL2-2.28.4\x86_64-w64-mingw32\include\SDL2\\* into ~\.pio\libdeps\simulator_windows\\**imgui**
--OR-
-Copy the just folder ~\SDL2-2.28.4\x86_64-w64-mingw32\include\\**SDL2** into the directory ~\libdeps\\*simulator_windows*
-You may have to first Build so the directory can be created.
+To install SDL for cross-compiling development:
+>     make cross
 
-Once all that is done, just build like you would normally and *MarlinSimulator.exe* will be created.
+Recommended for 64-bit - If you receive an error, then try the following:
+>     make install-package arch=x86_64-w64-mingw32 prefix=/usr
+
+You may have to first Build so the directory can be created, but you can:  
+**Copy** the contents of ~\SDL2-2.30.5\x86_64-w64-mingw32\include\SDL2\\* into the directory ~\.pio\libdeps\simulator_windows\\**imgui**  
+-OR-  
+**Copy** the just folder ~\SDL2-2.30.5\x86_64-w64-mingw32\include\\**SDL2** into the directory ~\.pio\libdeps\\*simulator_windows*
+
+Once all that is done, just Build like you would normally and *MarlinSimulator.exe* will be created.
 
 For MacOS or Linux, you're on your own...sorry.
 <br>
