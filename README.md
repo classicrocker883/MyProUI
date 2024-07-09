@@ -7,8 +7,9 @@
 ![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)  
 ![Ender Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs_Ender.yml/badge.svg)
 
-**Don't forget to checkout the [thingiverse](https://www.thingiverse.com/classicrocker883/designs) models I designed
-[Minimalist Dual Cooling Fan Shroud](https://www.thingiverse.com/thing:5263939) for Aquila / Ender 3 V2**
+**Don't forget to checkout the [thingiverse](https://www.thingiverse.com/classicrocker883/designs) models I've designed:**
+
+[Minimalist Dual Cooling Fan Shroud](https://www.thingiverse.com/thing:5263939) for Aquila / Ender 3 V2
 <img src="https://cdn.thingiverse.com/assets/1a/21/e9/e9/f5/card_preview_c60b15d6-69cf-469a-8641-40f6bef37992.png" style="float:left;width:40px;height:40px;" align="left"/>
 
 [Tool Box for Middle Extrusion](https://www.thingiverse.com/thing:5181522) "**VOXELAB**" engraved
@@ -22,17 +23,22 @@
 
 ---
 
-## Universal RET6/RCT6 chips: G32, N32, H32, Creality 4.2.7 and 4.2.2 boards
 <br>
+
+## Universal Firmware for RET6/RCT6 chips: G32, N32, H32, Creality 4.2.7 and 4.2.2 boards 
+**_<sup>(Also available for BTT SKR Mini E3 and others)</sup>_**
 
 ### - Please read this: -
 > [!NOTE]
 Many Updates have been included in the most recent MRiscoCProUI for the **2024-July** release.
 This release has many changes to the **UI**.
 New ICON's have been added, and old ones enhanced. Whoever edited them before saved directly as .*JPG* which in many editors lowers the quality of the image. I painstakingly remastered almost every single one; preserving the original quality.
-
-> You must [REFLASH](https://github.com/classicrocker883/MRiscoCProUI/wiki/HOW-TO-UPDATE-THE-DISPLAY) the *LCD Display* with the new **DWIN_SET**; which is located in the `display assets` folder.
-
+>
+> > You must [REFLASH](https://github.com/classicrocker883/MRiscoCProUI/wiki/HOW-TO-UPDATE-THE-DISPLAY) the *LCD Display* with the new **DWIN_SET**; which is located in the `display assets` folder.
+>
+> If you encounter any issues, suggestions, or feature requests please feel free to post it on the [Issues tab](https://github.com/classicrocker883/MRiscoCProUI/issues), otherwise if everything is going well please leave a comment.
+>
+> I will be working on more upgrades and features and tweaks along the way. Enjoy using this fork of Marlin as I intend it to be the best; easy to use and convenient. So far I really enjoy the new settings and toolbar for the main menu. There is a variety of parameters and options that can be changed without having to reflash the firmware - like with other versions.
 <br>
 
 #### Important Info regarding HC32:
@@ -45,7 +51,7 @@ New ICON's have been added, and old ones enhanced. Whoever edited them before sa
 >
 > HC32 support has recently been added to the [Marlin Firmware](https://github.com/MarlinFirmware/Marlin) repository. Please post any [Issues](https://github.com/MarlinFirmware/Marlin/issues) there first, otherwise if there are any ProUI specific issues or anything else to report please do so under [Issues tab](https://github.com/classicrocker883/MRiscoCProUI/issues) here.
 
-> [!NOTE]
+> [!CAUTION]
 > Previous Issue of it restarting when saving/store settings has been fixed in the more recent ProUI version (October Rev.1).
 _HOWEVER_, now there is a current Issue to be addressed:
 The screen may **freeze and restart** when the SD card is inserted. This means that everything *so far* seems to work correctly as it should, except for when an **SD card is inserted**, so printing may not be possible *unless* you use USB serial interface to upload the file (through a slicer or something like Pronterface).
@@ -69,12 +75,6 @@ General information about the firmware and updates is located in the _Wiki_ page
      */
 If you start printing and it says `Advance Pause` while **Runout** is enabled, you may have to change state it triggers no filament to **HIGH**, or **LOW** (depending on what is already selected). This is found in the _Prepare_ menu/ _Filament Management_/ _Filament Settings_ -> _Runout Active_. <br>
 A small issue which may occur is if you are in the <i>Print</i> menu and you quickly select to print between several printable *Gcode* files in a short amount of time. The screen can freeze for a moment and the printer will restart - that is it.
-
-<br>
-
-If you encounter any issues, suggestions, or feature requests please feel free to post it on the [Issues tab](https://github.com/classicrocker883/MRiscoCProUI/issues), otherwise if everything is going well please leave a comment.
-
-I will be working on more upgrades and features and tweaks along the way. Enjoy using this fork of Marlin as I intend it to be the best; easy to use and convenient. So far I really enjoy the new settings and toolbar for the main menu. There is a variety of parameters and options that can be changed without having to reflash the firmware - like with other versions.
 
 <br>
 
@@ -122,8 +122,8 @@ The Precompiled binary files of this firmware can work with STM32 (STM32F103RET6
 
 ## Donations
 
-Please consider making a donation, as large or as small and as often as you'd like.
-Thank you for your support, I receive donations through  
+Thank you for your support.  
+Please consider making a donation, as large or as small and as often as you'd like.    
 [Ko-fi](https://ko-fi.com/classicrocker883)  
 [Venmo](https://venmo.com/u/andrewleduc88)  
 [Paypal](https://www.paypal.com/paypalme/andrewleduc)
