@@ -26,6 +26,10 @@
  * Conditionals that need to be set before Configuration_adv.h or pins.h
  */
 
+#ifndef STRING_CONFIG_H_AUTHOR
+  #define STRING_CONFIG_H_AUTHOR "(anonymous)"
+#endif
+
 /**
  * Extruders have some combination of stepper motors and hotends
  * so we separate these concepts into the defines:
@@ -1674,6 +1678,9 @@
 #endif
 #if SERIAL_PORT == -1 || SERIAL_PORT_2 == -1 || SERIAL_PORT_3 == -1
   #define HAS_USB_SERIAL 1
+#endif
+#ifdef RS485_SERIAL_PORT
+  #define HAS_RS485_SERIAL 1
 #endif
 #if SERIAL_PORT_2 == -2
   #define HAS_ETHERNET 1
