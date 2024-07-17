@@ -36,7 +36,7 @@
 /**
  * M73: Set percentage complete (for display on LCD)
  *
- * Example:
+ * EXAMPLE:
  *   M73 P25.63 ; Set progress to 25.63%
  *   M73 R456   ; Set remaining time to 456 minutes
  *   M73 C12    ; Set next interaction countdown to 12 minutes

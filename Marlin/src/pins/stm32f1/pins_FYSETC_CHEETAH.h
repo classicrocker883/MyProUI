@@ -143,7 +143,7 @@
  *                 ------
  *                  EXP1
  *
- * Notes:
+ * NOTES:
  *  - The pin-numbers match the connector correctly and are not in reverse order like on the Ender-3 board.
  *  - Functionally the pins are assigned in the same order as on the Ender-3 board.
  *  - Pin 4 on the Cheetah board is assigned to an I/O, it is assigned to RESET on the Ender-3 board.

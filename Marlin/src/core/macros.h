@@ -55,13 +55,6 @@
   #define CYCLES_PER_MICROSECOND (F_CPU / 1000000UL) // 16 or 20 on AVR
 #endif
 
-// Macros to make a string from a macro
-#define STRINGIFY_(M) #M
-#define STRINGIFY( M) STRINGIFY_(M)
-
-#define A(CODE) " " CODE "\n\t"
-#define L(CODE) CODE ":\n\t"
-
 // Macros for bit masks
 #undef _BV
 #define _BV(n) (1<<(n))
@@ -308,14 +301,6 @@
 #define HEXCHR(a)           (NUMERIC(a) ? (a) - '0' : WITHIN(a, 'a', 'f') ? ((a) - 'a' + 10)  : WITHIN(a, 'A', 'F') ? ((a) - 'A' + 10) : -1)
 #define NUMERIC_SIGNED(a)   (NUMERIC(a) || (a) == '-' || (a) == '+')
 #define DECIMAL_SIGNED(a)   (DECIMAL(a) || (a) == '-' || (a) == '+')
-
-// Array shorthand
-#define COUNT(a)            (sizeof(a)/sizeof(*a))
-#define ZERO(a)             memset((void*)a,0,sizeof(a))
-#define COPY(a,b) do{ \
-    static_assert(sizeof(a[0]) == sizeof(b[0]), "COPY: '" STRINGIFY(a) "' and '" STRINGIFY(b) "' types (sizes) don't match!"); \
-    memcpy(&a[0],&b[0],_MIN(sizeof(a),sizeof(b))); \
-  }while(0)
 
 // Expansion of some code
 #define CODE_16(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,...) A; B; C; D; E; F; G; H; I; J; K; L; M; N; O; P
@@ -763,3 +748,18 @@
 #define _UI_E3S1PRO     107
 #define _DGUS_UI_IS(N) || (CAT(_UI_, DGUS_LCD_UI) == CAT(_UI_, N))
 #define DGUS_UI_IS(V...) (0 MAP(_DGUS_UI_IS, V))
+
+// Macros to make a string from a macro
+#define STRINGIFY_(M) #M
+#define STRINGIFY( M) STRINGIFY_(M)
+
+#define A(CODE) " " CODE "\n\t"
+#define L(CODE) CODE ":\n\t"
+
+// Array shorthand
+#define COUNT(a)            (sizeof(a)/sizeof(*a))
+#define ZERO(a)             memset((void*)a,0,sizeof(a))
+#define COPY(a,b) do{ \
+    static_assert(sizeof(a[0]) == sizeof(b[0]), "COPY: '" STRINGIFY(a) "' and '" STRINGIFY(b) "' types (sizes) don't match!"); \
+    memcpy(&a[0],&b[0],_MIN(sizeof(a),sizeof(b))); \
+  }while(0)

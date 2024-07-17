@@ -33,7 +33,7 @@
  * Parameters:
  *   <dospath> Case-insensitive DOS-style path to a file or folder
  *
- * Example:
+ * EXAMPLE:
  *   M33 miscel~1/armchair/armcha~1.gco
  *
  * Output:

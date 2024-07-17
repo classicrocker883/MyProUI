@@ -1970,7 +1970,7 @@ void DWIN_Print_Aborted() {
       do_z_post_clearance();
     #endif
     #ifdef EVENT_GCODE_SD_ABORT
-    queue.inject(F(EVENT_GCODE_SD_ABORT));
+      queue.inject(F(EVENT_GCODE_SD_ABORT));
     #endif
     ui.reset_status(true);
   }
@@ -3194,8 +3194,8 @@ void Draw_Tramming_Menu() {
     MENU_ITEM(ICON_AxisBR, MSG_TRAM_FR, onDrawMenuItem, []{ (void)tram(1); });
     MENU_ITEM(ICON_AxisTR, MSG_TRAM_BR, onDrawMenuItem, []{ (void)tram(2); });
     MENU_ITEM(ICON_AxisTL, MSG_TRAM_BL, onDrawMenuItem, []{ (void)tram(3); });
-    MENU_ITEM(ICON_AxisC, MSG_TRAM_C, onDrawMenuItem, []{ (void)tram(4); });
-    MENU_ITEM(ICON_HomeZ, MSG_AUTO_HOME_Z, onDrawMenuItem, HomeZ);
+    MENU_ITEM(ICON_AxisC,  MSG_TRAM_C,  onDrawMenuItem, []{ (void)tram(4); });
+    MENU_ITEM(ICON_HomeZ,  MSG_AUTO_HOME_Z, onDrawMenuItem, HomeZ);
   }
   UpdateMenu(TrammingMenu);
 }
@@ -3372,7 +3372,7 @@ void Draw_FilSet_Menu() {
         BACK_ITEM(TERN(HAS_HOME_OFFSET, Draw_HomeOffset_Menu, Draw_Control_Menu));
         EDIT_ITEM(ICON_ParkPosX, MSG_PARK_XPOSITION, onDrawPIntMenu, SetParkPosX, &PRO_data.Park_point.x);
         EDIT_ITEM(ICON_ParkPosY, MSG_PARK_YPOSITION, onDrawPIntMenu, SetParkPosY, &PRO_data.Park_point.y);
-        EDIT_ITEM(ICON_ParkPosZ, MSG_PARK_ZRAISE, onDrawPIntMenu, SetParkZRaise, &PRO_data.Park_point.z);
+        EDIT_ITEM(ICON_ParkPosZ, MSG_PARK_ZRAISE,  onDrawPIntMenu, SetParkZRaise, &PRO_data.Park_point.z);
       }
       UpdateMenu(ParkPosMenu);
     }
@@ -3384,11 +3384,11 @@ void Draw_FilSet_Menu() {
       BACK_ITEM(Draw_Control_Menu);
       EDIT_ITEM(ICON_BedSize, MSG_PHY_XBEDSIZE, onDrawPIntMenu, SetBedSizeX, &PRO_data.x_bed_size);
       EDIT_ITEM(ICON_BedSize, MSG_PHY_YBEDSIZE, onDrawPIntMenu, SetBedSizeY, &PRO_data.y_bed_size);
-      EDIT_ITEM(ICON_MaxPosX, MSG_PHY_XMINPOS, onDrawPIntMenu, SetMinPosX, &PRO_data.x_min_pos);
-      EDIT_ITEM(ICON_MaxPosY, MSG_PHY_YMINPOS, onDrawPIntMenu, SetMinPosY, &PRO_data.y_min_pos);
-      EDIT_ITEM(ICON_MaxPosX, MSG_PHY_XMAXPOS, onDrawPIntMenu, SetMaxPosX, &PRO_data.x_max_pos);
-      EDIT_ITEM(ICON_MaxPosY, MSG_PHY_YMAXPOS, onDrawPIntMenu, SetMaxPosY, &PRO_data.y_max_pos);
-      EDIT_ITEM(ICON_MaxPosZ, MSG_PHY_ZMAXPOS, onDrawPIntMenu, SetMaxPosZ, &PRO_data.z_max_pos);
+      EDIT_ITEM(ICON_MaxPosX, MSG_PHY_XMINPOS,  onDrawPIntMenu, SetMinPosX,  &PRO_data.x_min_pos);
+      EDIT_ITEM(ICON_MaxPosY, MSG_PHY_YMINPOS,  onDrawPIntMenu, SetMinPosY,  &PRO_data.y_min_pos);
+      EDIT_ITEM(ICON_MaxPosX, MSG_PHY_XMAXPOS,  onDrawPIntMenu, SetMaxPosX,  &PRO_data.x_max_pos);
+      EDIT_ITEM(ICON_MaxPosY, MSG_PHY_YMAXPOS,  onDrawPIntMenu, SetMaxPosY,  &PRO_data.y_max_pos);
+      EDIT_ITEM(ICON_MaxPosZ, MSG_PHY_ZMAXPOS,  onDrawPIntMenu, SetMaxPosZ,  &PRO_data.z_max_pos);
     }
     UpdateMenu(PhySetMenu);
   }
@@ -3417,18 +3417,18 @@ void Draw_FilSet_Menu() {
       #endif
       #if HAS_COLOR_LEDS
         #if ENABLED(LED_COLOR_PRESETS)
-          MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_WHITE, onDrawMenuItem,  leds.set_white);
-          MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_RED, onDrawMenuItem,    leds.set_red);
+          MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_WHITE,  onDrawMenuItem, leds.set_white);
+          MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_RED,    onDrawMenuItem, leds.set_red);
           MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_ORANGE, onDrawMenuItem, leds.set_orange);
           MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_YELLOW, onDrawMenuItem, leds.set_yellow);
-          MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_GREEN, onDrawMenuItem,  leds.set_green);
-          MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_BLUE, onDrawMenuItem,   leds.set_blue);
+          MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_GREEN,  onDrawMenuItem, leds.set_green);
+          MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_BLUE,   onDrawMenuItem, leds.set_blue);
           MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_INDIGO, onDrawMenuItem, leds.set_indigo);
           MENU_ITEM(ICON_LedControl, MSG_SET_LEDS_VIOLET, onDrawMenuItem, leds.set_violet);
         #else
-          EDIT_ITEM(ICON_LedControl, MSG_COLORS_RED, onDrawPInt8Menu, SetLEDColorR, &leds.color.r);
+          EDIT_ITEM(ICON_LedControl, MSG_COLORS_RED,   onDrawPInt8Menu, SetLEDColorR, &leds.color.r);
           EDIT_ITEM(ICON_LedControl, MSG_COLORS_GREEN, onDrawPInt8Menu, SetLEDColorG, &leds.color.g);
-          EDIT_ITEM(ICON_LedControl, MSG_COLORS_BLUE, onDrawPInt8Menu, SetLEDColorB, &leds.color.b);
+          EDIT_ITEM(ICON_LedControl, MSG_COLORS_BLUE,  onDrawPInt8Menu, SetLEDColorB, &leds.color.b);
           #if HAS_WHITE_LED
             EDIT_ITEM(ICON_LedControl, MSG_COLORS_WHITE, onDrawPInt8Menu, SetLEDColorW, &leds.color.w);
           #endif
@@ -3444,7 +3444,7 @@ void Draw_Tune_Menu() {
     if (laser_device.is_laser_device()) return LCD_MESSAGE_F("Not available in laser mode");
   #endif
   checkkey = Menu;
-  if (SET_MENU(TuneMenu, MSG_TUNE, 24)) {
+  if (SET_MENU(TuneMenu, MSG_TUNE, 25)) {
     BACK_ITEM(Goto_PrintProcess);
     #if HAS_LCD_BRIGHTNESS
       MENU_ITEM(ICON_Box, MSG_BRIGHTNESS_OFF, onDrawMenuItem, TurnOffBacklight);
@@ -3488,6 +3488,9 @@ void Draw_Tune_Menu() {
     #endif
     #if ENABLED(SHOW_SPEED_IND)
       EDIT_ITEM(ICON_MaxSpeed, MSG_SPEED_IND, onDrawChkbMenu, SetSpdInd, &HMI_data.SpdInd);
+    #endif
+    #if ENABLED(PROUI_ITEM_ABRT)
+      EDIT_ITEM_F(ICON_File, "Auto Abort GCodes", onDrawChkbMenu, SetAutoAbort, &HMI_data.auto_abort);
     #endif
     #if ENABLED(FWRETRACT)
       MENU_ITEM(ICON_FWRetract, MSG_FWRETRACT, onDrawSubMenu, Draw_FWRetract_Menu);
@@ -4158,8 +4161,6 @@ void Draw_MaxAccel_Menu() {
       MENU_ITEM(ICON_Homing, MSG_AUTO_HOME, onDrawMenuItem, AutoHome);
       MENU_ITEM(ICON_AxisD, MSG_MOVE_NOZZLE_TO_BED, onDrawMenuItem, SetMoveZto0);
       EDIT_ITEM(ICON_Fade, MSG_XATC_UPDATE_Z_OFFSET, onDrawPFloat2Menu, SetZOffset, &BABY_Z_VAR);
-      //MENU_ITEM_F(ICON_HotendTemp, "For Best Results:\n", onDrawMenuItem);
-      //MENU_ITEM_F(ICON_Cancel, "Have Nozzle Touch Bed", onDrawMenuItem);
     }
     UpdateMenu(ZOffsetWizMenu);
 
@@ -4167,7 +4168,7 @@ void Draw_MaxAccel_Menu() {
     DWINUI::Draw_CenteredString(263, "For Best Results:\n");
     DWINUI::Draw_Icon(ICON_HotendTemp, ICOX + 204, 100 + 3 * MLINE);
 
-    DWINUI::Draw_Icon(ICON_Cancel, ICOX - 2, 92 + 4 * MLINE);
+    DWINUI::Draw_Icon(ICON_Back, ICOX - 2, 92 + 4 * MLINE);
     DWINUI::Draw_CenteredString(308, "Have Nozzle Touch Bed");
     DWINUI::Draw_Icon(ICON_Cancel, ICOX + 206, 92 + 4 * MLINE);
     DWIN_Draw_HLine(HMI_data.SplitLine_Color, 16, MYPOS(4 + 2), 240);
@@ -4374,6 +4375,7 @@ void Draw_MaxAccel_Menu() {
       #endif
       //MENU_ITEM_F(ICON_ProbeMargin, "Create Plane from Mesh", onDrawMenuItem, CreatePlaneFromMesh);
     }
+    ui.reset_status(true);
     UpdateMenu(MeshMenu);
   }
 

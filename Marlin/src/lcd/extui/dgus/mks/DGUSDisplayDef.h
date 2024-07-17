@@ -456,7 +456,8 @@ constexpr uint16_t SP_T_Bed_Set   = 0x5040;
   constexpr uint16_t VP_SD_FileSelect_Back            = 0x3082;
   // SDCard File Listing
   constexpr uint16_t VP_SD_FileName_LEN = 32;                   // LEN is shared for all entries.
-  constexpr uint16_t DGUS_SD_FILESPERSCREEN = 10;               // FIXME move that info to the display and read it from there.
+  constexpr uint16_t DGUS_SD_FILESPERSCREEN = 10;
+  /// FIXME: Move that info to the display and read it from there.
   constexpr uint16_t VP_SD_FileName0                  = 0x3100;
   constexpr uint16_t VP_SD_FileName1                  = 0x3120;
   constexpr uint16_t VP_SD_FileName2                  = 0x3140;

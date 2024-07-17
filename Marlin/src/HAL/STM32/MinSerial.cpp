@@ -94,10 +94,12 @@ static void TXBegin() {
       __HAL_RCC_USART3_CLK_DISABLE();
       __HAL_RCC_USART3_CLK_ENABLE();
     #elif SERIAL_PORT == 4
-      __HAL_RCC_UART4_CLK_DISABLE(); // BEWARE: UART4 and not USART4 here
+      __HAL_RCC_UART4_CLK_DISABLE();
+      /// BEWARE: UART4 and not USART4 here
       __HAL_RCC_UART4_CLK_ENABLE();
     #elif SERIAL_PORT == 5
-      __HAL_RCC_UART5_CLK_DISABLE(); // BEWARE: UART5 and not USART5 here
+      __HAL_RCC_UART5_CLK_DISABLE();
+      /// BEWARE: UART5 and not USART5 here
       __HAL_RCC_UART5_CLK_ENABLE();
     #elif SERIAL_PORT == 6
       __HAL_RCC_USART6_CLK_DISABLE();

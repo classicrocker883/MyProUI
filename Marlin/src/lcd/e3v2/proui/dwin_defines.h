@@ -42,7 +42,7 @@
   #define STEALTHCHOP_MENU      // Enable StealthChop menu (352 bytes)
 #endif
 
-#if defined(__STM32F1__) || defined(STM32F1) || defined(ARDUINO_ARCH_HC32)//#if MB(CREALITY_V24S1_301, CREALITY_V24S1_301F4)
+#if defined(__STM32F1__) || defined(STM32F1) || defined(ARDUINO_ARCH_HC32) || MB(CREALITY_V24S1_301, CREALITY_V24S1_301F4)
   #define DASH_REDRAW 1
 #endif
 
@@ -51,11 +51,11 @@
 #endif
 
 #if (ALT_COLOR_MENU == 2)
-#define Def_Background_Color  RGB( 0, 8, 6) // Dark Green/Blue
-#define Def_TitleBg_Color     RGB( 0, 23, 16) // Orient Blue
+  #define Def_Background_Color  RGB( 0, 8, 6) // Dark Green/Blue
+  #define Def_TitleBg_Color     RGB( 0, 23, 16) // Orient Blue
 #else
-#define Def_Background_Color  Color_Bg_Black //
-#define Def_TitleBg_Color     Color_Voxelab_Red //
+  #define Def_Background_Color  Color_Bg_Black //
+  #define Def_TitleBg_Color     Color_Voxelab_Red //
 #endif
 #define Def_Cursor_Color      Color_Cyan //
 #define Def_TitleTxt_Color    Color_White
@@ -74,7 +74,11 @@
 #define Def_Indicator_Color   Color_Cyan //
 #define Def_Coordinate_Color  Color_Brown //
 #define Def_Bottom_Color      Color_Silver //
-#define Def_Leds_Color        LEDColorWhite()
+
+#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS) && DISABLED(LED_COLOR_PRESETS)
+  #define Def_Leds_Color      LEDColorWhite()
+#endif
+
 #if CASELIGHT_USES_BRIGHTNESS
   #define Def_CaseLight_Brightness 255
 #endif

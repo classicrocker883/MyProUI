@@ -192,7 +192,7 @@ uint8_t UHS_USB_HOST_BASE::doSoftReset(uint8_t parent, uint8_t port, uint8_t add
  *              }
  *      }
  *
- *       NOTE:
+ *       NOTES:
  *              1: We do not need to save toggle states anymore and have not
  *                      needed to for some time, because the lower level driver
  *                      actually corrects wrong toggles on-the-fly for us.
@@ -1167,10 +1167,11 @@ uint8_t UHS_NI UHS_VSI::SetInterface(ENUMERATION_INFO *ei) {
 
 #if 0
 
-/* TO-DO: Move this silliness to a NONE driver.
+/**
+ * TODO: Move this silliness to a NONE driver.
  * When we have a generic NONE driver we can:
- *  o Extract ALL device information to help users with a new device.
- *  o Use an unknown device from a sketch, kind of like usblib does.
+ *  - Extract ALL device information to help users with a new device.
+ *  - Use an unknown device from a sketch, kind of like usblib does.
  *    This will aid in making more drivers in a faster way.
  */
 uint8_t UHS_USB_HOST_BASE::DefaultAddressing(uint8_t parent, uint8_t port, uint8_t speed) {

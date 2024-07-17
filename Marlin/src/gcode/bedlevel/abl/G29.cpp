@@ -71,14 +71,21 @@
   #endif
 #endif
 
+/**
+ * @brief Do some things before returning from G29.
+ * @param retry : true if the G29 can and should be retried. false if the failure is too serious.
+ * @param   did : true if the leveling procedure completed successfully.
+ */
 static void pre_g29_return(const bool retry, const bool did) {
   if (!retry) {
     TERN_(FULL_REPORT_TO_HOST_FEATURE, set_and_report_grblstate(M_IDLE, false));
   }
-  if (did) {
-    TERN_(HAS_DWIN_E3V2_BASIC, DWIN_LevelingDone());
-    TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
-  }
+  #if DISABLED(G29_RETRY_AND_RECOVER)
+    if (!retry || did) {
+      TERN_(HAS_DWIN_E3V2_BASIC, DWIN_LevelingDone());
+      TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
+    }
+  #endif
 }
 
 #define G29_RETURN(retry, did) do{ \
@@ -158,19 +165,19 @@ public:
  *
  *  J  Jettison current bed leveling data
  *
- *  V  Set the verbose level (0-4). Example: "G29 V3"
+ *  V  Set the verbose level (0-4). EXAMPLE: "G29 V3"
  *
  * Parameters With LINEAR leveling only:
  *
  *  P  Set the size of the grid that will be probed (P x P points).
- *     Example: "G29 P4"
+ *     EXAMPLE: "G29 P4"
  *
  *  X  Set the X size of the grid that will be probed (X x Y points).
- *     Example: "G29 X7 Y5"
+ *     EXAMPLE: "G29 X7 Y5"
  *
  *  Y  Set the Y size of the grid that will be probed (X x Y points).
  *
- *  T  Generate a Bed Topology Report. Example: "G29 P5 T" for a detailed report.
+ *  T  Generate a Bed Topology Report. EXAMPLE: "G29 P5 T" for a detailed report.
  *     This is useful for manual bed leveling and finding flaws in the bed (to
  *     assist with part placement).
  *     Not supported by non-linear delta printer bed leveling.

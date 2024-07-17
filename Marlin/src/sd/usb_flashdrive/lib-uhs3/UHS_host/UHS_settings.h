@@ -27,7 +27,7 @@ e-mail   :  support@circuitsathome.com
 #ifndef UHS_SETTINGS_H
 #define UHS_SETTINGS_H
 
-// TO-DO: Move specific settings to modules which use them.
+/// TODO: Move specific settings to modules which use them.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Define any of these options at the top of your sketch to override

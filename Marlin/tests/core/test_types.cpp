@@ -80,7 +80,7 @@ MARLIN_TEST(types, XYval_small_large) {
   TEST_ASSERT_EQUAL(3, xy.small());
   TEST_ASSERT_EQUAL(4, xy.large());
 
-  // BUG?: Is this behavior actually correct?
+  /// BUG: Is this behavior actually correct?
   // Does small mean "less than", or should it mean
   // "closer to zero"? If the latter, then the following
   // tests are incorrect.
