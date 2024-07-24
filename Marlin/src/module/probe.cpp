@@ -795,7 +795,7 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
       if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("1st Probe Z:", z1);
 
       // Raise to give the probe clearance
-      do_z_clearance(z1 + (Z_CLEARANCE_MULTI_PROBE), false);
+      do_z_clearance(z1 + (Z_CLEARANCE_MULTI_PROBE));
 
     #elif Z_PROBE_FEEDRATE_FAST != Z_PROBE_FEEDRATE_SLOW
 
@@ -856,7 +856,7 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
             #if EXTRA_PROBING > 0
               < TOTAL_PROBING - 1
             #endif
-          ) do_z_clearance(z + (Z_CLEARANCE_MULTI_PROBE), false);
+          ) do_z_clearance(z + (Z_CLEARANCE_MULTI_PROBE));
         #endif
       }
 
@@ -950,7 +950,7 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
     if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("1st Probe Z:", z1);
 
     // Raise to give the probe clearance
-    do_z_clearance(z1 + (Z_CLEARANCE_MULTI_PROBE), false);
+    do_z_clearance(z1 + (Z_CLEARANCE_MULTI_PROBE));
 
     float probes_z_sum = 0;
     for (uint8_t p = 0; p < TERN(PROUI_EX, PRO_data, HMI_data).multiple_probing - 1; p++) {
@@ -966,7 +966,7 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
       const float z = DIFF_TERN(HAS_DELTA_SENSORLESS_PROBING, current_position.z, largest_sensorless_adj);
       probes_z_sum += z;
       // Small Z raise after probe
-      do_z_clearance(z + (Z_CLEARANCE_MULTI_PROBE), false);
+      do_z_clearance(z + (Z_CLEARANCE_MULTI_PROBE));
     }
 
     // Return a weighted average of the fast and slow probes

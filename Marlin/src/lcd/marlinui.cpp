@@ -1763,7 +1763,7 @@ void MarlinUI::host_notify(const char * const cstr) {
       #endif
       {
         pause_show_message(PAUSE_MESSAGE_PARKING, PAUSE_MODE_PAUSE_PRINT); // Show message immediately to let user know about pause in progress
-        queue.inject(F("M25P\nM24"));
+        queue.inject(F("M125P\nM24"));
       }
     #elif HAS_MEDIA
       queue.inject(F("M25"));

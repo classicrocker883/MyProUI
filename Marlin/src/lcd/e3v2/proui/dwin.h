@@ -162,6 +162,8 @@ void ResetEeprom();
   void SetYMeshInset();
   void MaxMeshArea();
   void CenterMeshArea();
+  void ApplyPhySet();
+  void SetData();
 #endif
 #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
   void SetMeshFadeHeight();

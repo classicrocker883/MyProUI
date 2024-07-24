@@ -34,6 +34,21 @@
 template <bool, class L, class R> struct IF             { typedef R type; };
 template <      class L, class R> struct IF<true, L, R> { typedef L type; };
 
+#if HAS_EXTRUDERS
+  #if NUM_AXES
+    #define LIST_ITEM_E(N) , N
+    #define CODE_ITEM_E(N) ; N
+  #else
+    #define LIST_ITEM_E(N) N
+    #define CODE_ITEM_E(N) N
+  #endif
+  #define GANG_ITEM_E(N) N
+#else
+  #define LIST_ITEM_E(N)
+  #define CODE_ITEM_E(N)
+  #define GANG_ITEM_E(N)
+#endif
+
 #define ALL_AXIS_NAMES X, X2, Y, Y2, Z, Z2, Z3, Z4, I, J, K, U, V, W, E0, E1, E2, E3, E4, E5, E6, E7
 
 #define NUM_AXIS_GANG(V...)   GANG_N(NUM_AXES, V)
@@ -130,21 +145,6 @@ template <      class L, class R> struct IF<true, L, R> { typedef L type; };
 
 #if HAS_ROTATIONAL_AXES
   #define ROTATIONAL_AXIS_GANG(V...) GANG_N(ROTATIONAL_AXES, V)
-#endif
-
-#if HAS_EXTRUDERS
-  #if NUM_AXES
-    #define LIST_ITEM_E(N) , N
-    #define CODE_ITEM_E(N) ; N
-  #else
-    #define LIST_ITEM_E(N) N
-    #define CODE_ITEM_E(N) N
-  #endif
-  #define GANG_ITEM_E(N) N
-#else
-  #define LIST_ITEM_E(N)
-  #define CODE_ITEM_E(N)
-  #define GANG_ITEM_E(N)
 #endif
 
 #define AXIS_COLLISION(L) (AXIS4_NAME == L || AXIS5_NAME == L || AXIS6_NAME == L || AXIS7_NAME == L || AXIS8_NAME == L || AXIS9_NAME == L)

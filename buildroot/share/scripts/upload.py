@@ -173,7 +173,7 @@ def Upload(source, target, env):
     # "upload_delete_old_bins": delete all *.bin files in the root of SD Card
     upload_delete_old_bins = marlin_motherboard in ['BOARD_CREALITY_V4',   'BOARD_CREALITY_V4210', 'BOARD_CREALITY_V422', 'BOARD_CREALITY_V423',
                                                     'BOARD_CREALITY_V427', 'BOARD_CREALITY_V431',  'BOARD_CREALITY_V452', 'BOARD_CREALITY_V453',
-                                                    'BOARD_CREALITY_V24S1']
+                                                    'BOARD_CREALITY_V24S1', 'BOARD_CREALITY_V24S1_301', 'BOARD_CREALITY_V24S1_301F4']
     # "upload_random_name": generate a random 8.3 firmware filename to upload
     upload_random_filename = upload_delete_old_bins # and not marlin_long_filename_host_support
 

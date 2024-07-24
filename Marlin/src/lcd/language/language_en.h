@@ -527,18 +527,14 @@ namespace LanguageNarrow_en {
   LSTR MSG_STOP_PRINT                     = _UxGT("Stop Print");
   LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Power-loss Recovery");
   LSTR MSG_RESUME_BED_TEMP                = _UxGT("Resume Bed Temp");
-
-  #if LCD_WIDTH < 20 || !HAS_DWIN_E3V2
-    LSTR MSG_HOST_START_PRINT             = _UxGT("Host Start");
-    LSTR MSG_PRINTING_OBJECT              = _UxGT("Print Obj");
-    LSTR MSG_CANCEL_OBJECT                = _UxGT("Cancel Obj");
-    LSTR MSG_CANCEL_OBJECT_N              = _UxGT("Cancel Obj {");
-    LSTR MSG_CONTINUE_PRINT_JOB           = _UxGT("Continue Print");
-    LSTR MSG_MEDIA_MENU                   = MEDIA_TYPE_EN _UxGT(" Print");
-    LSTR MSG_TURN_OFF                     = _UxGT("Turn off now");
-    LSTR MSG_END_LOOPS                    = _UxGT("End Loops");
-  #endif
-
+  LSTR MSG_HOST_START_PRINT               = _UxGT("Start Host Print");
+  LSTR MSG_PRINTING_OBJECT                = _UxGT("Printing Object");
+  LSTR MSG_CANCEL_OBJECT                  = _UxGT("Cancel Object");
+  LSTR MSG_CANCEL_OBJECT_N                = _UxGT("Cancel Object {");
+  LSTR MSG_CONTINUE_PRINT_JOB             = _UxGT("Continue Print");
+  LSTR MSG_MEDIA_MENU                     = _UxGT("Select from ") MEDIA_TYPE_EN;
+  LSTR MSG_TURN_OFF                       = _UxGT("Turn off printer");
+  LSTR MSG_END_LOOPS                      = _UxGT("End Repeat Loops");
   LSTR MSG_NO_MEDIA                       = _UxGT("No ") MEDIA_TYPE_EN;
   LSTR MSG_DWELL                          = _UxGT("Sleep...");
   LSTR MSG_USERWAIT                       = _UxGT("Click to Resume...");
@@ -1006,15 +1002,6 @@ namespace LanguageWide_en {
     LSTR MSG_OUTAGE_RECOVERY2             = _UxGT("It looks like the last");
     LSTR MSG_OUTAGE_RECOVERY3             = _UxGT("file was interrupted.");
 
-    LSTR MSG_HOST_START_PRINT             = _UxGT("Start Host Print");
-    LSTR MSG_PRINTING_OBJECT              = _UxGT("Printing Object");
-    LSTR MSG_CANCEL_OBJECT                = _UxGT("Cancel Object");
-    LSTR MSG_CANCEL_OBJECT_N              = _UxGT("Cancel Object {");
-    LSTR MSG_CONTINUE_PRINT_JOB           = _UxGT("Continue Print");
-    LSTR MSG_MEDIA_MENU                   = _UxGT("Select from ") MEDIA_TYPE_EN;
-    LSTR MSG_TURN_OFF                     = _UxGT("Turn off the printer");
-    LSTR MSG_END_LOOPS                    = _UxGT("End Repeat Loops");
-
     LSTR MSG_MEDIA_NOT_INSERTED           = MEDIA_TYPE_EN _UxGT(" Not Inserted."); // ProUI
     LSTR MSG_PLEASE_PREHEAT               = _UxGT("Please Preheat Hotend.");  // ProUI
     LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Reset Print Count");       // ProUI
@@ -1025,35 +1012,35 @@ namespace LanguageWide_en {
 
     // DWIN_LCD_PROUI specific message strings
     #define _MSG_PREHEAT(N) \
-      LSTR MSG_PREHEAT_##N                  = _UxGT("Preheat ") PREHEAT_## N ##_LABEL; \
-      LSTR MSG_PREHEAT_## N ##_SETTINGS     = _UxGT("Preheat ") PREHEAT_## N ##_LABEL _UxGT(" Settings");
+      LSTR MSG_PREHEAT_##N                = _UxGT("Preheat ") PREHEAT_## N ##_LABEL; \
+      LSTR MSG_PREHEAT_## N ##_SETTINGS   = _UxGT("Preheat ") PREHEAT_## N ##_LABEL _UxGT(" Settings");
     #if PREHEAT_COUNT > 3
       REPEAT_S(4, INCREMENT(PREHEAT_COUNT), _MSG_PREHEAT)
     #endif
-    LSTR MSG_CHECK_FILENAME                 = _UxGT("Please check filenames");
-    LSTR MSG_ONLY_GCODE                     = _UxGT("Only G-code can be printed");
-    LSTR MSG_MPC_SETTINGS                   = _UxGT("MPC Settings");
-    LSTR MSG_HOTEND_PID_SETTINGS            = _UxGT(STR_HOTEND_PID " Settings");
-    LSTR MSG_BED_PID_SETTINGS               = _UxGT(STR_BED_PID " Settings");
-    LSTR MSG_CHAMBER_PID_SETTINGS           = _UxGT(STR_CHAMBER_PID " Settings");
-    LSTR MSG_HOTEND_TUNE                    = _UxGT("Tune " STR_HOTEND_PID);
-    LSTR MSG_BED_TUNE                       = _UxGT("Tune " STR_BED_PID);
-    LSTR MSG_CHAMBER_TUNE                   = _UxGT("Tune " STR_CHAMBER_PID);
-    LSTR MSG_PID_SETTINGS                   = _UxGT("PID Settings");
-    LSTR MSG_PID_SET_KP                     = _UxGT("Set" STR_KP);
-    LSTR MSG_PID_SET_KI                     = _UxGT("Set" STR_KI);
-    LSTR MSG_PID_SET_KD                     = _UxGT("Set" STR_KD);
-    LSTR MSG_MPC_TARGET                     = _UxGT("MPC target:     Celsius");
-    LSTR MSG_PID_TARGET                     = _UxGT("PID target:     Celsius");
-    LSTR MSG_TARGET                         = _UxGT("Target:     Celsius");
-    LSTR MSG_250K_BAUD                      = _UxGT("250K baud");
-    LSTR MSG_SCREW_INSET                    = _UxGT("Bed Screw Inset");
-    LSTR MSG_SPEED_IND                      = _UxGT("Speed Indicator");
-    LSTR MSG_ZERO_MESH                      = _UxGT("Zero Current Point");
-    LSTR MSG_TRAMWIZ_CALC                   = _UxGT("Calculate Average");
-    LSTR MSG_HOME_Z_AND_DISABLE             = _UxGT("Home Z and Disable");
-    LSTR MSG_TOOLBAR_SETUP                  = _UxGT("Toolbar Setup");
-    LSTR MSG_OPTION_DISABLED                = _UxGT("Option Disabled");
+    LSTR MSG_CHECK_FILENAME               = _UxGT("Please check filenames");
+    LSTR MSG_ONLY_GCODE                   = _UxGT("Only G-code can be printed");
+    LSTR MSG_MPC_SETTINGS                 = _UxGT("MPC Settings");
+    LSTR MSG_HOTEND_PID_SETTINGS          = _UxGT(STR_HOTEND_PID " Settings");
+    LSTR MSG_BED_PID_SETTINGS             = _UxGT(STR_BED_PID " Settings");
+    LSTR MSG_CHAMBER_PID_SETTINGS         = _UxGT(STR_CHAMBER_PID " Settings");
+    LSTR MSG_HOTEND_TUNE                  = _UxGT("Tune " STR_HOTEND_PID);
+    LSTR MSG_BED_TUNE                     = _UxGT("Tune " STR_BED_PID);
+    LSTR MSG_CHAMBER_TUNE                 = _UxGT("Tune " STR_CHAMBER_PID);
+    LSTR MSG_PID_SETTINGS                 = _UxGT("PID Settings");
+    LSTR MSG_PID_SET_KP                   = _UxGT("Set" STR_KP);
+    LSTR MSG_PID_SET_KI                   = _UxGT("Set" STR_KI);
+    LSTR MSG_PID_SET_KD                   = _UxGT("Set" STR_KD);
+    LSTR MSG_MPC_TARGET                   = _UxGT("MPC target:     Celsius");
+    LSTR MSG_PID_TARGET                   = _UxGT("PID target:     Celsius");
+    LSTR MSG_TARGET                       = _UxGT("Target:     Celsius");
+    LSTR MSG_250K_BAUD                    = _UxGT("250K baud");
+    LSTR MSG_SCREW_INSET                  = _UxGT("Bed Screw Inset");
+    LSTR MSG_SPEED_IND                    = _UxGT("Speed Indicator");
+    LSTR MSG_ZERO_MESH                    = _UxGT("Zero Current Point");
+    LSTR MSG_TRAMWIZ_CALC                 = _UxGT("Calculate Average");
+    LSTR MSG_HOME_Z_AND_DISABLE           = _UxGT("Home Z and Disable");
+    LSTR MSG_TOOLBAR_SETUP                = _UxGT("Toolbar Setup");
+    LSTR MSG_OPTION_DISABLED              = _UxGT("Option Disabled");
   #endif // LCD_WIDTH >= 20 || HAS_DWIN_E3V2
 }
 

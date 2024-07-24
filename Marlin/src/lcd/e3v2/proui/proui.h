@@ -40,16 +40,16 @@ constexpr uint8_t DEF_GRID_MAX_POINTS = TERN(HAS_MESH, GRID_MAX_POINTS_X, 3);
   #define MESH_INSET 10
 #endif
 #ifndef   MESH_MIN_X
-  #define MESH_MIN_X MESH_INSET
+  #define MESH_MIN_X (MESH_INSET)
 #endif
 #ifndef   MESH_MIN_Y
-  #define MESH_MIN_Y MESH_INSET
+  #define MESH_MIN_Y (MESH_INSET)
 #endif
 #ifndef   MESH_MAX_X
-  #define MESH_MAX_X  X_BED_SIZE - (MESH_INSET)
+  #define MESH_MAX_X ((X_BED_SIZE) - (MESH_INSET))
 #endif
 #ifndef   MESH_MAX_Y
-  #define MESH_MAX_Y  Y_BED_SIZE - (MESH_INSET)
+  #define MESH_MAX_Y ((Y_BED_SIZE) - (MESH_INSET))
 #endif
 constexpr uint16_t DEF_MESH_MIN_X = MESH_MIN_X;
 constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X;
@@ -76,11 +76,11 @@ constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
 #define Y_BED_MIN 150
 constexpr uint16_t DEF_X_BED_SIZE = X_BED_SIZE;
 constexpr uint16_t DEF_Y_BED_SIZE = Y_BED_SIZE;
-constexpr int16_t DEF_X_MIN_POS = X_MIN_POS;
-constexpr int16_t DEF_Y_MIN_POS = Y_MIN_POS;
-constexpr int16_t DEF_X_MAX_POS = X_MAX_POS;
-constexpr int16_t DEF_Y_MAX_POS = Y_MAX_POS;
-constexpr int16_t DEF_Z_MAX_POS = Z_MAX_POS;
+constexpr int16_t  DEF_X_MIN_POS  = X_MIN_POS;
+constexpr int16_t  DEF_Y_MIN_POS  = Y_MIN_POS;
+constexpr int16_t  DEF_X_MAX_POS  = X_MAX_POS;
+constexpr int16_t  DEF_Y_MAX_POS  = Y_MAX_POS;
+constexpr int16_t  DEF_Z_MAX_POS  = Z_MAX_POS;
 
 typedef struct {
   uint16_t x_bed_size = DEF_X_BED_SIZE;
@@ -214,17 +214,17 @@ typedef struct {
 #if ENABLED(PROUI_ITEM_ABRT)
   bool auto_abort;
 #endif
+#if !PROUI_EX
 #if ENABLED(PROUI_MESH_EDIT)
   float mesh_min_x = DEF_MESH_MIN_X;
   float mesh_max_x = DEF_MESH_MAX_X;
   float mesh_min_y = DEF_MESH_MIN_Y;
   float mesh_max_y = DEF_MESH_MAX_Y;
 #endif
-#if !PROUI_EX
   TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points = DEF_GRID_MAX_POINTS;)
 #if HAS_BED_PROBE
   IF_DISABLED(BD_SENSOR, uint8_t multiple_probing = MULTIPLE_PROBING;)
-  uint16_t zprobeFeed = DEF_Z_PROBE_FEEDRATE_SLOW ;
+  uint16_t zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW ;
 #endif
 #if HAS_EXTRUDERS
   bool Invert_E0 = DEF_INVERT_E0_DIR;

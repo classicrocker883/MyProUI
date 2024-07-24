@@ -981,6 +981,12 @@ void reset_stepper_drivers();    // Called by settings.load / settings.reset
   #define AFTER_CHANGE(N,TF) NOOP
 #endif
 
+#ifdef Z_IDLE_HEIGHT
+  #define Z_RESET() do{ current_position.z = Z_IDLE_HEIGHT; sync_plan_position(); }while(0)
+#else
+  #define Z_RESET()
+#endif
+
 #if HAS_X_AXIS
   #define  ENABLE_AXIS_X() if (SHOULD_ENABLE(x))  {  ENABLE_STEPPER_X();  ENABLE_STEPPER_X2(); AFTER_CHANGE(x, true); }
   #define DISABLE_AXIS_X() if (SHOULD_DISABLE(x)) { DISABLE_STEPPER_X(); DISABLE_STEPPER_X2(); AFTER_CHANGE(x, false); set_axis_untrusted(X_AXIS); }
@@ -1003,12 +1009,6 @@ void reset_stepper_drivers();    // Called by settings.load / settings.reset
 #else
   #define  ENABLE_AXIS_Z() NOOP
   #define DISABLE_AXIS_Z() NOOP
-#endif
-
-#ifdef Z_IDLE_HEIGHT
-  #define Z_RESET() do{ current_position.z = Z_IDLE_HEIGHT; sync_plan_position(); }while(0)
-#else
-  #define Z_RESET()
 #endif
 
 #if HAS_I_AXIS

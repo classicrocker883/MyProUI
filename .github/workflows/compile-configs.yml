@@ -240,7 +240,7 @@ jobs:
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
-        if ($T13); then THMP="13"; DSMP="425"; else THMP="1"; DSMP="98"; fi;
+        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
         sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
@@ -250,7 +250,6 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
-        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -330,7 +329,7 @@ jobs:
         sed -i "s/.*#define PROUI_ITEM_PLR/#define PROUI_ITEM_PLR/" Marlin/Configuration.h
         sed -i "s/.*#define POWER_LOSS_RECOVERY/#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
         sed -i "s/.*#define NO_HOME_OFFSETS/#define NO_HOME_OFFSETS/" Marlin/Configuration_adv.h
-        if ($T13); then THMP="13"; DSMP="425"; else THMP="1"; DSMP="98"; fi;
+        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
         sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
@@ -343,7 +342,6 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
-        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -511,7 +509,6 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
-        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -605,7 +602,6 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
-        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -688,6 +684,7 @@ jobs:
         cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
         fi;
+        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_${SKR}/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
@@ -699,8 +696,6 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
-        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
-        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         pio run
         mkdir temp
         mv .pio/build/${STMP}_btt/*.bin temp/build.bin
@@ -778,11 +773,11 @@ jobs:
         cp configurations/BTT-SKR_Mini_E3_V2/Configuration_advMM.h Marlin/Configuration_adv.h
         cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
         fi;
+        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_${SKR}/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
-        sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         pio run
         mkdir temp
         mv .pio/build/${STMP}_btt/*.bin temp/build.bin
@@ -1040,7 +1035,7 @@ jobs:
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
-        if ($T13); then THMP="13"; DSMP="425"; else THMP="1"; DSMP="98"; fi;
+        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
         sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
@@ -1050,7 +1045,6 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
-        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -1147,7 +1141,6 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
-        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -1328,7 +1321,6 @@ jobs:
         sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
         sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
         sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
-        if ($BMP); then sed -i -e "/.*#define BIQU_MICROPROBE_V2.*/a#define NO_MICROPROBE_WARNING" Marlin/Configuration.h; fi;
         pio run
         mkdir temp
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
@@ -1395,6 +1387,7 @@ jobs:
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; DBORD='CREALITY_V427'; else AVTMP="422"; DBORD='CREALITY_V422'; fi;
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        echo "filename=C2-Aquila_${AVTMP}_${ABL}${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -1407,7 +1400,6 @@ jobs:
         cp configurations/Voxelab\ Aquila\ 427/MM/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila\ 427/MM/Version.h Marlin/Version.h
         fi;
-        echo "filename=C2-Aquila_${AVTMP}_${ABL}${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/\/\/#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h

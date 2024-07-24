@@ -689,7 +689,7 @@
  * Multiple extruders can be assigned to the same pin in which case
  * the fan will turn on when any selected extruder is above the threshold.
  */
-#define E0_AUTO_FAN_PIN -1  // Ender3V2 Configs
+#define E0_AUTO_FAN_PIN FAN1_PIN // Board v301 Configs
 #define E1_AUTO_FAN_PIN -1
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
@@ -964,7 +964,7 @@
 
   // Safety: The probe needs time to recognize the command.
   //         Minimum command delay (ms). Enable and increase if needed.
-  //#define BLTOUCH_DELAY 200
+  #define BLTOUCH_DELAY 200
 
   /**
    * Settings for BLTOUCH Classic 1.2, 1.3 or BLTouch Smart 1.0, 2.0, 2.2, 3.0, 3.1, and most clones:
@@ -1752,9 +1752,9 @@
    * an option on the LCD screen to continue the print from the last-known
    * point in the file.
    */
-  #define POWER_LOSS_RECOVERY           // (3400 bytes of flash)
+  //#define POWER_LOSS_RECOVERY         // (3400 bytes of flash)
   #if ENABLED(POWER_LOSS_RECOVERY)
-    #define PLR_ENABLED_DEFAULT       false  // Power-Loss Recovery enabled by default. (Set with 'M413 Sn' & M500)
+    #define PLR_ENABLED_DEFAULT       true  // Power-Loss Recovery enabled by default. (Set with 'M413 Sn' & M500)
     //#define PLR_BED_THRESHOLD BED_MAXTEMP // (°C) Skip user confirmation at or above this bed temperature (0 to disable)
 
     //#define POWER_LOSS_PIN             44 // Pin to detect power-loss. Set to -1 to disable default pin on boards without module, or comment to use board default.
@@ -1844,7 +1844,7 @@
 
   //#define SD_REPRINT_LAST_SELECTED_FILE // On print completion open the LCD Menu and select the same file
 
-  #define AUTO_REPORT_SD_STATUS           // Auto-report media status with 'M27 S<seconds>' (416 bytes of flash)
+  //#define AUTO_REPORT_SD_STATUS           // Auto-report media status with 'M27 S<seconds>' (416 bytes of flash)
 
   /**
    * Support for USB thumb drives using an Arduino USB Host Shield or
@@ -2350,7 +2350,7 @@
  * underextrusion at high extruder speeds that are otherwise well-behaved (i.e., not skipping).
  * For better results also enable ADAPTIVE_STEP_SMOOTHING.
  */
-#define NONLINEAR_EXTRUSION // (560 bytes of flash)
+//#define NONLINEAR_EXTRUSION // (560 bytes of flash)
 
 // @section leveling
 
@@ -2760,7 +2760,7 @@
  *
  * NOTE: M207 / M208 / M209 settings are saved to EEPROM.
  */
-#define FWRETRACT  // MRiscoC Enabled support for firmware based retract (1592 bytes of flash)
+//#define FWRETRACT  // MRiscoC Enabled support for firmware based retract (1592 bytes of flash)
 #if ENABLED(FWRETRACT)
   //#define FWRETRACT_AUTORETRACT             // Override slicer retractions  // MRiscoC use slicer retract
   #if ENABLED(FWRETRACT_AUTORETRACT)
@@ -3905,7 +3905,7 @@
 /**
  * Extra options for the M114 "Current Position" report
  */
-#define M114_DETAIL           // Use 'M114' for details to check planner calculations
+//#define M114_DETAIL         // Use 'M114' for details to check planner calculations
 //#define M114_REALTIME       // Real current position based on forward kinematics
 //#define M114_LEGACY         // M114 used to synchronize on every call. Enable if needed.
 
@@ -3920,7 +3920,7 @@
 /**
  * Auto-report temperatures with M155 S<seconds>
  */
-#define AUTO_REPORT_TEMPERATURES // (288 bytes of flash)
+//#define AUTO_REPORT_TEMPERATURES // (288 bytes of flash)
 #if ENABLED(AUTO_REPORT_TEMPERATURES) && TEMP_SENSOR_REDUNDANT
   //#define AUTO_REPORT_REDUNDANT // Include the "R" sensor in the auto-report
 #endif
@@ -3928,16 +3928,16 @@
 /**
  * Auto-report position with M154 S<seconds>
  */
-#define AUTO_REPORT_POSITION // (224 bytes of flash)
+//#define AUTO_REPORT_POSITION // (224 bytes of flash)
 #if ENABLED(AUTO_REPORT_POSITION)
-  //#define AUTO_REPORT_REAL_POSITION // Auto-report the real position
+  #define AUTO_REPORT_REAL_POSITION // Auto-report the real position
 #endif
 
 /**
  * M115 - Report capabilites. Disable to save ~1150 bytes of flash.
  *        Some hosts (and serial TFT displays) rely on this feature.
  */
-#define CAPABILITIES_REPORT
+//#define CAPABILITIES_REPORT
 #if ENABLED(CAPABILITIES_REPORT)
   // Include capabilities in M115 output
   #define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
@@ -3970,7 +3970,7 @@
  * Enable M111 debug flags 1=ECHO, 2=INFO, 4=ERRORS (unimplemented).
  * Disable to save some flash. Some hosts (Repetier Host) may rely on this feature.
  */
-#define DEBUG_FLAGS_GCODE
+//#define DEBUG_FLAGS_GCODE
 
 /**
  * Enable this option for a leaner build of Marlin that removes
@@ -4155,7 +4155,7 @@
  *
  * Implement M486 to allow Marlin to skip objects
  */
-#define CANCEL_OBJECTS  // MRiscoC Enabled M486 to skip objects (416 bytes of flash)
+//#define CANCEL_OBJECTS  // MRiscoC Enabled M486 to skip objects (416 bytes of flash)
 #if ENABLED(CANCEL_OBJECTS)
   #define CANCEL_OBJECTS_REPORTING // Emit the current object as a status message
 #endif

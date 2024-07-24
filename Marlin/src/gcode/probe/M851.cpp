@@ -27,6 +27,9 @@
 #include "../gcode.h"
 #include "../../feature/bedlevel/bedlevel.h"
 #include "../../module/probe.h"
+#if PROUI_EX
+  #include "../../lcd/e3v2/proui/dwin.h"
+#endif
 
 /**
  * M851: Set the nozzle-to-probe offsets in current units
@@ -80,14 +83,10 @@ void GcodeSuite::M851() {
   }
 
   // Save the new offsets
-  #if PROUI_EX
-    if (ok) {
-      probe.offset = offs;
-      ProEx.ApplyPhySet();
-    }
-  #else
-    if (ok) probe.offset = offs;
-  #endif
+  if (ok) {
+    probe.offset = offs;
+    TERN_(PROUI_EX, ApplyPhySet();)
+  }
 }
 
 void GcodeSuite::M851_report(const bool forReplay/*=true*/) {

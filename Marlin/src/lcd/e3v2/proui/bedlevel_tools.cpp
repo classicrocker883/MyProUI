@@ -106,7 +106,7 @@ void BedLevelToolsClass::manual_move(const uint8_t mesh_x, const uint8_t mesh_y,
   else {
     DWIN_Show_Popup(ICON_BLTouch, F("Moving to Point"), F("Please wait until done."));
     HMI_SaveProcessID(NothingToDo);
-    gcode.process_subcommands_now(F("G0F300Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES)));
+    gcode.process_subcommands_now(F("G0F600Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES)));
     gcode.process_subcommands_now(TS(F("G42F4000I"), mesh_x, F("J"), mesh_y));
     planner.synchronize();
     current_position.z = goto_mesh_value ? bedlevel.z_values[mesh_x][mesh_y] : Z_CLEARANCE_BETWEEN_PROBES;

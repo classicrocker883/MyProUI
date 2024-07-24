@@ -25,7 +25,7 @@
 //#define DEBUG_DWIN 1
 //#define TJC_DISPLAY         // Enable for TJC display
 //#define DACAI_DISPLAY       // Enable for DACAI display
-//#define TITLE_CENTERED      // Center Menu Title Text
+#define TITLE_CENTERED        // Center Menu Title Text
 
 #if HAS_MESH
   #define PROUI_MESH_EDIT     // Add a menu to edit mesh inset + points
@@ -83,10 +83,12 @@
   #define Def_CaseLight_Brightness 255
 #endif
 
-#ifdef Z_AFTER_HOMING
-  #define DEF_Z_AFTER_HOMING Z_AFTER_HOMING
-#elif ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
-  #define DEF_Z_AFTER_HOMING 10
+#if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
+  #ifdef Z_AFTER_HOMING
+    #define DEF_Z_AFTER_HOMING Z_AFTER_HOMING
+  #else
+    #define DEF_Z_AFTER_HOMING 10
+  #endif
 #endif
 
 #ifndef PREHEAT_1_TEMP_HOTEND
@@ -164,6 +166,16 @@
     #undef  INVERT_E0_DIR
     #define INVERT_E0_DIR PRO_data.Invert_E0
   #endif
+  #if ENABLED(PROUI_MESH_EDIT)
+    #undef  MESH_MIN_X
+    #undef  MESH_MAX_X
+    #undef  MESH_MIN_Y
+    #undef  MESH_MAX_Y
+    #define MESH_MIN_X PRO_data.mesh_min_x
+    #define MESH_MAX_X PRO_data.mesh_max_x
+    #define MESH_MIN_Y PRO_data.mesh_min_y
+    #define MESH_MAX_Y PRO_data.mesh_max_y
+  #endif
 
 #else
 
@@ -186,21 +198,21 @@
   #endif
   #if HAS_BED_PROBE
     #undef  Z_PROBE_FEEDRATE_SLOW
-    #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobeFeed
+    #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobefeedslow
   #endif
   #if HAS_EXTRUDERS
     #undef  INVERT_E0_DIR
     #define INVERT_E0_DIR HMI_data.Invert_E0
   #endif
-#endif // PROUI_EX
+  #if ENABLED(PROUI_MESH_EDIT)
+    #undef  MESH_MIN_X
+    #undef  MESH_MAX_X
+    #undef  MESH_MIN_Y
+    #undef  MESH_MAX_Y
+    #define MESH_MIN_X HMI_data.mesh_min_x
+    #define MESH_MAX_X HMI_data.mesh_max_x
+    #define MESH_MIN_Y HMI_data.mesh_min_y
+    #define MESH_MAX_Y HMI_data.mesh_max_y
+  #endif
 
-#if ENABLED(PROUI_MESH_EDIT)
-  #undef  MESH_MIN_X
-  #undef  MESH_MAX_X
-  #undef  MESH_MIN_Y
-  #undef  MESH_MAX_Y
-  #define MESH_MIN_X HMI_data.mesh_min_x
-  #define MESH_MAX_X HMI_data.mesh_max_x
-  #define MESH_MIN_Y HMI_data.mesh_min_y
-  #define MESH_MAX_Y HMI_data.mesh_max_y
-#endif
+#endif // PROUI_EX

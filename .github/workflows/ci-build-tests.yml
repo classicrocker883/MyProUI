@@ -41,6 +41,7 @@ jobs:
 
         # Native
         # - linux_native
+        # - simulator_linux_release
 
         # AVR
         # - mega2560
@@ -114,7 +115,7 @@ jobs:
         # - Opulo_Lumen_REV3
         # - rumba32
         - STM32F401RC_btt
-        # - STM32F401RC_creality
+        - STM32F401RC_creality
         # - STM32F407VE_black
         # - I3DBEEZ9_V1
 
@@ -123,8 +124,8 @@ jobs:
         # - REMRAM_V1
 
         # STM32H7
-        # - BTT_SKR_SE_BX
-        #- STM32H743VI_btt
+        # - BIGTREE_SKR_SE_BX
+        # - STM32H743VI_btt
 
         # STM32F1 (Maple)
         # - jgaurora_a5s_a1_maple
@@ -185,6 +186,13 @@ jobs:
         pip install -U platformio
         pio upgrade --dev
         pio pkg update --global
+
+    - name: Install Simulator dependencies
+      run: |
+        sudo apt-get install build-essential
+        sudo apt-get install libsdl2-dev
+        sudo apt-get install libsdl2-net-dev
+        sudo apt-get install libglm-dev
 
     - name: Run ${{ matrix.test-platform }} Tests
       run: |
