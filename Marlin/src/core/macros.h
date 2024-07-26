@@ -57,7 +57,7 @@
 
 // Macros for bit masks
 #undef _BV
-#define _BV(n) (1<<(n))
+#define _BV(b) (1 << (b))
 #ifndef SBI
   #define SBI(A,B) (A |= _BV(B))
 #endif

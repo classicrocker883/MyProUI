@@ -303,7 +303,7 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        if [ "$ENDER_VER" = F4 ]; then EVTMP="F4"; DENV="STM32F401RC_creality"; DBORD='CREALITY_V24S1_301F4'; else EVTMP="F1"; DENV="STM32F103RE_creality"; DBORD='CREALITY_V24S1_301'; fi;
+        if [ "$ENDER_VER" = F4 ]; then EVTMP="-F4"; DENV="STM32F401RC_creality"; DBORD='CREALITY_V24S1_301F4'; else EVTMP="-F1"; DENV="STM32F103RC_creality"; DBORD='CREALITY_V24S1_301'; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
         echo "filename=${DTMP}Ender-S1${EVTMP}${MPTMP}_UBL-ProUI-EX$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
@@ -317,31 +317,17 @@ jobs:
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
-        if ($BMP); then
-        sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
-        sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE LOW/" Marlin/Configuration.h
-        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE LOW/" Marlin/Configuration.h
-        sed -i "s/.*#define BLTOUCH/\/\/#define BLTOUCH/" Marlin/Configuration.h
-        sed -i "s/.*#define BIQU_MICROPROBE_V2/#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
-        sed -i "s/.*#define PROBE_ENABLE_DISABLE/#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
-        sed -i "s/.*#define HAS_ESDIAG 1/#define HAS_ESDIAG 1/" Marlin/Configuration.h
-        sed -i "s/.*#define PROUI_ITEM_PLOT/#define PROUI_ITEM_PLOT/" Marlin/Configuration.h
-        sed -i "s/.*#define PROUI_ITEM_TRAM/#define PROUI_ITEM_TRAM/" Marlin/Configuration.h
-        sed -i "s/.*#define FWRETRACT/#define FWRETRACT/" Marlin/Configuration_adv.h
-        fi;
-        if [ "$ENDER_VER" = F1 ]; then
-        sed -i "s/.*#define HAS_GCODE_PREVIEW 1/#define HAS_GCODE_PREVIEW 1/" Marlin/Configuration.h
-        sed -i "s/.*#define HAS_ESDIAG 1/#define HAS_ESDIAG 1/" Marlin/Configuration.h
-        sed -i "s/.*#define HAS_CGCODE 1/#define HAS_CGCODE 1/" Marlin/Configuration.h
-        sed -i "s/.*#define USE_GRID_MESHVIEWER 1/#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
-        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
-        sed -i "s/.*#define PROUI_ITEM_PLOT/#define PROUI_ITEM_PLOT/" Marlin/Configuration.h
-        sed -i "s/.*#define PROUI_ITEM_TRAM/#define PROUI_ITEM_TRAM/" Marlin/Configuration.h
-        sed -i "s/.*#define SHOW_SPEED_IND/#define SHOW_SPEED_IND/" Marlin/Configuration.h
-        sed -i "s/.*#define FWRETRACT/#define FWRETRACT/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define AUTO_REPORT_POSITION/#define AUTO_REPORT_POSITION/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define CAPABILITIES_REPORT/#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
-        fi;
+        if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/${MPDEMP}#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        sed -i "s/.*#define HAS_ESDIAG 1/${MPDEMP}#define HAS_ESDIAG 1/" Marlin/Configuration.h
+        sed -i "s/.*#define PROUI_ITEM_PLOT/${MPDEMP}#define PROUI_ITEM_PLOT/" Marlin/Configuration.h
+        sed -i "s/.*#define PROUI_ITEM_TRAM/${MPDEMP}#define PROUI_ITEM_TRAM/" Marlin/Configuration.h
+        sed -i "s/.*#define FWRETRACT/${MPDEMP}#define FWRETRACT/" Marlin/Configuration_adv.h
         pio run
         mkdir temp
         mv .pio/build/${DENV}/*.bin temp/build.bin
@@ -801,6 +787,182 @@ jobs:
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
         BMP: ${{ matrix.bmp }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-UBL-EX-E3-FREE-RUNS:            # UBL EX for Ender-3 E3 Free-runs
+    name: Build UBL EX E3 Free-runs Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        temp: [true,false]
+        inshape: [true,false]
+        tjc: [true,false]
+        t13: [true,false]
+        bmp: [true,false]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v4
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
+        if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
+        echo "filename=${DTMP}Ender_E3-Free-runs${TTMP}${MPTMP}_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Creality\ Ender/E3-Free-runs/UBL/Configuration.h Marlin/Configuration.h
+        cp configurations/Creality\ Ender/E3-Free-runs/UBL/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Creality\ Ender/E3-Free-runs/UBL/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = STM32F401RE_freeruns/" platformio.ini
+        if ($IS); then STEMP=; else STEMP='\/\/'; fi;
+        sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Z/${STEMP}#define INPUT_SHAPING_Z/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
+        sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
+        sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
+        if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/${MPDEMP}#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        pio run
+        mkdir temp
+        mv .pio/build/STM32F401RE_freeruns/*.bin temp/build.bin
+      env:
+        TP: ${{ matrix.temp }}
+        IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
+        T13: ${{ matrix.t13 }}
+        BMP: ${{ matrix.bmp }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: tanyagray/action-upload-release-asset@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-MM-EX-E3-FREE-RUNS:            # MM EX for Ender-3 E3 Free-runs
+    name: Build MM EX E3 Free-runs Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        temp: [true,false]
+        inshape: [true,false]
+        tjc: [true,false]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v4
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install --upgrade pip
+        pip install --upgrade wheel
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Ender_E3-Free-runs_MM-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Creality\ Ender/E3-Free-runs/MM/Configuration.h Marlin/Configuration.h
+        cp configurations/Creality\ Ender/E3-Free-runs/MM/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Creality\ Ender/E3-Free-runs/MM/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = STM32F401RE_freeruns/" platformio.ini
+        if ($IS); then STEMP=; else STEMP='\/\/'; fi;
+        sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Z/${STEMP}#define INPUT_SHAPING_Z/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        pio run
+        mkdir temp
+        mv .pio/build/STM32F401RE_freeruns/*.bin temp/build.bin
+      env:
+        TP: ${{ matrix.temp }}
+        IS: ${{ matrix.inshape }}
+        TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2

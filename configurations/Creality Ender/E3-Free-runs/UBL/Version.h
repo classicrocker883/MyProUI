@@ -34,7 +34,7 @@
  * Verbose version identifier which should contain a reference to the location
  * from where the binary was downloaded or the source code was compiled.
  */
-#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION "Aquila-UBL-Inductive"
+#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION "Ender-UBL"
 
 /**
  * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
@@ -49,7 +49,7 @@
 /**
  * Defines a generic printer name to be output to the LCD after booting Marlin.
  */
-#define MACHINE_NAME "Aquila"
+#define MACHINE_NAME "Ender-3 E3 Free-runs"
 
 /**
  * The SOURCE_CODE_URL is the location where users will find the Marlin Source
