@@ -198,10 +198,10 @@ public:
   }
 
   #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-    static float mesh_inset_min_x;
-    static float mesh_inset_max_x;
-    static float mesh_inset_min_y;
-    static float mesh_inset_max_y;
+    static float mesh_min_x;
+    static float mesh_max_x;
+    static float mesh_min_y;
+    static float mesh_max_y;
   #endif
 
   #ifdef BED_SCREW_INSET

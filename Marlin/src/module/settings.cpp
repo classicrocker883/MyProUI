@@ -630,10 +630,10 @@ typedef struct SettingsDataStruct {
   // MESH_INSET workaround
   //
   #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-    float ui_mesh_inset_min_x;
-    float ui_mesh_inset_max_x;
-    float ui_mesh_inset_min_y;
-    float ui_mesh_inset_max_y;
+    float ui_mesh_min_x;
+    float ui_mesh_max_x;
+    float ui_mesh_min_y;
+    float ui_mesh_max_y;
   #endif
 
   //
@@ -1771,10 +1771,10 @@ void MarlinSettings::postprocess() {
     // MESH_INSET workaround
     //
     #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-      EEPROM_WRITE(ui.mesh_inset_min_x);
-      EEPROM_WRITE(ui.mesh_inset_max_x);
-      EEPROM_WRITE(ui.mesh_inset_min_y);
-      EEPROM_WRITE(ui.mesh_inset_max_y);
+      EEPROM_WRITE(ui.mesh_min_x);
+      EEPROM_WRITE(ui.mesh_max_x);
+      EEPROM_WRITE(ui.mesh_min_y);
+      EEPROM_WRITE(ui.mesh_max_y);
     #endif
 
     //
@@ -2919,14 +2919,14 @@ void MarlinSettings::postprocess() {
       // MESH_INSET workaround
       //
       #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-        _FIELD_TEST(ui_mesh_inset_min_x);
-        EEPROM_READ(ui.mesh_inset_min_x);
-        _FIELD_TEST(ui_mesh_inset_max_x);
-        EEPROM_READ(ui.mesh_inset_max_x);
-        _FIELD_TEST(ui_mesh_inset_min_y);
-        EEPROM_READ(ui.mesh_inset_min_y);
-        _FIELD_TEST(ui_mesh_inset_max_y);
-        EEPROM_READ(ui.mesh_inset_max_y);
+        _FIELD_TEST(ui_mesh_min_x);
+        EEPROM_READ(ui.mesh_min_x);
+        _FIELD_TEST(ui_mesh_max_x);
+        EEPROM_READ(ui.mesh_max_x);
+        _FIELD_TEST(ui_mesh_min_y);
+        EEPROM_READ(ui.mesh_min_y);
+        _FIELD_TEST(ui_mesh_max_y);
+        EEPROM_READ(ui.mesh_max_y);
       #endif
 
       //
@@ -3501,10 +3501,10 @@ void MarlinSettings::reset() {
   // MESH_INSET workaround
   //
   #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-    ui.mesh_inset_min_x = MESH_INSET;
-    ui.mesh_inset_max_x = (X_BED_SIZE - MESH_INSET);
-    ui.mesh_inset_min_y = MESH_INSET;
-    ui.mesh_inset_max_y = (Y_BED_SIZE - MESH_INSET);
+    ui.mesh_min_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x;
+    ui.mesh_max_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x;
+    ui.mesh_min_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y;
+    ui.mesh_max_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y;
   #endif
 
   //

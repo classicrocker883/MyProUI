@@ -126,7 +126,7 @@
   #if HAS_TOOLBAR
     constexpr uint8_t TBMaxOpt = 5;      // Amount of shortcuts on screen
     #if HAS_BED_PROBE
-      #define DEF_TBOPT {1, 7, 6, 2, 4}  // Default shorcuts for ALB/UBL
+      #define DEF_TBOPT {1, 7, 6, 2, 4}  // Default shorcuts for ABL/UBL
     #else
       #define DEF_TBOPT {1, 5, 4, 2, 3}; // Default shortcuts for MM
     #endif
