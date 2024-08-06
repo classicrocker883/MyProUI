@@ -3502,9 +3502,9 @@ void MarlinSettings::reset() {
   //
   #if ALL(PROUI_MESH_EDIT, HAS_MESH)
     ui.mesh_inset_min_x = MESH_INSET;
-    ui.mesh_inset_max_x = (DEF_X_BED_SIZE - MESH_INSET);
+    ui.mesh_inset_max_x = (X_BED_SIZE - MESH_INSET);
     ui.mesh_inset_min_y = MESH_INSET;
-    ui.mesh_inset_max_y = (DEF_Y_BED_SIZE - MESH_INSET);
+    ui.mesh_inset_max_y = (Y_BED_SIZE - MESH_INSET);
   #endif
 
   //
