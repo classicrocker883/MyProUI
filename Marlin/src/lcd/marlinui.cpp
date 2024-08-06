@@ -64,6 +64,13 @@ MarlinUI ui;
 
 constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
 
+#if ALL(PROUI_MESH_EDIT, HAS_MESH)
+  float MarlinUI::mesh_inset_min_x = MESH_INSET;
+  float MarlinUI::mesh_inset_max_x = X_BED_SIZE - MESH_INSET;
+  float MarlinUI::mesh_inset_min_y = MESH_INSET;
+  float MarlinUI::mesh_inset_max_y = Y_BED_SIZE - MESH_INSET;
+#endif
+
 #ifdef BED_SCREW_INSET
   float MarlinUI::screw_pos = BED_SCREW_INSET;
 #endif
