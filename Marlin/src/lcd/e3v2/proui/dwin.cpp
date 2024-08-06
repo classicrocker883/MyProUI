@@ -2056,9 +2056,7 @@ void DWIN_Print_Aborted() {
     TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x = ui.mesh_max_x;
     TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y = ui.mesh_min_y;
     TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y = ui.mesh_max_y;
-    set_bed_leveling_enabled(false);
-    reset_bed_level();
-    ReDrawMenu();
+    ApplyMeshInset();
   }
 #endif
 
