@@ -462,8 +462,8 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if SAVED_POSITIONS
-        case 60: G60(); break;                                    // G60:  save current position
-        case 61: G61(); break;                                    // G61:  Apply/restore saved coordinates.
+        case 60: G60(); break;                                    // G60: Save current position
+        case 61: G61(); break;                                    // G61: Apply/restore saved coordinates
       #endif
 
       #if ALL(PTC_PROBE, PTC_BED)

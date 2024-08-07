@@ -36,7 +36,7 @@ void PrintStats::draw() {
   char str[30] = "";
   constexpr int8_t MRG = 30;
 
-  Title.ShowCaption(GET_TEXT_F(MSG_INFO_STATS_MENU));
+  Title.ShowCaption(GET_TEXT_F(MSG_INFO_PRINTER_STATS_MENU));
   DWINUI::ClearMainArea();
   Draw_Popup_Bkgd();
   DWINUI::Draw_Button(BTN_Continue, 86, 250, true);

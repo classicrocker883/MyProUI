@@ -26,6 +26,7 @@
 #include "../common/encoder.h"
 #include "../common/limits.h"
 #include "../../../MarlinCore.h"
+
 #if ENABLED(LED_CONTROL_MENU)
   #include "../../../feature/leds/leds.h"
 #endif
@@ -156,12 +157,14 @@ void ResetEeprom();
 #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
   void SetHSMode();
 #endif
-#if PROUI_EX
+#if ANY(PROUI_EX, PROUI_GRID_PNTS)
   void SetMeshPoints();
   void SetXMeshInset();
   void SetYMeshInset();
   void MaxMeshArea();
   void CenterMeshArea();
+#endif
+#if PROUI_EX
   void ApplyPhySet();
   void SetData();
 #endif
@@ -209,6 +212,10 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
 #endif
 
 // Other
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
+  void ChangeFilament();
+  void Goto_FilamentPurge();
+#endif
 void Goto_PrintProcess();
 void Goto_Main_Menu();
 void Goto_Info_Menu();
@@ -270,9 +277,6 @@ void DWIN_RebootScreen();
   void DWIN_LevelingStart();
   void DWIN_LevelingDone();
 #endif
-#if HAS_ESDIAG
-  void Draw_EndStopDiag();
-#endif
 
 // Menu drawing functions
 void Draw_Print_File_Menu();
@@ -282,6 +286,9 @@ void Draw_AdvancedSettings_Menu();
 void Draw_Prepare_Menu();
 void Draw_Move_Menu();
 void Draw_Tramming_Menu();
+#if HAS_ESDIAG
+  void Draw_EndStopDiag();
+#endif
 #if HAS_HOME_OFFSET
   void Draw_HomeOffset_Menu();
 #endif
@@ -302,10 +309,6 @@ void Draw_PhySet_Menu();
 #endif
 void Draw_Tune_Menu();
 void Draw_Motion_Menu();
-#if ENABLED(ADVANCED_PAUSE_FEATURE)
-  void ChangeFilament();
-  void Goto_FilamentPurge();
-#endif
 void Draw_FilamentMan_Menu();
 void Draw_Temperature_Menu();
 void Draw_MaxSpeed_Menu();
@@ -330,6 +333,7 @@ void Draw_MaxAccel_Menu();
   void Draw_MeshInset_Menu();
   #if ENABLED(PROUI_MESH_EDIT)
     void Draw_EditMesh_Menu();
+    void ApplyMeshInset();
   #endif
 #endif
 #if HAS_TRINAMIC_CONFIG

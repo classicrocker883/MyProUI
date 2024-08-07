@@ -8,21 +8,31 @@ name: CI - Unit Tests
 on:
   pull_request:
     branches:
-    #- HEAD need to be tested
-    - 2024-July
+    - 2024-August
     paths-ignore:
-    - config/**
+    - configurations/**
+    - display assets/**
     - data/**
     - docs/**
+    - docker/**
+    - slicer scripts/**
+    - test/**
+    - themes/**
+    - Marlin/tests/**
     - '**/*.md'
   push:
     branches:
-    #- HEAD need to be tested
-    - 2024-July
+    - 2024-August
     paths-ignore:
-    - config/**
+    - configurations/**
+    - display assets/**
     - data/**
     - docs/**
+    - docker/**
+    - slicer scripts/**
+    - test/**
+    - themes/**
+    - Marlin/tests/**
     - '**/*.md'
 
 jobs:
@@ -54,10 +64,10 @@ jobs:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
-    - name: Select Python 3.9
+    - name: Select Python 3.10
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: '3.10'
         architecture: 'x64'
 
     - name: Install PlatformIO

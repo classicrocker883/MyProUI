@@ -8,22 +8,30 @@ name: CI - Build Tests
 on:
   pull_request:
     branches:
-    - 2024-July!
+    - 2024-August
     paths-ignore:
-    - config/**
+    - configurations/**
+    - display assets/**
     - data/**
     - docs/**
+    - docker/**
+    - slicer scripts/**
     - test/**
+    - themes/**
     - Marlin/tests/**
     - '**/*.md'
   push:
     branches:
-    - 2024-July!
+    - 2024-August
     paths-ignore:
-    - config/**
+    - configurations/**
+    - display assets/**
     - data/**
     - docs/**
+    - docker/**
+    - slicer scripts/**
     - test/**
+    - themes/**
     - Marlin/tests/**
     - '**/*.md'
 
@@ -91,22 +99,23 @@ jobs:
         # - PANDA_PI_V29
         - STM32F103RC_btt
         # - STM32F103RC_fysetc
-        - STM32F103RE_btt
+        # - STM32F103RE_btt
         # - STM32F103RE_btt_USB
         - STM32F103RE_creality
+        - STM32F103RC_creality
         # - STM32F103VE_longer
-        #- mks_robin_mini
-        #- mks_robin_nano_v1_3_f4_usbmod
-        #- mks_robin_nano_v1v2_usbmod
-        #- STM32F103CB_malyan
-        #- STM32F103RC_btt_USB
-        #- STM32F103RE
+        # - mks_robin_mini
+        # - mks_robin_nano_v1_3_f4_usbmod
+        # - mks_robin_nano_v1v2_usbmod
+        # - STM32F103CB_malyan
+        # - STM32F103RC_btt_USB
+        # - STM32F103RE
 
         # STM32F4
         # - ARMED
-        # - BIGTREE_BTT002
-        # - BIGTREE_GTR_V1_0
-        # - BIGTREE_SKR_PRO
+        # - BTT_BTT002
+        # - BTT_GTR_V1_0
+        # - BTT_SKR_PRO
         # - FLYF407ZG
         # - FYSETC_S6
         # - LERDGEK
@@ -116,6 +125,7 @@ jobs:
         # - rumba32
         - STM32F401RC_btt
         - STM32F401RC_creality
+        - STM32F401RE_freeruns
         # - STM32F407VE_black
         # - I3DBEEZ9_V1
 
@@ -124,7 +134,7 @@ jobs:
         # - REMRAM_V1
 
         # STM32H7
-        # - BIGTREE_SKR_SE_BX
+        # - BTT_SKR_SE_BX
         # - STM32H743VI_btt
 
         # STM32F1 (Maple)
@@ -136,16 +146,16 @@ jobs:
         # - STM32F103RC_meeb_maple
         # - STM32F103VE_longer_maple
         # - STM32F103VE_ZM3E4V2_USB_maple
-        #- mks_robin_maple
-        #- mks_robin_nano_v1v2_maple
-        #- STM32F103RC_btt_maple
-        #- STM32F103RE_creality_maple
-        #- STM32F103RC_creality_maple
-        #- GD32F303RC_creality_maple
-        #- GD32F303RC_creality_maple
+        # - mks_robin_maple
+        # - mks_robin_nano_v1v2_maple
+        # - STM32F103RC_btt_maple
+        # - STM32F103RE_creality_maple
+        # - STM32F103RC_creality_maple
+        # - GD32F303RC_creality_maple
+        # - GD32F303RC_creality_maple
         - GD32F103RC_voxelab_maple
         - N32F103RC_voxelab_maple
-        #- N32G455RE_voxelab_maple
+        # - N32G455RE_voxelab_maple
 
         # STM32G0
         - STM32G0B1RE_btt
@@ -173,10 +183,10 @@ jobs:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
-    - name: Select Python 3.9
+    - name: Select Python 3.10
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: '3.10'
         architecture: 'x64'
 
     - name: Install PlatformIO

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Build tests for STM32F401RC_btt (BigTreeTech SKR Mini E3)
+#
+
+# exit on first failure
+set -e
+
+#
+# Build with included configs
+#
+use_example_configs "BTT_SKR-Mini-E3-V2/MM"
+opt_set MOTHERBOARD BOARD_BTT_SKR_MINI_E3_V3_0_1
+# opt_disable
+# opt_enable
+# opt_add
+exec_test $1 $2 "BigTreeTech SKR Mini E3 V3.0.1 - ProUI Manual Mesh (MM)" "$3"
+
+use_example_configs "BTT_SKR-Mini-E3-V2/UBL"
+opt_set MOTHERBOARD BOARD_BTT_SKR_MINI_E3_V3_0_1
+opt_disable HAS_CUSTOM_COLORS
+# opt_enable
+# opt_add
+exec_test $1 $2 "BigTreeTech SKR Mini E3 V3.0.1 - ProUI Unified (UBL)" "$3"
+
+# clean up
+restore_configs

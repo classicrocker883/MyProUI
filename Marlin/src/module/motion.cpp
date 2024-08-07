@@ -863,11 +863,11 @@ void restore_feedrate_and_scaling() {
     OPTARG(HAS_HOTEND_OFFSET, const uint8_t old_tool_index/*=0*/, const uint8_t new_tool_index/*=0*/)
   ) {
 
-    #if PROUI_EX
+    // #if PROUI_EX
 
-      ProEx.UpdateAxis(axis);
+    //   ProEx.UpdateAxis(axis);
 
-    #elif ENABLED(DUAL_X_CARRIAGE)
+    #if ENABLED(DUAL_X_CARRIAGE)
 
       if (axis == X_AXIS) {
 

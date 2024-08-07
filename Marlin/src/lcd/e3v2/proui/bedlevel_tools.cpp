@@ -35,6 +35,9 @@
 #include "dwin_popup.h"
 #include "bedlevel_tools.h"
 
+#define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
+#include "../../../core/debug_out.h"
+
 BedLevelToolsClass bedLevelTools;
 
 bool BedLevelToolsClass::goto_mesh_value = false;
@@ -68,17 +71,21 @@ bool drawing_mesh = false;
     GRID_LOOP(i, j) {
       float mx = bedlevel.get_mesh_x(i), my = bedlevel.get_mesh_y(j), mz = bedlevel.z_values[i][j];
 
-      if (DEBUGGING(LEVELING)) {
-        DEBUG_ECHOLN(F("before rotation = ["), p_float_t(mx, 7), C(','), p_float_t(my, 7), C(','), p_float_t(mz, 7), F("]   ---> "));
-        DEBUG_DELAY(20);
-      }
+      #if DEBUG_OUT
+        if (DEBUGGING(LEVELING)) {
+          DEBUG_ECHOLN(F("before rotation = ["), p_float_t(mx, 7), C(','), p_float_t(my, 7), C(','), p_float_t(mz, 7), F("]   ---> "));
+          DEBUG_DELAY(20);
+        }
+      #endif
 
       rotation.apply_rotation_xyz(mx, my, mz);
 
-      if (DEBUGGING(LEVELING)) {
-        DEBUG_ECHOLN(F("after rotation = ["), p_float_t(mx, 7), C(','), p_float_t(my, 7), C(','), p_float_t(mz, 7), F("]   ---> "));
-        DEBUG_DELAY(20);
-      }
+      #if DEBUG_OUT
+        if (DEBUGGING(LEVELING)) {
+          DEBUG_ECHOLN(F("after rotation = ["), p_float_t(mx, 7), C(','), p_float_t(my, 7), C(','), p_float_t(mz, 7), F("]   ---> "));
+          DEBUG_DELAY(20);
+        }
+      #endif
 
       bedlevel.z_values[i][j] = mz - lsf_results.D;
     }

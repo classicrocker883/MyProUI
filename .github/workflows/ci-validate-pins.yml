@@ -8,14 +8,14 @@ name: CI - Validate Pins Files
 on:
   pull_request:
     branches:
-    - 2024-July
+    - 2024-August
     # Cannot be enabled on 2.1.x until it contains the unit test framework
     #- 2.1.x
     paths:
     - 'Marlin/src/pins/*/**'
   push:
     branches:
-    - 2024-July
+    - 2024-August
     # Cannot be enabled on 2.1.x until it contains the unit test framework
     #- 2.1.x
     paths:
@@ -40,10 +40,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-    - name: Select Python 3.9
+    - name: Select Python 3.10
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: '3.10'
         architecture: 'x64'
 
     - name: Validate all pins files

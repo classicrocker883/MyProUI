@@ -547,16 +547,6 @@ namespace DWINUI {
     DWIN_Draw_Box(mode, color, frame.x, frame.y, frame.w, frame.h);
   }
 
-  // Draw a circle
-  //  Color: circle color
-  //  x: abscissa of the center of the circle
-  //  y: ordinate of the center of the circle
-  //  r: circle radius
-  void Draw_Circle(uint16_t color, uint16_t x, uint16_t y, uint8_t r);
-  inline void Draw_Circle(uint16_t color, uint8_t r) {
-    Draw_Circle(color, cursor.x, cursor.y, r);
-  }
-
   // Draw a checkbox
   //  Color: frame color
   //  bColor: Background color

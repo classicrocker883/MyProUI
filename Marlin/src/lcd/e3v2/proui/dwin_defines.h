@@ -126,7 +126,7 @@
   #if HAS_TOOLBAR
     constexpr uint8_t TBMaxOpt = 5;      // Amount of shortcuts on screen
     #if HAS_BED_PROBE
-      #define DEF_TBOPT {1, 7, 6, 2, 4}  // Default shorcuts for ALB/UBL
+      #define DEF_TBOPT {1, 7, 6, 2, 4}  // Default shorcuts for ABL/UBL
     #else
       #define DEF_TBOPT {1, 5, 4, 2, 3}; // Default shortcuts for MM
     #endif
@@ -171,10 +171,10 @@
     #undef  MESH_MAX_X
     #undef  MESH_MIN_Y
     #undef  MESH_MAX_Y
-    #define MESH_MIN_X PRO_data.mesh_min_x
-    #define MESH_MAX_X PRO_data.mesh_max_x
-    #define MESH_MIN_Y PRO_data.mesh_min_y
-    #define MESH_MAX_Y PRO_data.mesh_max_y
+    #define MESH_MIN_X (float)PRO_data.mesh_min_x
+    #define MESH_MAX_X (float)PRO_data.mesh_max_x
+    #define MESH_MIN_Y (float)PRO_data.mesh_min_y
+    #define MESH_MAX_Y (float)PRO_data.mesh_max_y
   #endif
 
 #else
@@ -209,10 +209,10 @@
     #undef  MESH_MAX_X
     #undef  MESH_MIN_Y
     #undef  MESH_MAX_Y
-    #define MESH_MIN_X HMI_data.mesh_min_x
-    #define MESH_MAX_X HMI_data.mesh_max_x
-    #define MESH_MIN_Y HMI_data.mesh_min_y
-    #define MESH_MAX_Y HMI_data.mesh_max_y
+    #define MESH_MIN_X (float)HMI_data.mesh_min_x
+    #define MESH_MAX_X (float)HMI_data.mesh_max_x
+    #define MESH_MIN_Y (float)HMI_data.mesh_min_y
+    #define MESH_MAX_Y (float)HMI_data.mesh_max_y
   #endif
 
 #endif // PROUI_EX

@@ -48,6 +48,22 @@
   #define PREHEAT_1_LABEL "PLA"
 #endif
 
+#ifndef PREHEAT_2_LABEL
+  #define PREHEAT_2_LABEL "ABS"
+#endif
+
+#ifndef PREHEAT_3_LABEL
+  #define PREHEAT_3_LABEL "Warmup"
+#endif
+
+#ifndef PREHEAT_4_LABEL
+  #define PREHEAT_4_LABEL "TPU"
+#endif
+
+#ifndef CUSTOM_MENU_MAIN_TITLE
+  #define CUSTOM_MENU_MAIN_TITLE ""
+#endif
+
 namespace LanguageNarrow_en {
   constexpr uint8_t CHARSIZE              = 2;
   LSTR LANGUAGE                           = _UxGT("English");
@@ -84,6 +100,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_Z_PROBE                        = _UxGT("Z-Probe");
   LSTR MSG_HOMING                         = _UxGT("Homing");
   LSTR MSG_AUTO_HOME                      = _UxGT("Auto Home");
+  LSTR MSG_HOME_ALL                       = _UxGT("Home All");
   LSTR MSG_AUTO_HOME_A                    = _UxGT("Home @");
   LSTR MSG_AUTO_HOME_X                    = _UxGT("Home X");
   LSTR MSG_AUTO_HOME_Y                    = _UxGT("Home Y");
@@ -124,14 +141,12 @@ namespace LanguageNarrow_en {
   LSTR MSG_PREHEAT_1_ALL                  = _UxGT("Preheat ") PREHEAT_1_LABEL _UxGT(" All");
   LSTR MSG_PREHEAT_1_BEDONLY              = _UxGT("Preheat ") PREHEAT_1_LABEL _UxGT(" Bed");
   LSTR MSG_PREHEAT_1_SETTINGS             = _UxGT("Preheat ") PREHEAT_1_LABEL _UxGT(" Settings");
-  #ifdef PREHEAT_2_LABEL
-    LSTR MSG_PREHEAT_2                    = _UxGT("Preheat ") PREHEAT_2_LABEL;
-    LSTR MSG_PREHEAT_2_SETTINGS           = _UxGT("Preheat ") PREHEAT_2_LABEL _UxGT(" Settings");
-  #endif
-  #ifdef PREHEAT_3_LABEL
-    LSTR MSG_PREHEAT_3                    = PREHEAT_3_LABEL;
-    LSTR MSG_PREHEAT_3_SETTINGS           = PREHEAT_3_LABEL _UxGT(" Settings");
-  #endif
+  LSTR MSG_PREHEAT_2                      = _UxGT("Preheat ") PREHEAT_2_LABEL;
+  LSTR MSG_PREHEAT_2_SETTINGS             = _UxGT("Preheat ") PREHEAT_2_LABEL _UxGT(" Settings");
+  LSTR MSG_PREHEAT_3                      = PREHEAT_3_LABEL;
+  LSTR MSG_PREHEAT_3_SETTINGS             = PREHEAT_3_LABEL _UxGT(" Settings");
+  LSTR MSG_PREHEAT_4                      = _UxGT("Preheat ") PREHEAT_4_LABEL;
+  LSTR MSG_PREHEAT_4_SETTINGS             = _UxGT("Preheat ") PREHEAT_4_LABEL _UxGT(" Settings");
   LSTR MSG_PREHEAT_M                      = _UxGT("Preheat $");
   LSTR MSG_PREHEAT_M_H                    = _UxGT("Preheat $ ~");
   LSTR MSG_PREHEAT_M_END                  = _UxGT("Preheat $ End");
@@ -142,6 +157,7 @@ namespace LanguageNarrow_en {
 
   LSTR MSG_PREHEAT_HOTEND                 = _UxGT("Preheat Hotend");
   LSTR MSG_PREHEAT_CUSTOM                 = _UxGT("Preheat Custom");
+  LSTR MSG_PREHEAT                        = _UxGT("Preheat");
   LSTR MSG_COOLDOWN                       = _UxGT("Cooldown");
 
   LSTR MSG_CUTTER_FREQUENCY               = _UxGT("Frequency");
@@ -196,6 +212,9 @@ namespace LanguageNarrow_en {
   LSTR MSG_MESH_CANCEL                    = _UxGT("Mesh Cancelled");
   LSTR MSG_MESH_RESET                     = _UxGT("Mesh Reset");
   LSTR MSG_CUSTOM_COMMANDS                = _UxGT("Custom Commands");
+  LSTR MSG_CUSTOM_MENU_MAIN_TITLE         = _UxGT(CUSTOM_MENU_MAIN_TITLE);
+  LSTR MSG_TOOL_HEAD_TH                   = _UxGT(CUSTOM_MENU_MAIN_TITLE" (TH)");
+  LSTR MSG_PRESENT_BED                    = _UxGT("Present Bed");
   LSTR MSG_M48_TEST                       = _UxGT("M48 Probe Test");
   LSTR MSG_M48_POINT                      = _UxGT("M48 Point");
   LSTR MSG_M48_OUT_OF_BOUNDS              = _UxGT("Probe out of bounds");
@@ -350,6 +369,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_CONTROLLER_FAN_AUTO_ON         = _UxGT("Auto Mode");
   LSTR MSG_CONTROLLER_FAN_SPEED           = _UxGT("Active Speed");
   LSTR MSG_CONTROLLER_FAN_DURATION        = _UxGT("Idle Period");
+  LSTR MSG_FLOW_PERCENTAGE                = _UxGT("Set Flowrate Percentage");
   LSTR MSG_FLOW                           = _UxGT("Flow");
   LSTR MSG_FLOW_N                         = _UxGT("Flow ~");
   LSTR MSG_CONTROL                        = _UxGT("Control");
@@ -525,6 +545,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_ADVANCED_PAUSE                 = _UxGT("Advanced Pause");
   LSTR MSG_RESUME_PRINT                   = _UxGT("Resume Print");
   LSTR MSG_STOP_PRINT                     = _UxGT("Stop Print");
+  LSTR MSG_CANCEL_PRINT                   = _UxGT("Cancel Print");
   LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Power-loss Recovery");
   LSTR MSG_RESUME_BED_TEMP                = _UxGT("Resume Bed Temp");
   LSTR MSG_HOST_START_PRINT               = _UxGT("Start Host Print");
@@ -563,6 +584,8 @@ namespace LanguageNarrow_en {
   LSTR MSG_FILAMENT_SWAP_EXTRA            = _UxGT("Swap Extra");
   LSTR MSG_FILAMENT_PURGE_LENGTH          = _UxGT("Purge Length");
   LSTR MSG_TOOL_CHANGE                    = _UxGT("Tool Change");
+  LSTR MSG_TOOL_HEAD_SWAP                 = _UxGT("Park For Tool Head Swap");
+  LSTR MSG_FILAMENT_SWAP                  = _UxGT("Park For Filament Change");
   LSTR MSG_TOOL_CHANGE_ZLIFT              = _UxGT("Raise Z");
   LSTR MSG_SINGLENOZZLE_PRIME_SPEED       = _UxGT("Prime Speed");
   LSTR MSG_SINGLENOZZLE_WIPE_RETRACT      = _UxGT("Wipe Retract");
@@ -635,6 +658,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_ZPROBE_ZOFFSET                 = _UxGT("Z-Offset");
   LSTR MSG_ZPROBE_MARGIN                  = _UxGT("Probe Margin");
   LSTR MSG_ZPROBE_MULTIPLE                = _UxGT("Multiple Probing");
+  LSTR MSG_ZOFFSET                        = _UxGT("Z Offset");
   LSTR MSG_Z_FEED_RATE                    = _UxGT("Z Feed Rate");
   LSTR MSG_ENABLE_HS_MODE                 = _UxGT("Enable HS Mode");
   LSTR MSG_MOVE_NOZZLE_TO_BED             = _UxGT("Center Nozzle on Bed");
@@ -686,7 +710,8 @@ namespace LanguageNarrow_en {
   LSTR MSG_MESH_DONE                      = _UxGT("Mesh probing done");
   LSTR MSG_MESH_POINTS                    = _UxGT("Mesh Points");
   LSTR MSG_MESH_SETTINGS                  = _UxGT("Mesh Settings");
-  LSTR MSG_INFO_STATS_MENU                = _UxGT("Printer Stats");
+  LSTR MSG_INFO_PRINTER_STATS_MENU        = _UxGT("Printer Stats");
+  LSTR MSG_INFO_STATS_MENU                = _UxGT("Stats");
   LSTR MSG_RESET_STATS                    = _UxGT("Reset Print Stats?");
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("Board Info");
   LSTR MSG_INFO_THERMISTOR_MENU           = _UxGT("Thermistors");
@@ -696,6 +721,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_INFO_RUNAWAY_OFF               = _UxGT("Runaway Watch: OFF");
   LSTR MSG_INFO_RUNAWAY_ON                = _UxGT("Runaway Watch: ON");
   LSTR MSG_HOTEND_IDLE_TIMEOUT            = _UxGT("Hotend Idle Timeout");
+  LSTR MSG_BED_IDLE_TIMEOUT               = _UxGT("Bed Idle Timeout");
   LSTR MSG_HOTEND_IDLE_DISABLE            = _UxGT("Disable Timeout");
   LSTR MSG_HOTEND_IDLE_NOZZLE_TARGET      = _UxGT("Nozzle Idle Temp");
   LSTR MSG_HOTEND_IDLE_BED_TARGET         = _UxGT("Bed Idle Temp");
@@ -732,6 +758,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_FILAMENT_CHANGE_PURGE_CONTINUE = _UxGT("Purge or Continue?");      // ProUI
   LSTR MSG_FILAMENT_CHANGE_NOZZLE         = _UxGT("  Nozzle: ");
   LSTR MSG_RUNOUT_SENSOR                  = _UxGT("Runout Sensor");
+  LSTR MSG_SENSOR                         = _UxGT("Sensor");
   LSTR MSG_RUNOUT_DISTANCE_MM             = _UxGT("Runout Dist mm");
   LSTR MSG_RUNOUT_ENABLE                  = _UxGT("Enable Runout");
   LSTR MSG_RUNOUT_ACTIVE                  = _UxGT("Runout Active");
@@ -974,26 +1001,26 @@ namespace LanguageNarrow_en {
 namespace LanguageWide_en {
   using namespace LanguageNarrow_en;
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_PLEASE_WAIT_REBOOT           = _UxGT("Starting... Please wait.");// ProUI
-    LSTR MSG_START_ABL                    = _UxGT("Start Auto Bed Leveling?");// ProUI
-    LSTR MSG_CANCEL_ABL                   = _UxGT("Canceling auto leveling"); // ProUI
-    LSTR MSG_RESET_MESH                   = _UxGT("Reset Current Mesh?");     // ProUI
-    LSTR MSG_EXIT_TO_MAIN_MENU            = _UxGT("Exit to Main Menu");       // ProUI
-    LSTR MSG_BACK                         = _UxGT(".. Back");                 // ProUI
+    LSTR MSG_PLEASE_WAIT_REBOOT           = _UxGT("Starting... Please wait.");
+    LSTR MSG_START_ABL                    = _UxGT("Start Auto Bed Leveling?");
+    LSTR MSG_CANCEL_ABL                   = _UxGT("Canceling Auto Leveling");
+    LSTR MSG_RESET_MESH                   = _UxGT("Reset Current Mesh?");
+    LSTR MSG_EXIT_TO_MAIN_MENU            = _UxGT("Exit to Main Menu");
+    LSTR MSG_BACK                         = _UxGT(".. Back");
 
-    LSTR MSG_DISABLE_MANUAL_TRAMMING      = _UxGT("Disable manual tramming"); // ProUI
-    LSTR MSG_TRAMMING_WIZARD              = _UxGT("Tramming Wizard");         // ProUI
-    LSTR MSG_TRAMMING_WIZARD_START        = _UxGT("Tramming Wizard Start");   // ProUI
-    LSTR MSG_TRAMMING_WIZARD_POPUP        = _UxGT("Start Tramming Wizard?");  // ProUI
-    LSTR MSG_CORNERS_LEVELED              = _UxGT("Corners leveled");         // ProUI
-    LSTR MSG_CORNERS_NOT_LEVELED          = _UxGT("Corners not leveled");     // ProUI
-    LSTR MSG_KNOB_ADJUSTMENT_REQUIRED     = _UxGT("Knob adjustment required");// ProUI
-    LSTR MSG_PROBE_FOR_Z_VALUE            = _UxGT("Probe for Z Value");       // ProUI
-    LSTR MSG_ZERO_CURRENT_POINT           = _UxGT("Zero Current Point");      // ProUI
-    LSTR MSG_CALCULATING_AVERAGE          = _UxGT("Calculating average");     // ProUI
-    LSTR MSG_AND_RELATIVE_HEIGHTS         = _UxGT("and relative heights");    // ProUI
-    LSTR MSG_TOLERANCE_ACHIEVED           = _UxGT("Tolerance achieved!");     // ProUI
-    LSTR MSG_FINDING_TRUE_VALUE           = _UxGT("Finding True value");      // ProUI
+    LSTR MSG_DISABLE_MANUAL_TRAMMING      = _UxGT("Disable manual tramming");
+    LSTR MSG_TRAMMING_WIZARD              = _UxGT("Tramming Wizard");
+    LSTR MSG_TRAMMING_WIZARD_START        = _UxGT("Tramming Wizard Start");
+    LSTR MSG_TRAMMING_WIZARD_POPUP        = _UxGT("Start Tramming Wizard?");
+    LSTR MSG_CORNERS_LEVELED              = _UxGT("Corners leveled");
+    LSTR MSG_CORNERS_NOT_LEVELED          = _UxGT("Corners not leveled");
+    LSTR MSG_KNOB_ADJUSTMENT_REQUIRED     = _UxGT("Knob adjustment required");
+    LSTR MSG_PROBE_FOR_Z_VALUE            = _UxGT("Probe for Z Value");
+    LSTR MSG_ZERO_CURRENT_POINT           = _UxGT("Zero Current Point");
+    LSTR MSG_CALCULATING_AVERAGE          = _UxGT("Calculating average");
+    LSTR MSG_AND_RELATIVE_HEIGHTS         = _UxGT("and relative heights");
+    LSTR MSG_TOLERANCE_ACHIEVED           = _UxGT("Tolerance achieved!");
+    LSTR MSG_FINDING_TRUE_VALUE           = _UxGT("Finding True value");
 
     LSTR MSG_POSITION_UNKNOWN             = _UxGT("..WARNING: Current position is unknown, Home axes.");
     LSTR MSG_POSITION_UNKNOWN_Z           = _UxGT("..CAUTION: Unknown Z position, Home Z axis.");
@@ -1002,21 +1029,13 @@ namespace LanguageWide_en {
     LSTR MSG_OUTAGE_RECOVERY2             = _UxGT("It looks like the last");
     LSTR MSG_OUTAGE_RECOVERY3             = _UxGT("file was interrupted.");
 
-    LSTR MSG_MEDIA_NOT_INSERTED           = MEDIA_TYPE_EN _UxGT(" Not Inserted."); // ProUI
-    LSTR MSG_PLEASE_PREHEAT               = _UxGT("Please Preheat Hotend.");  // ProUI
-    LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Reset Print Count");       // ProUI
+    LSTR MSG_MEDIA_NOT_INSERTED           = MEDIA_TYPE_EN _UxGT(" Not Inserted.");
+    LSTR MSG_PLEASE_PREHEAT               = _UxGT("Please Preheat Hotend.");
+    LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Reset Print Count");
     LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Print Count");
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("Print Time");
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Longest Job Time");
     LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Extruded Total");
-
-    // DWIN_LCD_PROUI specific message strings
-    #define _MSG_PREHEAT(N) \
-      LSTR MSG_PREHEAT_##N                = _UxGT("Preheat ") PREHEAT_## N ##_LABEL; \
-      LSTR MSG_PREHEAT_## N ##_SETTINGS   = _UxGT("Preheat ") PREHEAT_## N ##_LABEL _UxGT(" Settings");
-    #if PREHEAT_COUNT > 3
-      REPEAT_S(4, INCREMENT(PREHEAT_COUNT), _MSG_PREHEAT)
-    #endif
     LSTR MSG_CHECK_FILENAME               = _UxGT("Please check filenames");
     LSTR MSG_ONLY_GCODE                   = _UxGT("Only G-code can be printed");
     LSTR MSG_MPC_SETTINGS                 = _UxGT("MPC Settings");

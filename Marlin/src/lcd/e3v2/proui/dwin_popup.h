@@ -65,15 +65,19 @@ void DWIN_Show_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8
 }
 
 template<typename T, typename U>
+void DWIN_Popup_Cancel(const uint8_t icon, T amsg1, U amsg2) {
+  HMI_SaveProcessID(WaitResponse);
+  DWIN_Show_Popup(icon, amsg1, amsg2, BTN_Cancel); // Button Cancel
+}
+
+template<typename T, typename U>
 void DWIN_Popup_Confirm(const uint8_t icon, T amsg1, U amsg2) {
   HMI_SaveProcessID(WaitResponse);
-  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Confirm); // Button Confirm
-  DWIN_UpdateLCD();
+  DWIN_Show_Popup(icon, amsg1, amsg2, BTN_Confirm); // Button Confirm
 }
 
 template<typename T, typename U>
 void DWIN_Popup_Continue(const uint8_t icon, T amsg1, U amsg2) {
   HMI_SaveProcessID(WaitResponse);
-  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Continue); // Button Continue
-  DWIN_UpdateLCD();
+  DWIN_Show_Popup(icon, amsg1, amsg2, BTN_Continue); // Button Continue
 }

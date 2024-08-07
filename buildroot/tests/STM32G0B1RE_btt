@@ -7,10 +7,21 @@
 set -e
 
 #
-# Build with the default configurations
+# Build with included configs
 #
-use_example_configs "Creality/Ender-3/BigTreeTech SKR Mini E3 3.0"
-exec_test $1 $2 "Creality/Ender-3/BigTreeTech SKR Mini E3 3.0" "$3"
+use_example_configs "BTT_SKR-Mini-E3-V3/MM"
+opt_set MOTHERBOARD BOARD_BTT_SKR_MINI_E3_V3_0
+# opt_disable
+# opt_enable
+# opt_add
+exec_test $1 $2 "BigTreeTech SKR Mini E3 V3.0 - ProUI Manual Mesh (MM)" "$3"
+
+use_example_configs "BTT_SKR-Mini-E3-V3/UBL"
+opt_set MOTHERBOARD BOARD_BTT_SKR_MINI_E3_V3_0
+# opt_disable
+# opt_enable
+# opt_add
+exec_test $1 $2 "BigTreeTech SKR Mini E3 V3.0 - ProUI Unified (UBL)" "$3"
 
 # clean up
 restore_configs

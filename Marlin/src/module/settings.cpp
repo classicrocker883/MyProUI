@@ -627,6 +627,16 @@ typedef struct SettingsDataStruct {
   #endif
 
   //
+  // MESH_INSET workaround
+  //
+  #if ALL(PROUI_MESH_EDIT, HAS_MESH)
+    float ui_mesh_min_x;
+    float ui_mesh_max_x;
+    float ui_mesh_min_y;
+    float ui_mesh_max_y;
+  #endif
+
+  //
   // Bed corner screw position
   //
   #ifdef BED_SCREW_INSET
@@ -1755,6 +1765,16 @@ void MarlinSettings::postprocess() {
     #if ENABLED(SOUND_MENU_ITEM)
       EEPROM_WRITE(ui.sound_on);
       EEPROM_WRITE(ui.tick_on);
+    #endif
+
+    //
+    // MESH_INSET workaround
+    //
+    #if ALL(PROUI_MESH_EDIT, HAS_MESH)
+      EEPROM_WRITE(ui.mesh_min_x);
+      EEPROM_WRITE(ui.mesh_max_x);
+      EEPROM_WRITE(ui.mesh_min_y);
+      EEPROM_WRITE(ui.mesh_max_y);
     #endif
 
     //
@@ -2896,6 +2916,20 @@ void MarlinSettings::postprocess() {
       #endif
 
       //
+      // MESH_INSET workaround
+      //
+      #if ALL(PROUI_MESH_EDIT, HAS_MESH)
+        _FIELD_TEST(ui_mesh_min_x);
+        EEPROM_READ(ui.mesh_min_x);
+        _FIELD_TEST(ui_mesh_max_x);
+        EEPROM_READ(ui.mesh_max_x);
+        _FIELD_TEST(ui_mesh_min_y);
+        EEPROM_READ(ui.mesh_min_y);
+        _FIELD_TEST(ui_mesh_max_y);
+        EEPROM_READ(ui.mesh_max_y);
+      #endif
+
+      //
       // BED_SCREW_INSET
       //
       #ifdef BED_SCREW_INSET
@@ -3461,6 +3495,16 @@ void MarlinSettings::reset() {
   #if ENABLED(SOUND_MENU_ITEM)
     ui.sound_on = ENABLED(SOUND_ON_DEFAULT);
     ui.tick_on = ENABLED(TICK_ON_DEFAULT); //added encoder beep bool
+  #endif
+
+  //
+  // MESH_INSET workaround
+  //
+  #if ALL(PROUI_MESH_EDIT, HAS_MESH)
+    ui.mesh_min_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x;
+    ui.mesh_max_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x;
+    ui.mesh_min_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y;
+    ui.mesh_max_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y;
   #endif
 
   //

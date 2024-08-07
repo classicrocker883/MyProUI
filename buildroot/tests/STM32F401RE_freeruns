@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Build tests for STM32F401RE_freeruns
+#
+
+# exit on first failure
+set -e
+
+#
+# Build with included configs
+#
+use_example_configs "Creality Ender/E3-Free-runs/MM"
+# opt_set
+# opt_disable
+# opt_enable
+# opt_add
+exec_test $1 $2 "Creality E3-Free-runs - ProUI Manual Mesh (MM)" "$3"
+
+use_example_configs "Creality Ender/E3-Free-runs/UBL"
+# opt_set
+# opt_disable
+# opt_enable
+# opt_add
+exec_test $1 $2 "Creality E3-Free-runs - ProUI Unified (UBL)" "$3"
+
+# clean up
+restore_configs

@@ -1,8 +1,9 @@
 # Professional Firmware for the Voxelab Aquila and Creality Ender-3 3D Printers
 **_<sup>(or any other compatible 3D Printer)</sup>_**
 
-![CI Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-unit-tests.yml/badge.svg)  
 ![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MRiscoCProUI.svg)  
+![CI Unit Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-unit-tests.yml/badge.svg)  
+![CI Build Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-build-tests.yml/badge.svg)  
 [![Aquila Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)  
 ![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)  
 ![Ender Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs_Ender.yml/badge.svg)
@@ -25,12 +26,12 @@
 
 <br>
 
-## Universal Firmware for RET6/RCT6 chips: G32, N32, H32, Creality 4.2.7 and 4.2.2 boards 
+## Universal Firmware for RET6/RCT6 chips: G32, N32, H32, Creality 4.2.7 and 4.2.2 boards
 **_<sup>(Also available for BTT SKR Mini E3 and others)</sup>_**
 
 ### - Please read this: -
 > [!NOTE]
-Many Updates have been included in the most recent MRiscoCProUI for the **2024-July** release.
+Many Updates have been included in the most recent MRiscoCProUI for the **2024-August** release.
 This release has many changes to the **UI**.
 New ICON's have been added, and old ones enhanced. Whoever edited them before saved directly as .*JPG* which in many editors lowers the quality of the image. I painstakingly remastered almost every single one; preserving the original quality.
 >
@@ -84,11 +85,11 @@ There is a *MarlinSimulator.exe* file provided to test out for yourself. It simu
 
 To create your own MarlinSimulator with you own build, start by changing in Configuration.h **MOTHERBOARD** to *BOARD_SIMULATED*, also disable `ENDSTOP_INTERRUPTS_FEATURE` and `PROUI_EX`, and then in platformio.ini **default_envs =** change to *simulator_windows*. The MarlinSimulator can only compile for Manual Mesh Bed Leveling for now, so make sure your configuration is set for `MESH_BED_LEVELING`.
 
-Then you have to extract **SDL2-devel-2.30.5-mingw.zip** from /**docs**.  
+Then you have to extract **SDL2-devel-2.30.5-mingw.zip** from /**docs**.
 You can either copy/paste the files directly, or install them.
 
-32-bit files are in \i686-w64-mingw32  
-64-bit files are in \x86_64-w64-mingw32  
+32-bit files are in \i686-w64-mingw32
+64-bit files are in \x86_64-w64-mingw32
 Navigate to the SDL2 directory in an *MSYS2 MINGW64* terminal (Run as Administrator):
 
 To install SDL for native (32-bit) development:
@@ -100,9 +101,9 @@ To install SDL for cross-compiling development:
 Recommended for 64-bit - If you receive an error, then try the following:
 >     make install-package arch=x86_64-w64-mingw32 prefix=/usr
 
-You may have to first Build so the directory can be created, but you can:  
-**Copy** the contents of ~\SDL2-2.30.5\x86_64-w64-mingw32\include\SDL2\\* into the directory ~\.pio\libdeps\simulator_windows\\**imgui**  
--OR-  
+You may have to first Build so the directory can be created, but you can:
+**Copy** the contents of ~\SDL2-2.30.5\x86_64-w64-mingw32\include\SDL2\\* into the directory ~\.pio\libdeps\simulator_windows\\**imgui**
+-OR-
 **Copy** the just folder ~\SDL2-2.30.5\x86_64-w64-mingw32\include\\**SDL2** into the directory ~\.pio\libdeps\\*simulator_windows*
 
 Once all that is done, just Build like you would normally and *MarlinSimulator.exe* will be created.
@@ -122,10 +123,10 @@ The Precompiled binary files of this firmware can work with STM32 (STM32F103RET6
 
 ## Donations
 
-Thank you for your support.  
-Please consider making a donation, as large or as small and as often as you'd like.    
-[Ko-fi](https://ko-fi.com/classicrocker883)  
-[Venmo](https://venmo.com/u/andrewleduc88)  
+Thank you for your support.
+Please consider making a donation, as large or as small and as often as you'd like.
+[Ko-fi](https://ko-fi.com/classicrocker883)
+[Venmo](https://venmo.com/u/andrewleduc88)
 [Paypal](https://www.paypal.com/paypalme/andrewleduc)
 
 [<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/donate/?business=PFNSKQX9WQQ8W&no_recurring=0&currency_code=USD)  **PayPal**

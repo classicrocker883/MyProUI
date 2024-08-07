@@ -197,6 +197,13 @@ public:
     TERN_(HAS_MARLINUI_MENU, currentScreen = status_screen);
   }
 
+  #if ALL(PROUI_MESH_EDIT, HAS_MESH)
+    static float mesh_min_x;
+    static float mesh_max_x;
+    static float mesh_min_y;
+    static float mesh_max_y;
+  #endif
+
   #ifdef BED_SCREW_INSET
     static float screw_pos; // bed corner screw inset
   #endif

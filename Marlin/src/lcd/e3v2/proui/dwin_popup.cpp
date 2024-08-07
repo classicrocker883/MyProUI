@@ -43,7 +43,7 @@ void Draw_Select_Highlight(const bool sel, const uint16_t ypos) {
 }
 
 void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2) {
-  DWIN_Draw_Popup(icon, F("Please confirm"), fmsg2);
+  DWIN_Show_Popup(icon, F("Please confirm"), fmsg2);
   DWINUI::Draw_Button(BTN_Confirm, 26, 280);
   DWINUI::Draw_Button(BTN_Cancel, 146, 280);
   Draw_Select_Highlight(HMI_flag.select_flag);
@@ -68,7 +68,8 @@ void HMI_Popup() {
     EncoderState encoder_diffState = get_encoder_state();
     if (encoder_diffState == ENCODER_DIFF_CW || encoder_diffState == ENCODER_DIFF_CCW) {
       const bool change = encoder_diffState != ENCODER_DIFF_CW;
-      if (PopupChange) PopupChange(change); else Draw_Select_Highlight(change, HighlightYPos);
+      if (PopupChange) { PopupChange(change); }
+      else { Draw_Select_Highlight(change, HighlightYPos); }
       DWIN_UpdateLCD();
     }
   }

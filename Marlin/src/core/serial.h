@@ -198,7 +198,7 @@ void SERIAL_ECHOLN(T arg1, Args ... args) { SERIAL_ECHO(arg1); SERIAL_ECHO(args 
 #define __SELP_N(N,V...)         _SELP_##N(V)
 #define _SELP_N(N,V...)          __SELP_N(N,V)
 #define _SELP_N_REF()            _SELP_N
-#define _SELP_1(s)               SERIAL_ECHO(  F(s "\n"));
+#define _SELP_1(s)               SERIAL_ECHO(F(s "\n"));
 #define _SELP_2(s,v)             SERIAL_ECHOLN(F(s),v);
 #define _SELP_3(s,v,V...)        _SEP_2(s,v); DEFER2(_SELP_N_REF)()(TWO_ARGS(V),V);
 #define SERIAL_ECHOLNPGM(V...)   do{ EVAL(_SELP_N(TWO_ARGS(V),V)); }while(0)

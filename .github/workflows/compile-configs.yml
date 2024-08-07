@@ -675,13 +675,13 @@ jobs:
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         if [ "$SKR" = V3_0 ]; then
-        cp configurations/BTT-SKR_Mini_E3_V3/ConfigurationUBL.h Marlin/Configuration.h
-        cp configurations/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
-        cp configurations/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
+        cp configurations/BTT_SKR-Mini-E3-V3/UBL/Configuration.h Marlin/Configuration.h
+        cp configurations/BTT_SKR-Mini-E3-V3/UBL/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/BTT_SKR-Mini-E3-V3/UBL/Version.h Marlin/Version.h
         else
-        cp configurations/BTT-SKR_Mini_E3_V2/ConfigurationUBL.h Marlin/Configuration.h
-        cp configurations/BTT-SKR_Mini_E3_V2/Configuration_advUBL.h Marlin/Configuration_adv.h
-        cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
+        cp configurations/BTT_SKR-Mini-E3-V2/UBL/Configuration.h Marlin/Configuration.h
+        cp configurations/BTT_SKR-Mini-E3-V2/UBL/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/BTT_SKR-Mini-E3-V2/UBL/Version.h Marlin/Version.h
         sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
         fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
@@ -765,13 +765,13 @@ jobs:
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
         if [ "$SKR" = V3_0 ]; then
-        cp configurations/BTT-SKR_Mini_E3_V3/ConfigurationMM.h Marlin/Configuration.h
-        cp configurations/BTT-SKR_Mini_E3_V3/Configuration_adv.h Marlin/Configuration_adv.h
-        cp configurations/BTT-SKR_Mini_E3_V3/Version.h Marlin/Version.h
+        cp configurations/BTT_SKR-Mini-E3-V3/MM/Configuration.h Marlin/Configuration.h
+        cp configurations/BTT_SKR-Mini-E3-V3/MM/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/BTT_SKR-Mini-E3-V3/MM/Version.h Marlin/Version.h
         else
-        cp configurations/BTT-SKR_Mini_E3_V2/ConfigurationMM.h Marlin/Configuration.h
-        cp configurations/BTT-SKR_Mini_E3_V2/Configuration_advMM.h Marlin/Configuration_adv.h
-        cp configurations/BTT-SKR_Mini_E3_V2/Version.h Marlin/Version.h
+        cp configurations/BTT_SKR-Mini-E3-V2/MM/Configuration.h Marlin/Configuration.h
+        cp configurations/BTT_SKR-Mini-E3-V2/MM/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/BTT_SKR-Mini-E3-V2/MM/Version.h Marlin/Version.h
         fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_${SKR}/" Marlin/Configuration.h
