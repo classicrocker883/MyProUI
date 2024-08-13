@@ -357,9 +357,11 @@ public:
     static void refresh_largest_sensorless_adj();
   #endif
 
-private:  //run_z_probes
-  static bool probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s);
-  static float run_z_probes(const bool sanity_check=true, const_float_t z_min_point=Z_PROBE_LOW_POINT, const_float_t z_clearance=Z_TWEEN_SAFE_CLEARANCE);
+private:
+  #if HAS_BED_PROBE
+    static bool probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s);
+    static float run_z_probes(const bool sanity_check=true, const_float_t z_min_point=Z_PROBE_LOW_POINT, const_float_t z_clearance=Z_TWEEN_SAFE_CLEARANCE);
+  #endif
 };
 
 extern Probe probe;

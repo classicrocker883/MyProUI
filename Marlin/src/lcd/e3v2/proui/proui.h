@@ -234,4 +234,4 @@ typedef struct {
 
 extern HMI_data_t HMI_data;
 
-static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) + TERN0(PROUI_EX, sizeof(PRO_data_t));
+static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) PLUS_TERN0(PROUI_EX, sizeof(PRO_data_t));

@@ -377,7 +377,7 @@ FORCE_INLINE void probe_specific_action(const bool deploy) {
 
     TERN_(HOST_PROMPT_SUPPORT, hostui.continue_prompt(ds_fstr));
     TERN_(EXTENSIBLE_UI, ExtUI::onUserConfirmRequired(ds_fstr));
-    TERN_(DWIN_LCD_PROUI, DWIN_Popup_Continue(ICON_BLTouch, ds_fstr, FPSTR(CONTINUE_STR)));
+    TERN_(DWIN_LCD_PROUI, DWIN_Popup_Continue(ICON_BLTouch, ds_fstr, F("")));
     TERN_(HAS_RESUME_CONTINUE, wait_for_user_response());
 
     ui.reset_status();

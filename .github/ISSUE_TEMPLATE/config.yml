@@ -12,6 +12,15 @@ contact_links:
   - name: 👤 Professional Firmware Facebook group
     url: https://www.facebook.com/groups/513889302986197
     about: Please ask and answer questions here.
+  - name: 🕹 Marlin on Discord
+    url: https://discord.com/servers/marlin-firmware-461605380783472640
+    about: Join the Discord server for support and discussion.
+  - name: 🔗 Marlin Discussion Forum
+    url: https://reprap.org/forum/list.php?415
+    about: A searchable web forum hosted by RepRap dot org.
+  - name: 📺 Marlin Videos on YouTube
+    url: https://www.youtube.com/results?search_query=marlin+firmware
+    about: Tutorials and more from Marlin users all around the world. Great for new users!
   - name: 💸 Want to donate?
     url: https://www.paypal.com/paypalme/andrewleduc
     about: Your contribution to this project is always welcome!

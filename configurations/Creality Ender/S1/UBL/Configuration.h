@@ -2566,7 +2566,7 @@
   //#define NOZZLE_CLEAN_HEATUP       // Heat up the nozzle instead of skipping wipe
 
   // Explicit wipe G-code script applies to a G12 with no arguments.
-  #define WIPE_SEQUENCE_COMMANDS "G0 X2 Y200 Z50\nG0 Z0.3\nG0 Z0.3\nG92 E0\nG1 Y140 E10 F1500\nG1 X2.3 F5000\nG92 E0\nG1 Y10 E10 F1200\nG92 E0"
+  #define WIPE_SEQUENCE_COMMANDS "G0X2Y200Z50\nG0Z0.3\nG0Z0.3\nG92E0\nG1Y140E10F1500\nG1X2.3F5000\nG92E0\nG1Y10E10F1200\nG92E0"
   // PrusaSlicer Start G-code Purge Line
 #endif
 

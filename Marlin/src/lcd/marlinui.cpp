@@ -65,10 +65,10 @@ MarlinUI ui;
 constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
 
 #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-  float MarlinUI::mesh_min_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x;
-  float MarlinUI::mesh_max_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x;
-  float MarlinUI::mesh_min_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y;
-  float MarlinUI::mesh_max_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y;
+  float MarlinUI::mesh_min_x = DEF_MESH_MIN_X;
+  float MarlinUI::mesh_max_x = DEF_MESH_MAX_X;
+  float MarlinUI::mesh_min_y = DEF_MESH_MIN_Y;
+  float MarlinUI::mesh_max_y = DEF_MESH_MAX_Y;
 #endif
 
 #ifdef BED_SCREW_INSET
@@ -842,7 +842,7 @@ void MarlinUI::init() {
       // Add a manual move to the queue?
       if (axis == NO_AXIS_ENUM || PENDING(millis(), start_time) || planner.is_full()) return;
 
-      const feedRate_t fr_mm_s = (axis < LOGICAL_AXES) ? manual_feedrate_mm_s[axis] : XY_PROBE_FEEDRATE_MM_S;
+      const feedRate_t fr_mm_s = (axis < LOGICAL_AXES) ? manual_feedrate_mm_s[axis] : PLANNER_XY_FEEDRATE_MM_S;
 
       /**
        * For a rotational axis apply the "inch" to "mm" conversion factor. This mimics behaviour of the G-code G1
@@ -1647,7 +1647,7 @@ void MarlinUI::host_notify(const char * const cstr) {
     TERN_(STATUS_MESSAGE_SCROLLING, reset_status_scroll());
 
     TERN_(EXTENSIBLE_UI, ExtUI::onStatusChanged(status_message));
-    TERN_(DWIN_LCD_PROUI, DWIN_CheckStatusMessage());
+    TERN_(DWIN_LCD_PROUI, DWIN_CheckStatusMessage(); DWIN_DrawStatusMessage(););
   }
 
   #if ENABLED(STATUS_MESSAGE_SCROLLING)

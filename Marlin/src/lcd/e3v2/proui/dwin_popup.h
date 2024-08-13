@@ -81,3 +81,19 @@ void DWIN_Popup_Continue(const uint8_t icon, T amsg1, U amsg2) {
   HMI_SaveProcessID(WaitResponse);
   DWIN_Show_Popup(icon, amsg1, amsg2, BTN_Continue); // Button Continue
 }
+
+#if DEBUG_DWIN
+  template<typename T, typename U, typename V, typename W>
+  void DWIN_Debug_Popup(T amsg1=nullptr, U amsg2=nullptr, V amsg3=nullptr, W amsg4=nullptr) {
+    HMI_SaveProcessID(WaitResponse);
+    DWINUI::ClearMainArea();
+    Draw_Popup_Bkgd();
+    DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 160, STR_DEBUG_PREFIX);
+    if (amsg1) DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 180, amsg1);
+    if (amsg2) DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 210, amsg2);
+    if (amsg3) DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 240, amsg3);
+    if (amsg4) DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 270, amsg4);
+    DWINUI::Draw_Button(BTN_Confirm, 86, 300, true);
+    DWIN_UpdateLCD();
+  }
+#endif

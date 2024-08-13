@@ -34,7 +34,6 @@
   #include "../HAL/platforms.h"
 #endif
 
-#include "../core/macros.h"
 #include "../core/boards.h"
 #include "../../Configuration.h"
 //#include "../../../configurations/_Undef_Configuration.h"   //**EXPERIMENTAL** Uncomment to use

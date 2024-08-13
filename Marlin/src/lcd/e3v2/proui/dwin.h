@@ -240,6 +240,7 @@ void Init();
 void DWIN_InitScreen();
 void DWIN_HandleScreen();
 void DWIN_CheckStatusMessage();
+void DWIN_DrawStatusMessage();
 void DWIN_HomingStart();
 void DWIN_HomingDone();
 void DWIN_Print_Started();
@@ -404,5 +405,5 @@ void Draw_MaxAccel_Menu();
 #endif
 
 #if DEBUG_DWIN
-  void DWIN_Debug(PGM_P msg);
+  void DWIN_Debug(PGM_P msg1=nullptr, PGM_P msg2=nullptr, PGM_P msg3=nullptr, PGM_P msg4=nullptr);
 #endif

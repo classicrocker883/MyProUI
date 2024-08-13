@@ -141,12 +141,14 @@ namespace LanguageNarrow_en {
   LSTR MSG_PREHEAT_1_ALL                  = _UxGT("Preheat ") PREHEAT_1_LABEL _UxGT(" All");
   LSTR MSG_PREHEAT_1_BEDONLY              = _UxGT("Preheat ") PREHEAT_1_LABEL _UxGT(" Bed");
   LSTR MSG_PREHEAT_1_SETTINGS             = _UxGT("Preheat ") PREHEAT_1_LABEL _UxGT(" Settings");
+
   LSTR MSG_PREHEAT_2                      = _UxGT("Preheat ") PREHEAT_2_LABEL;
   LSTR MSG_PREHEAT_2_SETTINGS             = _UxGT("Preheat ") PREHEAT_2_LABEL _UxGT(" Settings");
   LSTR MSG_PREHEAT_3                      = PREHEAT_3_LABEL;
   LSTR MSG_PREHEAT_3_SETTINGS             = PREHEAT_3_LABEL _UxGT(" Settings");
   LSTR MSG_PREHEAT_4                      = _UxGT("Preheat ") PREHEAT_4_LABEL;
   LSTR MSG_PREHEAT_4_SETTINGS             = _UxGT("Preheat ") PREHEAT_4_LABEL _UxGT(" Settings");
+
   LSTR MSG_PREHEAT_M                      = _UxGT("Preheat $");
   LSTR MSG_PREHEAT_M_H                    = _UxGT("Preheat $ ~");
   LSTR MSG_PREHEAT_M_END                  = _UxGT("Preheat $ End");
@@ -351,7 +353,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_NOZZLE_N                       = _UxGT("Nozzle ~");
   LSTR MSG_NOZZLE_PARKED                  = _UxGT("Nozzle Parked");
   LSTR MSG_NOZZLE_STANDBY                 = _UxGT("Nozzle Standby");
-  LSTR MSG_NOZZLE_CLEAN                   = _UxGT("Clean and press continue");
+  LSTR MSG_NOZZLE_CLEAN                   = _UxGT("Clean and Press Continue");
   LSTR MSG_BED                            = _UxGT("Bed");
   LSTR MSG_CHAMBER                        = _UxGT("Enclosure");
   LSTR MSG_COOLER                         = _UxGT("Laser Coolant");
@@ -655,10 +657,10 @@ namespace LanguageNarrow_en {
   LSTR MSG_ZPROBE_OFFSETS                 = _UxGT("Probe Offsets");
   LSTR MSG_ZPROBE_XOFFSET                 = _UxGT("Probe X Offset");
   LSTR MSG_ZPROBE_YOFFSET                 = _UxGT("Probe Y Offset");
-  LSTR MSG_ZPROBE_ZOFFSET                 = _UxGT("Z-Offset");
+  LSTR MSG_ZPROBE_ZOFFSET                 = _UxGT("Probe Z Offset");
   LSTR MSG_ZPROBE_MARGIN                  = _UxGT("Probe Margin");
   LSTR MSG_ZPROBE_MULTIPLE                = _UxGT("Multiple Probing");
-  LSTR MSG_ZOFFSET                        = _UxGT("Z Offset");
+  LSTR MSG_ZOFFSET                        = _UxGT("Z-Offset");
   LSTR MSG_Z_FEED_RATE                    = _UxGT("Z Feed Rate");
   LSTR MSG_ENABLE_HS_MODE                 = _UxGT("Enable HS Mode");
   LSTR MSG_MOVE_NOZZLE_TO_BED             = _UxGT("Center Nozzle on Bed");
@@ -707,7 +709,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_BILINEAR_LEVELING              = _UxGT("Bilinear Leveling");
   LSTR MSG_UBL_LEVELING                   = _UxGT("Unified Bed Leveling");
   LSTR MSG_MESH_LEVELING                  = _UxGT("Mesh Leveling");
-  LSTR MSG_MESH_DONE                      = _UxGT("Mesh probing done");
+  LSTR MSG_MESH_DONE                      = _UxGT("Mesh Probing Done");
   LSTR MSG_MESH_POINTS                    = _UxGT("Mesh Points");
   LSTR MSG_MESH_SETTINGS                  = _UxGT("Mesh Settings");
   LSTR MSG_INFO_PRINTER_STATS_MENU        = _UxGT("Printer Stats");

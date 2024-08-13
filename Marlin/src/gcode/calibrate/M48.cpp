@@ -25,7 +25,6 @@
 #if ENABLED(Z_MIN_PROBE_REPEATABILITY_TEST)
 
 #include "../gcode.h"
-#include "../../module/motion.h"
 #include "../../module/probe.h"
 #include "../../lcd/marlinui.h"
 

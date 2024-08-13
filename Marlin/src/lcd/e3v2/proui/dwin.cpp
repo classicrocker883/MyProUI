@@ -1901,8 +1901,8 @@ void DWIN_HomingDone() {
 void DWIN_Print_Started() {
   DEBUG_ECHOLNPGM("DWIN_Print_Started: ", SD_Printing());
   TERN_(HAS_GCODE_PREVIEW, if (Host_Printing()) { preview.invalidate(); })
-  ui.progress_reset();
-  ui.reset_remaining_time();
+  TERN_(SET_PROGRESS_PERCENT, ui.progress_reset();)
+  TERN_(SET_REMAINING_TIME, ui.reset_remaining_time();)
   HMI_flag.pause_flag = false;
   HMI_flag.abort_flag = false;
   select_print.reset();
@@ -1935,11 +1935,10 @@ void DWIN_Print_Finished() {
       #ifdef SD_FINISHED_RELEASECOMMAND
         queue.inject(F(SD_FINISHED_RELEASECOMMAND));
       #else
-        const_float_t zpos = current_position.z + TERN(NOZZLE_PARK_FEATURE,
-        NOZZLE_PARK_Z_RAISE_MIN, Z_POST_CLEARANCE);
+        const_float_t zpos = current_position.z + TERN(NOZZLE_PARK_FEATURE, NOZZLE_PARK_Z_RAISE_MIN, Z_POST_CLEARANCE);
         _MIN(zpos, Z_MAX_POS);
         const int16_t ypos = TERN(NOZZLE_PARK_FEATURE, TERN(PROUI_EX, PRO_data.Park_point.y, DEF_NOZZLE_PARK_POINT.y), Y_MAX_POS);
-        queue.inject(TS(F("G0F600Z"), zpos, F("\nG0F2000Y"), ypos));
+        queue.inject(TS(F("G0F600Z"), zpos, F("\nG0F2000Y"), ypos, F("\nM400")));
       #endif
     }
   }
@@ -2680,7 +2679,7 @@ void ApplyMove() {
 #else
   void RaiseHead() {
     LCD_MESSAGE(MSG_TOOL_CHANGE_ZLIFT);
-    gcode.process_subcommands_now(TS(F("G0F600Z"), float(_MIN(current_position.z + (Z_POST_CLEARANCE), Z_MAX_POS))));
+    gcode.process_subcommands_now(TS(F("G0F600Z"), float(_MIN(current_position.z + (Z_POST_CLEARANCE), Z_MAX_POS, F("\nM400")))));
   }
 #endif
 
@@ -2842,6 +2841,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
           F("G90\nG0F600Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES) "\nG0F5000X"), p_float_t(xpos, 1), F("Y"), p_float_t(ypos, 1), F("\nG0F600Z0")
         #endif
       ));
+      planner.synchronize();
     }
     else {
       if (stow_probe) { probe.stow(); }
@@ -2862,6 +2862,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
         F("G90\nG0F600Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES) "\nG0F5000X"), p_float_t(xpos, 1), F("Y"), p_float_t(ypos, 1), F("\nG0F600Z0")
       #endif
     ));
+    planner.synchronize();
   #endif // HAS_BED_PROBE
 } // Bed Tramming
 
@@ -2968,7 +2969,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
 #if ENABLED(MESH_BED_LEVELING)
 
   void ManualMeshStart() {
-    LCD_MESSAGE(MSG_UBL_BUILD_MESH_MENU);
+    LCD_MESSAGE(MSG_UBL_CONTINUE_MESH);
     gcode.process_subcommands_now(F("G28XYO\nG28Z\nM211S0\nG29S1"));
     #ifdef MANUAL_PROBE_START_Z
       const uint8_t line = CurrentMenu->line(MMeshMoveZItem->pos);
@@ -3483,7 +3484,7 @@ void Draw_Tune_Menu() {
       FanSpeedItem = EDIT_ITEM(ICON_FanSpeed, MSG_FAN_SPEED, onDrawPInt8Menu, SetFanSpeed, &thermalManager.fan_speed[EXT]);
     #endif
     #if HAS_ZOFFSET_ITEM && ANY(BABYSTEP_ZPROBE_OFFSET, JUST_BABYSTEP)
-      EDIT_ITEM(ICON_Zoffset, MSG_ZPROBE_ZOFFSET, onDrawPFloat2Menu, SetZOffset, &BABY_Z_VAR);
+      EDIT_ITEM(ICON_Zoffset, MSG_ZOFFSET, onDrawPFloat2Menu, SetZOffset, &BABY_Z_VAR);
     #endif
     #if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
       #if ANY(PIDTEMP, MPCTEMP)
@@ -4519,10 +4520,10 @@ void Draw_MaxAccel_Menu() {
   void HostShutDown() { Goto_Popup(PopUp_HostShutDown, OnClick_HostShutDown); }
 #endif
 
-#if ENABLED(DEBUG_DWIN)
-  void DWIN_Debug(PGM_P msg) {
-    DEBUG_ECHOLNPGM_P(msg);
-    DWIN_Popup_Continue(ICON_Control_1, STR_DEBUG_PREFIX, msg);
+#if DEBUG_DWIN
+  void DWIN_Debug(PGM_P msg1, PGM_P msg2, PGM_P msg3, PGM_P msg4) {
+    DEBUG_ECHOLNPGM_P(msg1, msg2, msg3, msg4);
+    DWIN_Debug_Popup(msg1, msg2, msg3, msg4);
     wait_for_user_response();
     Draw_Main_Area();
   }
@@ -4591,7 +4592,7 @@ void Draw_AdvancedSettings_Menu() {
   checkkey = Menu;
   if (SET_MENU(AdvancedSettings, MSG_MESH_LEVELING, 10)) {
     BACK_ITEM(Goto_Main_Menu);
-    MENU_ITEM(ICON_ManualMesh, MSG_UBL_CONTINUE_MESH, onDrawMenuItem, ManualMeshStart);
+    MENU_ITEM(ICON_ManualMesh, MSG_MANUAL_MESH, onDrawMenuItem, ManualMeshStart);
     MMeshMoveZItem = EDIT_ITEM(ICON_Zoffset, MSG_MESH_EDIT_Z, onDrawPFloat2Menu, SetMMeshMoveZ, &current_position.z);
     MENU_ITEM(ICON_AxisD, MSG_LEVEL_BED_NEXT_POINT, onDrawMenuItem, ManualMeshContinue);
     MENU_ITEM(ICON_PrintSize, MSG_MESH_SETTINGS, onDrawSubMenu, Draw_MeshSet_Menu);
