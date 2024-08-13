@@ -16,25 +16,25 @@ jobs:
         temp: [true,false]
         inshape: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -47,7 +47,7 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=HC32_Default${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=HC32_Default${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -90,25 +90,25 @@ jobs:
         temp: [true,false]
         inshape: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -121,7 +121,7 @@ jobs:
       run: |
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
-        echo "filename=HC32_MM-ProUI-EX${ISTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=HC32_MM-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -173,25 +173,25 @@ jobs:
         pro: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -205,7 +205,7 @@ jobs:
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($PRO); then PRTMP=; else PRTMP=-ProUI-EX; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=HC32${MPTMP}_UBL${PRTMP}${TPTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=HC32${MPTMP}_UBL${PRTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -261,25 +261,25 @@ jobs:
         inshape: [true]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -292,7 +292,7 @@ jobs:
       run: |
         if ($IS); then ISTMP=-IS; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=HC32${MPTMP}_UBL${ISTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=HC32${MPTMP}_UBL${ISTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -340,25 +340,25 @@ jobs:
         inshape: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Cache pip
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v4
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -371,7 +371,7 @@ jobs:
       run: |
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=HC32${MPTMP}_BLT-ProUI-EX${ISTMP}.bin" >> $GITHUB_OUTPUT
+        echo "filename=HC32${MPTMP}_BLT-ProUI-EX${ISTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -444,7 +444,6 @@ jobs:
     - name: Install PlatformIO
       run: |
         python3 -m pip install --upgrade pip
-        pip install --upgrade pip
         pip install --upgrade wheel
         pip install --upgrade platformio
     - name: Run PlatformIO
