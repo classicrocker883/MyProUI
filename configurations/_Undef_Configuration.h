@@ -1,4 +1,7 @@
-/*Configuration.h Undefines*/
+/**
+ * Configuration.h Undefines
+ */
+#pragma once
 
 // #undef CONFIGURATION_H_VERSION
 // #undef STRING_CONFIG_H_AUTHOR
@@ -14,6 +17,7 @@
 // #undef SERIAL_PORT_3
 // #undef BAUDRATE_3
 // #undef RS485_SERIAL_PORT
+// #undef M485_PROTOCOL
 // #undef RS485_BUS_BUFFER_SIZE
 // #undef BLUETOOTH
 // #undef CUSTOM_MACHINE_NAME
@@ -211,6 +215,7 @@
 // #undef DEFAULT_Kd
 // #undef BANG_MAX
 // #undef MPC_AUTOTUNE
+// #undef MPC_AUTOTUNE_DEBUG
 // #undef MPC_EDIT_MENU
 // #undef MPC_AUTOTUNE_MENU
 // #undef MPC_MAX
@@ -473,10 +478,6 @@
 // #undef Z_PROBE_ALLEN_KEY_STOW_3_FEEDRATE
 // #undef Z_PROBE_ALLEN_KEY_STOW_4
 // #undef Z_PROBE_ALLEN_KEY_STOW_4_FEEDRATE
-// #undef NOZZLE_TO_PROBE_OFFSET
-// #undef NOZZLE_TO_PROBE_OFFSET
-// #undef NOZZLE_TO_PROBE_OFFSET
-// #undef NOZZLE_TO_PROBE_OFFSET
 // #undef NOZZLE_TO_PROBE_OFFSET
 // #undef PROBING_TOOL
 // #undef PROBE_TOOLCHANGE_NO_MOVE
@@ -857,11 +858,11 @@
 // #undef PASSWORD_ON_SD_PRINT_MENU
 // #undef PASSWORD_AFTER_SD_PRINT_END
 // #undef PASSWORD_AFTER_SD_PRINT_ABORT
+// #undef SDSUPPORT
+// #undef SD_CHECK_AND_RETRY
 // #undef LCD_LANGUAGE
 // #undef DISPLAY_CHARSET_HD44780
 // #undef LCD_INFO_SCREEN_STYLE
-// #undef SDSUPPORT
-// #undef SD_CHECK_AND_RETRY
 // #undef NO_LCD_MENUS
 // #undef SLIM_LCD_MENUS
 // #undef ENCODER_PULSES_PER_STEP
@@ -1013,6 +1014,7 @@
 // #undef PROUI_ITEM_ENC
 // #undef ENC_MENU_ITEM
 // #undef SHOW_SPEED_IND
+// #undef PROUI_ITEM_ABRT
 // #undef NO_BLINK_IND
 // #undef CR10_STOCKDISPLAY
 // #undef RET6_12864_LCD
@@ -1020,7 +1022,7 @@
 // #undef TOUCH_SCREEN
 // #undef BUTTON_DELAY_EDIT
 // #undef BUTTON_DELAY_MENU
-// #undef DISABLE_ENCODER
+// #undef NO_BACK_MENU_ITEM
 // #undef TOUCH_SCREEN_CALIBRATION
 // #undef TOUCH_CALIBRATION_X
 // #undef TOUCH_CALIBRATION_Y

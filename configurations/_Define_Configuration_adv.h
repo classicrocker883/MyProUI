@@ -1,4 +1,7 @@
-/*Configuration_adv.h Defines*/
+/**
+ * Configuration_adv.h Defines
+ */
+#pragma once
 
 // #define CONFIGURATION_ADV_H_VERSION 02010300
 // #define CONFIG_EXPORT 2
@@ -189,6 +192,7 @@
 // #define CONTROLLER_FAN_MENU
 // #define FAN_KICKSTART_TIME  100
 // #define FAN_KICKSTART_POWER 180
+// #define FAN_KICKSTART_LINEAR
 // #define FAN_OFF_PWM  1
 // #define FAN_MIN_PWM 50
 // #define FAN_MAX_PWM 128
@@ -327,12 +331,14 @@
 // #define ASSISTED_TRAMMING_WAIT_POSITION { X_CENTER, Y_CENTER, 30 }
 // #define TRAMMING_SCREW_THREAD 40
 // #define FT_MOTION
-// #define FTM_DEFAULT_MODE        ftMotionMode_DISABLED
+// #define FTM_IS_DEFAULT_MOTION
 // #define FTM_DEFAULT_DYNFREQ_MODE dynFreqMode_DISABLED
+// #define FTM_DEFAULT_SHAPER_X      ftMotionShaper_NONE
+// #define FTM_DEFAULT_SHAPER_Y      ftMotionShaper_NONE
 // #define FTM_SHAPING_DEFAULT_X_FREQ   37.0f
 // #define FTM_SHAPING_DEFAULT_Y_FREQ   37.0f
 // #define FTM_LINEAR_ADV_DEFAULT_ENA   false
-// #define FTM_LINEAR_ADV_DEFAULT_K      0.0f
+// #define FTM_LINEAR_ADV_DEFAULT_K      0
 // #define FTM_SHAPING_ZETA_X            0.1f
 // #define FTM_SHAPING_ZETA_Y            0.1f
 // #define FTM_SHAPING_V_TOL_X           0.05f
@@ -344,8 +350,6 @@
 // #define FTM_BATCH_SIZE            100
 // #define FTM_FS                     1000
 // #define FTM_TS                        0.001f
-// #define FTM_STEPS_PER_LOOP           60
-// #define FTM_POINTS_PER_LOOP         100
 // #define FTM_STEPPER_FS          20000
 // #define FTM_STEPPERCMD_BUFF_SIZE 3000
 // #define FTM_STEPPER_FS          30000
@@ -358,10 +362,13 @@
 // #define FTM_ZMAX (FTM_RATIO * 2)
 // #define INPUT_SHAPING_X
 // #define INPUT_SHAPING_Y
+// #define INPUT_SHAPING_Z
 // #define SHAPING_FREQ_X  40.0
 // #define SHAPING_ZETA_X   0.15
 // #define SHAPING_FREQ_Y  40.0
 // #define SHAPING_ZETA_Y   0.15
+// #define SHAPING_FREQ_Z  40.0
+// #define SHAPING_ZETA_Z   0.15
 // #define SHAPING_MIN_FREQ  20.0
 // #define SHAPING_MAX_STEPRATE 10000
 // #define SHAPING_MENU
@@ -410,7 +417,6 @@
 // #define CALIBRATION_GCODE
 // #define CALIBRATION_SCRIPT_PRE  "M117 Starting Auto-Calibration\nT0\nG28\nG12\nM117 Calibrating..."
 // #define CALIBRATION_SCRIPT_POST "M500\nM117 Calibration data saved"
-// #define CALIBRATION_MEASUREMENT_RESOLUTION     0.01
 // #define CALIBRATION_FEEDRATE_SLOW             60
 // #define CALIBRATION_FEEDRATE_FAST           1200
 // #define CALIBRATION_FEEDRATE_TRAVEL         3000
@@ -473,7 +479,7 @@
 // #define FEEDRATE_CHANGE_BEEP_DURATION   10
 // #define FEEDRATE_CHANGE_BEEP_FREQUENCY 440
 // #define PROBE_OFFSET_WIZARD
-// #define PROBE_OFFSET_WIZARD_START_Z -4.0
+// #define PROBE_OFFSET_WIZARD_START_Z -1.0
 // #define PROBE_OFFSET_WIZARD_XY_POS { X_CENTER, Y_CENTER }
 // #define X_AXIS_TWIST_COMPENSATION
 // #define XATC_START_Z 0.0
@@ -563,7 +569,7 @@
 // #define EVENT_GCODE_SD_ABORT "M84XYE"
 // #define PE_LEDS_COMPLETED_TIME  (30*60)
 // #define POWER_LOSS_RECOVERY
-// #define PLR_ENABLED_DEFAULT       false
+// #define PLR_ENABLED_DEFAULT       true
 // #define PLR_BED_THRESHOLD BED_MAXTEMP
 // #define POWER_LOSS_PIN             44
 // #define POWER_LOSS_STATE         HIGH
@@ -820,7 +826,7 @@
 // #define MIN_STEPS_PER_SEGMENT 4
 // #define MINIMUM_STEPPER_POST_DIR_DELAY 650
 // #define MINIMUM_STEPPER_PRE_DIR_DELAY 650
-// #define MINIMUM_STEPPER_PULSE 2
+// #define MINIMUM_STEPPER_PULSE_NS 2000
 // #define MAXIMUM_STEPPER_RATE 250000
 // #define HEATERS_PARALLEL
 // #define BLOCK_BUFFER_SIZE  32
@@ -1071,6 +1077,7 @@
 // #define E7_CHAIN_POS     -1
 // #define E7_INTERPOLATE true
 // #define E7_HOLD_MULTIPLIER 0.5
+// #define PROBING_USE_CURRENT_HOME
 // #define X_CS_PIN      -1
 // #define Y_CS_PIN      -1
 // #define Z_CS_PIN      -1
@@ -1467,8 +1474,7 @@
 // #define WEBSUPPORT
 // #define OTASUPPORT
 // #define WIFI_CUSTOM_COMMAND
-// #define WIFI_SSID "WiFi SSID"
-// #define WIFI_PWD  "WiFi Password"
+// #include "Configuration_Secure.h"
 // #define E_MUX0_PIN 40
 // #define E_MUX1_PIN 42
 // #define E_MUX2_PIN 44

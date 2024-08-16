@@ -1,4 +1,7 @@
-/*Configuration_advh Undefines*/
+/**
+ * Configuration_advh Undefines
+ */
+#pragma once
 
 // #undef CONFIGURATION_ADV_H_VERSION
 // #undef CONFIG_EXPORT
@@ -189,6 +192,7 @@
 // #undef CONTROLLER_FAN_MENU
 // #undef FAN_KICKSTART_TIME
 // #undef FAN_KICKSTART_POWER
+// #undef FAN_KICKSTART_LINEAR
 // #undef FAN_OFF_PWM
 // #undef FAN_MIN_PWM
 // #undef FAN_MAX_PWM
@@ -327,8 +331,10 @@
 // #undef ASSISTED_TRAMMING_WAIT_POSITION
 // #undef TRAMMING_SCREW_THREAD
 // #undef FT_MOTION
-// #undef FTM_DEFAULT_MODE
+// #undef FTM_IS_DEFAULT_MOTION
 // #undef FTM_DEFAULT_DYNFREQ_MODE
+// #undef FTM_DEFAULT_SHAPER_X
+// #undef FTM_DEFAULT_SHAPER_Y
 // #undef FTM_SHAPING_DEFAULT_X_FREQ
 // #undef FTM_SHAPING_DEFAULT_Y_FREQ
 // #undef FTM_LINEAR_ADV_DEFAULT_ENA
@@ -344,8 +350,6 @@
 // #undef FTM_BATCH_SIZE
 // #undef FTM_FS
 // #undef FTM_TS
-// #undef FTM_STEPS_PER_LOOP
-// #undef FTM_POINTS_PER_LOOP
 // #undef FTM_STEPPER_FS
 // #undef FTM_STEPPERCMD_BUFF_SIZE
 // #undef FTM_STEPPER_FS
@@ -358,10 +362,13 @@
 // #undef FTM_ZMAX
 // #undef INPUT_SHAPING_X
 // #undef INPUT_SHAPING_Y
+// #undef INPUT_SHAPING_Z
 // #undef SHAPING_FREQ_X
 // #undef SHAPING_ZETA_X
 // #undef SHAPING_FREQ_Y
 // #undef SHAPING_ZETA_Y
+// #undef SHAPING_FREQ_Z
+// #undef SHAPING_ZETA_Z
 // #undef SHAPING_MIN_FREQ
 // #undef SHAPING_MAX_STEPRATE
 // #undef SHAPING_MENU
@@ -410,7 +417,6 @@
 // #undef CALIBRATION_GCODE
 // #undef CALIBRATION_SCRIPT_PRE
 // #undef CALIBRATION_SCRIPT_POST
-// #undef CALIBRATION_MEASUREMENT_RESOLUTION
 // #undef CALIBRATION_FEEDRATE_SLOW
 // #undef CALIBRATION_FEEDRATE_FAST
 // #undef CALIBRATION_FEEDRATE_TRAVEL
@@ -509,7 +515,6 @@
 // #undef LCD_DECIMAL_SMALL_XY
 // #undef LCD_SHOW_E_TOTAL
 // #undef SHOW_TEMPERATURE_BELOW_ZERO
-// #undef TITLE_CENTERED
 // #undef LED_CONTROL_MENU
 // #undef LED_COLOR_PRESETS
 // #undef NEO2_COLOR_PRESETS
@@ -821,7 +826,7 @@
 // #undef MIN_STEPS_PER_SEGMENT
 // #undef MINIMUM_STEPPER_POST_DIR_DELAY
 // #undef MINIMUM_STEPPER_PRE_DIR_DELAY
-// #undef MINIMUM_STEPPER_PULSE
+// #undef MINIMUM_STEPPER_PULSE_NS
 // #undef MAXIMUM_STEPPER_RATE
 // #undef HEATERS_PARALLEL
 // #undef BLOCK_BUFFER_SIZE
@@ -1072,6 +1077,7 @@
 // #undef E7_CHAIN_POS
 // #undef E7_INTERPOLATE
 // #undef E7_HOLD_MULTIPLIER
+// #undef PROBING_USE_CURRENT_HOME
 // #undef X_CS_PIN
 // #undef Y_CS_PIN
 // #undef Z_CS_PIN
@@ -1468,8 +1474,6 @@
 // #undef WEBSUPPORT
 // #undef OTASUPPORT
 // #undef WIFI_CUSTOM_COMMAND
-// #undef WIFI_SSID
-// #undef WIFI_PWD
 // #undef E_MUX0_PIN
 // #undef E_MUX1_PIN
 // #undef E_MUX2_PIN

@@ -25,6 +25,11 @@
 #define __MARLIN_FIRMWARE__
 #endif
 
+#if __has_include("../../Config.h")
+  #define USE_BASE_CONFIGS 1
+  #include "../../Config.h"
+#endif
+
 //
 // Prefix header to acquire configurations
 //
@@ -35,9 +40,14 @@
 #endif
 
 #include "../core/boards.h"
-#include "../../Configuration.h"
-//#include "../../../configurations/_Undef_Configuration.h"   //**EXPERIMENTAL** Uncomment to use
+
+//#include "../../../configurations/_Undef_Configuration.h"  //**EXPERIMENTAL** Uncomment to use
 //#include "../../../configurations/_Define_Configuration.h" //**EXPERIMENTAL** Uncomment to use
+#if USE_BASE_CONFIGS
+  #include "BaseConfiguration.h"
+#else
+  #include "../../Configuration.h"
+#endif
 
 #ifdef CUSTOM_VERSION_FILE
   #if __has_include(STRINGIFY(../../CUSTOM_VERSION_FILE))
@@ -54,9 +64,14 @@
 #endif
 
 #include "../core/drivers.h"
-#include "../../Configuration_adv.h"
-//#include "../../../configurations/_Undef_Configuration_adv.h"   //**EXPERIMENTAL** Uncomment to use
+
+//#include "../../../configurations/_Undef_Configuration_adv.h"  //**EXPERIMENTAL** Uncomment to use
 //#include "../../../configurations/_Define_Configuration_adv.h" //**EXPERIMENTAL** Uncomment to use
+#if USE_BASE_CONFIGS
+  #include "BaseConfiguration_adv.h"
+#else
+  #include "../../Configuration_adv.h"
+#endif
 
 #include "Conditionals_adv.h"
 

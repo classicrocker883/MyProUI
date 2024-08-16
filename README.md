@@ -40,6 +40,9 @@ New ICON's have been added, and old ones enhanced. Whoever edited them before sa
 > If you encounter any issues, suggestions, or feature requests please feel free to post it on the [Issues tab](https://github.com/classicrocker883/MRiscoCProUI/issues), otherwise if everything is going well please leave a comment.
 >
 > I will be working on more upgrades and features and tweaks along the way. Enjoy using this fork of Marlin as I intend it to be the best; easy to use and convenient. So far I really enjoy the new settings and toolbar for the main menu. There is a variety of parameters and options that can be changed without having to reflash the firmware - like with other versions.
+>
+> If you start printing and it says `Advance Pause` while **Runout** is enabled, you may have to change state it triggers no filament to **HIGH**, or **LOW** (depending on what is already selected). This is found in the _Prepare_ menu/ _Filament Management_/ _Filament Settings_ -> _Runout Active_.
+
 <br>
 
 #### Important Info regarding HC32:
@@ -59,22 +62,10 @@ New ICON's have been added, and old ones enhanced. Whoever edited them before sa
 <br>
 
 #### Other Information:
-General information about the firmware and updates is located in the _Wiki_ page [What's New In This Release](https://github.com/classicrocker883/MRiscoCProUI/wiki/What's-New-in-this-Release). <br> Other changes and updates are [addressed here](https://github.com/classicrocker883/MRiscoCProUI/releases/latest) and are [addressed here](https://github.com/mriscoc/Ender3V2S1/releases/latest).
+General information about the firmware and updates is located in the _Wiki_ page [What's New In This Release](https://github.com/classicrocker883/MRiscoCProUI/wiki/What's-New-in-this-Release). <br> 
+Other changes and updates are [addressed here](https://github.com/classicrocker883/MRiscoCProUI/releases/latest).
 
 [Linear Advance Information](https://github.com/MarlinFirmware/MarlinDocumentation/blob/master/_features/lin_advance.md)
-
-#### One important change to note is the `Mesh Inset` now saves upon restart -- it is working as normal.
-    /**
-     * The nozzle is only able to move within the physical bounds of the machine.
-     * If the PROBE has an OFFSET Marlin may need to apply additional limits so
-     * the probe can be prevented from going to unreachable points.
-     *
-     * e.g., If the PROBE is to the LEFT of the NOZZLE, it will be limited in how
-     * close it can get the RIGHT edge of the bed (unless the nozzle is able move
-     * far enough past the right edge).
-     */
-If you start printing and it says `Advance Pause` while **Runout** is enabled, you may have to change state it triggers no filament to **HIGH**, or **LOW** (depending on what is already selected). This is found in the _Prepare_ menu/ _Filament Management_/ _Filament Settings_ -> _Runout Active_. <br>
-A small issue which may occur is if you are in the <i>Print</i> menu and you quickly select to print between several printable *Gcode* files in a short amount of time. The screen can freeze for a moment and the printer will restart - that is it.
 
 <br>
 
@@ -82,7 +73,7 @@ A small issue which may occur is if you are in the <i>Print</i> menu and you qui
 
 There is a *MarlinSimulator.exe* file provided to test out for yourself. It simulates a pre-built configuration of this firmware.
 
-To create your own MarlinSimulator with you own build, start by changing in Configuration.h **MOTHERBOARD** to *BOARD_SIMULATED*, also disable `ENDSTOP_INTERRUPTS_FEATURE` and `PROUI_EX`, and then in platformio.ini **default_envs =** change to *simulator_windows*. The MarlinSimulator can only compile for Manual Mesh Bed Leveling for now, so make sure your configuration is set for `MESH_BED_LEVELING`.
+To create your own MarlinSimulator with your own build, start by changing in Configuration.h **MOTHERBOARD** to *BOARD_SIMULATED*, also disable `ENDSTOP_INTERRUPTS_FEATURE` and `PROUI_EX`, and then in platformio.ini **default_envs =** change to *simulator_windows*. The MarlinSimulator can only compile for Manual Mesh Bed Leveling for now, so make sure your configuration is set for `MESH_BED_LEVELING`.
 
 Then you have to extract **SDL2-devel-2.30.5-mingw.zip** from /**docs**.
 You can either copy/paste the files directly, or install them.
@@ -108,24 +99,28 @@ You may have to first Build so the directory can be created, but you can:
 Once all that is done, just Build like you would normally and *MarlinSimulator.exe* will be created.
 
 For MacOS or Linux, you're on your own...sorry.
+
 <br>
 
+### Printer Information
 The Precompiled binary files of this firmware can work with STM32 (STM32F103RET6/RCT6 - STMicroelectronics) and it's clones: G32 (GD32F103Rx - GigaDevice), N32 (N32F103Rx / N32G455x - Nation), and H32 (HC32F460x - Huada Semiconductor/HDSC). They can be downloaded from:
 [Latest Release](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)
+
+<br>
 
 <img height=260 src="https://enfss.voxelab3dp.com/10001/picture/2021/09/b849845bd0ffa889f00a782aae76ccf3.jpg" align="left" />
 <img height=260 src="https://enfss.voxelab3dp.com/10001/picture/2021/09/677b721574efca3daa5c0d39e438fee6.jpg" align="middle" />
 <img height=260 src="buildroot/share/pixmaps/Ender-3V2.jpg" align="left" />
-<img height=300 src="buildroot/share/pixmaps/Ender-3S1.jpg" align="middle"  />
+<img width=260.5 src="buildroot/share/pixmaps/Ender-3S1.jpg" align="middle"  />
 
 <br>
 
 ## Donations
 
 Thank you for your support.
-Please consider making a donation, as large or as small and as often as you'd like.
-[Ko-fi](https://ko-fi.com/classicrocker883)
-[Venmo](https://venmo.com/u/andrewleduc88)
+Please consider making a donation, as large or as small and as often as you'd like.  
+[Ko-fi](https://ko-fi.com/classicrocker883)  
+[Venmo](https://venmo.com/u/andrewleduc88)  
 [Paypal](https://www.paypal.com/paypalme/andrewleduc)
 
 [<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/donate/?business=PFNSKQX9WQQ8W&no_recurring=0&currency_code=USD)  **PayPal**
@@ -133,10 +128,10 @@ Please consider making a donation, as large or as small and as often as you'd li
 <br>
 
 ## Wiki
- - [How to install the firmware](https://github.com/mriscoc/Ender3V2S1/wiki/How-to-install-the-firmware)
- - [Installing a 3D/BLTouch](https://github.com/mriscoc/Ender3V2S1/wiki/3D-BLTouch)
- - [Color themes](https://github.com/mriscoc/Ender3V2S1/wiki/Color-Themes)
- - [How to use with Octoprint](https://github.com/mriscoc/Ender3V2S1/wiki/Octoprint)
+ - [How to install the firmware](https://github.com/classicrocker883/MRiscoCProUI/wiki/How-to-install-the-firmware)
+ - [Installing a 3D/BLTouch](https://github.com/classicrocker883/MRiscoCProUI/wiki/3D-BLTouch)
+ - [Color themes](https://github.com/classicrocker883/MRiscoCProUI/wiki/Color-Themes)
+ - [How to use with Octoprint](https://github.com/classicrocker883/MRiscoCProUI/wiki/Octoprint)
 
 <br>
 
@@ -168,11 +163,10 @@ The Issue Queue is reserved for Bug Reports and Feature Requests. Please use the
 
 ## Credits
 
-Thanks to Reddit u/schuh8 and @whasupjohn for donating his board to help test the firmware.
+Thanks to Reddit u/schuh8 and GitHub @whasupjohn for donating his board to help test the firmware.
 <br>
-/u I*U*2
+/uI*U*2
 </br>
-
 
 Find me on [Facebook](https://www.facebook.com/yoboyyy)
 
@@ -188,11 +182,11 @@ Marlin is maintained mainly by [@thinkyhead](https://github.com/thinkyhead)
 
 This work would not be possible without me spending time working on it for free.
 
-I would greatly appreate supporters, helpers and betatesters whenever possible.
+I would greatly appreciate supporters, helpers, and betatesters whenever possible.
 
-Please consider making a donation or show your support or input if you end up using this firmware.
+Please show your support by considering making a donation, or giving your input if you end up using this firmware.
 
-It wasn't easy getting it to this point. I am just a basic programmer and the work is mostly trial and error. Thank goodness for VS Code's compiler which shows me what changes need to be made as I make them.
+It wasn't easy getting it to this point. I am just a basic programmer and the work is mostly trial and error. Thank goodness for VS Code's compiler and also AI like ChatGPT which shows me what changes need to be made as I make them. 
 
 Marlin firmware is an Open Source project hosted on Github, [Marlin](https://marlinfw.org/) is owned and maintained by the maker community.
 

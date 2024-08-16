@@ -1,0 +1,27 @@
+#
+# update-base-configs.yml
+# Generate new base config files if needed
+#
+
+name: Update Base Configs
+
+on:
+  schedule:
+    - cron: '22 2 * * 0'
+
+jobs:
+  bump_date:
+    name: Update Base Configs
+    if: github.repository == 'classicrocker883/MRiscoCProUI'
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Check out 2024-August
+      uses: actions/checkout@v4
+      with:
+        ref: 2024-August
+
+    - name: Update Base Configs
+      run: make base-configs
