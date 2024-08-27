@@ -143,9 +143,9 @@ void WriteEeprom();
 void ResetEeprom();
 #if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
   void dwinDrawPlot(tempcontrol_t result);
-  void drawHPlot();
-  void drawBPlot();
-  void drawCPlot();
+  void drawHotendPlot();
+  void drawBedPlot();
+  void drawChamberPlot();
 #endif
 #if ENABLED(ENC_MENU_ITEM)
   void SetEncRateA();

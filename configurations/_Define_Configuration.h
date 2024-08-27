@@ -111,7 +111,7 @@
 // #define HOTEND_OFFSET_X { 0.0, 20.00 }
 // #define HOTEND_OFFSET_Y { 0.0, 5.00 }
 // #define HOTEND_OFFSET_Z { 0.0, 0.00 }
-// #define MMU_MODEL PRUSA_MMU2
+// #define MMU_MODEL PRUSA_MMU3
 // #define PSU_CONTROL
 // #define PSU_NAME "Power Supply"
 // #define MKS_PWC

@@ -26,8 +26,9 @@
 #endif
 
 #if __has_include("../../Config.h")
-  #define USE_BASE_CONFIGS 1
   #include "../../Config.h"
+#else
+  #define USE_STD_CONFIGS 1
 #endif
 
 //
@@ -41,13 +42,11 @@
 
 #include "../core/boards.h"
 
-//#include "../../../configurations/_Undef_Configuration.h"  //**EXPERIMENTAL** Uncomment to use
-//#include "../../../configurations/_Define_Configuration.h" //**EXPERIMENTAL** Uncomment to use
-#if USE_BASE_CONFIGS
-  #include "BaseConfiguration.h"
-#else
+#if USE_STD_CONFIGS
   #include "../../Configuration.h"
 #endif
+//#include "../../../configurations/_Undef_Configuration.h"  //**EXPERIMENTAL** Uncomment to use
+//#include "../../../configurations/_Define_Configuration.h" //**EXPERIMENTAL** Uncomment to use
 
 #ifdef CUSTOM_VERSION_FILE
   #if __has_include(STRINGIFY(../../CUSTOM_VERSION_FILE))
@@ -65,13 +64,11 @@
 
 #include "../core/drivers.h"
 
-//#include "../../../configurations/_Undef_Configuration_adv.h"  //**EXPERIMENTAL** Uncomment to use
-//#include "../../../configurations/_Define_Configuration_adv.h" //**EXPERIMENTAL** Uncomment to use
-#if USE_BASE_CONFIGS
-  #include "BaseConfiguration_adv.h"
-#else
+#if USE_STD_CONFIGS
   #include "../../Configuration_adv.h"
 #endif
+//#include "../../../configurations/_Undef_Configuration_adv.h"  //**EXPERIMENTAL** Uncomment to use
+//#include "../../../configurations/_Define_Configuration_adv.h" //**EXPERIMENTAL** Uncomment to use
 
 #include "Conditionals_adv.h"
 

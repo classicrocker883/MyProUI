@@ -509,8 +509,8 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
 #if HAS_FILAMENT_SENSOR
   #if !PIN_EXISTS(FIL_RUNOUT)
     #error "FILAMENT_RUNOUT_SENSOR requires FIL_RUNOUT_PIN."
-  #elif HAS_PRUSA_MMU2 && NUM_RUNOUT_SENSORS != 1
-      #error "NUM_RUNOUT_SENSORS must be 1 with MMU2 / MMU2S."
+  #elif (HAS_PRUSA_MMU2 || HAS_PRUSA_MMU3) && NUM_RUNOUT_SENSORS != 1
+      #error "NUM_RUNOUT_SENSORS must be 1 with MMU2 / MMU2S / MMU3."
   #elif NUM_RUNOUT_SENSORS != 1 && NUM_RUNOUT_SENSORS != E_STEPPERS
     #error "NUM_RUNOUT_SENSORS must be either 1 or number of E steppers."
   #elif NUM_RUNOUT_SENSORS >= 8 && !PIN_EXISTS(FIL_RUNOUT8)
@@ -604,7 +604,7 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
 /**
  * Multi-Material-Unit 2 / EXTENDABLE_EMU_MMU2 requirements
  */
-#if HAS_PRUSA_MMU2
+#if HAS_PRUSA_MMU2 || HAS_PRUSA_MMU3
   #if !HAS_EXTENDABLE_MMU && EXTRUDERS != 5
     #undef SINGLENOZZLE
     #error "PRUSA_MMU2(S) requires exactly 5 EXTRUDERS. Please update your Configuration."
@@ -612,14 +612,20 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #error "EXTRUDERS is too large for MMU(S) emulation mode. The maximum value is 15."
   #elif DISABLED(NOZZLE_PARK_FEATURE)
     #error "PRUSA_MMU2(S) requires NOZZLE_PARK_FEATURE. Enable it to continue."
-  #elif HAS_PRUSA_MMU2S && DISABLED(FILAMENT_RUNOUT_SENSOR)
-    #error "PRUSA_MMU2S requires FILAMENT_RUNOUT_SENSOR. Enable it to continue."
+  #elif (HAS_PRUSA_MMU2S || HAS_PRUSA_MMU3) && DISABLED(FILAMENT_RUNOUT_SENSOR)
+    #error "PRUSA_MMU2S and HAS_PRUSA_MMU3 requires FILAMENT_RUNOUT_SENSOR. Enable it to continue."
   #elif ENABLED(MMU_EXTRUDER_SENSOR) && DISABLED(FILAMENT_RUNOUT_SENSOR)
     #error "MMU_EXTRUDER_SENSOR requires FILAMENT_RUNOUT_SENSOR. Enable it to continue."
   #elif ENABLED(MMU_EXTRUDER_SENSOR) && !HAS_MARLINUI_MENU
     #error "MMU_EXTRUDER_SENSOR requires an LCD supporting MarlinUI."
-  #elif ENABLED(MMU2_MENUS) && !HAS_MARLINUI_MENU
-    #error "MMU2_MENUS requires an LCD supporting MarlinUI."
+  #elif ENABLED(MMU_MENUS) && !HAS_MARLINUI_MENU
+    #error "MMU_MENUS requires an LCD supporting MarlinUI."
+  #elif HAS_PRUSA_MMU3 && !HAS_MARLINUI_MENU
+    #error "MMU3 requires an LCD supporting MarlinUI."
+  #elif HAS_PRUSA_MMU3 && DISABLED(MMU_MENUS)
+    #error "MMU3 requires MMU_MENUS."
+  #elif HAS_PRUSA_MMU3 && DISABLED(EEPROM_SETTINGS)
+    #error "MMU3 requires EEPROM_SETTINGS."
   #elif DISABLED(ADVANCED_PAUSE_FEATURE)
     static_assert(nullptr == strstr(MMU2_FILAMENT_RUNOUT_SCRIPT, "M600"), "MMU2_FILAMENT_RUNOUT_SCRIPT cannot make use of M600 unless ADVANCED_PAUSE_FEATURE is enabled");
   #endif
@@ -695,8 +701,8 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #error "MECHANICAL_SWITCHING_NOZZLE and DUAL_X_CARRIAGE are incompatible."
   #elif ENABLED(SINGLENOZZLE)
     #error "MECHANICAL_SWITCHING_NOZZLE and SINGLENOZZLE are incompatible."
-  #elif HAS_PRUSA_MMU2
-    #error "MECHANICAL_SWITCHING_NOZZLE and PRUSA_MMU2(S) are incompatible."
+  #elif HAS_PRUSA_MMU2 || HAS_PRUSA_MMU3
+    #error "MECHANICAL_SWITCHING_NOZZLE and PRUSA_MMU2(2S,3) are incompatible."
   #elif !defined(EVENT_GCODE_TOOLCHANGE_T0)
     #error "MECHANICAL_SWITCHING_NOZZLE requires EVENT_GCODE_TOOLCHANGE_T0."
   #elif !defined(EVENT_GCODE_TOOLCHANGE_T1)
@@ -709,8 +715,8 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #error "SWITCHING_NOZZLE and DUAL_X_CARRIAGE are incompatible."
   #elif ENABLED(SINGLENOZZLE)
     #error "SWITCHING_NOZZLE and SINGLENOZZLE are incompatible."
-  #elif HAS_PRUSA_MMU2
-    #error "SWITCHING_NOZZLE and PRUSA_MMU2(S) are incompatible."
+  #elif HAS_PRUSA_MMU2 || HAS_PRUSA_MMU3
+    #error "SWITCHING_NOZZLE and PRUSA_MMU2(2S,3) are incompatible."
   #elif NUM_SERVOS < 1
     #error "SWITCHING_NOZZLE requires NUM_SERVOS >= 1."
   #elif !defined(SWITCHING_NOZZLE_SERVO_NR)
@@ -2912,8 +2918,8 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
     #error "PROUI_ITEM_JD requires HAS_JUNCTION_DEVIATION."
   #elif ENABLED(PROUI_ITEM_ADVK) && DISABLED(LIN_ADVANCE)
     #error "PROUI_ITEM_ADVK requires LIN_ADVANCE."
-  #elif ENABLED(PROUI_ITEM_PLOT) && DISABLED(PROUI_TUNING_GRAPH)
-    #error "PROUI_ITEM_PLOT requires PROUI_TUNING_GRAPH."
+  #elif (ENABLED(PROUI_ITEM_PLOT) || PROUI_TUNING_GRAPH) && NONE(PIDTEMP, MPCTEMP, PIDTEMPBED, PIDTEMPCHAMBER)
+    #error "PROUI_ITEM_PLOT or PROUI_TUNING_GRAPH requires PIDTEMP, MPCTEMP, PIDTEMPBED, or PIDTEMPCHAMBER."
   #elif ENABLED(LCD_BED_TRAMMING) && DISABLED(BED_TRAMMING_INSET_LFRB)
     #error "BED_TRAMMING_INSET_LFRB must be defined with LCD_BED_TRAMMING."
   #endif
@@ -3635,7 +3641,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
 #if HAS_MOTOR_CURRENT_I2C
   #if ALL(DIGIPOT_MCP4018, DIGIPOT_MCP4451)
     #error "Enable only one of DIGIPOT_MCP4018 or DIGIPOT_MCP4451."
-  #elif !MB(MKS_SBASE, AZTEEG_X5_GT, AZTEEG_X5_MINI, AZTEEG_X5_MINI_WIFI) \
+  #elif !MB(MKS_SBASE, AZTEEG_X3_PRO, AZTEEG_X5_GT, AZTEEG_X5_MINI, AZTEEG_X5_MINI_WIFI) \
     && (!defined(DIGIPOTS_I2C_SDA_X) || !defined(DIGIPOTS_I2C_SDA_Y) || !defined(DIGIPOTS_I2C_SDA_Z) || !defined(DIGIPOTS_I2C_SDA_E0) || !defined(DIGIPOTS_I2C_SDA_E1))
       #error "DIGIPOT_MCP4018/4451 requires DIGIPOTS_I2C_SDA_* pins to be defined."
   #endif
@@ -3911,7 +3917,7 @@ static_assert(_PLUS_TEST(3), "DEFAULT_MAX_ACCELERATION values must be positive."
     #elif ENABLED(LASER_MOVE_G0_OFF)
       #error "LASER_MOVE_G0_OFF is no longer required, G0 and G28 cannot apply power."
     #elif ENABLED(LASER_MOVE_G28_OFF)
-      #error "LASER_MOVE_G0_OFF is no longer required, G0 and G28 cannot apply power."
+      #error "LASER_MOVE_G28_OFF is no longer required, G0 and G28 cannot apply power."
     #elif ENABLED(LASER_MOVE_POWER)
       #error "LASER_MOVE_POWER is no longer applicable."
     #endif
@@ -4412,7 +4418,7 @@ static_assert(_PLUS_TEST(3), "DEFAULT_MAX_ACCELERATION values must be positive."
     #error "FT_MOTION requires FTM_UNIFIED_BWS to be enabled because FBS is not yet implemented."
   #endif
   #if !HAS_X_AXIS
-    static_assert(FTM_DEFAULT_X_COMPENSATOR != ftMotionShaper_NONE, "Without any linear axes FTM_DEFAULT_X_COMPENSATOR must be ftMotionShaper_NONE.");
+    static_assert(FTM_DEFAULT_SHAPER_X != ftMotionShaper_NONE, "Without any linear axes FTM_DEFAULT_SHAPER_X must be ftMotionShaper_NONE.");
   #endif
   #if HAS_DYNAMIC_FREQ_MM
     static_assert(FTM_DEFAULT_DYNFREQ_MODE != dynFreqMode_Z_BASED, "dynFreqMode_Z_BASED requires a Z axis.");

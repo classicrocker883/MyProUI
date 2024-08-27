@@ -103,8 +103,7 @@ void BedLevelToolsClass::manual_value_update(const uint8_t mesh_x, const uint8_t
 void BedLevelToolsClass::manual_move(const uint8_t mesh_x, const uint8_t mesh_y, bool zmove/*=false*/) {
   gcode.process_subcommands_now(F("G28O"));
   if (!zmove) {
-    DWIN_Show_Popup(ICON_BLTouch, F("Moving to Point"), F("Please wait until done."));
-    HMI_SaveProcessID(NothingToDo);
+    DWIN_Draw_Popup(ICON_BLTouch, F("Moving to Point"), F("Please wait until done."));
     gcode.process_subcommands_now(TS(F("G0F600Z"), p_float_t(Z_CLEARANCE_BETWEEN_PROBES, 3))); //gcode.process_subcommands_now(F("G0F600Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES)));
     gcode.process_subcommands_now(TS(F("G42F4000I"), mesh_x, F("J"), mesh_y));
   }

@@ -41,10 +41,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -125,10 +122,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -210,10 +204,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -306,10 +297,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -396,10 +384,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -475,10 +460,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -565,10 +547,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -657,10 +636,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -748,10 +724,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -831,10 +804,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -916,10 +886,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -1003,10 +970,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -1103,10 +1067,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -1195,10 +1156,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -1275,10 +1233,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -1377,10 +1332,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
