@@ -407,3 +407,15 @@ void Draw_MaxAccel_Menu();
 #if DEBUG_DWIN
   void DWIN_Debug(PGM_P msg1=nullptr, PGM_P msg2=nullptr, PGM_P msg3=nullptr, PGM_P msg4=nullptr);
 #endif
+
+#if ENABLED(PROUI_MESH_EDIT)
+  #undef  MESH_MIN_X
+  #undef  MESH_MAX_X
+  #undef  MESH_MIN_Y
+  #undef  MESH_MAX_Y
+  #include "../../marlinui.h"
+  #define MESH_MIN_X ui.mesh_min_x
+  #define MESH_MAX_X ui.mesh_max_x
+  #define MESH_MIN_Y ui.mesh_min_y
+  #define MESH_MAX_Y ui.mesh_max_y
+#endif

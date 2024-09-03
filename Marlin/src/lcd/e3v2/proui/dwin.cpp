@@ -2073,16 +2073,6 @@ void DWIN_Print_Aborted() {
   }
 #endif
 
- #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-  void SetMeshArea() {
-    TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x = ui.mesh_min_x;
-    TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x = ui.mesh_max_x;
-    TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y = ui.mesh_min_y;
-    TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y = ui.mesh_max_y;
-    ApplyMeshInset();
-  }
-#endif
-
 void DWIN_SetDataDefaults() {
   DEBUG_ECHOLNPGM("DWIN_SetDataDefaults");
   DWIN_SetColorDefaults();
@@ -2130,13 +2120,13 @@ void DWIN_SetDataDefaults() {
   #endif
   TERN_(HAS_GCODE_PREVIEW, HMI_data.EnablePreview = true;)
   TERN_(PROUI_ITEM_ABRT, HMI_data.auto_abort = true;)
+  #if ENABLED(PROUI_MESH_EDIT)
+    ui.mesh_min_x = DEF_MESH_MIN_X;
+    ui.mesh_max_x = DEF_MESH_MAX_X;
+    ui.mesh_min_y = DEF_MESH_MIN_Y;
+    ui.mesh_max_y = DEF_MESH_MAX_Y;
+  #endif
   #if PROUI_EX
-    #if ENABLED(PROUI_MESH_EDIT)
-      PRO_data.mesh_min_x = DEF_MESH_MIN_X;
-      PRO_data.mesh_max_x = DEF_MESH_MAX_X;
-      PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
-      PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
-    #endif
     PRO_data.x_bed_size = DEF_X_BED_SIZE;
     PRO_data.y_bed_size = DEF_Y_BED_SIZE;
     PRO_data.x_min_pos  = DEF_X_MIN_POS;
@@ -2172,12 +2162,6 @@ void DWIN_SetDataDefaults() {
       HMI_data.grid_max_points = DEF_GRID_MAX_POINTS;
     #endif
     TERN_(HAS_EXTRUDERS, HMI_data.Invert_E0 = DEF_INVERT_E0_DIR;)
-    #if ENABLED(PROUI_MESH_EDIT)
-      HMI_data.mesh_min_x = DEF_MESH_MIN_X;
-      HMI_data.mesh_max_x = DEF_MESH_MAX_X;
-      HMI_data.mesh_min_y = DEF_MESH_MIN_Y;
-      HMI_data.mesh_max_y = DEF_MESH_MAX_Y;
-    #endif
   #endif
 }
 
@@ -4324,13 +4308,13 @@ void Draw_MaxAccel_Menu() {
 
     // Mesh Inset
     void ApplyMeshInset() { set_bed_leveling_enabled(false); reset_bed_level(); ReDrawItem(); }
-    void SetXMeshInset() { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, SetMeshArea, ApplyMeshInset); }
-    void SetYMeshInset() { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, SetMeshArea, ApplyMeshInset); }
+    void SetXMeshInset() { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
+    void SetYMeshInset() { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
     void MaxMeshArea() {
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x = ui.mesh_min_x = 0;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x = ui.mesh_max_x = X_BED_SIZE;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y = ui.mesh_min_y = 0;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y = ui.mesh_max_y = Y_BED_SIZE;
+      MESH_MIN_X = 0;
+      MESH_MAX_X = X_BED_SIZE;
+      MESH_MIN_Y = 0;
+      MESH_MAX_Y = Y_BED_SIZE;
       set_bed_leveling_enabled(false);
       reset_bed_level();
       ReDrawMenu();
@@ -4340,10 +4324,10 @@ void Draw_MaxAccel_Menu() {
       if (max < X_BED_SIZE - MESH_MAX_X) { max = X_BED_SIZE - MESH_MAX_X; }
       if (max < MESH_MIN_Y) { max = MESH_MIN_Y; }
       if (max < Y_BED_SIZE - MESH_MAX_Y) { max = Y_BED_SIZE - MESH_MAX_Y; }
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x = ui.mesh_min_x = max;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x = ui.mesh_max_x = X_BED_SIZE - max;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y = ui.mesh_min_y = max;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y = ui.mesh_max_y = Y_BED_SIZE - max;
+      MESH_MIN_X = max;
+      MESH_MAX_X = X_BED_SIZE - max;
+      MESH_MIN_Y = max;
+      MESH_MAX_Y = Y_BED_SIZE - max;
       set_bed_leveling_enabled(false);
       reset_bed_level();
       ReDrawMenu();
