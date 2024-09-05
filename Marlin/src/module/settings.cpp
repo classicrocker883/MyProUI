@@ -1053,9 +1053,7 @@ void MarlinSettings::postprocess() {
           TERN(AUTO_BED_LEVELING_BILINEAR, "Bilinear Z array is the wrong size.", "MBL Z array is the wrong size.")
         );
       #endif
-      #if DISABLED(MESH_BED_LEVELING)
-        dummyf = 0;
-      #endif
+
       #if ANY(PROUI_EX, PROUI_GRID_PNTS)
         const uint8_t grid_max_x = GRID_LIMIT,
                       grid_max_y = GRID_LIMIT;
@@ -1063,6 +1061,7 @@ void MarlinSettings::postprocess() {
         const uint8_t grid_max_x = GRID_MAX_POINTS_X,
                       grid_max_y = GRID_MAX_POINTS_Y;
       #endif
+      TERN_(MESH_BED_LEVELING, EEPROM_WRITE(bedlevel.z_offset);)
       EEPROM_WRITE(grid_max_x);
       EEPROM_WRITE(grid_max_y);
 
@@ -1071,13 +1070,10 @@ void MarlinSettings::postprocess() {
       EEPROM_WRITE(mesh_check);
       EEPROM_WRITE(bedlevel.z_values);              // 9-256 floats
 
-    #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
-      EEPROM_WRITE(bedlevel.grid_spacing);
-      EEPROM_WRITE(bedlevel.grid_start);
-      EEPROM_WRITE(dummyf);
-    #elif ENABLED(MESH_BED_LEVELING)
-      EEPROM_WRITE(bedlevel.z_offset);
-    #endif
+      #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
+        EEPROM_WRITE(bedlevel.grid_spacing);
+        EEPROM_WRITE(bedlevel.grid_start);
+      #endif
     }
     #endif
 
@@ -2088,57 +2084,51 @@ void MarlinSettings::postprocess() {
       #if ANY(AUTO_BED_LEVELING_BILINEAR, MESH_BED_LEVELING)
       {
         uint8_t grid_max_x, grid_max_y;
+        TERN_(MESH_BED_LEVELING, EEPROM_READ(dummyf);)
+        EEPROM_READ_ALWAYS(grid_max_x);                 // 1 byte
+        EEPROM_READ_ALWAYS(grid_max_y);                 // 1 byte
+
+        // Check value must correspond to the X/Y values
         uint16_t mesh_check;
-        EEPROM_READ_ALWAYS(grid_max_x);
-        EEPROM_READ_ALWAYS(grid_max_y);
+        EEPROM_READ_ALWAYS(mesh_check);
+        if (mesh_check != TWO_BYTE_HASH(grid_max_x, grid_max_y)) {
+          eeprom_error = ERR_EEPROM_CORRUPT;
+          break;
+        }
 
         #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
           xy_pos_t spacing, start;
           EEPROM_READ(spacing);                         // 2 ints
           EEPROM_READ(start);                           // 2 ints
         #elif ENABLED(MESH_BED_LEVELING)
-          EEPROM_READ(dummyf);
+          if (!validating) bedlevel.z_offset = dummyf;
         #endif
-
-        // Check value must correspond to the X/Y values
-        EEPROM_READ_ALWAYS(mesh_check);
-        if (mesh_check != TWO_BYTE_HASH(grid_max_x, grid_max_y)) {
+        #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+          if (grid_max_x == (GRID_LIMIT) && grid_max_y == (GRID_LIMIT)) {
+        #else
+          if (grid_max_x == (GRID_MAX_POINTS_X) && grid_max_y == (GRID_MAX_POINTS_Y)) {
+        #endif
+          // EEPROM data fits the current mesh
+          #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
+            if (!validating) set_bed_leveling_enabled(false);
+            bedlevel.set_grid(spacing, start);
+          #endif
+          EEPROM_READ(bedlevel.z_values);               // 9 to 256 floats
+        }
+        #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+          else if (grid_max_x > (GRID_LIMIT) || grid_max_y > (GRID_LIMIT)) {
+        #else
+          else if (grid_max_x > (GRID_MAX_POINTS_X) || grid_max_y > (GRID_MAX_POINTS_Y)) {
+        #endif
           eeprom_error = ERR_EEPROM_CORRUPT;
           break;
         }
-          #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
-            xy_pos_t spacing, start;
-            EEPROM_READ(spacing);                          // 2 ints
-            EEPROM_READ(start);                            // 2 ints
-          #elif ENABLED(MESH_BED_LEVELING)
-            if (!validating) bedlevel.z_offset = dummyf;
-          #endif
-          #if ANY(PROUI_EX, PROUI_GRID_PNTS)
-            if (grid_max_x == (GRID_LIMIT) && grid_max_y == (GRID_LIMIT)) {
-          #else
-            if (grid_max_x == (GRID_MAX_POINTS_X) && grid_max_y == (GRID_MAX_POINTS_Y)) {
-          #endif
-            // EEPROM data fits the current mesh
-            #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
-              if (!validating) set_bed_leveling_enabled(false);
-              bedlevel.set_grid(spacing, start);
-            #endif
-            EEPROM_READ(bedlevel.z_values);             // 9 to 256 floats
-          }
-          #if ANY(PROUI_EX, PROUI_GRID_PNTS)
-            else if (grid_max_x > (GRID_LIMIT) || grid_max_y > (GRID_LIMIT)) {
-          #else
-            else if (grid_max_x > (GRID_MAX_POINTS_X) || grid_max_y > (GRID_MAX_POINTS_Y)) {
-          #endif
-            eeprom_error = ERR_EEPROM_CORRUPT;
-            break;
-          }
-          else {
-            // EEPROM data is stale
-            TERN_(MESH_BED_LEVELING, if (!validating) bedlevel.reset();)
-            // Skip past disabled (or stale) Grid data
-            for (uint16_t q = grid_max_x * grid_max_y; q--;) EEPROM_READ(dummyf);
-          }
+        else {
+          // EEPROM data is stale
+          TERN_(MESH_BED_LEVELING, if (!validating) bedlevel.reset();)
+          // Skip past disabled (or stale) Grid data
+          for (uint16_t q = grid_max_x * grid_max_y; q--;) EEPROM_READ(dummyf);
+        }
       }
       #endif
 
