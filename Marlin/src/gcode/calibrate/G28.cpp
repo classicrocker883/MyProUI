@@ -375,7 +375,7 @@ void GcodeSuite::G28() {
         else {
           // Raise above the current Z (which should be synced in the planner)
           // The "height" for Z is a coordinate. But if Z is not trusted/homed make it relative.
-          if (seenR || !TERN(HOME_AFTER_DEACTIVATE, axis_is_trusted, axis_was_homed)(Z_AXIS)) {
+          if (seenR || !(z_min_trusted || axis_should_home(Z_AXIS))) {
             z_homing_height += current_position.z;
           }
 

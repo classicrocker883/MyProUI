@@ -358,7 +358,7 @@ FORCE_INLINE void probe_specific_action(const bool deploy) {
 
     FSTR_P const ds_fstr = deploy ? GET_TEXT_F(MSG_MANUAL_DEPLOY) : GET_TEXT_F(MSG_MANUAL_STOW);
     ui.return_to_status();       // To display the new status message
-    ui.set_max_status(ds_fstr);
+    ui.set_max_status(ds_fstr);  // Set a status message that won't be overwritten by the host
     SERIAL_ECHOLN(deploy ? GET_EN_TEXT_F(MSG_MANUAL_DEPLOY) : GET_EN_TEXT_F(MSG_MANUAL_STOW));
 
     OKAY_BUZZ();
@@ -380,7 +380,8 @@ FORCE_INLINE void probe_specific_action(const bool deploy) {
     TERN_(DWIN_LCD_PROUI, DWIN_Popup_Continue(ICON_BLTouch, ds_fstr, F("")));
     TERN_(HAS_RESUME_CONTINUE, wait_for_user_response());
 
-    ui.reset_status();
+    ui.reset_alert_level();
+    //ui.reset_status();
 
   #endif // PAUSE_BEFORE_DEPLOY_STOW
 
@@ -1024,7 +1025,7 @@ float Probe::probe_at_point(
   const bool sanity_check,            // = true
   const_float_t z_min_point,          // = Z_PROBE_LOW_POINT
   const_float_t z_clearance,          // = Z_TWEEN_SAFE_CLEARANCE
-  const bool raise_after_is_relative  // = false
+  const bool raise_after_is_rel       // = false
 ) {
   DEBUG_SECTION(log_probe, "Probe::probe_at_point", DEBUGGING(LEVELING));
 
@@ -1088,7 +1089,7 @@ float Probe::probe_at_point(
       switch (raise_after) {
         default: break;
         case PROBE_PT_RAISE:
-          if (raise_after_is_relative)
+          if (raise_after_is_rel)
             do_z_clearance_by(z_clearance);
           else
             do_z_clearance(z_clearance);
