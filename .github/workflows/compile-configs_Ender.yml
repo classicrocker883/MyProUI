@@ -19,9 +19,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -96,9 +96,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -175,9 +175,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -266,9 +266,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -349,9 +349,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -436,9 +436,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -517,9 +517,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -600,9 +600,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -696,9 +696,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -787,9 +787,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -878,9 +878,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:

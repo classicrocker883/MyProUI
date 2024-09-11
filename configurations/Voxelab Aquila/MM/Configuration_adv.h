@@ -2370,7 +2370,7 @@
  * underextrusion at high extruder speeds that are otherwise well-behaved (i.e., not skipping).
  * For better results also enable ADAPTIVE_STEP_SMOOTHING.
  */
-//#define NONLINEAR_EXTRUSION // (560 bytes of flash)
+#define NONLINEAR_EXTRUSION // (560 bytes of flash)
 
 // @section leveling
 

@@ -356,12 +356,12 @@ typedef struct PlannerSettings {
     #undef _DLIM
   #endif
 
- feedRate_t max_feedrate_mm_s[DISTINCT_AXES];   // (mm/s) M203 XYZE - Max speeds
+ feedRate_t max_feedrate_mm_s[DISTINCT_AXES],   // (mm/s) M203 XYZE - Max speeds
+            min_feedrate_mm_s,                  // (mm/s) M205 S - Minimum linear feedrate
+            min_travel_feedrate_mm_s;           // (mm/s) M205 T - Minimum travel feedrate
       float acceleration,                       // (mm/s^2) M204 S - Normal acceleration. DEFAULT ACCELERATION for all printing moves.
             retract_acceleration,               // (mm/s^2) M204 R - Retract acceleration. Filament pull-back and push-forward while standing still in the other axes
             travel_acceleration;                // (mm/s^2) M204 T - Travel acceleration. DEFAULT ACCELERATION for all NON printing moves.
- feedRate_t min_feedrate_mm_s,                  // (mm/s) M205 S - Minimum linear feedrate
-            min_travel_feedrate_mm_s;           // (mm/s) M205 T - Minimum travel feedrate
 } planner_settings_t;
 
 #if ENABLED(IMPROVE_HOMING_RELIABILITY)
@@ -1112,14 +1112,6 @@ class Planner {
 
     #endif // HAS_JUNCTION_DEVIATION
 };
-
-#if HAS_Y_AXIS
-  #define PLANNER_XY_FEEDRATE_MM_S _MIN(planner.settings.max_feedrate_mm_s[X_AXIS], planner.settings.max_feedrate_mm_s[Y_AXIS])
-#elif HAS_X_AXIS
-  #define PLANNER_XY_FEEDRATE_MM_S planner.settings.max_feedrate_mm_s[X_AXIS]
-#else
-  #define PLANNER_XY_FEEDRATE_MM_S 60.0f
-#endif
 
 #define ANY_AXIS_MOVES(BLOCK)  \
   (false NUM_AXIS_GANG(        \

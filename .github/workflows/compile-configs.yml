@@ -14,15 +14,15 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
-        temp: [true,false]
         inshape: [true,false]
+        temp: [true,false]
         tjc: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -46,8 +46,8 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Aquila_${AVTMP}_Default${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
@@ -72,8 +72,8 @@ jobs:
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
@@ -95,15 +95,15 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
-        temp: [true,false]
         inshape: [true,false]
+        temp: [true,false]
         tjc: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -127,8 +127,8 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Aquila_${AVTMP}_MM-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
@@ -153,8 +153,8 @@ jobs:
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
@@ -176,6 +176,7 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
+        plr: [true,false]
         temp: [true,false]
         tjc: [true,false]
         t13: [true,false]
@@ -183,9 +184,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -209,11 +210,12 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
+        if ($PLR); then PLTMP=-PLR; else PLTMP=; fi;
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=${DTMP}Aquila_${AVTMP}${TTMP}${MPTMP}_UBL-ProUI-EX${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_${AVTMP}${TTMP}${MPTMP}_UBL-ProUI-EX${PLTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -221,13 +223,17 @@ jobs:
         cp configurations/Voxelab\ Aquila/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
+        if ($PLR); then PLMP='\/\/'; PRMP=; else PLMP=; PRMP='\/\/'; fi;
+        sed -i "s/.*#define PROUI_ITEM_PLR/${PRMP}#define PROUI_ITEM_PLR/" Marlin/Configuration.h
+        sed -i "s/.*#define POWER_LOSS_RECOVERY/${PRMP}#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define MARLIN_SMALL_BUILD/${PRMP}#define MARLIN_SMALL_BUILD/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         sed -i "s/.*#define PREHEAT_2_LABEL/${PTEMP}#define PREHEAT_2_LABEL/" Marlin/Configuration.h
         sed -i "s/.*#define USE_GRID_MESHVIEWER 1/${PTEMP}#define USE_GRID_MESHVIEWER 1/" Marlin/Configuration.h
-        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PTEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
         sed -i "s/.*#define CAPABILITIES_REPORT/${PTEMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PLMP}${PTEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
@@ -246,6 +252,7 @@ jobs:
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        PLR: ${{ matrix.plr }}
         TP: ${{ matrix.temp }}
         TJC: ${{ matrix.tjc }}
         T13: ${{ matrix.t13 }}
@@ -264,21 +271,22 @@ jobs:
         asset_path: temp/build.bin
         asset_name: ${{ steps.build_configs.outputs.filename }}
         asset_content_type: application/x-binary
-  Build-UBL-EX-PLR-A:            # UBL EX PLR for Aquila
-    name: Build UBL EX PLR Files A
+  Build-UBL-EX-IS-A:            # UBL EX IS for Aquila
+    name: Build UBL EX IS Files A
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chip: [GD32,N32]
+        plr: [true,false]
         tjc: [true,false]
         t13: [true,false]
         bmp: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -302,10 +310,11 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
+        if ($PLR); then PLTMP=-PLR; else PLTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=${DTMP}Aquila_${AVTMP}${TTMP}${MPTMP}_UBL-ProUI-EX-PLR$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_${AVTMP}${TTMP}${MPTMP}_UBL-ProUI-EX${PLTMP}-IS$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -313,16 +322,21 @@ jobs:
         cp configurations/Voxelab\ Aquila/UBL/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
+        sed -i "s/.*#define MARLIN_SMALL_BUILD/#define MARLIN_SMALL_BUILD/" Marlin/Configuration_adv.h
         sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
-        sed -i "s/.*#define PROUI_ITEM_PLR/#define PROUI_ITEM_PLR/" Marlin/Configuration.h
-        sed -i "s/.*#define POWER_LOSS_RECOVERY/#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
         sed -i "s/.*#define NO_HOME_OFFSETS/#define NO_HOME_OFFSETS/" Marlin/Configuration_adv.h
-        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
-        sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
-        sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
+        sed -i "s/.*#define INPUT_SHAPING_X/#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Z/#define INPUT_SHAPING_Z/" Marlin/Configuration_adv.h
+        if ($PLR); then PRMP=; else PRMP='\/\/'; fi;
+        sed -i "s/.*#define PROUI_ITEM_PLR/${PRMP}#define PROUI_ITEM_PLR/" Marlin/Configuration.h
+        sed -i "s/.*#define POWER_LOSS_RECOVERY/${PRMP}#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
+        sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
+        sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
         sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/${MPDEMP}#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
         sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
@@ -335,6 +349,7 @@ jobs:
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        PLR: ${{ matrix.plr }}
         TJC: ${{ matrix.tjc }}
         T13: ${{ matrix.t13 }}
         BMP: ${{ matrix.bmp }}
@@ -358,14 +373,15 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
+        plr: [true,false]
         tjc: [true,false]
-        pwr: [true,false]
+        t13: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -389,9 +405,10 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
+        if ($PLR); then PLTMP=-PLR; else PLTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
-        if ($PWR); then PLTMP=-PLR; else PLTMP=; fi;
-        echo "filename=${DTMP}Aquila_${AVTMP}_IND_UBL-ProUI-EX${PLTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
+        echo "filename=${DTMP}Aquila_${AVTMP}_IND${TTMP}_UBL-ProUI-EX${PLTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -399,20 +416,25 @@ jobs:
         cp configurations/Voxelab\ Aquila/X3/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/X3/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
-        if ($PWR); then PLMP='\/\/'; PRMP=; else PLMP=; PRMP='\/\/'; fi;
+        if ($PLR); then PLMP='\/\/'; PRMP=; else PLMP=; PRMP='\/\/'; fi;
         sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PLMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
+        sed -i "s/.*#define PROUI_ITEM_PLR/${PRMP}#define PROUI_ITEM_PLR/" Marlin/Configuration.h
         sed -i "s/.*#define POWER_LOSS_RECOVERY/${PRMP}#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
         sed -i "s/.*#define CAPABILITIES_REPORT/${PLMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
+        sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
+        sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        PLR: ${{ matrix.plr }}
         TJC: ${{ matrix.tjc }}
-        PWR: ${{ matrix.pwr }}
+        T13: ${{ matrix.t13 }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
@@ -433,15 +455,17 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
+        plr: [true,false]
         temp: [true,false]
         tjc: [true,false]
+        t13:  [true,false]
         bmp: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -465,10 +489,12 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
+        if ($PLR); then PLTMP=-PLR; else PLTMP=; fi;
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=${DTMP}Aquila_${AVTMP}${MPTMP}_BLT-ProUI-EX${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_${AVTMP}${TTMP}${MPTMP}_BLT-ProUI-EX${PLTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -477,6 +503,10 @@ jobs:
         cp configurations/Voxelab\ Aquila/BLT/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         sed -i "s/.*#define PROUI_EX 1/#define PROUI_EX 1/" Marlin/Configuration.h
+        if ($PLR); then PRMP=; else PRMP='\/\/'; fi;
+        sed -i "s/.*#define PROUI_ITEM_PLR/${PRMP}#define PROUI_ITEM_PLR/" Marlin/Configuration.h
+        sed -i "s/.*#define POWER_LOSS_RECOVERY/${PRMP}#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define MARLIN_SMALL_BUILD/${PRMP}#define MARLIN_SMALL_BUILD/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
@@ -484,6 +514,9 @@ jobs:
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
+        sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
+        sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
         sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/${MPDEMP}#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
         sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
@@ -496,8 +529,10 @@ jobs:
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
+        PLR: ${{ matrix.plr }}
         TP: ${{ matrix.temp }}
         TJC: ${{ matrix.tjc }}
+        T13: ${{ matrix.t13 }}
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
@@ -519,6 +554,7 @@ jobs:
     strategy:
       matrix:
         chip: [GD32,N32]
+        plr: [true,false]
         temp: [true,false]
         inshape: [true,false]
         tjc: [true,false]
@@ -526,9 +562,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -552,11 +588,12 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
-        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($PLR); then PLTMP=-PLR; else PLTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=${DTMP}Aquila_${AVTMP}${MPTMP}_BLT${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Aquila_${AVTMP}${MPTMP}_BLT${PLTMP}${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -564,6 +601,10 @@ jobs:
         cp configurations/Voxelab\ Aquila/BLT/Configuration_adv.h Marlin/Configuration_adv.h
         cp configurations/Voxelab\ Aquila/BLT/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
+        if ($PLR); then PLMP='\/\/'; PRMP=; else PLMP=; PRMP='\/\/'; fi;
+        sed -i "s/.*#define PROUI_ITEM_PLR/${PRMP}#define PROUI_ITEM_PLR/" Marlin/Configuration.h
+        sed -i "s/.*#define POWER_LOSS_RECOVERY/${PRMP}#define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define MARLIN_SMALL_BUILD/${PRMP}#define MARLIN_SMALL_BUILD/" Marlin/Configuration_adv.h
         if ($IS); then STEMP=; else STEMP='\/\/'; fi;
         sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
         sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
@@ -586,8 +627,9 @@ jobs:
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
+        PLR: ${{ matrix.plr }}
         IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
         TJC: ${{ matrix.tjc }}
         BMP: ${{ matrix.bmp }}
     - name: Get release
@@ -615,9 +657,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -703,9 +745,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -777,15 +819,15 @@ jobs:
     strategy:
       matrix:
         chip: [427,422]
-        temp: [true,false]
         inshape: [true,false]
+        temp: [true,false]
         tjc: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -809,8 +851,8 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; DBORD='CREALITY_V427'; else AVTMP="422"; DBORD='CREALITY_V422'; fi;
-        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Aquila_${AVTMP}_Default${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
@@ -836,8 +878,8 @@ jobs:
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
@@ -859,15 +901,15 @@ jobs:
     strategy:
       matrix:
         chip: [427,422]
-        temp: [true,false]
         inshape: [true,false]
+        temp: [true,false]
         tjc: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -891,8 +933,8 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; DBORD='CREALITY_V427'; else AVTMP="422"; DBORD='CREALITY_V422'; fi;
-        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         echo "filename=${DTMP}Aquila_${AVTMP}_MM-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
@@ -918,8 +960,8 @@ jobs:
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
@@ -941,17 +983,17 @@ jobs:
     strategy:
       matrix:
         chip: [427,422]
-        temp: [true,false]
         inshape: [true,false]
+        temp: [true,false]
         tjc: [true,false]
         t13: [true,false]
         bmp: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -975,8 +1017,8 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; DBORD='CREALITY_V427'; else AVTMP="422"; DBORD='CREALITY_V422'; fi;
-        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
@@ -1014,8 +1056,8 @@ jobs:
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
         TJC: ${{ matrix.tjc }}
         T13: ${{ matrix.t13 }}
         BMP: ${{ matrix.bmp }}
@@ -1039,16 +1081,16 @@ jobs:
     strategy:
       matrix:
         chip: [427,422]
-        temp: [true,false]
         inshape: [true,false]
+        temp: [true,false]
         tjc: [true,false]
         bmp: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -1072,8 +1114,8 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; DBORD='CREALITY_V427'; else AVTMP="422"; DBORD='CREALITY_V422'; fi;
-        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
         echo "filename=${DTMP}Aquila_${AVTMP}${MPTMP}_BLT-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
@@ -1107,8 +1149,8 @@ jobs:
         mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
       env:
         AQUILA_VER: ${{ matrix.chip }}
-        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
         TJC: ${{ matrix.tjc }}
         BMP: ${{ matrix.bmp }}
     - name: Get release
@@ -1135,9 +1177,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -1206,15 +1248,15 @@ jobs:
       matrix:
         chip: [427,422]
         abl: [UBL,BLT]
-        temp: [true,false]
         inshape: [true,false]
+        temp: [true,false]
         bmp: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -1238,8 +1280,8 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; DBORD='CREALITY_V427'; else AVTMP="422"; DBORD='CREALITY_V422'; fi;
-        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
         echo "filename=C2-Aquila_${AVTMP}${MPTMP}_${ABL}${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
@@ -1282,8 +1324,8 @@ jobs:
       env:
         AQUILA_VER: ${{ matrix.chip }}
         ABL: ${{ matrix.abl }}
-        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
@@ -1306,14 +1348,14 @@ jobs:
       matrix:
         chip: [427,422]
         abl: [MM,Default]
-        temp: [true,false]
         inshape: [true,false]
+        temp: [true,false]
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -1337,8 +1379,8 @@ jobs:
       id: build_configs
       run: |
         if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; DBORD='CREALITY_V427'; else AVTMP="422"; DBORD='CREALITY_V422'; fi;
-        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         echo "filename=C2-Aquila_${AVTMP}_${ABL}${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
@@ -1371,8 +1413,8 @@ jobs:
       env:
         AQUILA_VER: ${{ matrix.chip }}
         ABL: ${{ matrix.abl }}
-        TP: ${{ matrix.temp }}
         IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.3.2
