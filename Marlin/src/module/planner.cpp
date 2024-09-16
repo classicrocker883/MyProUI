@@ -168,7 +168,7 @@ uint32_t Planner::max_acceleration_steps_per_s2[DISTINCT_AXES]; // (steps/s^2) D
 #endif
 
 #if ENABLED(DISTINCT_E_FACTORS)
-  uint8_t Planner::last_extruder = 0;     // Respond to extruder change
+  uint8_t Planner::last_extruder = 0; // Respond to extruder change
 #endif
 
 #if ENABLED(DIRECT_STEPPING)
@@ -178,18 +178,18 @@ uint32_t Planner::max_acceleration_steps_per_s2[DISTINCT_AXES]; // (steps/s^2) D
 
 #if HAS_EXTRUDERS
   int16_t Planner::flow_percentage[EXTRUDERS] = ARRAY_BY_EXTRUDERS1(100); // Extrusion factor for each extruder
-  float Planner::e_factor[EXTRUDERS] = ARRAY_BY_EXTRUDERS1(1.00f); // The flow percentage and volumetric multiplier combine to scale E movement
+  float Planner::e_factor[EXTRUDERS] = ARRAY_BY_EXTRUDERS1(1.00f);        // The flow percentage and volumetric multiplier combine to scale E movement
 #endif
 
 #if DISABLED(NO_VOLUMETRICS)
-  float Planner::filament_size[EXTRUDERS],          // diameter of filament (in millimeters), typically around 1.75 or 2.85, 0 disables the volumetric calculations for the extruder
+  float Planner::filament_size[EXTRUDERS],         // Diameter of filament (in millimeters), typically around 1.75 or 2.85, 0 disables the volumetric calculations for the extruder
         Planner::volumetric_area_nominal = CIRCLE_AREA(float(DEFAULT_NOMINAL_FILAMENT_DIA) * 0.5f), // Nominal cross-sectional area
-        Planner::volumetric_multiplier[EXTRUDERS];  // Reciprocal of cross-sectional area of filament (in mm^2). Pre-calculated to reduce computation in the planner
+        Planner::volumetric_multiplier[EXTRUDERS]; // Reciprocal of cross-sectional area of filament (in mm^2). Pre-calculated to reduce computation in the planner
 #endif
 
 #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
-  float Planner::volumetric_extruder_limit[EXTRUDERS],          // max mm^3/sec the extruder is able to handle
-        Planner::volumetric_extruder_feedrate_limit[EXTRUDERS]; // pre calculated extruder feedrate limit based on volumetric_extruder_limit; pre-calculated to reduce computation in the planner
+  float Planner::volumetric_extruder_limit[EXTRUDERS],          // Max mm^3/sec the extruder is able to handle
+        Planner::volumetric_extruder_feedrate_limit[EXTRUDERS]; // Pre-calculated extruder feedrate limit based on volumetric_extruder_limit; pre-calculated to reduce computation in the planner
 #endif
 
 #ifdef MAX7219_DEBUG_SLOWDOWN
@@ -202,7 +202,7 @@ uint32_t Planner::max_acceleration_steps_per_s2[DISTINCT_AXES]; // (steps/s^2) D
     matrix_3x3 Planner::bed_level_matrix; // Transform to compensate for bed level
   #endif
   #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
-    float Planner::z_fade_height,      // Initialized by settings.load()
+    float Planner::z_fade_height,     // Initialized by settings.load()
           Planner::inverse_z_fade_height,
           Planner::last_fade_z;
   #endif

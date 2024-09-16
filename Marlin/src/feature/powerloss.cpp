@@ -343,7 +343,7 @@ void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POW
     // Tell the LCD about the outage, even though it is about to die
     TERN_(EXTENSIBLE_UI, ExtUI::onPowerLoss());
 
-    // Disable all heaters to reduce power loss
+    // Disable all heaters to reduce power-loss
     thermalManager.disable_all_heaters();
 
     #if ENABLED(BACKUP_POWER_SUPPLY)
@@ -374,8 +374,8 @@ void PrintJobRecovery::write() {
   open(false);
   file.seekSet(0);
   const int16_t ret = file.write(&info, sizeof(info));
-  if (ret == -1) DEBUG_ECHOLNPGM("Power-loss file write failed.");
-  if (!file.close()) DEBUG_ECHOLNPGM("Power-loss file close failed.");
+  if (ret == -1) DEBUG_ECHOLNPGM("Power-Loss file write failed.");
+  if (!file.close()) DEBUG_ECHOLNPGM("Power-Loss file close failed.");
 }
 
 /**

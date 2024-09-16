@@ -751,7 +751,7 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
  *  - Update the Print Job Timer state
  *  - Update the Beeper queue
  *  - Read Buttons and Update the LCD
- *  - Run i2c Position Encoders
+ *  - Run I2C Position Encoders
  *  - Auto-report Temperatures / SD Status
  *  - Update the Průša MMU2
  *  - Handle Joystick jogging
@@ -825,7 +825,7 @@ void idle(const bool no_stepper_sleep/*=false*/) {
   // Handle UI input / draw events
   ui.update();
 
-  // Run i2c Position Encoders
+  // Run I2C Position Encoders
   #if ENABLED(I2C_POSITION_ENCODERS)
   {
     static millis_t i2cpem_next_update_ms;
@@ -1053,14 +1053,14 @@ inline void tmc_standby_setup() {
  *  - Prepare (disable) board JTAG and Debug ports
  *  - Init serial for a connected MKS TFT with WiFi
  *  - Install Marlin custom Exception Handlers, if set.
- *  - Init Marlin's HAL interfaces (for SPI, i2c, etc.)
+ *  - Init Marlin's HAL interfaces (for SPI, I2C, etc.)
  *  - Init some optional hardware and features:
  *    • MAX Thermocouple pins
  *    • Duet Smart Effector
  *    • Filament Runout Sensor
  *    • TMC220x Stepper Drivers (Serial)
  *    • PSU control
- *    • Power-loss Recovery
+ *    • Power-Loss Recovery
  *    • Stepper Driver Reset: DISABLE
  *    • TMC Stepper Drivers (SPI)
  *    • Run hal.init_board() for additional pins setup

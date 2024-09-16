@@ -202,7 +202,7 @@ void GcodeSuite::get_destination_from_command() {
   #endif
 
   #if ENABLED(POWER_LOSS_RECOVERY) && !PIN_EXISTS(POWER_LOSS)
-    // Only update power loss recovery on moves with E
+    // Only update power-loss recovery on moves with E
     if (recovery.enabled && IS_SD_PRINTING() && seen.e && (seen.x || seen.y))
       recovery.save();
   #endif
@@ -837,8 +837,8 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if ENABLED(EXPERIMENTAL_I2CBUS)
-        case 260: M260(); break;                                  // M260: Send data to an i2c slave
-        case 261: M261(); break;                                  // M261: Request data from an i2c slave
+        case 260: M260(); break;                                  // M260: Send data to an I2C slave
+        case 261: M261(); break;                                  // M261: Request data from an I2C slave
       #endif
 
       #if ENABLED(PREVENT_COLD_EXTRUSION)

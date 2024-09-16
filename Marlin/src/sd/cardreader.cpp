@@ -1460,7 +1460,7 @@ void CardReader::fileHasFinished() {
       recovery.init();
       removeFile(recovery.filename);
       #if ENABLED(DEBUG_POWER_LOSS_RECOVERY)
-        SERIAL_ECHOLN(F("Power-loss file delete"), jobRecoverFileExists() ? F(" failed.") : F("d."));
+        SERIAL_ECHOLN(F("Power-Loss file delete"), jobRecoverFileExists() ? F(" failed.") : F("d."));
       #endif
     }
   }

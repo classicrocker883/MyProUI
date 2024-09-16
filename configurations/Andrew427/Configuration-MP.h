@@ -3175,7 +3175,7 @@
 //#define U8GLIB_SH1106_EINSTART
 
 //
-// Overlord OLED display/controller with i2c buzzer and LEDs
+// Overlord OLED display/controller with I2C buzzer and LEDs
 //
 //#define OVERLORD_OLED
 
@@ -3486,7 +3486,7 @@
     #define HS_MENU_ITEM        // BLTOUCH_HS_MODE menu option (56 bytes of flash)
   #endif
   #define PROUI_ITEM_PLOT       // Temp Plot Graph item in Tune/Prepare Menu (688 bytes of flash)
-  #define PROUI_ITEM_PLR        // Power-loss Recovery option in Tune Menu (POWER_LOSS_RECOVERY 3400 bytes of flash)
+  #define PROUI_ITEM_PLR        // Power-Loss Recovery option in Tune Menu (POWER_LOSS_RECOVERY 3400 bytes of flash)
   //#define PROUI_ITEM_JD       // Juntion Deviation item in Tune Menu (only if JD is enabled)
   #define PROUI_ITEM_ADVK       // Linear Advance item in Tune Menu (only if LA is enabled)
   #define SHOW_REAL_POS
