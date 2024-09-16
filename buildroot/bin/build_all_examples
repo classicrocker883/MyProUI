@@ -47,7 +47,7 @@ build_all_examples [-b|--branch=<branch>] - Branch to fetch from Configurations 
 }
 
 # Assume the most recent configs
-BRANCH="2024-August"
+BRANCH="2024-September"
 unset FIRST_CONF
 EXIT_USAGE=
 LIMIT=1000

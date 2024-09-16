@@ -9,13 +9,13 @@ name: CI - Validate boards.h
 on:
   pull_request:
     branches:
-    - 2024-August
+    - 2024-September
     #- bugfix-2.1.x
     paths:
     - 'Marlin/src/core/boards.h'
   push:
     branches:
-    - 2024-August
+    - 2024-September
     #- bugfix-2.1.x
     paths:
     - 'Marlin/src/core/boards.h'
