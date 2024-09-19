@@ -143,9 +143,9 @@ void WriteEeprom();
 void ResetEeprom();
 #if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
   void dwinDrawPlot(tempcontrol_t result);
-  void drawHPlot();
-  void drawBPlot();
-  void drawCPlot();
+  void drawHotendPlot();
+  void drawBedPlot();
+  void drawChamberPlot();
 #endif
 #if ENABLED(ENC_MENU_ITEM)
   void SetEncRateA();
@@ -240,6 +240,7 @@ void Init();
 void DWIN_InitScreen();
 void DWIN_HandleScreen();
 void DWIN_CheckStatusMessage();
+void DWIN_DrawStatusMessage();
 void DWIN_HomingStart();
 void DWIN_HomingDone();
 void DWIN_Print_Started();
@@ -404,5 +405,17 @@ void Draw_MaxAccel_Menu();
 #endif
 
 #if DEBUG_DWIN
-  void DWIN_Debug(PGM_P msg);
+  void DWIN_Debug(PGM_P msg1=nullptr, PGM_P msg2=nullptr, PGM_P msg3=nullptr, PGM_P msg4=nullptr);
+#endif
+
+#if ENABLED(PROUI_MESH_EDIT)
+  #undef  MESH_MIN_X
+  #undef  MESH_MAX_X
+  #undef  MESH_MIN_Y
+  #undef  MESH_MAX_Y
+  #include "../../marlinui.h"
+  #define MESH_MIN_X ui.mesh_min_x
+  #define MESH_MAX_X ui.mesh_max_x
+  #define MESH_MIN_Y ui.mesh_min_y
+  #define MESH_MAX_Y ui.mesh_max_y
 #endif

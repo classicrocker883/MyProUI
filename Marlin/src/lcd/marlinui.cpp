@@ -65,10 +65,10 @@ MarlinUI ui;
 constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
 
 #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-  float MarlinUI::mesh_min_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x;
-  float MarlinUI::mesh_max_x = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x;
-  float MarlinUI::mesh_min_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y;
-  float MarlinUI::mesh_max_y = TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y;
+  float MarlinUI::mesh_min_x = DEF_MESH_MIN_X;
+  float MarlinUI::mesh_max_x = DEF_MESH_MAX_X;
+  float MarlinUI::mesh_min_y = DEF_MESH_MIN_Y;
+  float MarlinUI::mesh_max_y = DEF_MESH_MAX_Y;
 #endif
 
 #ifdef BED_SCREW_INSET
@@ -393,9 +393,9 @@ void MarlinUI::init() {
             }
           }
         #else
-          theCard.longFilename[
-            TERN(UTF_FILENAME_SUPPORT, utf8_byte_pos_by_char_num(theCard.longFilename, maxlen), maxlen)
-          ] = '\0'; // cutoff at screen edge
+          // Simply cut off at maxlen
+          const uint8_t chop = TERN(UTF_FILENAME_SUPPORT, utf8_byte_pos_by_char_num(theCard.longFilename, maxlen), maxlen);
+          theCard.longFilename[_MAX(chop, LONG_FILENAME_LENGTH - 1)] = '\0';
         #endif
       }
       return outstr;
@@ -1493,16 +1493,6 @@ void MarlinUI::host_notify(const char * const cstr) {
    * Reset the status message
    */
   void MarlinUI::reset_status(const bool no_welcome) {
-    #if SERVICE_INTERVAL_1 > 0
-      static PGMSTR(service1, "> " SERVICE_NAME_1 "!");
-    #endif
-    #if SERVICE_INTERVAL_2 > 0
-      static PGMSTR(service2, "> " SERVICE_NAME_2 "!");
-    #endif
-    #if SERVICE_INTERVAL_3 > 0
-      static PGMSTR(service3, "> " SERVICE_NAME_3 "!");
-    #endif
-
     FSTR_P msg;
     if (printingIsPaused())
       msg = GET_TEXT_F(MSG_PRINT_PAUSED);
@@ -1518,13 +1508,13 @@ void MarlinUI::host_notify(const char * const cstr) {
       #endif
     }
     #if SERVICE_INTERVAL_1 > 0
-      else if (print_job_timer.needsService(1)) msg = FPSTR(service1);
+      else if (print_job_timer.needsService(1)) msg = F("> " SERVICE_NAME_1 "!");
     #endif
     #if SERVICE_INTERVAL_2 > 0
-      else if (print_job_timer.needsService(2)) msg = FPSTR(service2);
+      else if (print_job_timer.needsService(2)) msg = F("> " SERVICE_NAME_2 "!");
     #endif
     #if SERVICE_INTERVAL_3 > 0
-      else if (print_job_timer.needsService(3)) msg = FPSTR(service3);
+      else if (print_job_timer.needsService(3)) msg = F("> " SERVICE_NAME_3 "!");
     #endif
 
     else if (!no_welcome) msg = GET_TEXT_F(WELCOME_MSG);
@@ -1647,7 +1637,7 @@ void MarlinUI::host_notify(const char * const cstr) {
     TERN_(STATUS_MESSAGE_SCROLLING, reset_status_scroll());
 
     TERN_(EXTENSIBLE_UI, ExtUI::onStatusChanged(status_message));
-    TERN_(DWIN_LCD_PROUI, DWIN_CheckStatusMessage());
+    TERN_(DWIN_LCD_PROUI, DWIN_CheckStatusMessage(); DWIN_DrawStatusMessage(););
   }
 
   #if ENABLED(STATUS_MESSAGE_SCROLLING)

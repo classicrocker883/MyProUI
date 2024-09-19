@@ -8,14 +8,14 @@ name: CI - Validate Pins Files
 on:
   pull_request:
     branches:
-    - 2024-August
+    - 2024-September
     # Cannot be enabled on 2.1.x until it contains the unit test framework
     #- 2.1.x
     paths:
     - 'Marlin/src/pins/*/**'
   push:
     branches:
-    - 2024-August
+    - 2024-September
     # Cannot be enabled on 2.1.x until it contains the unit test framework
     #- 2.1.x
     paths:

@@ -1,4 +1,7 @@
-/*Configuration.h Defines*/
+/**
+ * Configuration.h Defines
+ */
+#pragma once
 
 // #define CONFIGURATION_H_VERSION 02010300
 // #define STRING_CONFIG_H_AUTHOR "Miguel A. Risco-Castillo (MRiscoC)"
@@ -14,6 +17,7 @@
 // #define SERIAL_PORT_3 1
 // #define BAUDRATE_3 250000
 // #define RS485_SERIAL_PORT 1
+// #define M485_PROTOCOL 1
 // #define RS485_BUS_BUFFER_SIZE 128
 // #define BLUETOOTH
 // #define CUSTOM_MACHINE_NAME "Aquila"
@@ -107,7 +111,7 @@
 // #define HOTEND_OFFSET_X { 0.0, 20.00 }
 // #define HOTEND_OFFSET_Y { 0.0, 5.00 }
 // #define HOTEND_OFFSET_Z { 0.0, 0.00 }
-// #define MMU_MODEL PRUSA_MMU2
+// #define MMU_MODEL PRUSA_MMU3
 // #define PSU_CONTROL
 // #define PSU_NAME "Power Supply"
 // #define MKS_PWC
@@ -211,6 +215,7 @@
 // #define DEFAULT_Kd  56.05
 // #define BANG_MAX 255
 // #define MPC_AUTOTUNE
+// #define MPC_AUTOTUNE_DEBUG
 // #define MPC_EDIT_MENU
 // #define MPC_AUTOTUNE_MENU
 // #define MPC_MAX 255
@@ -242,8 +247,8 @@
 // #define MAX_CHAMBER_POWER 255
 // #define MIN_CHAMBER_POWER 0
 // #define PID_CHAMBER_DEBUG
-// #define DEFAULT_chamberKp 37.04
-// #define DEFAULT_chamberKi 1.40
+// #define DEFAULT_chamberKp  37.04
+// #define DEFAULT_chamberKi   1.40
 // #define DEFAULT_chamberKd 655.17
 // #define PID_OPENLOOP
 // #define SLOW_PWM_HEATERS
@@ -473,10 +478,6 @@
 // #define Z_PROBE_ALLEN_KEY_STOW_3_FEEDRATE XY_PROBE_FEEDRATE
 // #define Z_PROBE_ALLEN_KEY_STOW_4 { 0.0, 0.0, 50.0 }
 // #define Z_PROBE_ALLEN_KEY_STOW_4_FEEDRATE XY_PROBE_FEEDRATE
-// #define NOZZLE_TO_PROBE_OFFSET { 10, 10, -1 }
-// #define NOZZLE_TO_PROBE_OFFSET {-10,  5, -1 }
-// #define NOZZLE_TO_PROBE_OFFSET {  5, -5, -1 }
-// #define NOZZLE_TO_PROBE_OFFSET {-15,-10, -1 }
 // #define NOZZLE_TO_PROBE_OFFSET { -45.0, -7.0, 0 }
 // #define PROBING_TOOL 0
 // #define PROBE_TOOLCHANGE_NO_MOVE
@@ -845,7 +846,7 @@
 // #define NOZZLE_CLEAN_NO_Y
 // #define NOZZLE_CLEAN_MIN_TEMP 170
 // #define NOZZLE_CLEAN_HEATUP
-// #define WIPE_SEQUENCE_COMMANDS "G0 X2 Y200 Z50\nG0 Z0.3\nG0 Z0.3\nG92 E0\nG1 Y140 E10 F1500\nG1 X2.3 F5000\nG92 E0\nG1 Y10 E10 F1200\nG92 E0"
+// #define WIPE_SEQUENCE_COMMANDS "G0X2Y200Z50\nG0Z0.3\nG0Z0.3\nG92E0\nG1Y140E10F1500\nG1X2.3F5000\nG92E0\nG1Y10E10F1200\nG92E0"
 // #define PRINTJOB_TIMER_AUTOSTART
 // #define PRINTCOUNTER
 // #define PRINTCOUNTER_SAVE_INTERVAL 60
@@ -857,11 +858,11 @@
 // #define PASSWORD_ON_SD_PRINT_MENU
 // #define PASSWORD_AFTER_SD_PRINT_END
 // #define PASSWORD_AFTER_SD_PRINT_ABORT
+// #define SDSUPPORT
+// #define SD_CHECK_AND_RETRY
 // #define LCD_LANGUAGE en
 // #define DISPLAY_CHARSET_HD44780 JAPANESE
 // #define LCD_INFO_SCREEN_STYLE 0
-// #define SDSUPPORT
-// #define SD_CHECK_AND_RETRY
 // #define NO_LCD_MENUS
 // #define SLIM_LCD_MENUS
 // #define ENCODER_PULSES_PER_STEP 4
@@ -1013,6 +1014,7 @@
 // #define PROUI_ITEM_ENC
 // #define ENC_MENU_ITEM
 // #define SHOW_SPEED_IND
+// #define PROUI_ITEM_ABRT
 // #define NO_BLINK_IND
 // #define CR10_STOCKDISPLAY
 // #define RET6_12864_LCD
@@ -1020,7 +1022,7 @@
 // #define TOUCH_SCREEN
 // #define BUTTON_DELAY_EDIT      50
 // #define BUTTON_DELAY_MENU     250
-// #define DISABLE_ENCODER
+// #define NO_BACK_MENU_ITEM
 // #define TOUCH_SCREEN_CALIBRATION
 // #define TOUCH_CALIBRATION_X 12316
 // #define TOUCH_CALIBRATION_Y -8981

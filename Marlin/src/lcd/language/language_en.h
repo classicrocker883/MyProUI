@@ -74,7 +74,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_NO                             = _UxGT("NO");
   LSTR MSG_HIGH                           = _UxGT("HIGH");
   LSTR MSG_LOW                            = _UxGT("LOW");
-  LSTR MSG_BACK                           = _UxGT("Back");
   LSTR MSG_ERROR                          = _UxGT("Error");
   LSTR MSG_MEDIA_ABORTING                 = _UxGT("Aborting...");
   LSTR MSG_MEDIA_INSERTED                 = MEDIA_TYPE_EN _UxGT(" Inserted");
@@ -141,12 +140,14 @@ namespace LanguageNarrow_en {
   LSTR MSG_PREHEAT_1_ALL                  = _UxGT("Preheat ") PREHEAT_1_LABEL _UxGT(" All");
   LSTR MSG_PREHEAT_1_BEDONLY              = _UxGT("Preheat ") PREHEAT_1_LABEL _UxGT(" Bed");
   LSTR MSG_PREHEAT_1_SETTINGS             = _UxGT("Preheat ") PREHEAT_1_LABEL _UxGT(" Settings");
+
   LSTR MSG_PREHEAT_2                      = _UxGT("Preheat ") PREHEAT_2_LABEL;
   LSTR MSG_PREHEAT_2_SETTINGS             = _UxGT("Preheat ") PREHEAT_2_LABEL _UxGT(" Settings");
   LSTR MSG_PREHEAT_3                      = PREHEAT_3_LABEL;
   LSTR MSG_PREHEAT_3_SETTINGS             = PREHEAT_3_LABEL _UxGT(" Settings");
   LSTR MSG_PREHEAT_4                      = _UxGT("Preheat ") PREHEAT_4_LABEL;
   LSTR MSG_PREHEAT_4_SETTINGS             = _UxGT("Preheat ") PREHEAT_4_LABEL _UxGT(" Settings");
+
   LSTR MSG_PREHEAT_M                      = _UxGT("Preheat $");
   LSTR MSG_PREHEAT_M_H                    = _UxGT("Preheat $ ~");
   LSTR MSG_PREHEAT_M_END                  = _UxGT("Preheat $ End");
@@ -181,6 +182,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_EXTRUDE                        = _UxGT("Extrude");
   LSTR MSG_RETRACT                        = _UxGT("Retract");
   LSTR MSG_MOVE_AXIS                      = _UxGT("Move Axis");
+  LSTR MSG_PROBE_AND_LEVEL                = _UxGT("Probe and Level");
   LSTR MSG_BED_LEVELING                   = _UxGT("Bed Leveling");
   LSTR MSG_LEVEL_BED                      = _UxGT("Level Bed");
   LSTR MSG_BED_TRAMMING                   = _UxGT("Bed Tramming");
@@ -240,13 +242,10 @@ namespace LanguageNarrow_en {
   LSTR MSG_UBL_BC_INSERT2                 = _UxGT("Measure");
   LSTR MSG_UBL_BC_REMOVE                  = _UxGT("Remove & Measure Bed");
   LSTR MSG_UBL_MOVING_TO_NEXT             = _UxGT("Moving to next");
-  LSTR MSG_UBL_ACTIVATE_MESH              = _UxGT("Activate UBL");
-  LSTR MSG_UBL_DEACTIVATE_MESH            = _UxGT("Deactivate UBL");
   LSTR MSG_UBL_SET_TEMP_BED               = _UxGT("Bed Temp");
   LSTR MSG_UBL_BED_TEMP_CUSTOM            = _UxGT("Bed Temp");
   LSTR MSG_UBL_SET_TEMP_HOTEND            = _UxGT("Hotend Temp");
   LSTR MSG_UBL_HOTEND_TEMP_CUSTOM         = _UxGT("Hotend Temp");
-  LSTR MSG_UBL_MESH_EDIT                  = _UxGT("Mesh Edit");
   LSTR MSG_UBL_EDIT_CUSTOM_MESH           = _UxGT("Edit Custom Mesh");
   LSTR MSG_UBL_FINE_TUNE_MESH             = _UxGT("Fine Tuning Mesh");
   LSTR MSG_UBL_DONE_EDITING_MESH          = _UxGT("Done Editing Mesh");
@@ -351,7 +350,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_NOZZLE_N                       = _UxGT("Nozzle ~");
   LSTR MSG_NOZZLE_PARKED                  = _UxGT("Nozzle Parked");
   LSTR MSG_NOZZLE_STANDBY                 = _UxGT("Nozzle Standby");
-  LSTR MSG_NOZZLE_CLEAN                   = _UxGT("Clean and press continue");
+  LSTR MSG_NOZZLE_CLEAN                   = _UxGT("Clean and Press Continue");
   LSTR MSG_BED                            = _UxGT("Bed");
   LSTR MSG_CHAMBER                        = _UxGT("Enclosure");
   LSTR MSG_COOLER                         = _UxGT("Laser Coolant");
@@ -387,22 +386,23 @@ namespace LanguageNarrow_en {
   LSTR MSG_PID_AUTOTUNE_DONE              = _UxGT("PID tuning done");
   LSTR MSG_PID_AUTOTUNE_FAILED            = _UxGT("PID Autotune failed!");
 
-  LSTR MSG_PID_FOR_NOZZLE                 = _UxGT("for NOZZLE is running.");
-  LSTR MSG_PID_FOR_BED                    = _UxGT("for BED is running.");
-  LSTR MSG_PID_FOR_CHAMBER                = _UxGT("for CHAMBER is running.");
+  LSTR MSG_PID_FOR_NOZZLE                 = _UxGT("for NOZZLE is running");
+  LSTR MSG_PID_FOR_BED                    = _UxGT("for BED is running");
+  LSTR MSG_PID_FOR_CHAMBER                = _UxGT("for CHAMBER is running");
 
   LSTR MSG_TEMP_NOZZLE                    = _UxGT("Nozzle Temperature");
   LSTR MSG_TEMP_BED                       = _UxGT("Bed Temperature");
   LSTR MSG_TEMP_CHAMBER                   = _UxGT("Chamber Temperature");
 
-  LSTR MSG_BAD_HEATER_ID                  = _UxGT("Bad extruder.");
-  LSTR MSG_TEMP_TOO_HIGH                  = _UxGT("Temperature too high.");
+  LSTR MSG_BAD_HEATER_ID                  = _UxGT("Bad extruder");
+  LSTR MSG_TEMP_TOO_HIGH                  = _UxGT("Temperature too high");
   LSTR MSG_TEMP_TOO_LOW                   = _UxGT("Temperature too low");
 
   LSTR MSG_PID_BAD_HEATER_ID              = _UxGT("Autotune failed! Bad extruder.");
   LSTR MSG_PID_TEMP_TOO_HIGH              = _UxGT("Autotune failed! Temperature too high.");
   LSTR MSG_PID_TIMEOUT                    = _UxGT("Autotune failed! Timeout.");
 
+  LSTR MSG_SHOW_TEMP_GRAPH                = _UxGT("Show Temp Graph");
   LSTR MSG_HOTEND_TEMP_GRAPH              = _UxGT("Hotend Temp Graph");
   LSTR MSG_BED_TEMP_GRAPH                 = _UxGT("Bed Temp Graph");
   LSTR MSG_CHAMBER_TEMP_GRAPH             = _UxGT("Chamber Temp Graph");
@@ -546,7 +546,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_RESUME_PRINT                   = _UxGT("Resume Print");
   LSTR MSG_STOP_PRINT                     = _UxGT("Stop Print");
   LSTR MSG_CANCEL_PRINT                   = _UxGT("Cancel Print");
-  LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Power-loss Recovery");
+  LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Power-Loss Recovery");
   LSTR MSG_RESUME_BED_TEMP                = _UxGT("Resume Bed Temp");
   LSTR MSG_HOST_START_PRINT               = _UxGT("Start Host Print");
   LSTR MSG_PRINTING_OBJECT                = _UxGT("Printing Object");
@@ -655,10 +655,11 @@ namespace LanguageNarrow_en {
   LSTR MSG_ZPROBE_OFFSETS                 = _UxGT("Probe Offsets");
   LSTR MSG_ZPROBE_XOFFSET                 = _UxGT("Probe X Offset");
   LSTR MSG_ZPROBE_YOFFSET                 = _UxGT("Probe Y Offset");
-  LSTR MSG_ZPROBE_ZOFFSET                 = _UxGT("Z-Offset");
+  LSTR MSG_ZPROBE_ZOFFSET                 = _UxGT("Probe Z Offset");
+  LSTR MSG_BABYSTEP_PROBE_Z               = _UxGT("Babystep Probe Z");
   LSTR MSG_ZPROBE_MARGIN                  = _UxGT("Probe Margin");
   LSTR MSG_ZPROBE_MULTIPLE                = _UxGT("Multiple Probing");
-  LSTR MSG_ZOFFSET                        = _UxGT("Z Offset");
+  LSTR MSG_ZOFFSET                        = _UxGT("Z-Offset");
   LSTR MSG_Z_FEED_RATE                    = _UxGT("Z Feed Rate");
   LSTR MSG_ENABLE_HS_MODE                 = _UxGT("Enable HS Mode");
   LSTR MSG_MOVE_NOZZLE_TO_BED             = _UxGT("Center Nozzle on Bed");
@@ -707,7 +708,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_BILINEAR_LEVELING              = _UxGT("Bilinear Leveling");
   LSTR MSG_UBL_LEVELING                   = _UxGT("Unified Bed Leveling");
   LSTR MSG_MESH_LEVELING                  = _UxGT("Mesh Leveling");
-  LSTR MSG_MESH_DONE                      = _UxGT("Mesh probing done");
+  LSTR MSG_MESH_DONE                      = _UxGT("Mesh Probing Done");
   LSTR MSG_MESH_POINTS                    = _UxGT("Mesh Points");
   LSTR MSG_MESH_SETTINGS                  = _UxGT("Mesh Settings");
   LSTR MSG_INFO_PRINTER_STATS_MENU        = _UxGT("Printer Stats");
@@ -732,8 +733,8 @@ namespace LanguageNarrow_en {
   LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("INCORRECT PRINTER");
 
   #if LCD_WIDTH < 20 || !HAS_DWIN_E3V2
+    LSTR MSG_BACK                         = _UxGT("Back");
     LSTR MSG_MEDIA_NOT_INSERTED           = _UxGT("No Media");
-    LSTR MSG_PLEASE_PREHEAT               = _UxGT("Please Preheat");
     LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Prints");
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("Total");
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Longest");
@@ -768,28 +769,90 @@ namespace LanguageNarrow_en {
   LSTR MSG_KILL_HOMING_FAILED             = _UxGT("Homing Failed");
   LSTR MSG_LCD_PROBING_FAILED             = _UxGT("Probing Failed");
 
+  // Ender-3 V2 DWIN - ProUI / JyersUI
+  LSTR MSG_COLORS_GET                     = _UxGT("Get Color");
+  LSTR MSG_COLORS_SELECT                  = _UxGT("Select Colors");
+  LSTR MSG_COLORS_APPLIED                 = _UxGT("Colors applied");
+  LSTR MSG_COLORS_RED                     = _UxGT("Red");
+  LSTR MSG_COLORS_GREEN                   = _UxGT("Green");
+  LSTR MSG_COLORS_BLUE                    = _UxGT("Blue");
+  LSTR MSG_COLORS_WHITE                   = _UxGT("White");
+
+  LSTR MSG_SCREEN_BACKGROUND              = _UxGT("Screen Background");
+  LSTR MSG_CURSOR                         = _UxGT("Cursor");
+  LSTR MSG_TITLE_BACKGROUND               = _UxGT("Title Background");
+  LSTR MSG_TITLE_TEXT                     = _UxGT("Title Text");
+  LSTR MSG_TEXT                           = _UxGT("Text");
+  LSTR MSG_SELECTED                       = _UxGT("Selected");
+  LSTR MSG_SPLIT_LINE                     = _UxGT("Split Line");
+  LSTR MSG_HIGHLIGHT                      = _UxGT("Highlight");
+  LSTR MSG_STATUS_BACKGROUND              = _UxGT("Status Background");
+  LSTR MSG_STATUS_TEXT                    = _UxGT("Status Text");
+  LSTR MSG_POPUP_BACKGROUND               = _UxGT("Popup Background");
+  LSTR MSG_POPUP_TEXT                     = _UxGT("Popup Text");
+  LSTR MSG_ALERT_BACKGROUND               = _UxGT("Alert Background");
+  LSTR MSG_ALERT_TEXT                     = _UxGT("Alert Text");
+  LSTR MSG_PERCENT_TEXT                   = _UxGT("Percent Text");
+  LSTR MSG_BAR_FILL                       = _UxGT("Bar Fill");
+  LSTR MSG_INDICATOR_VALUE                = _UxGT("Indicator value");
+  LSTR MSG_COORDINATE_VALUE               = _UxGT("Coordinate value");
+
+  LSTR MSG_UI_LANGUAGE                    = _UxGT("UI Language");
+  LSTR MSG_LOCKSCREEN                     = _UxGT("Lock Screen");
+  LSTR MSG_LOCKSCREEN_LOCKED              = _UxGT("Printer is Locked,");
+  LSTR MSG_LOCKSCREEN_UNLOCK              = _UxGT("Scroll to unlock");
+  LSTR MSG_PLEASE_PREHEAT                 = _UxGT("Please Preheat");
+
+  // Prusa MMU 2
   LSTR MSG_MMU2_CHOOSE_FILAMENT_HEADER    = _UxGT("CHOOSE FILAMENT");
   LSTR MSG_MMU2_MENU                      = _UxGT("MMU");
   LSTR MSG_KILL_MMU2_FIRMWARE             = _UxGT("Update MMU Firmware!");
   LSTR MSG_MMU2_NOT_RESPONDING            = _UxGT("MMU Needs Attention.");
-  LSTR MSG_MMU2_RESUME                    = _UxGT("MMU Resume");
+  LSTR MSG_MMU2_RESUME                    = _UxGT("Resume");
   LSTR MSG_MMU2_RESUMING                  = _UxGT("MMU Resuming...");
-  LSTR MSG_MMU2_LOAD_FILAMENT             = _UxGT("MMU Load");
-  LSTR MSG_MMU2_LOAD_ALL                  = _UxGT("MMU Load All");
-  LSTR MSG_MMU2_LOAD_TO_NOZZLE            = _UxGT("MMU Load to Nozzle");
-  LSTR MSG_MMU2_EJECT_FILAMENT            = _UxGT("MMU Eject");
-  LSTR MSG_MMU2_EJECT_FILAMENT_N          = _UxGT("MMU Eject ~");
-  LSTR MSG_MMU2_UNLOAD_FILAMENT           = _UxGT("MMU Unload");
+  LSTR MSG_MMU2_LOAD_FILAMENT             = _UxGT("Load");
+  LSTR MSG_MMU2_LOAD_ALL                  = _UxGT("Load All");
+  LSTR MSG_MMU2_LOAD_TO_NOZZLE            = _UxGT("Load to Nozzle");
+  LSTR MSG_MMU2_CUT_FILAMENT              = _UxGT("Cut");
+  LSTR MSG_MMU2_EJECT_FILAMENT            = _UxGT("Eject");
+  LSTR MSG_MMU2_EJECT_FILAMENT_N          = _UxGT("Eject ~");
+  LSTR MSG_MMU2_UNLOAD_FILAMENT           = _UxGT("Unload");
   LSTR MSG_MMU2_LOADING_FILAMENT          = _UxGT("Filament %i Load...");
-  LSTR MSG_MMU2_EJECTING_FILAMENT         = _UxGT("Filament Eject...");
-  LSTR MSG_MMU2_UNLOADING_FILAMENT        = _UxGT("Filament Unload...");
+  LSTR MSG_MMU2_CUTTING_FILAMENT          = _UxGT("Filament %i Cut...");
+  LSTR MSG_MMU2_EJECTING_FILAMENT         = _UxGT("Filament %i Eject...");
+  LSTR MSG_MMU2_UNLOADING_FILAMENT        = _UxGT("Filament %i Unload...");
   LSTR MSG_MMU2_ALL                       = _UxGT("All");
   LSTR MSG_MMU2_FILAMENT_N                = _UxGT("Filament ~");
   LSTR MSG_MMU2_RESET                     = _UxGT("Reset MMU");
-  LSTR MSG_MMU2_RESETTING                 = _UxGT("MMU Resetting...");
-  LSTR MSG_MMU2_EJECT_RECOVER             = _UxGT("MMU2 Eject Recover");
+  LSTR MSG_MMU2_RESETTING                 = _UxGT("Resetting...");
+  LSTR MSG_MMU2_EJECT_RECOVER             = _UxGT("Eject Recover");
   LSTR MSG_MMU2_REMOVE_AND_CLICK          = _UxGT("Remove and click...");
 
+  LSTR MSG_MMU_SENSITIVITY                = _UxGT("Sensitivity");
+  LSTR MSG_MMU_CUTTER                     = _UxGT("Cutter");
+  LSTR MSG_MMU_CUTTER_MODE                = _UxGT("Cutter Mode");
+  LSTR MSG_MMU_CUTTER_MODE_DISABLE        = _UxGT("Disable");
+  LSTR MSG_MMU_CUTTER_MODE_ENABLE         = _UxGT("Enable");
+  LSTR MSG_MMU_CUTTER_MODE_ALWAYS         = _UxGT("Always");
+  LSTR MSG_MMU_SPOOL_JOIN                 = _UxGT("Spool Join");
+
+  LSTR MSG_MMU_STATISTICS                 = _UxGT("Statistics");
+  LSTR MSG_MMU_RESET_FAIL_STATS           = _UxGT("Reset Fail Stats");
+  LSTR MSG_MMU_RESET_STATS                = _UxGT("Reset All Stats");
+  LSTR MSG_MMU_CURRENT_PRINT              = _UxGT("Curr. print");
+  LSTR MSG_MMU_CURRENT_PRINT_FAILURES     = _UxGT("Curr. print failures");
+  LSTR MSG_MMU_LAST_PRINT                 = _UxGT("Last print");
+  LSTR MSG_MMU_LAST_PRINT_FAILURES        = _UxGT("Last print failures");
+  LSTR MSG_MMU_TOTAL                      = _UxGT("Total");
+  LSTR MSG_MMU_TOTAL_FAILURES             = _UxGT("Total failures");
+  LSTR MSG_MMU_DEV_INCREMENT_FAILS        = _UxGT("Increment fails");
+  LSTR MSG_MMU_DEV_INCREMENT_LOAD_FAILS   = _UxGT("Increment load fails");
+  LSTR MSG_MMU_FAILS                      = _UxGT("MMU fails");
+  LSTR MSG_MMU_LOAD_FAILS                 = _UxGT("MMU load fails");
+  LSTR MSG_MMU_POWER_FAILS                = _UxGT("MMU power fails");
+  LSTR MSG_MMU_MATERIAL_CHANGES           = _UxGT("Material changes");
+
+  // Mixing Extruder (e.g., Geeetech A10M / A20M)
   LSTR MSG_MIX                            = _UxGT("Mix");
   LSTR MSG_MIX_COMPONENT_N                = _UxGT("Component {");
   LSTR MSG_MIXER                          = _UxGT("Mixer");
@@ -809,15 +872,18 @@ namespace LanguageNarrow_en {
   LSTR MSG_START_Z                        = _UxGT("Start Z:");
   LSTR MSG_END_Z                          = _UxGT("  End Z:");
 
+  // Games Menu
   LSTR MSG_GAMES                          = _UxGT("Games");
   LSTR MSG_BRICKOUT                       = _UxGT("Brickout");
   LSTR MSG_INVADERS                       = _UxGT("Invaders");
   LSTR MSG_SNAKE                          = _UxGT("Sn4k3");
   LSTR MSG_MAZE                           = _UxGT("Maze");
 
+  // Direct Stepping
   LSTR MSG_BAD_PAGE                       = _UxGT("Bad page index");
   LSTR MSG_BAD_PAGE_SPEED                 = _UxGT("Bad page speed");
 
+  // Password Lock
   LSTR MSG_EDIT_PASSWORD                  = _UxGT("Edit Password");
   LSTR MSG_LOGIN_REQUIRED                 = _UxGT("Login Required");
   LSTR MSG_PASSWORD_SETTINGS              = _UxGT("Password Settings");
@@ -828,40 +894,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_START_OVER                     = _UxGT("Start Over");
   LSTR MSG_REMINDER_SAVE_SETTINGS         = _UxGT("Remember to Save!");
   LSTR MSG_PASSWORD_REMOVED               = _UxGT("Password Removed");
-
-  LSTR MSG_COLORS_GET                     = _UxGT("Get Color");               // ProUI
-  LSTR MSG_COLORS_SELECT                  = _UxGT("Select Colors");           // ProUI
-  LSTR MSG_COLORS_APPLIED                 = _UxGT("Colors applied");          // ProUI
-  LSTR MSG_COLORS_RED                     = _UxGT("Red");                     // ProUI
-  LSTR MSG_COLORS_GREEN                   = _UxGT("Green");                   // ProUI
-  LSTR MSG_COLORS_BLUE                    = _UxGT("Blue");                    // ProUI
-  LSTR MSG_COLORS_WHITE                   = _UxGT("White");                   // ProUI
-
-  LSTR MSG_SCREEN_BACKGROUND              = _UxGT("Screen Background");       // ProUI
-  LSTR MSG_CURSOR                         = _UxGT("Cursor");                  // ProUI
-  LSTR MSG_TITLE_BACKGROUND               = _UxGT("Title Background");        // ProUI
-  LSTR MSG_TITLE_TEXT                     = _UxGT("Title Text");              // ProUI
-  LSTR MSG_TEXT                           = _UxGT("Text");                    // ProUI
-  LSTR MSG_SELECTED                       = _UxGT("Selected");                // ProUI
-  LSTR MSG_SPLIT_LINE                     = _UxGT("Split Line");              // ProUI
-  LSTR MSG_HIGHLIGHT                      = _UxGT("Highlight");               // ProUI
-  LSTR MSG_STATUS_BACKGROUND              = _UxGT("Status Background");       // ProUI
-  LSTR MSG_STATUS_TEXT                    = _UxGT("Status Text");             // ProUI
-  LSTR MSG_POPUP_BACKGROUND               = _UxGT("Popup Background");        // ProUI
-  LSTR MSG_POPUP_TEXT                     = _UxGT("Popup Text");              // ProUI
-  LSTR MSG_ALERT_BACKGROUND               = _UxGT("Alert Background");        // ProUI
-  LSTR MSG_ALERT_TEXT                     = _UxGT("Alert Text");              // ProUI
-  LSTR MSG_PERCENT_TEXT                   = _UxGT("Percent Text");            // ProUI
-  LSTR MSG_BAR_FILL                       = _UxGT("Bar Fill");                // ProUI
-  LSTR MSG_INDICATOR_VALUE                = _UxGT("Indicator value");         // ProUI
-  LSTR MSG_COORDINATE_VALUE               = _UxGT("Coordinate value");        // ProUI
-
-  LSTR MSG_UI_LANGUAGE                    = _UxGT("UI Language");             // ProUI
-  LSTR MSG_LOCKSCREEN                     = _UxGT("Lock Screen");             // ProUI
-  LSTR MSG_LOCKSCREEN_LOCKED              = _UxGT("Printer is Locked,");      // ProUI
-  LSTR MSG_LOCKSCREEN_UNLOCK              = _UxGT("Scroll to unlock.");       // ProUI
-  LSTR MSG_LOWER                          = _UxGT("Lower");                   // ProUI
-  LSTR MSG_RAISE                          = _UxGT("Raise");                   // ProUI
 
   // Filament Change screens show up to 2 lines on a 3-line display
   LSTR MSG_ADVANCED_PAUSE_WAITING         = _UxGT(MSG_1_LINE("Click to continue"));
@@ -883,15 +915,15 @@ namespace LanguageNarrow_en {
   LSTR MSG_TMC_CCURRENT                   = _UxGT(STR_C " Driver Current");
   LSTR MSG_TMC_ECURRENT                   = _UxGT(STR_E " Driver Current");
   LSTR MSG_TMC_ENCURRENT                  = _UxGT("* Driver Current");
-  LSTR MSG_TMC_HYBRID_THRS                = _UxGT("Hybrid Threshold");
-  LSTR MSG_TMC_AHYBRID_THRS               = _UxGT(STR_A " Hybrid Threshold");
-  LSTR MSG_TMC_BHYBRID_THRS               = _UxGT(STR_B " Hybrid Threshold");
-  LSTR MSG_TMC_CHYBRID_THRS               = _UxGT(STR_C " Hybrid Threshold");
-  LSTR MSG_TMC_EHYBRID_THRS               = _UxGT(STR_E " Hybrid Threshold");
-  LSTR MSG_TMC_ENHYBRID_THRS              = _UxGT("* Hybrid Threshold");
+  LSTR MSG_TMC_HYBRID_THRS                = _UxGT(STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_AHYBRID_THRS               = _UxGT(STR_A " " STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_BHYBRID_THRS               = _UxGT(STR_B " " STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_CHYBRID_THRS               = _UxGT(STR_C " " STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_EHYBRID_THRS               = _UxGT(STR_E " " STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_ENHYBRID_THRS              = _UxGT("* " STR_HYBRID_THRESHOLD);
   LSTR MSG_TMC_HOMING_THRS                = _UxGT("Sensorless Homing");
   LSTR MSG_TMC_STEPPING_MODE              = _UxGT("Stepping Mode");
-  LSTR MSG_TMC_STEALTH_ENABLED            = _UxGT("StealthChop Enabled");
+  LSTR MSG_TMC_STEALTH_ENABLED            = _UxGT(STR_TMC_STEALTH " Enabled");
   LSTR MSG_TMC_ASTEALTH                   = _UxGT(STR_A " " STR_TMC_STEALTH);
   LSTR MSG_TMC_BSTEALTH                   = _UxGT(STR_B " " STR_TMC_STEALTH);
   LSTR MSG_TMC_CSTEALTH                   = _UxGT(STR_C " " STR_TMC_STEALTH);
@@ -923,7 +955,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_FTM_ZETA_N                     = _UxGT("@ Damping");
   LSTR MSG_FTM_VTOL_N                     = _UxGT("@ Vib. Level");
 
-  LSTR MSG_LEVEL_X_AXIS                   = _UxGT("Level X Axis");
+  LSTR MSG_LEVEL_X_AXIS                   = _UxGT("Level X-Axis");
   LSTR MSG_AUTO_CALIBRATE                 = _UxGT("Auto Calibrate");
   LSTR MSG_FTDI_HEATER_TIMEOUT            = _UxGT("Idle timeout, temperature decreased. Press Okay to reheat and again to resume.");
   LSTR MSG_HEATER_TIMEOUT                 = _UxGT("Heater Timeout");
@@ -996,11 +1028,117 @@ namespace LanguageNarrow_en {
   LSTR DGUS_MSG_WRITE_EEPROM_FAILED       = _UxGT("EEPROM write failed");
   LSTR DGUS_MSG_READ_EEPROM_FAILED        = _UxGT("EEPROM read failed");
   LSTR DGUS_MSG_FILAMENT_RUNOUT           = _UxGT("Filament runout E%d");
+
+  //
+  // MMU3 Translatable Strings
+  //
+
+  LSTR MSG_TITLE_FINDA_DIDNT_TRIGGER      = _UxGT("FINDA DIDNT TRIGGER");
+  LSTR MSG_TITLE_FINDA_FILAMENT_STUCK     = _UxGT("FINDA FILAM. STUCK");
+  LSTR MSG_TITLE_FSENSOR_DIDNT_TRIGGER    = _UxGT("FSENSOR DIDNT TRIGG.");
+  LSTR MSG_TITLE_FSENSOR_FILAMENT_STUCK   = _UxGT("FSENSOR FIL. STUCK");
+  LSTR MSG_TITLE_PULLEY_CANNOT_MOVE       = _UxGT("PULLEY CANNOT MOVE");
+  LSTR MSG_TITLE_FSENSOR_TOO_EARLY        = _UxGT("FSENSOR TOO EARLY");
+  LSTR MSG_TITLE_INSPECT_FINDA            = _UxGT("INSPECT FINDA");
+  LSTR MSG_TITLE_LOAD_TO_EXTRUDER_FAILED  = _UxGT("LOAD TO EXTR. FAILED");
+  LSTR MSG_TITLE_SELECTOR_CANNOT_MOVE     = _UxGT("SELECTOR CANNOT MOVE");
+  LSTR MSG_TITLE_SELECTOR_CANNOT_HOME     = _UxGT("SELECTOR CANNOT HOME");
+  LSTR MSG_TITLE_IDLER_CANNOT_MOVE        = _UxGT("IDLER CANNOT MOVE");
+  LSTR MSG_TITLE_IDLER_CANNOT_HOME        = _UxGT("IDLER CANNOT HOME");
+  LSTR MSG_TITLE_TMC_WARNING_TMC_TOO_HOT  = _UxGT("WARNING TMC TOO HOT");
+  LSTR MSG_TITLE_TMC_OVERHEAT_ERROR       = _UxGT("TMC OVERHEAT ERROR");
+  LSTR MSG_TITLE_TMC_DRIVER_ERROR         = _UxGT("TMC DRIVER ERROR");
+  LSTR MSG_TITLE_TMC_DRIVER_RESET         = _UxGT("TMC DRIVER RESET");
+  LSTR MSG_TITLE_TMC_UNDERVOLTAGE_ERROR   = _UxGT("TMC UNDERVOLTAGE ERR");
+  LSTR MSG_TITLE_TMC_DRIVER_SHORTED       = _UxGT("TMC DRIVER SHORTED");
+  LSTR MSG_TITLE_SELFTEST_FAILED          = _UxGT("MMU SELFTEST FAILED");
+  LSTR MSG_TITLE_MMU_MCU_ERROR            = _UxGT("MMU MCU ERROR");
+  LSTR MSG_TITLE_MMU_NOT_RESPONDING       = _UxGT("MMU NOT RESPONDING");
+  LSTR MSG_TITLE_COMMUNICATION_ERROR      = _UxGT("COMMUNICATION ERROR");
+  LSTR MSG_TITLE_FILAMENT_ALREADY_LOADED  = _UxGT("FIL. ALREADY LOADED");
+  LSTR MSG_TITLE_INVALID_TOOL             = _UxGT("INVALID TOOL");
+  LSTR MSG_TITLE_QUEUE_FULL               = _UxGT("QUEUE FULL");
+  LSTR MSG_TITLE_FW_UPDATE_NEEDED         = _UxGT("MMU FW UPDATE NEEDED");
+  LSTR MSG_TITLE_FW_RUNTIME_ERROR         = _UxGT("FW RUNTIME ERROR");
+  LSTR MSG_TITLE_UNLOAD_MANUALLY          = _UxGT("UNLOAD MANUALLY");
+  LSTR MSG_TITLE_FILAMENT_EJECTED         = _UxGT("FILAMENT EJECTED");
+  LSTR MSG_TITLE_FILAMENT_CHANGE          = _UxGT("FILAMENT CHANGE");
+  LSTR MSG_TITLE_UNKNOWN_ERROR            = _UxGT("UNKNOWN ERROR");
+
+  LSTR MSG_DESC_FINDA_DIDNT_TRIGGER       = _UxGT("FINDA didn't trigger while loading the filament. Ensure the filament can move and FINDA works.");
+  LSTR MSG_DESC_FINDA_FILAMENT_STUCK      = _UxGT("FINDA didn't switch off while unloading filament. Try unloading manually. Ensure filament can move and FINDA works.");
+  LSTR MSG_DESC_FSENSOR_DIDNT_TRIGGER     = _UxGT("Filament sensor didn't trigger while loading the filament. Ensure the sensor is calibrated and the filament reached it.");
+  LSTR MSG_DESC_FSENSOR_FILAMENT_STUCK    = _UxGT("Filament sensor didn't switch off while unloading filament. Ensure filament can move and the sensor works.");
+  LSTR MSG_DESC_PULLEY_CANNOT_MOVE        = _UxGT("Pulley motor stalled. Ensure the pulley can move and check the wiring.");
+  LSTR MSG_DESC_FSENSOR_TOO_EARLY         = _UxGT("Filament sensor triggered too early while loading to extruder. Check there isn't anything stuck in PTFE tube. Check that sensor reads properly.");
+  LSTR MSG_DESC_INSPECT_FINDA             = _UxGT("Selector can't move due to FINDA detecting a filament. Make sure no filament is in Selector and FINDA works properly.");
+  LSTR MSG_DESC_LOAD_TO_EXTRUDER_FAILED   = _UxGT("Loading to extruder failed. Inspect the filament tip shape. Refine the sensor calibration, if needed.");
+  LSTR MSG_DESC_SELECTOR_CANNOT_HOME      = _UxGT("The Selector cannot home properly. Check for anything blocking its movement.");
+  LSTR MSG_DESC_CANNOT_MOVE               = _UxGT("Can't move Selector or Idler.");
+  LSTR MSG_DESC_IDLER_CANNOT_HOME         = _UxGT("The Idler cannot home properly. Check for anything blocking its movement.");
+  LSTR MSG_DESC_TMC                       = _UxGT("More details online.");
+  LSTR MSG_DESC_MMU_NOT_RESPONDING        = _UxGT("MMU not responding. Check the wiring and connectors.");
+  LSTR MSG_DESC_COMMUNICATION_ERROR       = _UxGT("MMU not responding correctly. Check the wiring and connectors.");
+  LSTR MSG_DESC_FILAMENT_ALREADY_LOADED   = _UxGT("Cannot perform the action, filament is already loaded. Unload it first.");
+  LSTR MSG_DESC_INVALID_TOOL              = _UxGT("Requested filament tool is not available on this hardware. Check the G-code for tool index out of range (T0-T4).");
+  LSTR MSG_DESC_QUEUE_FULL                = _UxGT("MMU Firmware internal error, please reset the MMU.");
+  LSTR MSG_DESC_FW_RUNTIME_ERROR          = _UxGT("Internal runtime error. Try resetting the MMU or updating the firmware.");
+  LSTR MSG_DESC_UNLOAD_MANUALLY           = _UxGT("Filament detected unexpectedly. Ensure no filament is loaded. Check the sensors and wiring.");
+  LSTR MSG_DESC_FILAMENT_EJECTED          = _UxGT("Remove the ejected filament from the front of the MMU.");
+  LSTR MSG_DESC_FILAMENT_CHANGE           = _UxGT("M600 Filament Change. Load a new filament or eject the old one.");
+  LSTR MSG_DESC_UNKNOWN_ERROR             = _UxGT("Unexpected error occurred.");
+
+  LSTR MSG_DESC_FW_UPDATE_NEEDED          = _UxGT("MMU FW version is not supported. Update to version " STRINGIFY(mmuVersionMajor) "." STRINGIFY(mmuVersionMinor) "." STRINGIFY(mmuVersionPatch) ".");
+
+  LSTR MSG_BTN_RETRY                      = _UxGT("Retry");
+  LSTR MSG_BTN_RESET_MMU                  = _UxGT("ResetMMU");
+  LSTR MSG_BTN_UNLOAD                     = _UxGT("Unload");
+  LSTR MSG_BTN_LOAD                       = _UxGT("Load");
+  LSTR MSG_BTN_EJECT                      = _UxGT("Eject");
+  LSTR MSG_BTN_STOP                       = _UxGT("Stop");
+  LSTR MSG_BTN_DISABLE_MMU                = _UxGT("Disable");
+  LSTR MSG_BTN_MORE                       = _UxGT("More Info");
+
+  // Prusa MMU
+  LSTR MSG_DONE                           = _UxGT("Done");
+  LSTR MSG_FINISHING_MOVEMENTS            = _UxGT("Finishing movements");
+  LSTR MSG_LOADING_FILAMENT               = _UxGT("Loading filament");
+  LSTR MSG_UNLOADING_FILAMENT             = _UxGT("Unloading filament");
+  LSTR MSG_TESTING_FILAMENT               = _UxGT("Testing filament");
+  LSTR MSG_EJECT_FROM_MMU                 = _UxGT("Eject from MMU");
+  LSTR MSG_CUT_FILAMENT                   = _UxGT("Cut filament");
+  LSTR MSG_OFF                            = _UxGT("Off");
+  LSTR MSG_ON                             = _UxGT("On");
+  LSTR MSG_PROGRESS_OK                    = _UxGT("OK");
+  LSTR MSG_PROGRESS_ENGAGE_IDLER          = _UxGT("Engaging idler");
+  LSTR MSG_PROGRESS_DISENGAGE_IDLER       = _UxGT("Disengaging idler");
+  LSTR MSG_PROGRESS_UNLOAD_FINDA          = _UxGT("Unloading to FINDA");
+  LSTR MSG_PROGRESS_UNLOAD_PULLEY         = _UxGT("Unloading to pulley");
+  LSTR MSG_PROGRESS_FEED_FINDA            = _UxGT("Feeding to FINDA");
+  LSTR MSG_PROGRESS_FEED_EXTRUDER         = _UxGT("Feeding to extruder");
+  LSTR MSG_PROGRESS_FEED_NOZZLE           = _UxGT("Feeding to nozzle");
+  LSTR MSG_PROGRESS_AVOID_GRIND           = _UxGT("Avoiding grind");
+  LSTR MSG_PROGRESS_WAIT_USER             = _UxGT("ERR Wait for User");
+  LSTR MSG_PROGRESS_ERR_INTERNAL          = _UxGT("ERR Internal");
+  LSTR MSG_PROGRESS_ERR_HELP_FIL          = _UxGT("ERR Help filament");
+  LSTR MSG_PROGRESS_ERR_TMC               = _UxGT("ERR TMC failed");
+  LSTR MSG_PROGRESS_SELECT_SLOT           = _UxGT("Selecting fil. slot");
+  LSTR MSG_PROGRESS_PREPARE_BLADE         = _UxGT("Preparing blade");
+  LSTR MSG_PROGRESS_PUSH_FILAMENT         = _UxGT("Pushing filament");
+  LSTR MSG_PROGRESS_PERFORM_CUT           = _UxGT("Performing cut");
+  LSTR MSG_PROGRESSPSTRETURN_SELECTOR     = _UxGT("Returning selector");
+  LSTR MSG_PROGRESS_PARK_SELECTOR         = _UxGT("Parking selector");
+  LSTR MSG_PROGRESS_EJECT_FILAMENT        = _UxGT("Ejecting filament");
+  LSTR MSG_PROGRESSPSTRETRACT_FINDA       = _UxGT("Retract from FINDA");
+  LSTR MSG_PROGRESS_HOMING                = _UxGT("Homing");
+  LSTR MSG_PROGRESS_MOVING_SELECTOR       = _UxGT("Moving selector");
+  LSTR MSG_PROGRESS_FEED_FSENSOR          = _UxGT("Feeding to FSensor");
 }
 
 namespace LanguageWide_en {
   using namespace LanguageNarrow_en;
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
+    // Ender-3 V2 DWIN - ProUI
     LSTR MSG_PLEASE_WAIT_REBOOT           = _UxGT("Starting... Please wait.");
     LSTR MSG_START_ABL                    = _UxGT("Start Auto Bed Leveling?");
     LSTR MSG_CANCEL_ABL                   = _UxGT("Canceling Auto Leveling");
@@ -1021,16 +1159,17 @@ namespace LanguageWide_en {
     LSTR MSG_AND_RELATIVE_HEIGHTS         = _UxGT("and relative heights");
     LSTR MSG_TOLERANCE_ACHIEVED           = _UxGT("Tolerance achieved!");
     LSTR MSG_FINDING_TRUE_VALUE           = _UxGT("Finding True value");
+    LSTR MSG_LOWER                        = _UxGT("Lower");
+    LSTR MSG_RAISE                        = _UxGT("Raise");
 
     LSTR MSG_POSITION_UNKNOWN             = _UxGT("..WARNING: Current position is unknown, Home axes.");
-    LSTR MSG_POSITION_UNKNOWN_Z           = _UxGT("..CAUTION: Unknown Z position, Home Z axis.");
+    LSTR MSG_POSITION_UNKNOWN_Z           = _UxGT("..CAUTION: Unknown Z position, Home Z-Axis.");
     LSTR MSG_CENTER_NOZZLE                = _UxGT("..Center Nozzle - As Nozzle touches bed, save Z-Offset.");
 
     LSTR MSG_OUTAGE_RECOVERY2             = _UxGT("It looks like the last");
     LSTR MSG_OUTAGE_RECOVERY3             = _UxGT("file was interrupted.");
 
-    LSTR MSG_MEDIA_NOT_INSERTED           = MEDIA_TYPE_EN _UxGT(" Not Inserted.");
-    LSTR MSG_PLEASE_PREHEAT               = _UxGT("Please Preheat Hotend.");
+    LSTR MSG_MEDIA_NOT_INSERTED           = MEDIA_TYPE_EN _UxGT(" Not Inserted");
     LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Reset Print Count");
     LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Print Count");
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("Print Time");

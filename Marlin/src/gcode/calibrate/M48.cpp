@@ -25,7 +25,6 @@
 #if ENABLED(Z_MIN_PROBE_REPEATABILITY_TEST)
 
 #include "../gcode.h"
-#include "../../module/motion.h"
 #include "../../module/probe.h"
 #include "../../lcd/marlinui.h"
 
@@ -40,7 +39,7 @@
 #endif
 
 /**
- * M48: Z probe repeatability measurement function.
+ * M48: Z-Probe repeatability measurement function.
  *
  * Usage:
  *   M48 <P#> <X#> <Y#> <V#> <E> <L#> <S> <C#>
@@ -48,7 +47,7 @@
  *     X = Sample X position
  *     Y = Sample Y position
  *     V = Verbose level (0-4, default=1)
- *     E = Engage Z probe for each reading
+ *     E = Engage Z-Probe for each reading
  *     L = Number of legs of movement before probe
  *     S = Schizoid (Or Star if you prefer)
  *     C = Enable probe temperature compensation (0 or 1, default 1)

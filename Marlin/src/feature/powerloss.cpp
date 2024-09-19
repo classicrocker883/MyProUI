@@ -89,7 +89,7 @@ PrintJobRecovery recovery;
   #define POWER_LOSS_PURGE_LEN 0
 #endif
 
-// Allow power-loss recovery to be aborted
+// Allow Power-Loss Recovery to be aborted
 #define PLR_CAN_ABORT
 #define PROCESS_SUBCOMMANDS_NOW(cmd) do{ \
     if (TERN0(PLR_CAN_ABORT, card.flag.abort_sd_printing)) return; \
@@ -179,7 +179,7 @@ void PrintJobRecovery::prepare() {
 }
 
 /**
- * Save the current machine state to the power-loss recovery file
+ * Save the current machine state to the Power-Loss Recovery file
  */
 void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER_LOSS_ZRAISE*/, const bool raised/*=false*/) {
 
@@ -343,7 +343,7 @@ void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POW
     // Tell the LCD about the outage, even though it is about to die
     TERN_(EXTENSIBLE_UI, ExtUI::onPowerLoss());
 
-    // Disable all heaters to reduce power loss
+    // Disable all heaters to reduce power-loss
     thermalManager.disable_all_heaters();
 
     #if ENABLED(BACKUP_POWER_SUPPLY)
@@ -374,8 +374,8 @@ void PrintJobRecovery::write() {
   open(false);
   file.seekSet(0);
   const int16_t ret = file.write(&info, sizeof(info));
-  if (ret == -1) DEBUG_ECHOLNPGM("Power-loss file write failed.");
-  if (!file.close()) DEBUG_ECHOLNPGM("Power-loss file close failed.");
+  if (ret == -1) DEBUG_ECHOLNPGM("Power-Loss file write failed.");
+  if (!file.close()) DEBUG_ECHOLNPGM("Power-Loss file close failed.");
 }
 
 /**
@@ -440,7 +440,7 @@ void PrintJobRecovery::resume() {
   // establish the current position as best we can.
   //
 
-  #if ENABLED(DWIN_LCD_PROUI) && DISABLED(NOZZLE_CLEAN_FEATURE)
+  #if ENABLED(DWIN_LCD_PROUI) && (DISABLED(NOZZLE_CLEAN_FEATURE) || defined(WIPE_SEQUENCE_COMMANDS))
     xyze_pos_t save_pos = info.current_position;
   #endif
 
@@ -502,9 +502,16 @@ void PrintJobRecovery::resume() {
     #endif
   #endif
 
-  #if ENABLED(DWIN_LCD_PROUI) && DISABLED(NOZZLE_CLEAN_FEATURE)
+  #if ENABLED(DWIN_LCD_PROUI) && (DISABLED(NOZZLE_CLEAN_FEATURE) || defined(WIPE_SEQUENCE_COMMANDS))
     // Parking head to allow clean before of heating the hotend
-    gcode.process_subcommands_now(F("G27"));
+    #if ENABLED(NOZZLE_PARK_FEATURE)
+      gcode.process_subcommands_now(F("G27P3\nG27P2"));
+    #else
+      const_float_t zpos = current_position.z + TERN(NOZZLE_PARK_FEATURE, NOZZLE_PARK_Z_RAISE_MIN, Z_POST_CLEARANCE);
+      _MIN(zpos, Z_MAX_POS);
+      const int16_t ypos = TERN(NOZZLE_PARK_FEATURE, TERN(PROUI_EX, PRO_data.Park_point.y, DEF_NOZZLE_PARK_POINT.y), Y_MAX_POS);
+      gcode.process_subcommands_now(TS(F("G0F600Z"), zpos, F("\nG0F2000Y"), ypos, F("\nM400")));
+    #endif
     DWIN_Popup_Continue(ICON_Leveling_0, GET_TEXT_F(MSG_NOZZLE_PARKED), GET_TEXT_F(MSG_NOZZLE_CLEAN));
     wait_for_user_response();
     info.current_position = save_pos;
@@ -578,7 +585,7 @@ void PrintJobRecovery::resume() {
     PROCESS_SUBCOMMANDS_NOW(TS(F("G1F3000E"), (POWER_LOSS_PURGE_LEN) + (POWER_LOSS_RETRACT_LEN)));
   #endif
 
-  #if ENABLED(NOZZLE_CLEAN_FEATURE)
+  #if ENABLED(NOZZLE_CLEAN_FEATURE) && !defined(WIPE_SEQUENCE_COMMANDS)
     PROCESS_SUBCOMMANDS_NOW(F("G12"));
   #endif
 

@@ -1,4 +1,7 @@
-/*Configuration_adv.h Defines*/
+/**
+ * Configuration_adv.h Defines
+ */
+#pragma once
 
 // #define CONFIGURATION_ADV_H_VERSION 02010300
 // #define CONFIG_EXPORT 2
@@ -189,6 +192,7 @@
 // #define CONTROLLER_FAN_MENU
 // #define FAN_KICKSTART_TIME  100
 // #define FAN_KICKSTART_POWER 180
+// #define FAN_KICKSTART_LINEAR
 // #define FAN_OFF_PWM  1
 // #define FAN_MIN_PWM 50
 // #define FAN_MAX_PWM 128
@@ -325,14 +329,16 @@
 // #define REPORT_TRAMMING_MM
 // #define ASSISTED_TRAMMING_WIZARD
 // #define ASSISTED_TRAMMING_WAIT_POSITION { X_CENTER, Y_CENTER, 30 }
-// #define TRAMMING_SCREW_THREAD 40
+// #define TRAMMING_SCREW_THREAD M4_CW
 // #define FT_MOTION
-// #define FTM_DEFAULT_MODE        ftMotionMode_DISABLED
+// #define FTM_IS_DEFAULT_MOTION
 // #define FTM_DEFAULT_DYNFREQ_MODE dynFreqMode_DISABLED
-// #define FTM_SHAPING_DEFAULT_X_FREQ   37.0f
-// #define FTM_SHAPING_DEFAULT_Y_FREQ   37.0f
+// #define FTM_DEFAULT_SHAPER_X      ftMotionShaper_NONE
+// #define FTM_DEFAULT_SHAPER_Y      ftMotionShaper_NONE
+// #define FTM_SHAPING_DEFAULT_FREQ_X   37.0f
+// #define FTM_SHAPING_DEFAULT_FREQ_Y   37.0f
 // #define FTM_LINEAR_ADV_DEFAULT_ENA   false
-// #define FTM_LINEAR_ADV_DEFAULT_K      0.0f
+// #define FTM_LINEAR_ADV_DEFAULT_K      0
 // #define FTM_SHAPING_ZETA_X            0.1f
 // #define FTM_SHAPING_ZETA_Y            0.1f
 // #define FTM_SHAPING_V_TOL_X           0.05f
@@ -344,8 +350,6 @@
 // #define FTM_BATCH_SIZE            100
 // #define FTM_FS                     1000
 // #define FTM_TS                        0.001f
-// #define FTM_STEPS_PER_LOOP           60
-// #define FTM_POINTS_PER_LOOP         100
 // #define FTM_STEPPER_FS          20000
 // #define FTM_STEPPERCMD_BUFF_SIZE 3000
 // #define FTM_STEPPER_FS          30000
@@ -358,10 +362,13 @@
 // #define FTM_ZMAX (FTM_RATIO * 2)
 // #define INPUT_SHAPING_X
 // #define INPUT_SHAPING_Y
+// #define INPUT_SHAPING_Z
 // #define SHAPING_FREQ_X  40.0
 // #define SHAPING_ZETA_X   0.15
 // #define SHAPING_FREQ_Y  40.0
 // #define SHAPING_ZETA_Y   0.15
+// #define SHAPING_FREQ_Z  40.0
+// #define SHAPING_ZETA_Z   0.15
 // #define SHAPING_MIN_FREQ  20.0
 // #define SHAPING_MAX_STEPRATE 10000
 // #define SHAPING_MENU
@@ -410,7 +417,6 @@
 // #define CALIBRATION_GCODE
 // #define CALIBRATION_SCRIPT_PRE  "M117 Starting Auto-Calibration\nT0\nG28\nG12\nM117 Calibrating..."
 // #define CALIBRATION_SCRIPT_POST "M500\nM117 Calibration data saved"
-// #define CALIBRATION_MEASUREMENT_RESOLUTION     0.01
 // #define CALIBRATION_FEEDRATE_SLOW             60
 // #define CALIBRATION_FEEDRATE_FAST           1200
 // #define CALIBRATION_FEEDRATE_TRAVEL         3000
@@ -460,7 +466,7 @@
 // #define DIGIPOT_USE_RAW_VALUES
 // #define DIGIPOT_I2C_ADDRESS_A 0x2C
 // #define DIGIPOT_I2C_ADDRESS_B 0x2D
-// #define MANUAL_FEEDRATE { 60*60, 60*60, 8*60, 2*60 }
+// #define MANUAL_FEEDRATE { 60*60, 60*60, 10*60, 2*60 }
 // #define FINE_MANUAL_MOVE 0.025
 // #define MANUAL_E_MOVES_RELATIVE
 // #define ULTIPANEL_FEEDMULTIPLY
@@ -473,7 +479,7 @@
 // #define FEEDRATE_CHANGE_BEEP_DURATION   10
 // #define FEEDRATE_CHANGE_BEEP_FREQUENCY 440
 // #define PROBE_OFFSET_WIZARD
-// #define PROBE_OFFSET_WIZARD_START_Z -4.0
+// #define PROBE_OFFSET_WIZARD_START_Z -1.0
 // #define PROBE_OFFSET_WIZARD_XY_POS { X_CENTER, Y_CENTER }
 // #define X_AXIS_TWIST_COMPENSATION
 // #define XATC_START_Z 0.0
@@ -491,6 +497,7 @@
 // #define MANUAL_MOVE_DISTANCE_IN   5.000, 1.000, 0.500, 0.100, 0.010, 0.001
 // #define MANUAL_MOVE_DISTANCE_DEG             90, 45, 22.5, 5, 1
 // #define TURBO_BACK_MENU_ITEM
+// #define GENERIC_BACK_MENU_ITEM
 // #define PREHEAT_SHORTCUT_MENU_ITEM
 // #define LCD_ENDSTOP_TEST
 // #define SHOW_BOOTSCREEN
@@ -563,7 +570,7 @@
 // #define EVENT_GCODE_SD_ABORT "M84XYE"
 // #define PE_LEDS_COMPLETED_TIME  (30*60)
 // #define POWER_LOSS_RECOVERY
-// #define PLR_ENABLED_DEFAULT       false
+// #define PLR_ENABLED_DEFAULT       true
 // #define PLR_BED_THRESHOLD BED_MAXTEMP
 // #define POWER_LOSS_PIN             44
 // #define POWER_LOSS_STATE         HIGH
@@ -820,7 +827,7 @@
 // #define MIN_STEPS_PER_SEGMENT 4
 // #define MINIMUM_STEPPER_POST_DIR_DELAY 650
 // #define MINIMUM_STEPPER_PRE_DIR_DELAY 650
-// #define MINIMUM_STEPPER_PULSE 2
+// #define MINIMUM_STEPPER_PULSE_NS 2000
 // #define MAXIMUM_STEPPER_RATE 250000
 // #define HEATERS_PARALLEL
 // #define BLOCK_BUFFER_SIZE  32
@@ -1071,6 +1078,7 @@
 // #define E7_CHAIN_POS     -1
 // #define E7_INTERPOLATE true
 // #define E7_HOLD_MULTIPLIER 0.5
+// #define PROBING_USE_CURRENT_HOME
 // #define X_CS_PIN      -1
 // #define Y_CS_PIN      -1
 // #define Z_CS_PIN      -1
@@ -1467,47 +1475,68 @@
 // #define WEBSUPPORT
 // #define OTASUPPORT
 // #define WIFI_CUSTOM_COMMAND
-// #define WIFI_SSID "WiFi SSID"
-// #define WIFI_PWD  "WiFi Password"
+// #include "Configuration_Secure.h"
 // #define E_MUX0_PIN 40
 // #define E_MUX1_PIN 42
 // #define E_MUX2_PIN 44
 // #define MMU2_SERIAL_PORT 2
+// #define MMU_BAUD 115200
 // #define MMU2_RST_PIN 23
 // #define MMU2_MODE_12V
 // #define MMU2_FILAMENT_RUNOUT_SCRIPT "M600"
-// #define MMU2_MENUS
+// #define MMU_MENUS
 // #define MMU2_FILAMENTCHANGE_EJECT_FEED 80.0
+// #define MMU2_EXTRUDER_PTFE_LENGTH       42.3
+// #define MMU2_EXTRUDER_HEATBREAK_LENGTH  17.7
 // #define MMU2_LOAD_TO_NOZZLE_SEQUENCE \
-  {  7.2, 1145 }, \
-  { 14.4,  871 }, \
-  { 36.0, 1393 }, \
-  { 14.4,  871 }, \
-  { 50.0,  198 }
+  { MMU2_EXTRUDER_PTFE_LENGTH,      MMM_TO_MMS(810) }, \
+  { MMU2_EXTRUDER_HEATBREAK_LENGTH, MMM_TO_MMS(198) }
 // #define MMU2_RAMMING_SEQUENCE \
-  {   1.0, 1000 }, \
-  {   1.0, 1500 }, \
-  {   2.0, 2000 }, \
-  {   1.5, 3000 }, \
-  {   2.5, 4000 }, \
-  { -15.0, 5000 }, \
-  { -14.0, 1200 }, \
-  {  -6.0,  600 }, \
-  {  10.0,  700 }, \
-  { -10.0,  400 }, \
-  { -50.0, 2000 }
+  { 0.2816,  MMM_TO_MMS(1339.0) }, \
+  { 0.3051,  MMM_TO_MMS(1451.0) }, \
+  { 0.3453,  MMM_TO_MMS(1642.0) }, \
+  { 0.3990,  MMM_TO_MMS(1897.0) }, \
+  { 0.4761,  MMM_TO_MMS(2264.0) }, \
+  { 0.5767,  MMM_TO_MMS(2742.0) }, \
+  { 0.5691,  MMM_TO_MMS(3220.0) }, \
+  { 0.1081,  MMM_TO_MMS(3220.0) }, \
+  { 0.7644,  MMM_TO_MMS(3635.0) }, \
+  { 0.8248,  MMM_TO_MMS(3921.0) }, \
+  { 0.8483,  MMM_TO_MMS(4033.0) }, \
+  { -15.0,   MMM_TO_MMS(6000.0) }, \
+  { -24.5,   MMM_TO_MMS(1200.0) }, \
+  {  -7.0,   MMM_TO_MMS( 600.0) }, \
+  {  -3.5,   MMM_TO_MMS( 360.0) }, \
+  {  20.0,   MMM_TO_MMS( 454.0) }, \
+  { -20.0,   MMM_TO_MMS( 303.0) }, \
+  { -35.0,   MMM_TO_MMS(2000.0) }
 // #define MMU2_C0_RETRY   5
 // #define MMU2_CAN_LOAD_FEEDRATE 800
 // #define MMU2_CAN_LOAD_SEQUENCE \
-  {  0.1, MMU2_CAN_LOAD_FEEDRATE }, \
-  {  60.0, MMU2_CAN_LOAD_FEEDRATE }, \
-  { -52.0, MMU2_CAN_LOAD_FEEDRATE }
+  {   5.0, MMU2_CAN_LOAD_FEEDRATE }, \
+  {  15.0, MMU2_CAN_LOAD_FEEDRATE }, \
+  { -10.0, MMU2_CAN_LOAD_FEEDRATE }
 // #define MMU2_CAN_LOAD_RETRACT   6.0
 // #define MMU2_CAN_LOAD_DEVIATION 0.8
 // #define MMU2_CAN_LOAD_INCREMENT 0.2
 // #define MMU2_CAN_LOAD_INCREMENT_SEQUENCE \
   { -MMU2_CAN_LOAD_INCREMENT, MMU2_CAN_LOAD_FEEDRATE }
 // #define MMU_IR_UNLOAD_MOVE
+// #define MMU2_MAX_RETRIES 3
+// #define MMU2_LOAD_TO_NOZZLE_LENGTH 87.0 + 5.0
+// #define MMU2_FILAMENT_SENSOR_POSITION    0
+// #define MMU2_LOAD_DISTANCE_PAST_GEARS    5
+// #define MMU2_TOOL_CHANGE_LOAD_LENGTH MMU2_FILAMENT_SENSOR_POSITION + MMU2_LOAD_DISTANCE_PAST_GEARS
+// #define MMU2_LOAD_TO_NOZZLE_FEED_RATE        20.0
+// #define MMU2_UNLOAD_TO_FINDA_FEED_RATE      120.0
+// #define MMU2_VERIFY_LOAD_TO_NOZZLE_FEED_RATE 50.0
+// #define MMU2_VERIFY_LOAD_TO_NOZZLE_TWEAK     -5.0
+// #define MMU2_RETRY_UNLOAD_TO_FINDA_LENGTH    80.0
+// #define MMU2_RETRY_UNLOAD_TO_FINDA_FEED_RATE 80.0
+// #define MMU2_CHECK_FILAMENT_PRESENCE_EXTRUSION_LENGTH (MMU2_EXTRUDER_PTFE_LENGTH + MMU2_EXTRUDER_HEATBREAK_LENGTH + MMU2_VERIFY_LOAD_TO_NOZZLE_TWEAK + MMU2_FILAMENT_SENSOR_POSITION)
+// #define MMU_HAS_CUTTER
+// #define MMU_FORCE_STEALTH_MODE
+// #define MMU_SPOOL_JOIN_CONSUMES_ALL_FILAMENT
 // #define MMU_EXTRUDER_SENSOR
 // #define MMU_LOADING_ATTEMPTS_NR 5
 // #define MMU2_DEBUG

@@ -31,4 +31,4 @@ jobs:
         remove-stale-when-updated: true
         exempt-all-assignees: true
         exempt-issue-labels: 'bug,Feature Request,Needs: More Data,Needs: Discussion,Needs: Documentation,Needs: Patch,Needs: Work,Needs: Testing,help wanted,no-locking,work-in-progress'
-        close-issue-reason: 'will not fix,false alarm,duplicate'
+        close-issue-label: 'will not fix,false alarm,duplicate'

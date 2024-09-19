@@ -19,9 +19,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -40,10 +40,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -99,9 +96,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -120,10 +117,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -181,9 +175,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -202,10 +196,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -275,9 +266,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -296,10 +287,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -361,9 +349,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -382,10 +370,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -451,9 +436,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -472,10 +457,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -535,9 +517,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -556,10 +538,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -621,9 +600,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -642,10 +621,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -720,9 +696,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -741,10 +717,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -814,9 +787,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -835,10 +808,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |
@@ -908,9 +878,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16
+        node-version: 20
     - name: Cache pip
       uses: actions/cache@v4
       with:
@@ -929,10 +899,7 @@ jobs:
         python-version: '3.10'
     - name: Install PlatformIO
       run: |
-        python3 -m pip install --upgrade pip
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        python3 -m pip install --upgrade pip wheel platformio
     - name: Run PlatformIO
       id: build_configs
       run: |

@@ -28,11 +28,7 @@
 #include "../../../module/probe.h"
 #include "../../../gcode/gcode.h"
 #include "../../../module/planner.h"
-#include "../../../gcode/queue.h"
-#include "../../../libs/least_squares_fit.h"
-#include "../../../libs/vector_3.h"
 
-#include "dwin_popup.h"
 #include "bedlevel_tools.h"
 
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
@@ -48,6 +44,8 @@ uint8_t BedLevelToolsClass::tilt_grid = 2;
 bool drawing_mesh = false;
 
 #if ENABLED(AUTO_BED_LEVELING_UBL)
+#include "../../../libs/least_squares_fit.h"
+#include "../../../libs/vector_3.h"
 
   bool BedLevelToolsClass::create_plane_from_mesh() {
     struct linear_fit_data lsf_results;
@@ -104,23 +102,16 @@ void BedLevelToolsClass::manual_value_update(const uint8_t mesh_x, const uint8_t
 
 void BedLevelToolsClass::manual_move(const uint8_t mesh_x, const uint8_t mesh_y, bool zmove/*=false*/) {
   gcode.process_subcommands_now(F("G28O"));
-  if (zmove) {
-    planner.synchronize();
-    current_position.z = goto_mesh_value ? bedlevel.z_values[mesh_x][mesh_y] : Z_CLEARANCE_BETWEEN_PROBES;
-    planner.buffer_line(current_position, homing_feedrate(Z_AXIS), active_extruder);
-    planner.synchronize();
-  }
-  else {
-    DWIN_Show_Popup(ICON_BLTouch, F("Moving to Point"), F("Please wait until done."));
-    HMI_SaveProcessID(NothingToDo);
-    gcode.process_subcommands_now(F("G0F600Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES)));
+  if (!zmove) {
+    DWIN_Draw_Popup(ICON_BLTouch, F("Moving to Point"), F("Please wait until done."));
+    gcode.process_subcommands_now(TS(F("G0F600Z"), p_float_t(Z_CLEARANCE_BETWEEN_PROBES, 3))); //gcode.process_subcommands_now(F("G0F600Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES)));
     gcode.process_subcommands_now(TS(F("G42F4000I"), mesh_x, F("J"), mesh_y));
-    planner.synchronize();
-    current_position.z = goto_mesh_value ? bedlevel.z_values[mesh_x][mesh_y] : Z_CLEARANCE_BETWEEN_PROBES;
-    planner.buffer_line(current_position, homing_feedrate(Z_AXIS), active_extruder);
-    planner.synchronize();
-    HMI_ReturnScreen();
   }
+  planner.synchronize();
+  current_position.z = goto_mesh_value ? bedlevel.z_values[mesh_x][mesh_y] : Z_CLEARANCE_BETWEEN_PROBES;
+  planner.buffer_line(current_position, homing_feedrate(Z_AXIS), active_extruder);
+  planner.synchronize();
+  if (!zmove) HMI_ReturnScreen();
 }
 
 // Move / Probe methods
@@ -212,6 +203,17 @@ bool BedLevelToolsClass::meshValidate() {
                : uint16_t(round(0x3F * -z / rmax)) << 5) // Green for negative mesh point
                | _MIN(0x1F, (uint8_t(abs(z) * 0.4)))     // + Blue stepping for every mm
       );                                                 // RGB565 colors: https://rgbcolorpicker.com/565
+
+      /*
+      const int16_t v = round(z * 100);
+      const uint16_t color = isnan(z) ? Color_Grey : DWINUI::RainbowInt(v, -rmax, rmax);
+      const uint16_t color = isnan(z) ? Color_Grey : (   // Gray if undefined
+        (z > 0 ? uint16_t(round(0x1F *  z / rmax)) << 11 // Red for positive mesh point
+               : uint16_t(round(0x3F * -z / rmax)) << 5) // Green for negative mesh point
+               | _MIN(0x1F, (uint8_t(abs(z) * 0.4)))     // + Blue stepping for every mm
+      );                                                 // RGB565 colors: https://rgbcolorpicker.com/565
+      */
+
       DWIN_Draw_Rectangle(1, color, start_x_px, start_y_px, end_x_px, end_y_px);
       safe_delay(10);
       LCD_SERIAL.flushTX();

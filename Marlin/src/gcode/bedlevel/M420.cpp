@@ -27,7 +27,10 @@
 #include "../gcode.h"
 #include "../../feature/bedlevel/bedlevel.h"
 #include "../../module/planner.h"
-#include "../../module/probe.h"
+
+#if ENABLED(MARLIN_DEV_MODE)
+  #include "../../module/probe.h"
+#endif
 
 #if ENABLED(EEPROM_SETTINGS)
   #include "../../module/settings.h"
@@ -247,7 +250,7 @@ void GcodeSuite::M420_report(const bool forReplay/*=true*/) {
   TERN_(MARLIN_SMALL_BUILD, return);
 
   report_heading_etc(forReplay, F(
-    TERN(MESH_BED_LEVELING, "Mesh Bed Leveling", TERN(AUTO_BED_LEVELING_UBL, "Unified Bed Leveling", "Auto Bed Leveling"))
+    TERN(MESH_BED_LEVELING, STR_MBL, TERN(AUTO_BED_LEVELING_UBL, STR_UBL, STR_ABL))
   ));
   SERIAL_ECHO(
     F("  M420 S"), planner.leveling_active

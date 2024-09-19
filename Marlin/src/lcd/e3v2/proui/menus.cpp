@@ -166,8 +166,8 @@ void DrawItemEdit(const bool selected) {
 //  hi: high limit
 //  dp: decimal places, 0 for integers
 //  val: value / scaled value
-//  LiveUpdate: live update function when the encoder changes
 //  Apply: update function when the encoder is pressed
+//  LiveUpdate: live update function when the encoder changes
 void SetOnClick(uint8_t process, const int32_t lo, const int32_t hi, uint8_t dp, const int32_t val, void (*Apply)()/*=nullptr*/, void (*LiveUpdate)()/*=nullptr*/) {
   checkkey = process;
   MenuData.MinValue = lo;
@@ -184,8 +184,8 @@ void SetOnClick(uint8_t process, const int32_t lo, const int32_t hi, uint8_t dp,
 //  lo: scaled low limit
 //  hi: scaled high limit
 //  val: value
-//  LiveUpdate: live update function when the encoder changes
 //  Apply: update function when the encoder is pressed
+//  LiveUpdate: live update function when the encoder changes
 void SetValueOnClick(uint8_t process, const int32_t lo, const int32_t hi, const int32_t val, void (*Apply)()/*=nullptr*/, void (*LiveUpdate)()/*=nullptr*/) {
   SetOnClick(process, lo, hi, 0, val, Apply, LiveUpdate);
   DrawItemEdit(true);
@@ -196,8 +196,8 @@ void SetValueOnClick(uint8_t process, const int32_t lo, const int32_t hi, const 
 //  lo: scaled low limit
 //  hi: scaled high limit
 //  val: value
-//  LiveUpdate: live update function when the encoder changes
 //  Apply: update function when the encoder is pressed
+//  LiveUpdate: live update function when the encoder changes
 void SetValueOnClick(uint8_t process, const float lo, const float hi, uint8_t dp, const float val, void (*Apply)()/*=nullptr*/, void (*LiveUpdate)()/*=nullptr*/) {
   const int32_t value =  round(val * POW(10, dp));
   SetOnClick(process, lo * POW(10, dp), hi * POW(10, dp), dp, value, Apply, LiveUpdate);
@@ -208,8 +208,8 @@ void SetValueOnClick(uint8_t process, const float lo, const float hi, uint8_t dp
 //  lo: scaled low limit
 //  hi: scaled high limit
 //  val: value
-//  LiveUpdate: live update function when the encoder changes
 //  Apply: update function when the encoder is pressed
+//  LiveUpdate: live update function when the encoder changes
 void SetIntOnClick(const int32_t lo, const int32_t hi, const int32_t val, void (*Apply)()/*=nullptr*/, void (*LiveUpdate)()/*=nullptr*/) {
   SetValueOnClick(SetInt, lo, hi, val, Apply, LiveUpdate);
 }
@@ -217,8 +217,8 @@ void SetIntOnClick(const int32_t lo, const int32_t hi, const int32_t val, void (
 // Generic onclick event for set pointer to 16 bit uinteger values
 //  lo: low limit
 //  hi: high limit
-//  LiveUpdate: live update function when the encoder changes
 //  Apply: update function when the encoder is pressed
+//  LiveUpdate: live update function when the encoder changes
 void SetPIntOnClick(const int32_t lo, const int32_t hi, void (*Apply)()/*=nullptr*/, void (*LiveUpdate)()/*=nullptr*/) {
   MenuData.P_Int = (int16_t*)static_cast<MenuItemPtrClass*>(CurrentMenu->SelectedItem())->value;
   const int32_t value = *MenuData.P_Int;
@@ -238,8 +238,8 @@ void SetFloatOnClick(const float lo, const float hi, uint8_t dp, const float val
 // Generic onclick event for set pointer to float values
 //  lo: low limit
 //  hi: high limit
-//  LiveUpdate: live update function when the encoder changes
 //  Apply: update function when the encoder is pressed
+//  LiveUpdate: live update function when the encoder changes
 void SetPFloatOnClick(const float lo, const float hi, uint8_t dp, void (*Apply)()/*=nullptr*/, void (*LiveUpdate)()/*=nullptr*/) {
   MenuData.P_Float = (float*)static_cast<MenuItemPtrClass*>(CurrentMenu->SelectedItem())->value;
   SetValueOnClick(SetPFloat, lo, hi, dp, *MenuData.P_Float, Apply, LiveUpdate);

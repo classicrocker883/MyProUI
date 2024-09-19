@@ -166,16 +166,6 @@
     #undef  INVERT_E0_DIR
     #define INVERT_E0_DIR PRO_data.Invert_E0
   #endif
-  #if ENABLED(PROUI_MESH_EDIT)
-    #undef  MESH_MIN_X
-    #undef  MESH_MAX_X
-    #undef  MESH_MIN_Y
-    #undef  MESH_MAX_Y
-    #define MESH_MIN_X (float)PRO_data.mesh_min_x
-    #define MESH_MAX_X (float)PRO_data.mesh_max_x
-    #define MESH_MIN_Y (float)PRO_data.mesh_min_y
-    #define MESH_MAX_Y (float)PRO_data.mesh_max_y
-  #endif
 
 #else
 
@@ -203,16 +193,6 @@
   #if HAS_EXTRUDERS
     #undef  INVERT_E0_DIR
     #define INVERT_E0_DIR HMI_data.Invert_E0
-  #endif
-  #if ENABLED(PROUI_MESH_EDIT)
-    #undef  MESH_MIN_X
-    #undef  MESH_MAX_X
-    #undef  MESH_MIN_Y
-    #undef  MESH_MAX_Y
-    #define MESH_MIN_X (float)HMI_data.mesh_min_x
-    #define MESH_MAX_X (float)HMI_data.mesh_max_x
-    #define MESH_MIN_Y (float)HMI_data.mesh_min_y
-    #define MESH_MAX_Y (float)HMI_data.mesh_max_y
   #endif
 
 #endif // PROUI_EX

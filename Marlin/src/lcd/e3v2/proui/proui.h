@@ -215,12 +215,6 @@ typedef struct {
   bool auto_abort;
 #endif
 #if !PROUI_EX
-#if ENABLED(PROUI_MESH_EDIT)
-  float mesh_min_x = DEF_MESH_MIN_X;
-  float mesh_max_x = DEF_MESH_MAX_X;
-  float mesh_min_y = DEF_MESH_MIN_Y;
-  float mesh_max_y = DEF_MESH_MAX_Y;
-#endif
   TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points = DEF_GRID_MAX_POINTS;)
 #if HAS_BED_PROBE
   IF_DISABLED(BD_SENSOR, uint8_t multiple_probing = MULTIPLE_PROBING;)
@@ -234,4 +228,4 @@ typedef struct {
 
 extern HMI_data_t HMI_data;
 
-static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) + TERN0(PROUI_EX, sizeof(PRO_data_t));
+static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) PLUS_TERN0(PROUI_EX, sizeof(PRO_data_t));

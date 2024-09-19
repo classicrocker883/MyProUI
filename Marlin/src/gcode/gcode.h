@@ -56,7 +56,7 @@
  * G27  - Park Nozzle (Requires NOZZLE_PARK_FEATURE)
  * G28  - Home one or more axes
  * G29  - Start or continue the bed leveling probe procedure (Requires bed leveling)
- * G30  - Single Z probe, probes bed at X Y location (defaults to current XY location)
+ * G30  - Single Z-Probe, probes bed at X Y location (defaults to current XY location)
  * G31  - Dock sled (Z_PROBE_SLED only)
  * G32  - Undock sled (Z_PROBE_SLED only)
  * G33  - Delta Auto-Calibration (Requires DELTA_AUTO_CALIBRATION)
@@ -112,7 +112,7 @@
  *
  * M42  - Change pin status via G-code: M42 P<pin> S<value>. LED pin assumed if P is omitted. (Requires DIRECT_PIN_CONTROL)
  * M43  - Display pin status, watch pins for changes, watch endstops & toggle LED, Z servo probe test, toggle pins (Requires PINS_DEBUGGING)
- * M48  - Measure Z Probe repeatability: M48 P<points> X<pos> Y<pos> V<level> E<engage> L<legs> S<chizoid>. (Requires Z_MIN_PROBE_REPEATABILITY_TEST)
+ * M48  - Measure Z-Probe repeatability: M48 P<points> X<pos> Y<pos> V<level> E<engage> L<legs> S<chizoid>. (Requires Z_MIN_PROBE_REPEATABILITY_TEST)
  *
  * M73  - Set the progress percentage. (Requires SET_PROGRESS_MANUALLY)
  * M75  - Start the print job timer.
@@ -206,8 +206,8 @@
  * M250 - Set LCD contrast: "M250 C<contrast>" (0-63). (Requires LCD support)
  * M255 - Set LCD sleep time: "M255 S<minutes>" (0-99). (Requires an LCD with brightness or sleep/wake)
  * M256 - Set LCD brightness: "M256 B<brightness>" (0-255). (Requires an LCD with brightness control)
- * M260 - i2c Send Data (Requires EXPERIMENTAL_I2CBUS)
- * M261 - i2c Request Data (Requires EXPERIMENTAL_I2CBUS)
+ * M260 - I2C Send Data (Requires EXPERIMENTAL_I2CBUS)
+ * M261 - I2C Request Data (Requires EXPERIMENTAL_I2CBUS)
  * M280 - Set servo position absolute: "M280 P<index> S<angle|µs>". (Requires servos)
  * M281 - Set servo min|max position: "M281 P<index> L<min> U<max>". (Requires EDITABLE_SERVO_ANGLES)
  * M282 - Detach servo: "M282 P<index>". (Requires SERVO_DETACH_GCODE)
@@ -226,8 +226,8 @@
  * M380 - Activate solenoid on active tool (Requires EXT_SOLENOID) or the tool specified by 'S' (Requires MANUAL_SOLENOID_CONTROL).
  * M381 - Disable solenoids on all tools (Requires EXT_SOLENOID) or the tool specified by 'S' (Requires MANUAL_SOLENOID_CONTROL).
  * M400 - Finish all moves.
- * M401 - Deploy and activate Z probe. (Requires a probe)
- * M402 - Deactivate and stow Z probe. (Requires a probe)
+ * M401 - Deploy and activate Z-Probe. (Requires a probe)
+ * M402 - Deactivate and stow Z-Probe. (Requires a probe)
  * M403 - Set filament type for PRUSA MMU2
  * M404 - Display or set the Nominal Filament Width: "W<diameter>". (Requires FILAMENT_WIDTH_SENSOR)
  * M405 - Enable Filament Sensor flow control. "M405 D<delay_cm>". (Requires FILAMENT_WIDTH_SENSOR)
@@ -272,9 +272,17 @@
  * M672 - Set/Reset Duet Smart Effector's sensitivity. (Requires DUET_SMART_EFFECTOR and SMART_EFFECTOR_MOD_PIN)
  * M701 - Load filament (Requires FILAMENT_LOAD_UNLOAD_GCODES)
  * M702 - Unload filament (Requires FILAMENT_LOAD_UNLOAD_GCODES)
+ *
+ * M704 - Preload to MMU (Requires PRUSA_MMU3)
+ * M705 - Eject filament (Requires PRUSA_MMU3)
+ * M706 - Cut filament (Requires PRUSA_MMU3)
+ * M707 - Read from MMU register (Requires PRUSA_MMU3)
+ * M708 - Write to MMU register (Requires PRUSA_MMU3)
+ * M709 - MMU power & reset (Requires PRUSA_MMU3)
+ *
  * M808 - Set or Goto a Repeat Marker (Requires GCODE_REPEAT_MARKERS)
  * M810-M819 - Define/execute a G-code macro (Requires GCODE_MACROS)
- * M851 - Set Z probe's XYZ offsets in current units. (Negative values: X=left, Y=front, Z=below)
+ * M851 - Set Z-Probe's XYZ offsets in current units. (Negative values: X=left, Y=front, Z=below)
  * M852 - Set skew factors: "M852 [I<xy>] [J<xz>] [K<yz>]". (Requires SKEW_CORRECTION_GCODE, plus SKEW_CORRECTION_FOR_Z for IJ)
  *
  *** I2C_POSITION_ENCODERS ***
@@ -1028,7 +1036,7 @@ private:
     static void M402();
   #endif
 
-  #if HAS_PRUSA_MMU2
+  #if HAS_PRUSA_MMU2 || HAS_PRUSA_MMU3
     static void M403();
   #endif
 
@@ -1164,6 +1172,16 @@ private:
   #if ENABLED(FILAMENT_LOAD_UNLOAD_GCODES)
     static void M701();
     static void M702();
+  #endif
+
+  #if HAS_PRUSA_MMU3
+    static void M704();
+    static void M705();
+    static void M706();
+    static void M707();
+    static void M708();
+    static void M709();
+    static void MMU3_report(const bool forReplay=true);
   #endif
 
   #if ENABLED(GCODE_REPEAT_MARKERS)
