@@ -202,7 +202,7 @@ void GcodeSuite::get_destination_from_command() {
   #endif
 
   #if ENABLED(POWER_LOSS_RECOVERY) && !PIN_EXISTS(POWER_LOSS)
-    // Only update power-loss recovery on moves with E
+    // Only update Power-Loss Recovery on moves with E
     if (recovery.enabled && IS_SD_PRINTING() && seen.e && (seen.x || seen.y))
       recovery.save();
   #endif
@@ -421,7 +421,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if HAS_BED_PROBE
-        case 30: G30(); break;                                    // G30: Single Z probe
+        case 30: G30(); break;                                    // G30: Single Z-Probe
         #if ENABLED(Z_PROBE_SLED)
           case 31: G31(); break;                                  // G31: dock the sled
           case 32: G32(); break;                                  // G32: undock the sled
@@ -570,7 +570,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if ENABLED(Z_MIN_PROBE_REPEATABILITY_TEST)
-        case 48: M48(); break;                                    // M48: Z probe repeatability test
+        case 48: M48(); break;                                    // M48: Z-Probe repeatability test
       #endif
 
       #if ENABLED(SET_PROGRESS_MANUALLY)
@@ -1030,7 +1030,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if HAS_BED_PROBE
-        case 851: M851(); break;                                  // M851: Set Z Probe Z Offset
+        case 851: M851(); break;                                  // M851: Set Z-Probe Offset
       #endif
 
       #if ENABLED(SKEW_CORRECTION_GCODE)

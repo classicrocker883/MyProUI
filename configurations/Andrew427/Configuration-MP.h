@@ -2090,7 +2090,7 @@
 
 /**
  * Commands to execute at the end of G29 probing.
- * Useful to retract or move the Z probe out of the way.
+ * Useful to retract or move the Z-Probe out of the way.
  */
 //#define EVENT_GCODE_AFTER_G29 "G1 Z10 F12000\nG1 X15 Y330\nG1 Z0.5\nG1 Z10"
 
@@ -2313,9 +2313,9 @@
 //#define MANUAL_W_HOME_POS 0
 
 /**
- * Use "Z Safe Homing" to avoid homing with a Z probe outside the bed area.
+ * Use "Z Safe Homing" to avoid homing with a Z-Probe outside the bed area.
  *
- * - Moves the Z probe (or nozzle) to a defined XY point before Z homing.
+ * - Moves the Z-Probe (or nozzle) to a defined XY point before Z homing.
  * - Allows Z homing only when XY positions are known and trusted.
  * - If stepper drivers sleep, XY homing may be required again before Z homing.
  */

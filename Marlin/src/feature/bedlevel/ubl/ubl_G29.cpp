@@ -321,7 +321,7 @@ void unified_bed_leveling::G29() {
     #endif
     probe.use_probing_tool();
 
-    // Position bed horizontally and Z probe vertically.
+    // Position bed horizontally and Z-Probe vertically.
     #if HAS_SAFE_BED_LEVELING
       xyze_pos_t safe_position = current_position;
       #ifdef SAFE_BED_LEVELING_START_X

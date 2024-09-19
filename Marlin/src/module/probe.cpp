@@ -573,7 +573,7 @@ bool Probe::set_deployed(const bool deploy, const bool no_return/*=false*/) {
 
 /**
  * @brief Move down until the probe triggers or the low limit is reached
- *        Used by run_z_probe to do a single Z probe move.
+ *        Used by run_z_probe to do a single Z-Probe move.
  *
  * @param  z        Z destination
  * @param  fr_mm_s  Feedrate in mm/s
@@ -708,7 +708,7 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
   }
 
   /**
-   * @brief Tare the Z probe
+   * @brief Tare the Z-Probe
    *
    * @details Signal to the probe to tare itself
    *
@@ -780,7 +780,7 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
     };
 
     // Stop the probe before it goes too low to prevent damage.
-    // For known Z probe below the expected trigger point, otherwise -10mm lower.
+    // For known Z-Probe below the expected trigger point, otherwise -10mm lower.
     const float z_probe_low_point = zoffs + z_min_point - float((!axis_is_trusted(Z_AXIS)) * 10);
     if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Probe Low Point: ", z_probe_low_point);
 
@@ -936,7 +936,7 @@ bool Probe::probe_down_to_z(const_float_t z, const_feedRate_t fr_mm_s) {
     };
 
     // Stop the probe before it goes too low to prevent damage.
-    // For known Z probe below the expected trigger point, otherwise -10mm lower.
+    // For known Z-Probe below the expected trigger point, otherwise -10mm lower.
     const float z_probe_low_point = zoffs + z_min_point - float((!axis_is_trusted(Z_AXIS)) * 10);
     if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Probe Low Point: ", z_probe_low_point);
 

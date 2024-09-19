@@ -89,7 +89,7 @@ PrintJobRecovery recovery;
   #define POWER_LOSS_PURGE_LEN 0
 #endif
 
-// Allow power-loss recovery to be aborted
+// Allow Power-Loss Recovery to be aborted
 #define PLR_CAN_ABORT
 #define PROCESS_SUBCOMMANDS_NOW(cmd) do{ \
     if (TERN0(PLR_CAN_ABORT, card.flag.abort_sd_printing)) return; \
@@ -179,7 +179,7 @@ void PrintJobRecovery::prepare() {
 }
 
 /**
- * Save the current machine state to the power-loss recovery file
+ * Save the current machine state to the Power-Loss Recovery file
  */
 void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER_LOSS_ZRAISE*/, const bool raised/*=false*/) {
 

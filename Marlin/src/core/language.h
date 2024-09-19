@@ -141,7 +141,7 @@
 #define STR_ACTIVE_EXTRUDER                 "Active Extruder: "
 #define STR_ERR_FANSPEED                    "Fan speed E"
 
-#define STR_PROBE_OFFSET                    "Probe Offset"
+#define STR_Z_PROBE_OFFSET                  "Z-Probe Offset"
 #define STR_SKEW_MIN                        "min_skew_factor: "
 #define STR_SKEW_MAX                        "max_skew_factor: "
 #define STR_ERR_MATERIAL_INDEX              "M145 S<index> out of range (0-1)"
@@ -161,8 +161,8 @@
 #define STR_FILAMENT_PRESENT                "PRESENT"
 #define STR_RUNOUT_DETECTED                 "Runout Detected"
 #define STR_DUPLICATION_MODE                "Duplication mode: "
-#define STR_SOFT_MIN                        " Min: "
-#define STR_SOFT_MAX                        " Max: "
+#define STR_SOFT_MIN                        "  Min: "
+#define STR_SOFT_MAX                        "  Max: "
 
 #define STR_SAVED_POSITION                  "Saved position #"
 #define STR_RESTORING_POSITION              "Restoring position #"
@@ -328,7 +328,7 @@
 #define STR_LCD_BRIGHTNESS                  "LCD Brightness"
 #define STR_DISPLAY_SLEEP                   "Display Sleep"
 #define STR_UI_LANGUAGE                     "UI Language"
-#define STR_Z_PROBE_OFFSET                  "Z-Probe Offset"
+#define STR_PROBE_OFFSET                    "Probe Offset"
 #define STR_TEMPERATURE_UNITS               "Temperature Units"
 #define STR_USER_THERMISTORS                "User thermistors"
 #define STR_DELAYED_POWEROFF                "Delayed poweroff"

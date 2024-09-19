@@ -396,7 +396,7 @@ namespace LanguageNarrow_it {
   LSTR MSG_AMAX_EN                        = _UxGT("Acc.massima *");
   LSTR MSG_A_RETRACT                      = _UxGT("A-Ritrazione");
   LSTR MSG_A_TRAVEL                       = _UxGT("A-Spostamento");
-  LSTR MSG_INPUT_SHAPING                  = _UxGT("Input shaping");
+  LSTR MSG_INPUT_SHAPING                  = _UxGT("Input SShaping");
   LSTR MSG_SHAPING_ENABLE                 = _UxGT("Abilita shaping @");
   LSTR MSG_SHAPING_DISABLE                = _UxGT("Disabil. shaping @");
   LSTR MSG_SHAPING_FREQ                   = _UxGT("Frequenza @");
@@ -555,7 +555,7 @@ namespace LanguageNarrow_it {
   LSTR MSG_ATTACH_USB_MEDIA               = _UxGT("Collega penna USB");
   LSTR MSG_CHANGE_MEDIA                   = _UxGT("Cambia ") MEDIA_TYPE_IT;
   LSTR MSG_RELEASE_MEDIA                  = _UxGT("Rilascia ") MEDIA_TYPE_IT;
-  LSTR MSG_ZPROBE_OUT                     = _UxGT("Z probe fuori piatto");
+  LSTR MSG_ZPROBE_OUT                     = _UxGT("Z-Probe fuori piatto");
   LSTR MSG_SKEW_FACTOR                    = _UxGT("Fattore distorsione");
   LSTR MSG_BLTOUCH                        = _UxGT("BLTouch");
   LSTR MSG_BLTOUCH_SELFTEST               = _UxGT("Autotest BLTouch");

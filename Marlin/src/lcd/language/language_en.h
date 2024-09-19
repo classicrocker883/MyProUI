@@ -546,7 +546,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_RESUME_PRINT                   = _UxGT("Resume Print");
   LSTR MSG_STOP_PRINT                     = _UxGT("Stop Print");
   LSTR MSG_CANCEL_PRINT                   = _UxGT("Cancel Print");
-  LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Power-loss Recovery");
+  LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Power-Loss Recovery");
   LSTR MSG_RESUME_BED_TEMP                = _UxGT("Resume Bed Temp");
   LSTR MSG_HOST_START_PRINT               = _UxGT("Start Host Print");
   LSTR MSG_PRINTING_OBJECT                = _UxGT("Printing Object");
@@ -915,15 +915,15 @@ namespace LanguageNarrow_en {
   LSTR MSG_TMC_CCURRENT                   = _UxGT(STR_C " Driver Current");
   LSTR MSG_TMC_ECURRENT                   = _UxGT(STR_E " Driver Current");
   LSTR MSG_TMC_ENCURRENT                  = _UxGT("* Driver Current");
-  LSTR MSG_TMC_HYBRID_THRS                = _UxGT("Hybrid Threshold");
-  LSTR MSG_TMC_AHYBRID_THRS               = _UxGT(STR_A " Hybrid Threshold");
-  LSTR MSG_TMC_BHYBRID_THRS               = _UxGT(STR_B " Hybrid Threshold");
-  LSTR MSG_TMC_CHYBRID_THRS               = _UxGT(STR_C " Hybrid Threshold");
-  LSTR MSG_TMC_EHYBRID_THRS               = _UxGT(STR_E " Hybrid Threshold");
-  LSTR MSG_TMC_ENHYBRID_THRS              = _UxGT("* Hybrid Threshold");
+  LSTR MSG_TMC_HYBRID_THRS                = _UxGT(STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_AHYBRID_THRS               = _UxGT(STR_A " " STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_BHYBRID_THRS               = _UxGT(STR_B " " STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_CHYBRID_THRS               = _UxGT(STR_C " " STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_EHYBRID_THRS               = _UxGT(STR_E " " STR_HYBRID_THRESHOLD);
+  LSTR MSG_TMC_ENHYBRID_THRS              = _UxGT("* " STR_HYBRID_THRESHOLD);
   LSTR MSG_TMC_HOMING_THRS                = _UxGT("Sensorless Homing");
   LSTR MSG_TMC_STEPPING_MODE              = _UxGT("Stepping Mode");
-  LSTR MSG_TMC_STEALTH_ENABLED            = _UxGT("StealthChop Enabled");
+  LSTR MSG_TMC_STEALTH_ENABLED            = _UxGT(STR_TMC_STEALTH " Enabled");
   LSTR MSG_TMC_ASTEALTH                   = _UxGT(STR_A " " STR_TMC_STEALTH);
   LSTR MSG_TMC_BSTEALTH                   = _UxGT(STR_B " " STR_TMC_STEALTH);
   LSTR MSG_TMC_CSTEALTH                   = _UxGT(STR_C " " STR_TMC_STEALTH);
@@ -955,7 +955,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_FTM_ZETA_N                     = _UxGT("@ Damping");
   LSTR MSG_FTM_VTOL_N                     = _UxGT("@ Vib. Level");
 
-  LSTR MSG_LEVEL_X_AXIS                   = _UxGT("Level X Axis");
+  LSTR MSG_LEVEL_X_AXIS                   = _UxGT("Level X-Axis");
   LSTR MSG_AUTO_CALIBRATE                 = _UxGT("Auto Calibrate");
   LSTR MSG_FTDI_HEATER_TIMEOUT            = _UxGT("Idle timeout, temperature decreased. Press Okay to reheat and again to resume.");
   LSTR MSG_HEATER_TIMEOUT                 = _UxGT("Heater Timeout");
@@ -1163,7 +1163,7 @@ namespace LanguageWide_en {
     LSTR MSG_RAISE                        = _UxGT("Raise");
 
     LSTR MSG_POSITION_UNKNOWN             = _UxGT("..WARNING: Current position is unknown, Home axes.");
-    LSTR MSG_POSITION_UNKNOWN_Z           = _UxGT("..CAUTION: Unknown Z position, Home Z axis.");
+    LSTR MSG_POSITION_UNKNOWN_Z           = _UxGT("..CAUTION: Unknown Z position, Home Z-Axis.");
     LSTR MSG_CENTER_NOZZLE                = _UxGT("..Center Nozzle - As Nozzle touches bed, save Z-Offset.");
 
     LSTR MSG_OUTAGE_RECOVERY2             = _UxGT("It looks like the last");

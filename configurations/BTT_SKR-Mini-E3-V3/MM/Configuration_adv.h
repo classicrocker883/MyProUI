@@ -1511,7 +1511,7 @@
 
 /**
  * Probe Offset Wizard
- * Add a Probe Z Offset calibration option to the LCD menu.
+ * Add a Probe Z-Offset calibration option to the LCD menu.
  * Use this helper to get a perfect 'M851 Z' probe offset.
  * When launched this powerful wizard:
  *  - Measures the bed height at the configured position with the probe.
@@ -2378,7 +2378,7 @@
 
 /**
  * Use Safe Bed Leveling coordinates to move axes to a useful position before bed probing.
- * For example, after homing a rotational axis the Z probe might not be perpendicular to the bed.
+ * For example, after homing a rotational axis the Z-Probe might not be perpendicular to the bed.
  * Choose values the orient the bed horizontally and the Z-probe vertically.
  */
 //#define SAFE_BED_LEVELING_START_X 0.0
