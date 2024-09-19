@@ -704,6 +704,10 @@ jobs:
         fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_${SKR}/" Marlin/Configuration.h
+        if [ "$SKR" = V3_0_1 ]; then
+        sed -i "s/.*#define CONTROLLER_FAN_PIN.*/#define CONTROLLER_FAN_PIN FAN2_PIN/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define E0_AUTO_FAN_PIN.*/#define E0_AUTO_FAN_PIN FAN1_PIN/" Marlin/Configuration_adv.h
+        fi;
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
@@ -790,6 +794,10 @@ jobs:
         fi;
         sed -i "s/default_envs =.*/default_envs = ${STMP}_btt/" platformio.ini
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_BTT_SKR_MINI_E3_${SKR}/" Marlin/Configuration.h
+        if [ "$SKR" = V3_0_1 ]; then
+        sed -i "s/.*#define CONTROLLER_FAN_PIN.*/#define CONTROLLER_FAN_PIN FAN2_PIN/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define E0_AUTO_FAN_PIN.*/#define E0_AUTO_FAN_PIN FAN1_PIN/" Marlin/Configuration_adv.h
+        fi;
         if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
         sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
