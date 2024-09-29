@@ -38,6 +38,8 @@
 
 #if ENABLED(DWIN_LCD_PROUI)
   #include "../lcd/e3v2/proui/dwin.h"
+#elif ENABLED(SOVOL_SV06_RTS)
+  #include "../lcd/sovol_rts/sovol_rts.h"
 #endif
 
 #include "../module/planner.h"        // for synchronize
@@ -1459,6 +1461,7 @@ void CardReader::fileHasFinished() {
     if (jobRecoverFileExists()) {
       recovery.init();
       removeFile(recovery.filename);
+      TERN_(SOVOL_SV06_RTS, poweroff_continue = false);
       #if ENABLED(DEBUG_POWER_LOSS_RECOVERY)
         SERIAL_ECHOLN(F("Power-Loss file delete"), jobRecoverFileExists() ? F(" failed.") : F("d."));
       #endif

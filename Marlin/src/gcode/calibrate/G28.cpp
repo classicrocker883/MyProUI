@@ -58,6 +58,8 @@
   #include "../../lcd/extui/ui_api.h"
 #elif ENABLED(DWIN_LCD_PROUI)
   #include "../../lcd/e3v2/proui/dwin.h"
+#elif ENABLED(SOVOL_SV06_RTS)
+  #include "../../lcd/sovol_rts/sovol_rts.h"
 #endif
 
 #if ENABLED(LASER_FEATURE)
@@ -203,6 +205,11 @@
  *  L<bool>   Force leveling state ON (if possible) or OFF after homing (Requires RESTORE_LEVELING_AFTER_G28 or ENABLE_LEVELING_AFTER_G28)
  *  O         Home only if the position is not known and trusted
  *  R<linear> Raise by n mm/inches before homing
+ *  H         Hold the current X/Y position when executing a home Z, or if
+ *            multiple axes are homed, the position when Z home is executed.
+ *            When using a probe for Z Home, positions close to the edge may
+ *            fail with position unreachable due to probe/nozzle offset.  This
+ *            can be used to avoid a model.
  *
  * Cartesian/SCARA parameters
  *
@@ -462,7 +469,12 @@ void GcodeSuite::G28() {
             #endif
 
             #if ENABLED(Z_SAFE_HOMING)
-              if (TERN1(POWER_LOSS_RECOVERY, !parser.seen_test('H'))) home_z_safely(); else homeaxis(Z_AXIS);
+              // H means hold the current X/Y position when probing.
+              // Otherwise move to the define safe X/Y position before homing Z.
+              if (!parser.seen_test('H'))
+                home_z_safely();
+              else
+                homeaxis(Z_AXIS);
             #else
               homeaxis(Z_AXIS);
             #endif
@@ -558,6 +570,7 @@ void GcodeSuite::G28() {
 
   ui.refresh();
 
+  TERN_(SOVOL_SV06_RTS, RTS_MoveAxisHoming());
   TERN_(HAS_DWIN_E3V2_BASIC, DWIN_HomingDone());
   TERN_(EXTENSIBLE_UI, ExtUI::onHomingDone());
 
