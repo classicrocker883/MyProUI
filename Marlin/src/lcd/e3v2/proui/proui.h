@@ -61,13 +61,13 @@ constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
   #define MULTIPLE_PROBING 2
 #endif
 #define DEF_FIL_MOTION_SENSOR ENABLED(FILAMENT_MOTION_SENSOR)
-#if DISABLED(FILAMENT_RUNOUT_SENSOR) // must be defined opposite FIL_RUNOUT_STATE in as Configuration.h
+#if DISABLED(FILAMENT_RUNOUT_SENSOR) // must be defined as opposite FIL_RUNOUT_STATE in Configuration.h
   #if MOTHERBOARD == BOARD_CREALITY_V427 || MOTHERBOARD == BOARD_CREALITY_V24S1_301F4 || MOTHERBOARD == BOARD_CREALITY_V24S1_301 || MOTHERBOARD == BOARD_VOXELAB_AQUILA || MOTHERBOARD == BOARD_AQUILA_V101
     #define FIL_RUNOUT_STATE LOW
   #elif MOTHERBOARD == BOARD_CREALITY_V422 || MOTHERBOARD == BOARD_CREALITY_V4
     #define FIL_RUNOUT_STATE HIGH
   #else
-    #error "FIL_RUNOUT_STATE must be HIGH or LOW - defined opposite as in Configuration.h"
+    #error "FIL_RUNOUT_STATE must be HIGH or LOW - defined as opposite in Configuration.h"
   #endif
 #endif
 

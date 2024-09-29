@@ -3,7 +3,7 @@
 # configuration.py
 # Apply options from config.ini to the existing Configuration headers
 #
-import re, shutil, configparser, datetime
+import os, re, shutil, configparser, datetime
 from pathlib import Path
 
 verbose = 0
@@ -129,7 +129,7 @@ def fetch_example(url):
     if not url.startswith('http'):
         brch = "HEAD"
         if '@' in url: url, brch = map(str.strip, url.split('@'))
-        if url == 'examples/default': url = 'Andrew427'
+        if url == 'configurations': url = 'Andrew427'
         url = f"https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/{brch}/configurations/{url}"
     url = url.replace("%", "%25").replace(" ", "%20")
 
@@ -141,8 +141,6 @@ def fetch_example(url):
     else:
         blab("Couldn't find curl or wget", -1)
         return False
-
-    import os
 
     # Reset configurations to default
     os.system("git checkout HEAD Marlin/*.h")
@@ -228,12 +226,12 @@ def apply_config_ini(cp):
             ckey = 'base'
 
         # (Allow 'example/' as a shortcut for 'examples/')
-        elif ckey.startswith('example/'):
-            ckey = 'examples' + ckey[7:]
+        elif ckey.startswith('configuration/'):
+            ckey = 'configurations' + ckey[7:]
 
         # For 'examples/<path>' fetch an example set from GitHub.
         # For https?:// do a direct fetch of the URL.
-        if ckey.startswith('examples/') or ckey.startswith('http'):
+        if ckey.startswith('configurations/') or ckey.startswith('http'):
             fetch_example(ckey)
             ckey = 'base'
 

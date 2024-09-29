@@ -102,7 +102,7 @@ typedef struct {
 
 typedef struct {
   rgb_t Color; // Color
-  #if ANY(HAS_PID_HEATING, MPCTEMP)
+  #if ANY(HAS_PID_HEATING, MPCTEMP, PROUI_ITEM_PLOT)
     tempcontrol_t tempControl = AUTOTUNE_DONE;
   #endif
   uint8_t Select = 0;     // Auxiliary selector variable

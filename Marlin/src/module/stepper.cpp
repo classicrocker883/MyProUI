@@ -246,15 +246,15 @@ uint32_t Stepper::advance_divisor = 0,
 #endif
 
 #if ENABLED(S_CURVE_ACCELERATION)
-  int32_t __attribute__((used)) Stepper::bezier_A __asm__("bezier_A");    // A coefficient in Bézier speed curve with alias for assembler
-  int32_t __attribute__((used)) Stepper::bezier_B __asm__("bezier_B");    // B coefficient in Bézier speed curve with alias for assembler
-  int32_t __attribute__((used)) Stepper::bezier_C __asm__("bezier_C");    // C coefficient in Bézier speed curve with alias for assembler
-  uint32_t __attribute__((used)) Stepper::bezier_F __asm__("bezier_F");   // F coefficient in Bézier speed curve with alias for assembler
+  int32_t  __attribute__((used)) Stepper::bezier_A  __asm__("bezier_A");  // A  coefficient in Bézier speed curve with alias for assembler
+  int32_t  __attribute__((used)) Stepper::bezier_B  __asm__("bezier_B");  // B  coefficient in Bézier speed curve with alias for assembler
+  int32_t  __attribute__((used)) Stepper::bezier_C  __asm__("bezier_C");  // C  coefficient in Bézier speed curve with alias for assembler
+  uint32_t __attribute__((used)) Stepper::bezier_F  __asm__("bezier_F");  // F  coefficient in Bézier speed curve with alias for assembler
   uint32_t __attribute__((used)) Stepper::bezier_AV __asm__("bezier_AV"); // AV coefficient in Bézier speed curve with alias for assembler
   #ifdef __AVR__
     bool __attribute__((used)) Stepper::A_negative __asm__("A_negative"); // If A coefficient was negative
   #endif
-  bool Stepper::bezier_2nd_half;    // =false If Bézier curve has been initialized or not
+  bool Stepper::bezier_2nd_half; // =false If Bézier curve has been initialized or not
 #endif
 
 #if ENABLED(LIN_ADVANCE)
@@ -268,29 +268,29 @@ uint32_t Stepper::advance_divisor = 0,
 
 #if ENABLED(NONLINEAR_EXTRUSION)
   ne_coeff_t Stepper::ne;
-  ne_fix_t Stepper::ne_fix;
-  int32_t Stepper::ne_edividend;
-  uint32_t Stepper::ne_scale;
+  ne_fix_t   Stepper::ne_fix;
+  int32_t    Stepper::ne_edividend;
+  uint32_t   Stepper::ne_scale;
 #endif
 
 #if HAS_ZV_SHAPING
-  shaping_time_t      ShapingQueue::now = 0;
   #if ANY(MCU_LPC1768, MCU_LPC1769) && DISABLED(NO_LPC_ETHERNET_BUFFER)
     // Use the 16K LPC Ethernet buffer: https://github.com/MarlinFirmware/Marlin/issues/25432#issuecomment-1450420638
     #define _ATTR_BUFFER __attribute__((section("AHBSRAM1"),aligned))
   #else
     #define _ATTR_BUFFER
   #endif
+  shaping_time_t      ShapingQueue::now = 0;
   shaping_time_t      ShapingQueue::times[shaping_echoes] _ATTR_BUFFER;
   shaping_echo_axis_t ShapingQueue::echo_axes[shaping_echoes];
   uint16_t            ShapingQueue::tail = 0;
 
-  #define SHAPING_VAR_DEFS(AXIS)                                           \
-    shaping_time_t  ShapingQueue::delay_##AXIS;                            \
-    shaping_time_t  ShapingQueue::_peek_##AXIS = shaping_time_t(-1);       \
-    uint16_t        ShapingQueue::head_##AXIS = 0;                         \
-    uint16_t        ShapingQueue::_free_count_##AXIS = shaping_echoes - 1; \
-    ShapeParams     Stepper::shaping_##AXIS;
+  #define SHAPING_VAR_DEFS(AXIS)                                          \
+    shaping_time_t ShapingQueue::delay_##AXIS;                            \
+    shaping_time_t ShapingQueue::_peek_##AXIS = shaping_time_t(-1);       \
+    uint16_t       ShapingQueue::head_##AXIS = 0;                         \
+    uint16_t       ShapingQueue::_free_count_##AXIS = shaping_echoes - 1; \
+    ShapeParams    Stepper::shaping_##AXIS;
 
   TERN_(INPUT_SHAPING_X, SHAPING_VAR_DEFS(x))
   TERN_(INPUT_SHAPING_Y, SHAPING_VAR_DEFS(y))
@@ -310,7 +310,7 @@ hal_timer_t Stepper::ticks_nominal = 0;
   uint32_t Stepper::acc_step_rate; // needed for deceleration start point
 #endif
 
-xyz_long_t Stepper::endstops_trigsteps;
+xyz_long_t  Stepper::endstops_trigsteps;
 xyze_long_t Stepper::count_position{0};
 xyze_int8_t Stepper::count_direction{0};
 
@@ -429,7 +429,7 @@ xyze_int8_t Stepper::count_direction{0};
     else if (last_moved_extruder) X2_STEP_WRITE(FWD); else X_STEP_WRITE(FWD); \
   }while(0)
 #elif HAS_X_AXIS
-  #define X_APPLY_DIR(FWD,Q) X_DIR_WRITE(FWD)
+  #define X_APPLY_DIR(FWD,Q)  X_DIR_WRITE(FWD)
   #define X_APPLY_STEP(FWD,Q) X_STEP_WRITE(FWD)
 #endif
 
@@ -441,7 +441,7 @@ xyze_int8_t Stepper::count_direction{0};
     #define Y_APPLY_STEP(FWD,Q) do{ Y_STEP_WRITE(FWD); Y2_STEP_WRITE(FWD); }while(0)
   #endif
 #elif HAS_Y_AXIS
-  #define Y_APPLY_DIR(FWD,Q) Y_DIR_WRITE(FWD)
+  #define Y_APPLY_DIR(FWD,Q)  Y_DIR_WRITE(FWD)
   #define Y_APPLY_STEP(FWD,Q) Y_STEP_WRITE(FWD)
 #endif
 
@@ -478,32 +478,32 @@ xyze_int8_t Stepper::count_direction{0};
     #define Z_APPLY_STEP(FWD,Q) do{ Z_STEP_WRITE(FWD); Z2_STEP_WRITE(FWD); }while(0)
   #endif
 #elif HAS_Z_AXIS
-  #define Z_APPLY_DIR(FWD,Q) Z_DIR_WRITE(FWD)
+  #define Z_APPLY_DIR(FWD,Q)  Z_DIR_WRITE(FWD)
   #define Z_APPLY_STEP(FWD,Q) Z_STEP_WRITE(FWD)
 #endif
 
 #if HAS_I_AXIS
-  #define I_APPLY_DIR(FWD,Q) I_DIR_WRITE(FWD)
+  #define I_APPLY_DIR(FWD,Q)  I_DIR_WRITE(FWD)
   #define I_APPLY_STEP(FWD,Q) I_STEP_WRITE(FWD)
 #endif
 #if HAS_J_AXIS
-  #define J_APPLY_DIR(FWD,Q) J_DIR_WRITE(FWD)
+  #define J_APPLY_DIR(FWD,Q)  J_DIR_WRITE(FWD)
   #define J_APPLY_STEP(FWD,Q) J_STEP_WRITE(FWD)
 #endif
 #if HAS_K_AXIS
-  #define K_APPLY_DIR(FWD,Q) K_DIR_WRITE(FWD)
+  #define K_APPLY_DIR(FWD,Q)  K_DIR_WRITE(FWD)
   #define K_APPLY_STEP(FWD,Q) K_STEP_WRITE(FWD)
 #endif
 #if HAS_U_AXIS
-  #define U_APPLY_DIR(FWD,Q) U_DIR_WRITE(FWD)
+  #define U_APPLY_DIR(FWD,Q)  U_DIR_WRITE(FWD)
   #define U_APPLY_STEP(FWD,Q) U_STEP_WRITE(FWD)
 #endif
 #if HAS_V_AXIS
-  #define V_APPLY_DIR(FWD,Q) V_DIR_WRITE(FWD)
+  #define V_APPLY_DIR(FWD,Q)  V_DIR_WRITE(FWD)
   #define V_APPLY_STEP(FWD,Q) V_STEP_WRITE(FWD)
 #endif
 #if HAS_W_AXIS
-  #define W_APPLY_DIR(FWD,Q) W_DIR_WRITE(FWD)
+  #define W_APPLY_DIR(FWD,Q)  W_DIR_WRITE(FWD)
   #define W_APPLY_STEP(FWD,Q) W_STEP_WRITE(FWD)
 #endif
 

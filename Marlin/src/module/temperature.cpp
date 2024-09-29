@@ -904,7 +904,7 @@ volatile bool Temperature::raw_temps_ready = false;
 
       // Timeout after PID_AUTOTUNE_MAX_CYCLE_MINS minutes since the last undershoot/overshoot cycle
       #ifndef PID_AUTOTUNE_MAX_CYCLE_MINS
-        #define PID_AUTOTUNE_MAX_CYCLE_MINS 20L
+        #define PID_AUTOTUNE_MAX_CYCLE_MINS 5L
       #endif
       if ((ms - _MIN(t1, t2)) > MIN_TO_MS(PID_AUTOTUNE_MAX_CYCLE_MINS)) {
         TERN_(EXTENSIBLE_UI, ExtUI::onPIDTuning(ExtUI::pidresult_t::PID_TUNING_TIMEOUT));

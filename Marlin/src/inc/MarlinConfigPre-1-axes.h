@@ -37,6 +37,7 @@
   #include "../HAL/platforms.h"
 #endif
 
+#include "../core/macros.h"
 #include "../core/boards.h"
 
 #if USE_STD_CONFIGS

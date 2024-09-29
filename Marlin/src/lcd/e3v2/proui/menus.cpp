@@ -500,7 +500,7 @@ void UpdateMenu(MenuClass* &menu) {
 }
 
 void ReDrawMenu(bool force/*=false*/) {
-  if (CurrentMenu && (force || checkkey==Menu)) CurrentMenu->draw();
+  if (CurrentMenu && (force || checkkey == Menu)) CurrentMenu->draw();
   if (force) DrawItemEdit(true);
 }
 

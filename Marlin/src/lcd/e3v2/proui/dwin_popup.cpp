@@ -51,8 +51,8 @@ void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2) {
 }
 
 void Goto_Popup(const popupDrawFunc_t fnDraw, const popupClickFunc_t fnClick/*=nullptr*/) {
-  Draw_Popup  = fnDraw;
-  ClickPopup  = fnClick;
+  Draw_Popup = fnDraw;
+  ClickPopup = fnClick;
   HMI_SaveProcessID(Popup);
   HMI_flag.select_flag = false;
   Draw_Popup();
