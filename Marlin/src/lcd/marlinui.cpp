@@ -48,6 +48,8 @@ MarlinUI ui;
 
 #if ENABLED(DWIN_LCD_PROUI)
   #include "e3v2/proui/dwin.h"
+#elif ENABLED(SOVOL_SV06_RTS)
+  #include "sovol_rts/sovol_rts.h"
 #endif
 
 #if ENABLED(LCD_PROGRESS_BAR) && !IS_TFTGLCD_PANEL
@@ -134,7 +136,9 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
   void MarlinUI::set_brightness(const uint8_t value) {
     backlight = !!value;
     if (backlight) brightness = constrain(value, LCD_BRIGHTNESS_MIN, LCD_BRIGHTNESS_MAX);
-    _set_brightness();
+    #if DISABLED(SOVOL_SV06_RTS)
+      _set_brightness();
+    #endif
   }
 #endif
 
@@ -842,7 +846,7 @@ void MarlinUI::init() {
       // Add a manual move to the queue?
       if (axis == NO_AXIS_ENUM || PENDING(millis(), start_time) || planner.is_full()) return;
 
-      const feedRate_t fr_mm_s = (axis < LOGICAL_AXES) ? manual_feedrate_mm_s[axis] : XY_PROBE_FEEDRATE_MM_S;
+      const feedRate_t fr_mm_s = (axis < LOGICAL_AXES) ? manual_feedrate_mm_s[axis] : PLANNER_XY_FEEDRATE_MM_S;
 
       /**
        * For a rotational axis apply the "inch" to "mm" conversion factor. This mimics behaviour of the G-code G1

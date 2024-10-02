@@ -3156,15 +3156,11 @@
   #if ALL(ENDSTOPPULLUPS, USE_Z_MIN_PROBE)
     #define ENDSTOPPULLUP_ZMIN_PROBE
   #endif
+  #ifndef XY_PROBE_FEEDRATE
+    #define XY_PROBE_FEEDRATE ((homing_feedrate_mm_m.x + homing_feedrate_mm_m.y) / 2)
+  #endif
   #ifndef NOZZLE_TO_PROBE_OFFSET
     #define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
-  #endif
-#endif
-#ifndef XY_PROBE_FEEDRATE
-  #if ALL(HAS_X_AXIS, HAS_Y_AXIS)
-    #define XY_PROBE_FEEDRATE ((homing_feedrate_mm_m.x + homing_feedrate_mm_m.y) / 2)
-  #else
-    #define XY_PROBE_FEEDRATE 3600.0f
   #endif
 #endif
 
@@ -3237,8 +3233,8 @@
  * Advanced Pause - Filament Change
  */
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #if ANY(HAS_MARLINUI_MENU, EXTENSIBLE_UI, DWIN_LCD_PROUI) || ALL(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT)
-    #define M600_PURGE_MORE_RESUMABLE 1 // UI provides some way to Purge More / Resume
+  #if ANY(HAS_MARLINUI_MENU, EXTENSIBLE_UI, DWIN_LCD_PROUI, SOVOL_SV06_RTS) || ALL(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT)
+    #define M600_PURGE_MORE_RESUMABLE 1  // UI provides some way to Purge More / Resume
   #endif
   #ifndef FILAMENT_CHANGE_SLOW_LOAD_LENGTH
     #define FILAMENT_CHANGE_SLOW_LOAD_LENGTH 0
