@@ -1293,7 +1293,7 @@ void setup() {
   if (mcu & RST_WATCHDOG)  SERIAL_ECHOLNPGM(STR_WATCHDOG_RESET);
   if (mcu & RST_SOFTWARE)  SERIAL_ECHOLNPGM(STR_SOFTWARE_RESET);
 
-  #if PROUI_EX
+  #if ALL(PROUI_EX, HAS_CGCODE)
     ProEx.C115();
   #else
     // Identify myself as Marlin x.x.x
@@ -1301,7 +1301,7 @@ void setup() {
     #ifdef STRING_DISTRIBUTION_DATE
       SERIAL_ECHO_MSG(
         " Last Updated: " STRING_DISTRIBUTION_DATE
-        " | Author: " STRING_CONFIG_H_AUTHOR
+        " | Author: ClassicRocker883"
       );
     #endif
     SERIAL_ECHO_MSG(" Compiled: " __DATE__);

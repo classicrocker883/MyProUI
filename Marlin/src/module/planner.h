@@ -81,8 +81,8 @@
 // Feedrate for manual moves
 #ifdef MANUAL_FEEDRATE
   #define _RATE_MM_SEC(A) MMM_TO_MMS(manual_feedrate_mm_m.A),
-  constexpr xyze_feedrate_t manual_feedrate_mm_m = MANUAL_FEEDRATE,
-                            manual_feedrate_mm_s = { LOGICAL_AXIS_MAP_LC(_RATE_MM_SEC) };
+  constexpr xyze_feedrate_t manual_feedrate_mm_m = MANUAL_FEEDRATE;
+  constexpr xyze_feedrate_t manual_feedrate_mm_s = { LOGICAL_AXIS_MAP_LC(_RATE_MM_SEC) };
   #undef _RATE_MM_SEC
 #endif
 

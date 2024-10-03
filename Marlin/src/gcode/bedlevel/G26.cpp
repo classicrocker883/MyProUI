@@ -783,7 +783,8 @@ void GcodeSuite::G26() {
 
         g26.recover_filament(destination);
 
-        { REMEMBER(fr, feedrate_mm_s, XY_PROBE_FEEDRATE_MM_S * 0.1f);
+        {
+          REMEMBER(fr, feedrate_mm_s, XY_PROBE_FEEDRATE_MM_S * 0.1f);
           plan_arc(endpoint, arc_offset, false, 0);  // Draw a counter-clockwise arc
           destination = current_position;
         }
