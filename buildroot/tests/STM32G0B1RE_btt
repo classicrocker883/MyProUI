@@ -22,6 +22,3 @@ opt_set MOTHERBOARD BOARD_BTT_SKR_MINI_E3_V3_0
 # opt_enable
 # opt_add
 exec_test $1 $2 "BigTreeTech SKR Mini E3 V3.0 - ProUI Unified (UBL)" "$3"
-
-# clean up
-restore_configs
