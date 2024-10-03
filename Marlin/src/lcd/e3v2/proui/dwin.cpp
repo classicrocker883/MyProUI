@@ -133,8 +133,8 @@
 #endif
 
 // Juntion deviation limits
-#define MIN_JD_MM             0.001
-#define MAX_JD_MM             TERN(LIN_ADVANCE, 0.3f, 0.5f)
+#define MIN_JD_MM 0.001f
+#define MAX_JD_MM TERN(LIN_ADVANCE, 0.3f, 0.5f)
 
 #if HAS_TRINAMIC_CONFIG
   #define MIN_TMC_CURRENT 100
@@ -142,15 +142,15 @@
 #endif
 
 // Editable temperature limits
-#define MIN_ETEMP   0
-#define MAX_ETEMP   thermalManager.hotend_max_target(EXT)
-#define MIN_BEDTEMP 0
-#define MAX_BEDTEMP BED_MAX_TARGET
+#define MIN_ETEMP       0
+#define MAX_ETEMP       thermalManager.hotend_max_target(EXT)
+#define MIN_BEDTEMP     0
+#define MAX_BEDTEMP     BED_MAX_TARGET
 #define MIN_CHAMBERTEMP 0
 #define MAX_CHAMBERTEMP CHAMBER_MAX_TARGET
 
-#define DWIN_VAR_UPDATE_INTERVAL          500
-#define DWIN_UPDATE_INTERVAL             1000
+#define DWIN_VAR_UPDATE_INTERVAL 500
+#define DWIN_UPDATE_INTERVAL    1000
 
 #define BABY_Z_VAR TERN(HAS_BED_PROBE, probe.offset.z, HMI_data.ManualZOffset)
 
@@ -1311,7 +1311,7 @@ void HMI_Init() {
     #endif
     DWINUI::Draw_Box(1, Color_Black, { 5, 220, DWIN_WIDTH - 5, DWINUI::fontHeight() });
     DWINUI::Draw_CenteredString(3, Color_White, 220, F(MACHINE_NAME));
-    for (uint16_t t = 15; t <= 257; t += 10) {
+    for (uint16_t t = 15; t <= 257; t += 11) {
       DWINUI::Draw_Icon(ICON_Bar, 15, 260);
       DWIN_Draw_Rectangle(1, HMI_data.Background_Color, t, 260, 257, 280);
       DWIN_UpdateLCD();
@@ -1637,7 +1637,7 @@ void HMI_ReturnScreen() {
           DWINUI::Draw_CenteredString(2,HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_MPC_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_MPC_TARGET));
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_TEMP_NOZZLE));
-          _maxtemp = thermalManager.hotend_max_target(EXT);
+          _maxtemp = MAX_ETEMP;
           _target = 200;
           break;
       #endif
@@ -1646,7 +1646,7 @@ void HMI_ReturnScreen() {
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_PID_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_PID_TARGET));
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_TEMP_NOZZLE));
-          _maxtemp = thermalManager.hotend_max_target(EXT);
+          _maxtemp = MAX_ETEMP;
           _target = HMI_data.HotendPIDT;
           break;
       #endif
@@ -1694,7 +1694,7 @@ void HMI_ReturnScreen() {
       #endif
           Title.ShowCaption(GET_TEXT_F(MSG_HOTEND_TEMP_GRAPH));
           DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_TEMP_NOZZLE));
-          _maxtemp = thermalManager.hotend_max_target(EXT);
+          _maxtemp = MAX_ETEMP;
           _target = thermalManager.degTargetHotend(EXT);
           break;
       #if ENABLED(PIDTEMPBED)
@@ -1703,6 +1703,14 @@ void HMI_ReturnScreen() {
           DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_TEMP_BED));
           _maxtemp = BED_MAX_TARGET;
           _target = thermalManager.degTargetBed();
+          break;
+      #endif
+      #if ENABLED(PIDTEMPCHAMBER)
+        case PID_CHAMBER_START:
+          Title.ShowCaption(GET_TEXT_F(MSG_CHAMBER_TEMP_GRAPH));
+          DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_TEMP_CHAMBER));
+          _maxtemp = CHAMBER_MAX_TARGET;
+          _target = thermalManager.degTargetChamber();
           break;
       #endif
       default: break;
@@ -2073,16 +2081,6 @@ void DWIN_Print_Aborted() {
   }
 #endif
 
- #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-  void SetMeshArea() {
-    TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x = ui.mesh_min_x;
-    TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x = ui.mesh_max_x;
-    TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y = ui.mesh_min_y;
-    TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y = ui.mesh_max_y;
-    ApplyMeshInset();
-  }
-#endif
-
 void DWIN_SetDataDefaults() {
   DEBUG_ECHOLNPGM("DWIN_SetDataDefaults");
   DWIN_SetColorDefaults();
@@ -2130,13 +2128,13 @@ void DWIN_SetDataDefaults() {
   #endif
   TERN_(HAS_GCODE_PREVIEW, HMI_data.EnablePreview = true;)
   TERN_(PROUI_ITEM_ABRT, HMI_data.auto_abort = true;)
+  #if ENABLED(PROUI_MESH_EDIT)
+    ui.mesh_min_x = DEF_MESH_MIN_X;
+    ui.mesh_max_x = DEF_MESH_MAX_X;
+    ui.mesh_min_y = DEF_MESH_MIN_Y;
+    ui.mesh_max_y = DEF_MESH_MAX_Y;
+  #endif
   #if PROUI_EX
-    #if ENABLED(PROUI_MESH_EDIT)
-      PRO_data.mesh_min_x = DEF_MESH_MIN_X;
-      PRO_data.mesh_max_x = DEF_MESH_MAX_X;
-      PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
-      PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
-    #endif
     PRO_data.x_bed_size = DEF_X_BED_SIZE;
     PRO_data.y_bed_size = DEF_Y_BED_SIZE;
     PRO_data.x_min_pos  = DEF_X_MIN_POS;
@@ -2172,12 +2170,6 @@ void DWIN_SetDataDefaults() {
       HMI_data.grid_max_points = DEF_GRID_MAX_POINTS;
     #endif
     TERN_(HAS_EXTRUDERS, HMI_data.Invert_E0 = DEF_INVERT_E0_DIR;)
-    #if ENABLED(PROUI_MESH_EDIT)
-      HMI_data.mesh_min_x = DEF_MESH_MIN_X;
-      HMI_data.mesh_max_x = DEF_MESH_MAX_X;
-      HMI_data.mesh_min_y = DEF_MESH_MIN_Y;
-      HMI_data.mesh_max_y = DEF_MESH_MAX_Y;
-    #endif
   #endif
 }
 
@@ -2899,6 +2891,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     static bed_mesh_t zval = {};
     probe.stow();
     HMI_SaveProcessID(NothingToDo); // Before home disable user input
+    wait_for_user = false;
     zval[0][0] = tram(0, false); // First tram point can do Homing
     MeshViewer.DrawMeshGrid(2, 2);
     MeshViewer.DrawMeshPoint(0, 0, zval[0][0]);
@@ -2976,7 +2969,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     if (HMI_flag.select_flag) {
       if (HMI_data.FullManualTramming) {
         LCD_MESSAGE(MSG_DISABLE_MANUAL_TRAMMING);
-        return HMI_ReturnScreen();
+        HMI_ReturnScreen();
       }
       else { Trammingwizard(); }
     }
@@ -3103,7 +3096,7 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
 #if PROUI_EX
   void ApplyPhySet() {
     ProEx.CheckParkingPos();
-    ProEx.UpdateAxis(ALL_AXES_ENUM);
+    update_software_endstops(ALL_AXES_ENUM);
   }
   void SetData() {
     ApplyPhySet();
@@ -3684,14 +3677,15 @@ void Draw_Motion_Menu() {
     MENU_ITEM(ICON_MaxAccelerated, MSG_ACCELERATION, onDrawSubMenu, Draw_MaxAccel_Menu);
     #if ENABLED(CLASSIC_JERK)
       MENU_ITEM(ICON_MaxJerk, MSG_JERK, onDrawSubMenu, Draw_MaxJerk_Menu);
-    #elif HAS_JUNCTION_DEVIATION
-      EDIT_ITEM(ICON_JDmm, MSG_JUNCTION_DEVIATION, onDrawPFloat3Menu, SetJDmm, &planner.junction_deviation_mm);
     #endif
     #if ENABLED(EDITABLE_STEPS_PER_UNIT)
       MENU_ITEM(ICON_Step, MSG_STEPS_PER_MM, onDrawSubMenu, Draw_Steps_Menu);
     #endif
     #if ENABLED(SHAPING_MENU)
       MENU_ITEM(ICON_InputShaping, MSG_INPUT_SHAPING, onDrawSubMenu, Draw_InputShaping_Menu);
+    #endif
+    #if HAS_JUNCTION_DEVIATION
+      EDIT_ITEM(ICON_JDmm, MSG_JUNCTION_DEVIATION, onDrawPFloat3Menu, SetJDmm, &planner.junction_deviation_mm);
     #endif
     #if ENABLED(LIN_ADVANCE)
       EDIT_ITEM(ICON_MaxAccelerated, MSG_ADVANCE_K, onDrawPFloat3Menu, SetLA_K, &planner.extruder_advance_K[EXT]);
@@ -4324,13 +4318,13 @@ void Draw_MaxAccel_Menu() {
 
     // Mesh Inset
     void ApplyMeshInset() { set_bed_leveling_enabled(false); reset_bed_level(); ReDrawItem(); }
-    void SetXMeshInset() { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, SetMeshArea, ApplyMeshInset); }
-    void SetYMeshInset() { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, SetMeshArea, ApplyMeshInset); }
+    void SetXMeshInset() { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
+    void SetYMeshInset() { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
     void MaxMeshArea() {
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x = ui.mesh_min_x = 0;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x = ui.mesh_max_x = X_BED_SIZE;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y = ui.mesh_min_y = 0;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y = ui.mesh_max_y = Y_BED_SIZE;
+      MESH_MIN_X = 0;
+      MESH_MAX_X = X_BED_SIZE;
+      MESH_MIN_Y = 0;
+      MESH_MAX_Y = Y_BED_SIZE;
       set_bed_leveling_enabled(false);
       reset_bed_level();
       ReDrawMenu();
@@ -4340,10 +4334,10 @@ void Draw_MaxAccel_Menu() {
       if (max < X_BED_SIZE - MESH_MAX_X) { max = X_BED_SIZE - MESH_MAX_X; }
       if (max < MESH_MIN_Y) { max = MESH_MIN_Y; }
       if (max < Y_BED_SIZE - MESH_MAX_Y) { max = Y_BED_SIZE - MESH_MAX_Y; }
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x = ui.mesh_min_x = max;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x = ui.mesh_max_x = X_BED_SIZE - max;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y = ui.mesh_min_y = max;
-      TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y = ui.mesh_max_y = Y_BED_SIZE - max;
+      MESH_MIN_X = max;
+      MESH_MAX_X = X_BED_SIZE - max;
+      MESH_MIN_Y = max;
+      MESH_MAX_Y = Y_BED_SIZE - max;
       set_bed_leveling_enabled(false);
       reset_bed_level();
       ReDrawMenu();
