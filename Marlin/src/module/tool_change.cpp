@@ -160,11 +160,11 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
 
 #if ENABLED(MAGNETIC_PARKING_EXTRUDER)
 
-  float parkingposx[2],           // M951 R L
-        parkinggrabdistance,      // M951 I
-        parkingslowspeed,         // M951 J
+  float parkingposx[2];           // M951 R L
+  float parkingslowspeed,         // M951 J
         parkinghighspeed,         // M951 H
         parkingtraveldistance,    // M951 D
+        parkinggrabdistance,      // M951 I
         compensationmultiplier;
 
   inline void magnetic_parking_extruder_tool_change(const uint8_t new_tool) {

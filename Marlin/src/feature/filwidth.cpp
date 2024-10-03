@@ -36,8 +36,8 @@ float FilamentWidthSensor::nominal_mm = DEFAULT_NOMINAL_FILAMENT_DIA,   // (M104
       FilamentWidthSensor::e_count = 0,
       FilamentWidthSensor::delay_dist = 0;
 uint8_t FilamentWidthSensor::meas_delay_cm = MEASUREMENT_DELAY_CM;      // Distance delay setting
-int8_t FilamentWidthSensor::ratios[MAX_MEASUREMENT_DELAY + 1],          // Ring buffer to delay measurement. (Extruder factor minus 100)
-       FilamentWidthSensor::index_r,                                    // Indexes into ring buffer
+int8_t FilamentWidthSensor::ratios[MAX_MEASUREMENT_DELAY + 1];          // Ring buffer to delay measurement. (Extruder factor minus 100)
+int8_t FilamentWidthSensor::index_r,                                    // Indexes into ring buffer
        FilamentWidthSensor::index_w;
 
 void FilamentWidthSensor::init() {

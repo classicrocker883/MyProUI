@@ -141,8 +141,8 @@ public:
     #if ENABLED(AUTO_BED_LEVELING_LINEAR)
       int indexIntoAB[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
       float eqnAMatrix[GRID_MAX_POINTS * 3],  // "A" matrix of the linear system of equations
-            eqnBVector[GRID_MAX_POINTS],      // "B" vector of Z points
-            mean;
+            eqnBVector[GRID_MAX_POINTS];      // "B" vector of Z points
+      float mean;
     #endif
   #endif
 };
