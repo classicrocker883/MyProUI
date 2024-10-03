@@ -129,7 +129,7 @@ def fetch_example(url):
     if not url.startswith('http'):
         brch = "HEAD"
         if '@' in url: url, brch = map(str.strip, url.split('@'))
-        if url == 'examples/default': url = 'Andrew427'
+        if url == 'configurations': url = 'Andrew427'
         url = f"https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/{brch}/configurations/{url}"
     url = url.replace("%", "%25").replace(" ", "%20")
 
@@ -258,7 +258,7 @@ if __name__ == "__main__":
     #
     # From command line use the given file name
     #
-    import sys
+    import sys, os
     args = sys.argv[1:]
     if len(args) > 0:
         if args[0].endswith('.ini'):

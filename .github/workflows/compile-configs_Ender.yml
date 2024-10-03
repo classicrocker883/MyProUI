@@ -17,25 +17,25 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -94,25 +94,25 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -173,25 +173,25 @@ jobs:
         t13: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -264,25 +264,25 @@ jobs:
         tjc: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -347,25 +347,25 @@ jobs:
         tjc: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -434,25 +434,25 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -515,25 +515,25 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -598,25 +598,25 @@ jobs:
         t13: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -694,25 +694,25 @@ jobs:
         tjc: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -785,25 +785,25 @@ jobs:
         t13: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
@@ -876,25 +876,25 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
     - name: Setup node
-      uses: actions/setup-node@v4.0.3
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.2.0
       with:
         python-version: '3.10'
     - name: Install PlatformIO
