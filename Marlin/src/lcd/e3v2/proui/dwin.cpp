@@ -1348,7 +1348,8 @@ void EachMomentUpdate() {
       #if ENABLED(PROUI_ITEM_PLOT)
         case PlotProcess: {
           if (HMI_flag.abort_flag || HMI_flag.pause_flag || print_job_timer.isPaused()) {
-            return HMI_ReturnScreen();
+            HMI_ReturnScreen();
+            break;
           }
         }
       #endif
@@ -1453,6 +1454,7 @@ void EachMomentUpdate() {
     DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 207, card.longest_filename());
     DWIN_Print_Header(card.longest_filename()); // Save filename
     Draw_Select_Highlight(HMI_flag.select_flag);
+    DWIN_UpdateLCD();
   }
 
   void OnClick_PowerLossRecovery() {
@@ -1540,27 +1542,34 @@ void EachMomentUpdate() {
 
 void DWIN_HandleScreen() {
   switch (checkkey) {
-    case MainMenu:        HMI_MainMenu(); break;
-    case Menu:            HMI_Menu(); break;
-    case SetInt:          HMI_SetDraw(); break;
-    case SetFloat:        HMI_SetDraw(); break;
-    case SetPInt:         HMI_SetPInt(); break;
-    case SetPFloat:       HMI_SetPFloat(); break;
-    case SetIntNoDraw:    HMI_SetNoDraw(); break;
-    case PrintProcess:    HMI_Printing(); break;
-    case Popup:           HMI_Popup(); break;
+    case MainMenu:     HMI_MainMenu();  break;
+    case Menu:         HMI_Menu();      break;
+    case SetInt:       HMI_SetDraw();   break;
+    case SetFloat:     HMI_SetDraw();   break;
+    case SetPInt:      HMI_SetPInt();   break;
+    case SetPFloat:    HMI_SetPFloat(); break;
+    case SetIntNoDraw: HMI_SetNoDraw(); break;
+    case PrintProcess: HMI_Printing();  break;
+    case Popup:        HMI_Popup();     break;
     OPTCODE(HAS_LOCKSCREEN,
-    case Locked:          HMI_LockScreen(); break)
+    case Locked:       HMI_LockScreen(); break)
 
     TERN_(HAS_BED_PROBE,
     case Leveling:)
     case PrintDone:
     TERN_(HAS_ESDIAG,
     case ESDiagProcess:)
-    case WaitResponse:    HMI_WaitForUser(); break;
+    case WaitResponse: HMI_WaitForUser(); break;
 
     OPTCODE(PROUI_ITEM_PLOT,
     case PlotProcess: PlotChange(); HMI_WaitForUser(); break)
+
+    case Homing:
+    TERN_(HAS_PID_HEATING,
+    case PIDProcess:)
+    TERN_(MPCTEMP,
+    case MPCProcess:)
+    case NothingToDo:
     default: break;
   }
 }
@@ -1602,10 +1611,6 @@ void HMI_SaveProcessID(const uint8_t id) {
     case PlotProcess:)
     case WaitResponse:
       wait_for_user = true;
-    break;
-    case NothingToDo:
-      wait_for_user = false;
-    break;
     default: break;
   }
 }
@@ -1756,7 +1761,7 @@ void HMI_ReturnScreen() {
           #if PROUI_TUNING_GRAPH
             DWIN_Draw_PID_MPC_Popup();
           #else
-            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_NOZZLE));
+            DWIN_Show_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_NOZZLE));
           #endif
           break;
       #endif
@@ -1766,7 +1771,7 @@ void HMI_ReturnScreen() {
           #if PROUI_TUNING_GRAPH
             DWIN_Draw_PID_MPC_Popup();
           #else
-            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_BED));
+            DWIN_Show_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_BED));
           #endif
           break;
       #endif
@@ -1776,7 +1781,7 @@ void HMI_ReturnScreen() {
           #if PROUI_TUNING_GRAPH
             DWIN_Draw_PID_MPC_Popup();
           #else
-            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_CHAMBER));
+            DWIN_Show_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_CHAMBER));
           #endif
           break;
       #endif
@@ -1815,7 +1820,7 @@ void HMI_ReturnScreen() {
         #if PROUI_TUNING_GRAPH
           DWIN_Draw_PID_MPC_Popup();
         #else
-          DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_MPC_AUTOTUNE), GET_TEXT_F(MSG_NOZZLE_RUN));
+          DWIN_Show_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_MPC_AUTOTUNE), GET_TEXT_F(MSG_NOZZLE_RUN));
         #endif
         break;
       case MPC_TEMP_ERROR:
@@ -1851,7 +1856,7 @@ void DWIN_HomingStart() {
   DEBUG_ECHOLNPGM("DWIN_HomingStart");
   if (checkkey != NothingToDo || checkkey != Leveling) { HMI_SaveProcessID(Homing); }
   Title.ShowCaption(GET_TEXT_F(MSG_HOMING));
-  DWIN_Draw_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
+  DWIN_Show_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
 }
 
 void DWIN_HomingDone() {
@@ -2312,8 +2317,9 @@ void MarlinUI::update() {
 #endif
 
 void MarlinUI::kill_screen(FSTR_P const lcd_error, FSTR_P const) {
-  DWIN_Draw_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
+  DWIN_Show_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
   DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 270, GET_TEXT_F(MSG_TURN_OFF));
+  DWIN_UpdateLCD();
 }
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
@@ -4451,7 +4457,8 @@ void Draw_MaxAccel_Menu() {
   void LaserRunRange() {
     if (!laser_device.is_laser_device()) return;
     if (!all_axes_trusted()) return LCD_MESSAGE_F("First set home");
-    DWIN_Draw_Popup(ICON_TempTooHigh, F("LASER"), F("Run Range"), BTN_Cancel);
+    DWIN_Show_Popup(ICON_TempTooHigh, F("LASER"), F("Run Range"), BTN_Cancel);
+    HMI_SaveProcessID(WaitResponse);
     laser_device.laser_range();
   }
 

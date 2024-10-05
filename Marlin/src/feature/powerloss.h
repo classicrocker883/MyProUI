@@ -101,7 +101,8 @@ typedef struct {
   #endif
 
   #if ENABLED(FWRETRACT)
-    float retract[EXTRUDERS], retract_hop;
+    float retract[EXTRUDERS];
+    float retract_hop;
   #endif
 
   // Mixing extruder and gradient

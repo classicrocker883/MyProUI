@@ -55,18 +55,24 @@ void DWIN_Draw_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8
   if (amsg1)  DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 210, amsg1);
   if (amsg2)  DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 240, amsg2);
   if (button) DWINUI::Draw_Button(button, 86, 280, true);
-  HMI_SaveProcessID(button ? Popup : NothingToDo);
+}
+
+template<typename T, typename U>
+void DWIN_Show_Popup(const uint8_t icon, T amsg1=nullptr, U amsg2=nullptr, uint8_t button=0) {
+  DWIN_Draw_Popup(icon, amsg1, amsg2, button);
   DWIN_UpdateLCD();
 }
 
 template<typename T, typename U>
-inline void DWIN_Popup_Confirm(const uint8_t icon, T amsg1, U amsg2) {
-  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Confirm); // Button Confirm
+void DWIN_Popup_Confirm(const uint8_t icon, T amsg1, U amsg2) {
+  HMI_SaveProcessID(WaitResponse);
+  DWIN_Show_Popup(icon, amsg1, amsg2, BTN_Confirm); // Button Confirm
 }
 
 template<typename T, typename U>
-inline void DWIN_Popup_Continue(const uint8_t icon, T amsg1, U amsg2) {
-  DWIN_Draw_Popup(icon, amsg1, amsg2, BTN_Continue); // Button Continue
+void DWIN_Popup_Continue(const uint8_t icon, T amsg1, U amsg2) {
+  HMI_SaveProcessID(WaitResponse);
+  DWIN_Show_Popup(icon, amsg1, amsg2, BTN_Continue); // Button Continue
 }
 
 #if DEBUG_DWIN
