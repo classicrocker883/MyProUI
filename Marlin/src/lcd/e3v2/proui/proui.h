@@ -223,6 +223,10 @@ typedef struct {
 #if HAS_EXTRUDERS
   bool Invert_E0 = DEF_INVERT_E0_DIR;
 #endif
+  float mesh_min_x = DEF_MESH_MIN_X;
+  float mesh_max_x = DEF_MESH_MAX_X;
+  float mesh_min_y = DEF_MESH_MIN_Y;
+  float mesh_max_y = DEF_MESH_MAX_Y;
 #endif
 } HMI_data_t;
 

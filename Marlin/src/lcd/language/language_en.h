@@ -661,7 +661,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_ZPROBE_MARGIN                  = _UxGT("Probe Margin");
   LSTR MSG_ZPROBE_MULTIPLE                = _UxGT("Multiple Probing");
   LSTR MSG_ZOFFSET                        = _UxGT("Z-Offset");
-  LSTR MSG_Z_FEED_RATE                    = _UxGT("Z Feed Rate");
+  LSTR MSG_Z_FEED_RATE                    = _UxGT("Z Slow Feed Rate");
   LSTR MSG_ENABLE_HS_MODE                 = _UxGT("Enable HS Mode");
   LSTR MSG_MOVE_NOZZLE_TO_BED             = _UxGT("Center Nozzle on Bed");
   LSTR MSG_BABYSTEP_X                     = _UxGT("Babystep X");
@@ -1202,6 +1202,9 @@ namespace LanguageWide_en {
     LSTR MSG_TOOLBAR_SETUP                = _UxGT("Toolbar Setup");
     LSTR MSG_OPTION_DISABLED              = _UxGT("Option Disabled");
     LSTR MSG_HOMING_FEEDRATE_N            = _UxGT("@ Homing Feedrate");
+    LSTR MSG_HOMING_FEEDRATE_X            = _UxGT(STR_A " " STR_HOMING_FEEDRATE);
+    LSTR MSG_HOMING_FEEDRATE_Y            = _UxGT(STR_B " " STR_HOMING_FEEDRATE);
+    LSTR MSG_HOMING_FEEDRATE_Z            = _UxGT(STR_C " " STR_HOMING_FEEDRATE);
   #endif // LCD_WIDTH >= 20 || HAS_DWIN_E3V2
 }
 

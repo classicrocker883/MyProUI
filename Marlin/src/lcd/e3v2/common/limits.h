@@ -36,11 +36,11 @@
 //
 #define MIN_FEEDRATE_EDIT_VALUE 1
 
-constexpr xyze_float_t min_feedrate_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_FEEDRATE_EDIT_VALUE);
+constexpr xyze_feedrate_t min_feedrate_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_FEEDRATE_EDIT_VALUE);
 #if !defined(MAX_FEEDRATE_EDIT_VALUES) && defined(DEFAULT_MAX_MULTIPLIER)
-  constexpr xyze_float_t default_max_feedrate = DEFAULT_MAX_FEEDRATE;
+  constexpr xyze_feedrate_t default_max_feedrate = DEFAULT_MAX_FEEDRATE;
 #endif
-constexpr xyze_float_t max_feedrate_edit_values =
+constexpr xyze_feedrate_t max_feedrate_edit_values =
                          #ifdef MAX_FEEDRATE_EDIT_VALUES
                            MAX_FEEDRATE_EDIT_VALUES
                          #elif !defined(DEFAULT_MAX_MULTIPLIER)
@@ -70,14 +70,14 @@ constexpr xyze_float_t max_acceleration_edit_values =
                        ;
 
 //
-// Max jerk limits
+// Max Jerk limits
 //
-#define MIN_JERK_EDIT_VALUE 0.1
-#define DEFAULT_MAX_JERK_MULTIPLIER 2
-
 #if ENABLED(CLASSIC_JERK)
+  #define MIN_JERK_EDIT_VALUE 0.1
+
   constexpr xyze_float_t min_jerk_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_JERK_EDIT_VALUE);
   #if !defined(MAX_JERK_EDIT_VALUES) && defined(DEFAULT_MAX_MULTIPLIER)
+    #define DEFAULT_MAX_JERK_MULTIPLIER 2
     constexpr xyze_float_t default_jerk = LOGICAL_AXIS_ARRAY(
                              DEFAULT_EJERK,
                              DEFAULT_XJERK, DEFAULT_YJERK, DEFAULT_ZJERK,
@@ -114,6 +114,25 @@ constexpr xyze_float_t max_steps_edit_values =
                            default_steps * DEFAULT_MAX_MULTIPLIER
                          #endif
                        ;
+
+//
+// Homing Feedrate limits
+//
+#if ENABLED(EDITABLE_HOMING_FEEDRATE)
+  #define MIN_HOMING_EDIT_VALUE 1
+
+  constexpr xyz_feedrate_t min_homing_edit_values = NUM_AXIS_ARRAY_1(MIN_HOMING_EDIT_VALUE);
+  #if defined(DEFAULT_MAX_MULTIPLIER)
+    constexpr xyz_feedrate_t default_homing = DEFAULT_FEEDRATE_MM_M;
+  #endif
+  constexpr xyz_feedrate_t max_homing_edit_values =
+                           #if !defined(DEFAULT_MAX_MULTIPLIER)
+                             { 10000, 10000, 2000 }
+                           #else
+                             default_homing * DEFAULT_MAX_MULTIPLIER
+                           #endif
+                         ;
+#endif
 
 //
 // Old Values

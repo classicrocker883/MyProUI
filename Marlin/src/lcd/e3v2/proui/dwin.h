@@ -157,13 +157,6 @@ void ResetEeprom();
 #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
   void SetHSMode();
 #endif
-#if ANY(PROUI_EX, PROUI_GRID_PNTS)
-  void SetMeshPoints();
-  void SetXMeshInset();
-  void SetYMeshInset();
-  void MaxMeshArea();
-  void CenterMeshArea();
-#endif
 #if PROUI_EX
   void ApplyPhySet();
   void SetData();
@@ -326,15 +319,25 @@ void Draw_MaxAccel_Menu();
 #if ENABLED(INDIVIDUAL_AXIS_HOMING_SUBMENU)
   void Draw_Homing_Menu();
 #endif
+#if ENABLED(EDITABLE_HOMING_FEEDRATE)
+  void Draw_HomingFR_Menu();
+#endif
 #if ENABLED(FWRETRACT)
   void Draw_FWRetract_Menu();
 #endif
 #if HAS_MESH
   void Draw_MeshSet_Menu();
-  void Draw_MeshInset_Menu();
   #if ENABLED(PROUI_MESH_EDIT)
+    void Draw_MeshInset_Menu();
     void Draw_EditMesh_Menu();
     void ApplyMeshInset();
+    void SetXMeshInset();
+    void SetYMeshInset();
+    void MaxMeshArea();
+    void CenterMeshArea();
+  #endif
+  #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+    void SetMeshPoints();
   #endif
 #endif
 #if HAS_TRINAMIC_CONFIG
@@ -406,16 +409,4 @@ void Draw_MaxAccel_Menu();
 
 #if DEBUG_DWIN
   void DWIN_Debug(PGM_P msg1=nullptr, PGM_P msg2=nullptr, PGM_P msg3=nullptr, PGM_P msg4=nullptr);
-#endif
-
-#if ENABLED(PROUI_MESH_EDIT)
-  #undef  MESH_MIN_X
-  #undef  MESH_MAX_X
-  #undef  MESH_MIN_Y
-  #undef  MESH_MAX_Y
-  #include "../../marlinui.h"
-  #define MESH_MIN_X ui.mesh_min_x
-  #define MESH_MAX_X ui.mesh_max_x
-  #define MESH_MIN_Y ui.mesh_min_y
-  #define MESH_MAX_Y ui.mesh_max_y
 #endif
