@@ -81,8 +81,8 @@
 // Feedrate for manual moves
 #ifdef MANUAL_FEEDRATE
   #define _RATE_MM_SEC(A) MMM_TO_MMS(manual_feedrate_mm_m.A),
-  constexpr xyze_feedrate_t manual_feedrate_mm_m = MANUAL_FEEDRATE,
-                            manual_feedrate_mm_s = { LOGICAL_AXIS_MAP_LC(_RATE_MM_SEC) };
+  constexpr xyze_feedrate_t manual_feedrate_mm_m = MANUAL_FEEDRATE;
+  constexpr xyze_feedrate_t manual_feedrate_mm_s = { LOGICAL_AXIS_MAP_LC(_RATE_MM_SEC) };
   #undef _RATE_MM_SEC
 #endif
 
@@ -337,8 +337,8 @@ constexpr uint8_t block_inc_mod(const uint8_t v1, const uint8_t v2) {
 #endif
 
 typedef struct PlannerSettings {
-   uint32_t max_acceleration_mm_per_s2[DISTINCT_AXES], // (mm/s^2) M201 XYZE
-            min_segment_time_us;                // (µs) M205 B
+   uint32_t max_acceleration_mm_per_s2[DISTINCT_AXES]; // (mm/s^2) M201 XYZE
+   uint32_t min_segment_time_us;                       // (µs) M205 B
 
   // (steps) M92 XYZE - Steps per millimeter
   #if ENABLED(EDITABLE_STEPS_PER_UNIT)
@@ -356,12 +356,12 @@ typedef struct PlannerSettings {
     #undef _DLIM
   #endif
 
- feedRate_t max_feedrate_mm_s[DISTINCT_AXES];   // (mm/s) M203 XYZE - Max speeds
+ feedRate_t max_feedrate_mm_s[DISTINCT_AXES];   // (mm/s)   M203 XYZE - Max speeds
       float acceleration,                       // (mm/s^2) M204 S - Normal acceleration. DEFAULT ACCELERATION for all printing moves.
             retract_acceleration,               // (mm/s^2) M204 R - Retract acceleration. Filament pull-back and push-forward while standing still in the other axes
             travel_acceleration;                // (mm/s^2) M204 T - Travel acceleration. DEFAULT ACCELERATION for all NON printing moves.
- feedRate_t min_feedrate_mm_s,                  // (mm/s) M205 S - Minimum linear feedrate
-            min_travel_feedrate_mm_s;           // (mm/s) M205 T - Minimum travel feedrate
+ feedRate_t min_feedrate_mm_s,                  // (mm/s)   M205 S - Minimum linear feedrate
+            min_travel_feedrate_mm_s;           // (mm/s)   M205 T - Minimum travel feedrate
 } planner_settings_t;
 
 #if ENABLED(IMPROVE_HOMING_RELIABILITY)
@@ -460,8 +460,8 @@ class Planner {
     #endif
 
     #if DISABLED(NO_VOLUMETRICS)
+      static float volumetric_area_nominal;           // (mm^3) Nominal cross-sectional area
       static float filament_size[EXTRUDERS],          // (mm) Diameter of filament, typically around 1.75 or 2.85, 0 disables the volumetric calculations for the extruder
-                   volumetric_area_nominal,           // (mm^3) Nominal cross-sectional area
                    volumetric_multiplier[EXTRUDERS];  // (1/mm^2) Reciprocal of cross-sectional area of filament. Pre-calculated to reduce computation in the planner
                                                       // May be auto-adjusted by a filament width sensor
     #endif
@@ -493,7 +493,7 @@ class Planner {
         static float max_e_jerk[DISTINCT_E];          // Calculated from junction_deviation_mm
       #endif
     #else // CLASSIC_JERK
-      // (mm/s^2) M205 XYZ(E) - The largest speed change requiring no acceleration.
+      // (mm/s^2) M205 XYZE - The largest speed change requiring no acceleration.
       static TERN(HAS_LINEAR_E_JERK, xyz_pos_t, xyze_pos_t) max_jerk;
     #endif
 

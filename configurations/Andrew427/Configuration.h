@@ -112,7 +112,7 @@
 
 /**
  * Select a third serial port on the board to use for communication with the host.
- * Currently only supported for AVR, DUE, LPC1768/9 and STM32/STM32F1
+ * Currently supported for AVR, DUE, SAMD51, LPC1768/9, STM32/STM32F1/HC32, and Teensy 4.x
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
  */
 //#define SERIAL_PORT_3 1
@@ -722,7 +722,7 @@
  * Use a physical model of the hotend to control temperature. When configured correctly this gives
  * better responsiveness and stability than PID and removes the need for PID_EXTRUSION_SCALING
  * and PID_FAN_SCALING. Enable MPC_AUTOTUNE and use M306 T to autotune the model.
- * @section mpctemp
+ * @section mpc temp
  */
 #if ENABLED(MPCTEMP)
   #define MPC_AUTOTUNE                                // Include a method to do MPC auto-tuning (~6.3K bytes of flash)
@@ -851,13 +851,15 @@
   // Lasko "MyHeat Personal Heater" (200w) modified with a Fotek SSR-10DA to control only the heating element
   // and placed inside the small Creality printer enclosure tent.
   //
-  #define DEFAULT_chamberKp 37.04
-  #define DEFAULT_chamberKi 1.40
+  #define DEFAULT_chamberKp  37.04
+  #define DEFAULT_chamberKi   1.40
   #define DEFAULT_chamberKd 655.17
   // M309 P37.04 I1.04 D655.17
 
   // FIND YOUR OWN: "M303 E-2 C8 S50" to run autotune on the chamber at 50 degreesC for 8 cycles.
 #endif // PIDTEMPCHAMBER
+
+// @section pid temp
 
 #if ANY(PIDTEMP, PIDTEMPBED, PIDTEMPCHAMBER)
   //#define PID_OPENLOOP          // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
@@ -1628,7 +1630,8 @@
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
 #define PROBING_MARGIN 0
 
-// X and Y axis travel speed (mm/min) between probes
+// X and Y axis travel speed (mm/min) between probes.
+// Leave undefined to use the average of the current XY homing feedrate.
 #define XY_PROBE_FEEDRATE (180*60)
 
 // Feedrate (mm/min) for the first approach when double-probing (MULTIPLE_PROBING == 2)
@@ -1697,8 +1700,8 @@
  * probe Z Offset set with NOZZLE_TO_PROBE_OFFSET, M851, or the LCD.
  * Only integer values >= 1 are valid here.
  *
- * EXAMPLE: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
- *     BUT: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
+ * EXAMPLE: 'M851 Z-5' with a CLEARANCE of 4  =>  9mm from bed to nozzle.
+ *     BUT: 'M851 Z+1' with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
 #define Z_CLEARANCE_DEPLOY_PROBE   10 // (mm) Z Clearance for Deploy/Stow
 #define Z_CLEARANCE_BETWEEN_PROBES  5 // (mm) Z Clearance between probe points
@@ -2326,6 +2329,9 @@
 
 // Homing speeds (linear=mm/min, rotational=°/min)
 #define HOMING_FEEDRATE_MM_M { (60*60), (60*60), (8*60) }
+
+// Edit homing feedrates with M210 and MarlinUI menu items
+#define EDITABLE_HOMING_FEEDRATE // (764 bytes of flash)
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
@@ -3271,6 +3277,11 @@
 // Touch-screen LCD for Anycubic Vyper
 //
 //#define ANYCUBIC_LCD_VYPER
+
+//
+// Sovol SV-06 Resistive Touch Screen
+//
+//#define SOVOL_SV06_RTS
 
 //
 // 320x240 Nextion 2.8" serial TFT Resistive Touch Screen NX3224T028

@@ -17,6 +17,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: OSDKDev/unlock-issues@v1.1
+    - uses: OSDKDev/unlock-issues@v1.1.1
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"

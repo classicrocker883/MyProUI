@@ -28,7 +28,7 @@
 /**
  * Marlin release version identifier
  */
-#define SHORT_BUILD_VERSION "2.1.3f-8"
+#define SHORT_BUILD_VERSION "2.1.3f-10"
 
 /**
  * Verbose version identifier which should contain a reference to the location
@@ -41,7 +41,7 @@
  * here we define this default string as the date where the latest release
  * version was tagged.
  */
-//#define STRING_DISTRIBUTION_DATE "2024-08-25"
+//#define STRING_DISTRIBUTION_DATE "2024-10-07"
 
 #define STRING_DISTRIBUTION_DATE __DATE__
 #define STRING_DISTRIBUTION_TIME __TIME__

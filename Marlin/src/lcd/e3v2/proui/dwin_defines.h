@@ -157,16 +157,6 @@
     #define GRID_MAX_POINTS_X PRO_data.grid_max_points
     #define GRID_MAX_POINTS_Y PRO_data.grid_max_points
     #define GRID_MAX_POINTS  (PRO_data.grid_max_points * PRO_data.grid_max_points)
-  #endif
-  #if HAS_BED_PROBE
-    #undef  Z_PROBE_FEEDRATE_SLOW
-    #define Z_PROBE_FEEDRATE_SLOW PRO_data.zprobefeedslow
-  #endif
-  #if HAS_EXTRUDERS
-    #undef  INVERT_E0_DIR
-    #define INVERT_E0_DIR PRO_data.Invert_E0
-  #endif
-  #if ENABLED(PROUI_MESH_EDIT)
     #undef  MESH_MIN_X
     #undef  MESH_MAX_X
     #undef  MESH_MIN_Y
@@ -175,6 +165,14 @@
     #define MESH_MAX_X (float)PRO_data.mesh_max_x
     #define MESH_MIN_Y (float)PRO_data.mesh_min_y
     #define MESH_MAX_Y (float)PRO_data.mesh_max_y
+  #endif
+  #if HAS_BED_PROBE
+    #undef  Z_PROBE_FEEDRATE_SLOW
+    #define Z_PROBE_FEEDRATE_SLOW PRO_data.zprobefeedslow
+  #endif
+  #if HAS_EXTRUDERS
+    #undef  INVERT_E0_DIR
+    #define INVERT_E0_DIR PRO_data.Invert_E0
   #endif
 
 #else
@@ -214,5 +212,4 @@
     #define MESH_MIN_Y (float)HMI_data.mesh_min_y
     #define MESH_MAX_Y (float)HMI_data.mesh_max_y
   #endif
-
 #endif // PROUI_EX

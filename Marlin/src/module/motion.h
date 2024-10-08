@@ -63,8 +63,6 @@ extern xyz_pos_t cartes;
   #define XY_PROBE_FEEDRATE_MM_S xy_probe_feedrate_mm_s
 #elif defined(XY_PROBE_FEEDRATE)
   #define XY_PROBE_FEEDRATE_MM_S MMM_TO_MMS(XY_PROBE_FEEDRATE)
-#else
-  #define XY_PROBE_FEEDRATE_MM_S PLANNER_XY_FEEDRATE_MM_S
 #endif
 
 #if HAS_BED_PROBE
@@ -75,7 +73,12 @@ extern xyz_pos_t cartes;
  * Feed rates are often configured with mm/m
  * but the planner and stepper like mm/s units.
  */
-constexpr xyz_feedrate_t homing_feedrate_mm_m = HOMING_FEEDRATE_MM_M;
+#if ENABLED(EDITABLE_HOMING_FEEDRATE)
+  extern xyz_feedrate_t homing_feedrate_mm_m;
+#else
+  constexpr xyz_feedrate_t homing_feedrate_mm_m = HOMING_FEEDRATE_MM_M;
+#endif
+
 FORCE_INLINE feedRate_t homing_feedrate(const AxisEnum a) {
   float v = TERN0(HAS_Z_AXIS, homing_feedrate_mm_m.z);
   #if DISABLED(DELTA)
@@ -127,19 +130,19 @@ extern int16_t feedrate_percentage;
 inline float pgm_read_any(const float *p)   { return TERN(__IMXRT1062__, *p, pgm_read_float(p)); }
 inline int8_t pgm_read_any(const int8_t *p) { return TERN(__IMXRT1062__, *p, pgm_read_byte(p)); }
 
-#if ENABLED(DWIN_LCD_PROUI)
+/* #if ENABLED(DWIN_LCD_PROUI)
   #define XYZ_DEFS(T, NAME, OPT) \
     inline T NAME(const AxisEnum axis) { \
       const XYZval<T> Value = NUM_AXIS_ARRAY(X_##OPT, Y_##OPT, Z_##OPT, I_##OPT, J_##OPT, K_##OPT, U_##OPT, V_##OPT, W_##OPT); \
       return Value[axis]; \
     }
-#else
+#else */
   #define XYZ_DEFS(T, NAME, OPT) \
     inline T NAME(const AxisEnum axis) { \
       static const XYZval<T> NAME##_P DEFS_PROGMEM = NUM_AXIS_ARRAY(X_##OPT, Y_##OPT, Z_##OPT, I_##OPT, J_##OPT, K_##OPT, U_##OPT, V_##OPT, W_##OPT); \
       return pgm_read_any(&NAME##_P[axis]); \
     }
-#endif
+//#endif
 
 XYZ_DEFS(float, base_min_pos,  MIN_POS);
 XYZ_DEFS(float, base_max_pos,  MAX_POS);
@@ -439,6 +442,10 @@ void restore_feedrate_and_scaling();
 typedef bits_t(NUM_AXES) main_axes_bits_t;
 constexpr main_axes_bits_t main_axes_mask = _BV(NUM_AXES) - 1;
 
+#if HAS_Z_AXIS
+  extern bool z_min_trusted; // If Z has been powered on trust that the real Z is >= current_position.z
+#endif
+
 void set_axis_is_at_home(const AxisEnum axis);
 
 #if HAS_ENDSTOPS
@@ -473,7 +480,7 @@ inline void set_all_homed()                         { TERN_(HAS_ENDSTOPS, axes_h
 
 inline bool axis_was_homed(const AxisEnum axis)     { return TEST(axes_homed, axis); }
 inline bool axis_is_trusted(const AxisEnum axis)    { return TEST(axes_trusted, axis); }
-inline bool axis_should_home(const AxisEnum axis)   { return (axes_should_home() & _BV(axis)) != 0; }
+inline bool axis_should_home(const AxisEnum axis)   { return axes_should_home(_BV(axis)) != 0; }
 inline bool no_axes_homed()                         { return !axes_homed; }
 inline bool all_axes_homed()                        { return main_axes_mask == (axes_homed & main_axes_mask); }
 inline bool homing_needed()                         { return !all_axes_homed(); }

@@ -47,7 +47,8 @@ private:
 
 public:
 
-  static T divisor, value[Cfg::SIZE], dir[Cfg::SIZE], dividend[Cfg::SIZE], counter[Cfg::SIZE];
+  static T divisor;
+  static T value[Cfg::SIZE], dir[Cfg::SIZE], dividend[Cfg::SIZE], counter[Cfg::SIZE];
 
   // Default: Instantiate all items with the identical parameters
   Bresenham(const T &inDivisor=1, const int8_t &inDir=1, const T &inDividend=1, const T &inValue=0) {

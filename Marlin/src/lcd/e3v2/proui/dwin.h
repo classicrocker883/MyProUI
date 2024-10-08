@@ -102,7 +102,7 @@ typedef struct {
 
 typedef struct {
   rgb_t Color; // Color
-  #if ANY(HAS_PID_HEATING, MPCTEMP)
+  #if ANY(HAS_PID_HEATING, MPCTEMP, PROUI_ITEM_PLOT)
     tempcontrol_t tempControl = AUTOTUNE_DONE;
   #endif
   uint8_t Select = 0;     // Auxiliary selector variable
@@ -156,13 +156,6 @@ void ResetEeprom();
 #endif
 #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
   void SetHSMode();
-#endif
-#if ANY(PROUI_EX, PROUI_GRID_PNTS)
-  void SetMeshPoints();
-  void SetXMeshInset();
-  void SetYMeshInset();
-  void MaxMeshArea();
-  void CenterMeshArea();
 #endif
 #if PROUI_EX
   void ApplyPhySet();
@@ -326,15 +319,25 @@ void Draw_MaxAccel_Menu();
 #if ENABLED(INDIVIDUAL_AXIS_HOMING_SUBMENU)
   void Draw_Homing_Menu();
 #endif
+#if ENABLED(EDITABLE_HOMING_FEEDRATE)
+  void Draw_HomingFR_Menu();
+#endif
 #if ENABLED(FWRETRACT)
   void Draw_FWRetract_Menu();
 #endif
 #if HAS_MESH
   void Draw_MeshSet_Menu();
-  void Draw_MeshInset_Menu();
   #if ENABLED(PROUI_MESH_EDIT)
+    void Draw_MeshInset_Menu();
     void Draw_EditMesh_Menu();
     void ApplyMeshInset();
+    void SetXMeshInset();
+    void SetYMeshInset();
+    void MaxMeshArea();
+    void CenterMeshArea();
+  #endif
+  #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+    void SetMeshPoints();
   #endif
 #endif
 #if HAS_TRINAMIC_CONFIG

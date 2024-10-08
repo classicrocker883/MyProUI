@@ -57,8 +57,8 @@ fwretract_settings_t FWRetract::settings;             // M207 S F Z W, M208 S F 
 
 Flags<EXTRUDERS> FWRetract::retracted;                // Which extruders are currently retracted
 
-float FWRetract::current_retract[EXTRUDERS],          // Retract value used by planner
-      FWRetract::current_hop;
+float FWRetract::current_retract[EXTRUDERS];          // Retract value used by planner
+float FWRetract::current_hop;
 
 void FWRetract::reset() {
   TERN_(FWRETRACT_AUTORETRACT, autoretract_enabled = false);

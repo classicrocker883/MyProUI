@@ -133,8 +133,8 @@
 #endif
 
 // Juntion deviation limits
-#define MIN_JD_MM             0.001
-#define MAX_JD_MM             TERN(LIN_ADVANCE, 0.3f, 0.5f)
+#define MIN_JD_MM 0.001f
+#define MAX_JD_MM TERN(LIN_ADVANCE, 0.3f, 0.5f)
 
 #if HAS_TRINAMIC_CONFIG
   #define MIN_TMC_CURRENT 100
@@ -142,15 +142,15 @@
 #endif
 
 // Editable temperature limits
-#define MIN_ETEMP   0
-#define MAX_ETEMP   thermalManager.hotend_max_target(EXT)
-#define MIN_BEDTEMP 0
-#define MAX_BEDTEMP BED_MAX_TARGET
+#define MIN_ETEMP       0
+#define MAX_ETEMP       thermalManager.hotend_max_target(EXT)
+#define MIN_BEDTEMP     0
+#define MAX_BEDTEMP     BED_MAX_TARGET
 #define MIN_CHAMBERTEMP 0
 #define MAX_CHAMBERTEMP CHAMBER_MAX_TARGET
 
-#define DWIN_VAR_UPDATE_INTERVAL          500
-#define DWIN_UPDATE_INTERVAL             1000
+#define DWIN_VAR_UPDATE_INTERVAL 500
+#define DWIN_UPDATE_INTERVAL    1000
 
 #define BABY_Z_VAR TERN(HAS_BED_PROBE, probe.offset.z, HMI_data.ManualZOffset)
 
@@ -281,6 +281,9 @@ MenuClass *MaxAccelMenu = nullptr;
 #endif
 #if ENABLED(INDIVIDUAL_AXIS_HOMING_SUBMENU)
   MenuClass *HomingMenu = nullptr;
+#endif
+#if ENABLED(EDITABLE_HOMING_FEEDRATE)
+  MenuClass *HomingFRMenu = nullptr;
 #endif
 #if ENABLED(FWRETRACT)
   MenuClass *FWRetractMenu = nullptr;
@@ -1116,12 +1119,12 @@ void DWIN_Draw_Dashboard() {
 void Draw_Info_Menu() {
   DWINUI::ClearMainArea();
   Title.ShowCaption(GET_TEXT_F(MSG_INFO_SCREEN));
-  Draw_Menu_Line(0, ICON_Back, GET_TEXT_F(MSG_BACK), false, true);
+  Draw_Menu_Line(0, ICON_Back, GET_TEXT_F(MSG_BUTTON_BACK), false, true);
   char machine_size[21];
   machine_size[0] = '\0';
   sprintf_P(machine_size, PSTR("%ix%ix%i"), (int16_t)X_BED_SIZE, (int16_t)Y_BED_SIZE, (int16_t)Z_MAX_POS);
 
-  DWINUI::Draw_CenteredString(92,  GET_TEXT_F(MSG_INFO_MACHINENAME));
+  DWINUI::Draw_CenteredString( 92, GET_TEXT_F(MSG_INFO_MACHINENAME));
   DWINUI::Draw_CenteredString(112, CUSTOM_MACHINE_NAME);
   DWINUI::Draw_CenteredString(145, GET_TEXT_F(MSG_INFO_SIZE));
   DWINUI::Draw_CenteredString(165, machine_size);
@@ -1311,7 +1314,7 @@ void HMI_Init() {
     #endif
     DWINUI::Draw_Box(1, Color_Black, { 5, 220, DWIN_WIDTH - 5, DWINUI::fontHeight() });
     DWINUI::Draw_CenteredString(3, Color_White, 220, F(MACHINE_NAME));
-    for (uint16_t t = 15; t <= 257; t += 10) {
+    for (uint16_t t = 15; t <= 257; t += 11) {
       DWINUI::Draw_Icon(ICON_Bar, 15, 260);
       DWIN_Draw_Rectangle(1, HMI_data.Background_Color, t, 260, 257, 280);
       DWIN_UpdateLCD();
@@ -1348,7 +1351,8 @@ void EachMomentUpdate() {
       #if ENABLED(PROUI_ITEM_PLOT)
         case PlotProcess: {
           if (HMI_flag.abort_flag || HMI_flag.pause_flag || print_job_timer.isPaused()) {
-            return HMI_ReturnScreen();
+            HMI_ReturnScreen();
+            break;
           }
         }
       #endif
@@ -1453,6 +1457,7 @@ void EachMomentUpdate() {
     DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 207, card.longest_filename());
     DWIN_Print_Header(card.longest_filename()); // Save filename
     Draw_Select_Highlight(HMI_flag.select_flag);
+    DWIN_UpdateLCD();
   }
 
   void OnClick_PowerLossRecovery() {
@@ -1540,27 +1545,34 @@ void EachMomentUpdate() {
 
 void DWIN_HandleScreen() {
   switch (checkkey) {
-    case MainMenu:        HMI_MainMenu(); break;
-    case Menu:            HMI_Menu(); break;
-    case SetInt:          HMI_SetDraw(); break;
-    case SetFloat:        HMI_SetDraw(); break;
-    case SetPInt:         HMI_SetPInt(); break;
-    case SetPFloat:       HMI_SetPFloat(); break;
-    case SetIntNoDraw:    HMI_SetNoDraw(); break;
-    case PrintProcess:    HMI_Printing(); break;
-    case Popup:           HMI_Popup(); break;
+    case MainMenu:     HMI_MainMenu();  break;
+    case Menu:         HMI_Menu();      break;
+    case SetInt:       HMI_SetDraw();   break;
+    case SetFloat:     HMI_SetDraw();   break;
+    case SetPInt:      HMI_SetPInt();   break;
+    case SetPFloat:    HMI_SetPFloat(); break;
+    case SetIntNoDraw: HMI_SetNoDraw(); break;
+    case PrintProcess: HMI_Printing();  break;
+    case Popup:        HMI_Popup();     break;
     OPTCODE(HAS_LOCKSCREEN,
-    case Locked:          HMI_LockScreen(); break)
+    case Locked:       HMI_LockScreen(); break)
 
     TERN_(HAS_BED_PROBE,
     case Leveling:)
     case PrintDone:
     TERN_(HAS_ESDIAG,
     case ESDiagProcess:)
-    case WaitResponse:    HMI_WaitForUser(); break;
+    case WaitResponse: HMI_WaitForUser(); break;
 
     OPTCODE(PROUI_ITEM_PLOT,
     case PlotProcess: PlotChange(); HMI_WaitForUser(); break)
+
+    case Homing:
+    TERN_(HAS_PID_HEATING,
+    case PIDProcess:)
+    TERN_(MPCTEMP,
+    case MPCProcess:)
+    case NothingToDo:
     default: break;
   }
 }
@@ -1602,10 +1614,6 @@ void HMI_SaveProcessID(const uint8_t id) {
     case PlotProcess:)
     case WaitResponse:
       wait_for_user = true;
-    break;
-    case NothingToDo:
-      wait_for_user = false;
-    break;
     default: break;
   }
 }
@@ -1637,7 +1645,7 @@ void HMI_ReturnScreen() {
           DWINUI::Draw_CenteredString(2,HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_MPC_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_MPC_TARGET));
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_TEMP_NOZZLE));
-          _maxtemp = thermalManager.hotend_max_target(EXT);
+          _maxtemp = MAX_ETEMP;
           _target = 200;
           break;
       #endif
@@ -1646,7 +1654,7 @@ void HMI_ReturnScreen() {
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 70, GET_TEXT_F(MSG_PID_AUTOTUNE));
           DWINUI::Draw_String(HMI_data.PopupTxt_Color, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, GET_TEXT_F(MSG_PID_TARGET));
           DWINUI::Draw_CenteredString(2, HMI_data.PopupTxt_Color, 92, GET_TEXT_F(MSG_TEMP_NOZZLE));
-          _maxtemp = thermalManager.hotend_max_target(EXT);
+          _maxtemp = MAX_ETEMP;
           _target = HMI_data.HotendPIDT;
           break;
       #endif
@@ -1694,7 +1702,7 @@ void HMI_ReturnScreen() {
       #endif
           Title.ShowCaption(GET_TEXT_F(MSG_HOTEND_TEMP_GRAPH));
           DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_TEMP_NOZZLE));
-          _maxtemp = thermalManager.hotend_max_target(EXT);
+          _maxtemp = MAX_ETEMP;
           _target = thermalManager.degTargetHotend(EXT);
           break;
       #if ENABLED(PIDTEMPBED)
@@ -1703,6 +1711,14 @@ void HMI_ReturnScreen() {
           DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_TEMP_BED));
           _maxtemp = BED_MAX_TARGET;
           _target = thermalManager.degTargetBed();
+          break;
+      #endif
+      #if ENABLED(PIDTEMPCHAMBER)
+        case PID_CHAMBER_START:
+          Title.ShowCaption(GET_TEXT_F(MSG_CHAMBER_TEMP_GRAPH));
+          DWINUI::Draw_CenteredString(3, HMI_data.PopupTxt_Color, 75, GET_TEXT_F(MSG_TEMP_CHAMBER));
+          _maxtemp = CHAMBER_MAX_TARGET;
+          _target = thermalManager.degTargetChamber();
           break;
       #endif
       default: break;
@@ -1748,7 +1764,7 @@ void HMI_ReturnScreen() {
           #if PROUI_TUNING_GRAPH
             DWIN_Draw_PID_MPC_Popup();
           #else
-            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_NOZZLE));
+            DWIN_Show_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_NOZZLE));
           #endif
           break;
       #endif
@@ -1758,7 +1774,7 @@ void HMI_ReturnScreen() {
           #if PROUI_TUNING_GRAPH
             DWIN_Draw_PID_MPC_Popup();
           #else
-            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_BED));
+            DWIN_Show_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_BED));
           #endif
           break;
       #endif
@@ -1768,7 +1784,7 @@ void HMI_ReturnScreen() {
           #if PROUI_TUNING_GRAPH
             DWIN_Draw_PID_MPC_Popup();
           #else
-            DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_CHAMBER));
+            DWIN_Show_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_CHAMBER));
           #endif
           break;
       #endif
@@ -1807,7 +1823,7 @@ void HMI_ReturnScreen() {
         #if PROUI_TUNING_GRAPH
           DWIN_Draw_PID_MPC_Popup();
         #else
-          DWIN_Draw_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_MPC_AUTOTUNE), GET_TEXT_F(MSG_NOZZLE_RUN));
+          DWIN_Show_Popup(ICON_TempTooHigh, GET_TEXT_F(MSG_MPC_AUTOTUNE), GET_TEXT_F(MSG_NOZZLE_RUN));
         #endif
         break;
       case MPC_TEMP_ERROR:
@@ -1843,7 +1859,7 @@ void DWIN_HomingStart() {
   DEBUG_ECHOLNPGM("DWIN_HomingStart");
   if (checkkey != NothingToDo || checkkey != Leveling) { HMI_SaveProcessID(Homing); }
   Title.ShowCaption(GET_TEXT_F(MSG_HOMING));
-  DWIN_Draw_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
+  DWIN_Show_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_HOMING), GET_TEXT_F(MSG_PLEASE_WAIT));
 }
 
 void DWIN_HomingDone() {
@@ -2073,13 +2089,12 @@ void DWIN_Print_Aborted() {
   }
 #endif
 
- #if ALL(PROUI_MESH_EDIT, HAS_MESH)
+#if ENABLED(PROUI_MESH_EDIT)
   void SetMeshArea() {
     TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_x = ui.mesh_min_x;
     TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_x = ui.mesh_max_x;
     TERN(PROUI_EX, PRO_data, HMI_data).mesh_min_y = ui.mesh_min_y;
     TERN(PROUI_EX, PRO_data, HMI_data).mesh_max_y = ui.mesh_max_y;
-    ApplyMeshInset();
   }
 #endif
 
@@ -2131,12 +2146,6 @@ void DWIN_SetDataDefaults() {
   TERN_(HAS_GCODE_PREVIEW, HMI_data.EnablePreview = true;)
   TERN_(PROUI_ITEM_ABRT, HMI_data.auto_abort = true;)
   #if PROUI_EX
-    #if ENABLED(PROUI_MESH_EDIT)
-      PRO_data.mesh_min_x = DEF_MESH_MIN_X;
-      PRO_data.mesh_max_x = DEF_MESH_MAX_X;
-      PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
-      PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
-    #endif
     PRO_data.x_bed_size = DEF_X_BED_SIZE;
     PRO_data.y_bed_size = DEF_Y_BED_SIZE;
     PRO_data.x_min_pos  = DEF_X_MIN_POS;
@@ -2146,6 +2155,12 @@ void DWIN_SetDataDefaults() {
     PRO_data.z_max_pos  = DEF_Z_MAX_POS;
     #if HAS_MESH
       PRO_data.grid_max_points = DEF_GRID_MAX_POINTS;
+    #endif
+    #if ENABLED(PROUI_MESH_EDIT)
+      PRO_data.mesh_min_x = DEF_MESH_MIN_X;
+      PRO_data.mesh_max_x = DEF_MESH_MAX_X;
+      PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
+      PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
     #endif
     #if HAS_BED_PROBE
       PRO_data.zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
@@ -2171,13 +2186,13 @@ void DWIN_SetDataDefaults() {
     #if ALL(HAS_MESH, PROUI_GRID_PNTS)
       HMI_data.grid_max_points = DEF_GRID_MAX_POINTS;
     #endif
-    TERN_(HAS_EXTRUDERS, HMI_data.Invert_E0 = DEF_INVERT_E0_DIR;)
     #if ENABLED(PROUI_MESH_EDIT)
       HMI_data.mesh_min_x = DEF_MESH_MIN_X;
       HMI_data.mesh_max_x = DEF_MESH_MAX_X;
       HMI_data.mesh_min_y = DEF_MESH_MIN_Y;
       HMI_data.mesh_max_y = DEF_MESH_MAX_Y;
     #endif
+    TERN_(HAS_EXTRUDERS, HMI_data.Invert_E0 = DEF_INVERT_E0_DIR;)
   #endif
 }
 
@@ -2320,8 +2335,9 @@ void MarlinUI::update() {
 #endif
 
 void MarlinUI::kill_screen(FSTR_P const lcd_error, FSTR_P const) {
-  DWIN_Draw_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
+  DWIN_Show_Popup(TERN(TJC_DISPLAY, ICON_BLTouch, ICON_Printer_0), GET_TEXT_F(MSG_PRINTER_KILLED), lcd_error);
   DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 270, GET_TEXT_F(MSG_TURN_OFF));
+  DWIN_UpdateLCD();
 }
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
@@ -2576,7 +2592,7 @@ void ApplyMove() {
   void SetProbeOffsetX() { SetPFloatOnClick(-60, 60, UNITFDIGITS, TERN(PROUI_EX, ApplyPhySet, nullptr)); }
   void SetProbeOffsetY() { SetPFloatOnClick(-60, 60, UNITFDIGITS, TERN(PROUI_EX, ApplyPhySet, nullptr)); }
   void SetProbeOffsetZ() { SetPFloatOnClick(-10, 10, 2); }
-  void SetProbeZSpeed() { SetPIntOnClick(60, 1000); }
+  void SetProbeZSpeed()  { SetPIntOnClick(60, 1000); }
   #if DISABLED(BD_SENSOR)
     void ApplyProbeMultiple() { TERN(PROUI_EX, PRO_data, HMI_data).multiple_probing = MenuData.Value; }
     void SetProbeMultiple() { SetIntOnClick(1, 4, TERN(PROUI_EX, PRO_data, HMI_data).multiple_probing, ApplyProbeMultiple); }
@@ -2899,6 +2915,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     static bed_mesh_t zval = {};
     probe.stow();
     HMI_SaveProcessID(NothingToDo); // Before home disable user input
+    wait_for_user = false;
     zval[0][0] = tram(0, false); // First tram point can do Homing
     MeshViewer.DrawMeshGrid(2, 2);
     MeshViewer.DrawMeshPoint(0, 0, zval[0][0]);
@@ -2976,7 +2993,7 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
     if (HMI_flag.select_flag) {
       if (HMI_data.FullManualTramming) {
         LCD_MESSAGE(MSG_DISABLE_MANUAL_TRAMMING);
-        return HMI_ReturnScreen();
+        HMI_ReturnScreen();
       }
       else { Trammingwizard(); }
     }
@@ -3038,13 +3055,13 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
 
 void ApplyMaxSpeed() { planner.set_max_feedrate(HMI_value.axis, MenuData.Value / MINUNITMULT); }
 #if HAS_X_AXIS
-  void SetMaxSpeedX() { HMI_value.axis = X_AXIS, SetFloatOnClick(min_feedrate_edit_values.x, max_feedrate_edit_values.x, UNITFDIGITS, planner.settings.max_feedrate_mm_s[X_AXIS], ApplyMaxSpeed); }
+  void SetMaxSpeedX() { HMI_value.axis = X_AXIS; SetFloatOnClick(min_feedrate_edit_values.x, max_feedrate_edit_values.x, UNITFDIGITS, planner.settings.max_feedrate_mm_s[X_AXIS], ApplyMaxSpeed); }
 #endif
 #if HAS_Y_AXIS
-  void SetMaxSpeedY() { HMI_value.axis = Y_AXIS, SetFloatOnClick(min_feedrate_edit_values.y, max_feedrate_edit_values.y, UNITFDIGITS, planner.settings.max_feedrate_mm_s[Y_AXIS], ApplyMaxSpeed); }
+  void SetMaxSpeedY() { HMI_value.axis = Y_AXIS; SetFloatOnClick(min_feedrate_edit_values.y, max_feedrate_edit_values.y, UNITFDIGITS, planner.settings.max_feedrate_mm_s[Y_AXIS], ApplyMaxSpeed); }
 #endif
 #if HAS_Z_AXIS
-  void SetMaxSpeedZ() { HMI_value.axis = Z_AXIS, SetFloatOnClick(min_feedrate_edit_values.z, max_feedrate_edit_values.z, UNITFDIGITS, planner.settings.max_feedrate_mm_s[Z_AXIS], ApplyMaxSpeed); }
+  void SetMaxSpeedZ() { HMI_value.axis = Z_AXIS; SetFloatOnClick(min_feedrate_edit_values.z, max_feedrate_edit_values.z, UNITFDIGITS, planner.settings.max_feedrate_mm_s[Z_AXIS], ApplyMaxSpeed); }
 #endif
 #if HAS_HOTEND
   void SetMaxSpeedE() { HMI_value.axis = E_AXIS; SetFloatOnClick(min_feedrate_edit_values.e, max_feedrate_edit_values.e, UNITFDIGITS, planner.settings.max_feedrate_mm_s[E_AXIS], ApplyMaxSpeed); }
@@ -3052,13 +3069,13 @@ void ApplyMaxSpeed() { planner.set_max_feedrate(HMI_value.axis, MenuData.Value /
 
 void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Value); }
 #if HAS_X_AXIS
-  void SetMaxAccelX() { HMI_value.axis = X_AXIS, SetIntOnClick(min_acceleration_edit_values.x, max_acceleration_edit_values.x, planner.settings.max_acceleration_mm_per_s2[X_AXIS], ApplyMaxAccel); }
+  void SetMaxAccelX() { HMI_value.axis = X_AXIS; SetIntOnClick(min_acceleration_edit_values.x, max_acceleration_edit_values.x, planner.settings.max_acceleration_mm_per_s2[X_AXIS], ApplyMaxAccel); }
 #endif
 #if HAS_Y_AXIS
-  void SetMaxAccelY() { HMI_value.axis = Y_AXIS, SetIntOnClick(min_acceleration_edit_values.y, max_acceleration_edit_values.y, planner.settings.max_acceleration_mm_per_s2[Y_AXIS], ApplyMaxAccel); }
+  void SetMaxAccelY() { HMI_value.axis = Y_AXIS; SetIntOnClick(min_acceleration_edit_values.y, max_acceleration_edit_values.y, planner.settings.max_acceleration_mm_per_s2[Y_AXIS], ApplyMaxAccel); }
 #endif
 #if HAS_Z_AXIS
-  void SetMaxAccelZ() { HMI_value.axis = Z_AXIS, SetIntOnClick(min_acceleration_edit_values.z, max_acceleration_edit_values.z, planner.settings.max_acceleration_mm_per_s2[Z_AXIS], ApplyMaxAccel); }
+  void SetMaxAccelZ() { HMI_value.axis = Z_AXIS; SetIntOnClick(min_acceleration_edit_values.z, max_acceleration_edit_values.z, planner.settings.max_acceleration_mm_per_s2[Z_AXIS], ApplyMaxAccel); }
 #endif
 #if HAS_HOTEND
   void SetMaxAccelE() { HMI_value.axis = E_AXIS; SetIntOnClick(min_acceleration_edit_values.e, max_acceleration_edit_values.e, planner.settings.max_acceleration_mm_per_s2[E_AXIS], ApplyMaxAccel); }
@@ -3067,13 +3084,13 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
 #if ENABLED(CLASSIC_JERK)
   void ApplyMaxJerk() { planner.set_max_jerk(HMI_value.axis, MenuData.Value / MINUNITMULT); }
   #if HAS_X_AXIS
-    void SetMaxJerkX() { HMI_value.axis = X_AXIS, SetFloatOnClick(min_jerk_edit_values.x, max_jerk_edit_values.x, UNITFDIGITS, planner.max_jerk.x, ApplyMaxJerk); }
+    void SetMaxJerkX() { HMI_value.axis = X_AXIS; SetFloatOnClick(min_jerk_edit_values.x, max_jerk_edit_values.x, UNITFDIGITS, planner.max_jerk.x, ApplyMaxJerk); }
   #endif
   #if HAS_Y_AXIS
-    void SetMaxJerkY() { HMI_value.axis = Y_AXIS, SetFloatOnClick(min_jerk_edit_values.y, max_jerk_edit_values.y, UNITFDIGITS, planner.max_jerk.y, ApplyMaxJerk); }
+    void SetMaxJerkY() { HMI_value.axis = Y_AXIS; SetFloatOnClick(min_jerk_edit_values.y, max_jerk_edit_values.y, UNITFDIGITS, planner.max_jerk.y, ApplyMaxJerk); }
   #endif
   #if HAS_Z_AXIS
-    void SetMaxJerkZ() { HMI_value.axis = Z_AXIS, SetFloatOnClick(min_jerk_edit_values.z, max_jerk_edit_values.z, UNITFDIGITS, planner.max_jerk.z, ApplyMaxJerk); }
+    void SetMaxJerkZ() { HMI_value.axis = Z_AXIS; SetFloatOnClick(min_jerk_edit_values.z, max_jerk_edit_values.z, UNITFDIGITS, planner.max_jerk.z, ApplyMaxJerk); }
   #endif
   #if HAS_HOTEND
     void SetMaxJerkE() { HMI_value.axis = E_AXIS; SetFloatOnClick(min_jerk_edit_values.e, max_jerk_edit_values.e, UNITFDIGITS, planner.max_jerk.e, ApplyMaxJerk); }
@@ -3088,34 +3105,46 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
 #endif
 
 #if HAS_X_AXIS
-  void SetStepsX() { HMI_value.axis = X_AXIS, SetPFloatOnClick(min_steps_edit_values.x, max_steps_edit_values.x, 2); }
+  void SetStepsX() { SetPFloatOnClick(min_steps_edit_values.x, max_steps_edit_values.x, 2); }
 #endif
 #if HAS_Y_AXIS
-  void SetStepsY() { HMI_value.axis = Y_AXIS, SetPFloatOnClick(min_steps_edit_values.y, max_steps_edit_values.y, 2); }
+  void SetStepsY() { SetPFloatOnClick(min_steps_edit_values.y, max_steps_edit_values.y, 2); }
 #endif
 #if HAS_Z_AXIS
-  void SetStepsZ() { HMI_value.axis = Z_AXIS, SetPFloatOnClick(min_steps_edit_values.z, max_steps_edit_values.z, 2); }
+  void SetStepsZ() { SetPFloatOnClick(min_steps_edit_values.z, max_steps_edit_values.z, 2); }
 #endif
 #if HAS_HOTEND
-  void SetStepsE() { HMI_value.axis = E_AXIS; SetPFloatOnClick(min_steps_edit_values.e, max_steps_edit_values.e, 2); }
+  void SetStepsE() { SetPFloatOnClick(min_steps_edit_values.e, max_steps_edit_values.e, 2); }
+#endif
+
+#if ENABLED(EDITABLE_HOMING_FEEDRATE)
+  #if HAS_X_AXIS
+    void SetHomingX() { SetPFloatOnClick(min_homing_edit_values.x, max_homing_edit_values.x, UNITFDIGITS); }
+  #endif
+  #if HAS_Y_AXIS
+    void SetHomingY() { SetPFloatOnClick(min_homing_edit_values.y, max_homing_edit_values.y, UNITFDIGITS); }
+  #endif
+  #if HAS_Z_AXIS
+    void SetHomingZ() { SetPFloatOnClick(min_homing_edit_values.z, max_homing_edit_values.z, UNITFDIGITS); }
+  #endif
 #endif
 
 #if PROUI_EX
   void ApplyPhySet() {
     ProEx.CheckParkingPos();
-    ProEx.UpdateAxis(ALL_AXES_ENUM);
+    update_software_endstops(ALL_AXES_ENUM);
   }
   void SetData() {
     ApplyPhySet();
   }
 
-  void SetBedSizeX() { HMI_value.axis = NO_AXIS_ENUM, SetPIntOnClick(X_BED_MIN, X_MAX_POS, ApplyPhySet); }
-  void SetBedSizeY() { HMI_value.axis = NO_AXIS_ENUM, SetPIntOnClick(Y_BED_MIN, Y_MAX_POS, ApplyPhySet); }
-  void SetMinPosX()  { HMI_value.axis = X_AXIS,       SetPIntOnClick(     -100,       100, ApplyPhySet); }
-  void SetMinPosY()  { HMI_value.axis = Y_AXIS,       SetPIntOnClick(     -100,       100, ApplyPhySet); }
-  void SetMaxPosX()  { HMI_value.axis = X_AXIS,       SetPIntOnClick(X_BED_MIN,       999, ApplyPhySet); }
-  void SetMaxPosY()  { HMI_value.axis = Y_AXIS,       SetPIntOnClick(Y_BED_MIN,       999, ApplyPhySet); }
-  void SetMaxPosZ()  { HMI_value.axis = Z_AXIS,       SetPIntOnClick(      100,       999, ApplyPhySet); }
+  void SetBedSizeX() { HMI_value.axis = NO_AXIS_ENUM; SetPIntOnClick(X_BED_MIN, X_MAX_POS, ApplyPhySet); }
+  void SetBedSizeY() { HMI_value.axis = NO_AXIS_ENUM; SetPIntOnClick(Y_BED_MIN, Y_MAX_POS, ApplyPhySet); }
+  void SetMinPosX()  { HMI_value.axis = X_AXIS;       SetPIntOnClick(     -100,       100, ApplyPhySet); }
+  void SetMinPosY()  { HMI_value.axis = Y_AXIS;       SetPIntOnClick(     -100,       100, ApplyPhySet); }
+  void SetMaxPosX()  { HMI_value.axis = X_AXIS;       SetPIntOnClick(X_BED_MIN,       999, ApplyPhySet); }
+  void SetMaxPosY()  { HMI_value.axis = Y_AXIS;       SetPIntOnClick(Y_BED_MIN,       999, ApplyPhySet); }
+  void SetMaxPosZ()  { HMI_value.axis = Z_AXIS;       SetPIntOnClick(      100,       999, ApplyPhySet); }
 #endif
 
 #if HAS_EXTRUDERS
@@ -3349,7 +3378,7 @@ void Draw_Move_Menu() {
 #if HAS_BED_PROBE
   void Draw_ProbeSet_Menu() {
     checkkey = Menu;
-    if (SET_MENU(ProbeSetMenu, MSG_ZPROBE_SETTINGS, 11)) {
+    if (SET_MENU(ProbeSetMenu, MSG_ZPROBE_SETTINGS, 10)) {
       BACK_ITEM(Draw_AdvancedSettings_Menu);
       #if HAS_X_AXIS
         EDIT_ITEM(ICON_ProbeOffsetX, MSG_ZPROBE_XOFFSET, onDrawPFloatMenu, SetProbeOffsetX, &probe.offset.x);
@@ -3357,7 +3386,6 @@ void Draw_Move_Menu() {
       #if HAS_Y_AXIS
         EDIT_ITEM(ICON_ProbeOffsetY, MSG_ZPROBE_YOFFSET, onDrawPFloatMenu, SetProbeOffsetY, &probe.offset.y);
       #endif
-      EDIT_ITEM(ICON_ProbeZSpeed, MSG_Z_FEED_RATE, onDrawPIntMenu, SetProbeZSpeed, TERN(PROUI_EX, &PRO_data, &HMI_data).zprobefeedslow);
       IF_DISABLED(BD_SENSOR, EDIT_ITEM(ICON_Cancel, MSG_ZPROBE_MULTIPLE, onDrawPInt8Menu, SetProbeMultiple, TERN(PROUI_EX, &PRO_data, &HMI_data).multiple_probing);)
       MENU_ITEM(ICON_ProbeTest, MSG_M48_TEST, onDrawMenuItem, ProbeTest);
       MENU_ITEM(ICON_ProbeStow, MSG_MANUAL_STOW, onDrawMenuItem, ProbeStow);
@@ -3678,20 +3706,26 @@ void Draw_Tune_Menu() {
 
 void Draw_Motion_Menu() {
   checkkey = Menu;
-  if (SET_MENU(MotionMenu, MSG_MOTION, 8)) {
+  if (SET_MENU(MotionMenu, MSG_MOTION, 9)) {
     BACK_ITEM(Draw_Control_Menu);
     MENU_ITEM(ICON_MaxSpeed, MSG_SPEED, onDrawSubMenu, Draw_MaxSpeed_Menu);
     MENU_ITEM(ICON_MaxAccelerated, MSG_ACCELERATION, onDrawSubMenu, Draw_MaxAccel_Menu);
     #if ENABLED(CLASSIC_JERK)
       MENU_ITEM(ICON_MaxJerk, MSG_JERK, onDrawSubMenu, Draw_MaxJerk_Menu);
-    #elif HAS_JUNCTION_DEVIATION
-      EDIT_ITEM(ICON_JDmm, MSG_JUNCTION_DEVIATION, onDrawPFloat3Menu, SetJDmm, &planner.junction_deviation_mm);
     #endif
     #if ENABLED(EDITABLE_STEPS_PER_UNIT)
       MENU_ITEM(ICON_Step, MSG_STEPS_PER_MM, onDrawSubMenu, Draw_Steps_Menu);
     #endif
+    #if ENABLED(EDITABLE_HOMING_FEEDRATE)
+      MENU_ITEM(ICON_Homing, MSG_HOMING_FEEDRATE, onDrawSubMenu, Draw_HomingFR_Menu);
+    #elif HAS_BED_PROBE
+      EDIT_ITEM(ICON_ProbeZSpeed, MSG_Z_FEED_RATE, onDrawPIntMenu, SetProbeZSpeed, TERN(PROUI_EX, &PRO_data, &HMI_data).zprobefeedslow);
+    #endif
     #if ENABLED(SHAPING_MENU)
       MENU_ITEM(ICON_InputShaping, MSG_INPUT_SHAPING, onDrawSubMenu, Draw_InputShaping_Menu);
+    #endif
+    #if HAS_JUNCTION_DEVIATION
+      EDIT_ITEM(ICON_JDmm, MSG_JUNCTION_DEVIATION, onDrawPFloat3Menu, SetJDmm, &planner.junction_deviation_mm);
     #endif
     #if ENABLED(LIN_ADVANCE)
       EDIT_ITEM(ICON_MaxAccelerated, MSG_ADVANCE_K, onDrawPFloat3Menu, SetLA_K, &planner.extruder_advance_K[EXT]);
@@ -3873,6 +3907,28 @@ void Draw_MaxAccel_Menu() {
   }
 #endif
 
+#if ENABLED(EDITABLE_HOMING_FEEDRATE)
+  void Draw_HomingFR_Menu() {
+    checkkey = Menu;
+    if (SET_MENU(HomingFRMenu, MSG_HOMING_FEEDRATE, 4 PLUS_TERN0(HAS_BED_PROBE, 1))) {
+      BACK_ITEM(Draw_Motion_Menu);
+      #if HAS_X_AXIS
+        EDIT_ITEM(ICON_HomeX, MSG_HOMING_FEEDRATE_X, onDrawPFloatMenu, SetHomingX, &homing_feedrate_mm_m.x);
+      #endif
+      #if HAS_Y_AXIS
+        EDIT_ITEM(ICON_HomeY, MSG_HOMING_FEEDRATE_Y, onDrawPFloatMenu, SetHomingY, &homing_feedrate_mm_m.y);
+      #endif
+      #if HAS_Z_AXIS
+        EDIT_ITEM(ICON_HomeZ, MSG_HOMING_FEEDRATE_Z, onDrawPFloatMenu, SetHomingZ, &homing_feedrate_mm_m.z);
+      #endif
+      #if HAS_BED_PROBE
+        EDIT_ITEM(ICON_ProbeZSpeed, MSG_Z_FEED_RATE, onDrawPIntMenu, SetProbeZSpeed, TERN(PROUI_EX, &PRO_data, &HMI_data).zprobefeedslow);
+      #endif
+    }
+    UpdateMenu(HomingFRMenu);
+  }
+#endif
+
 //=============================================================================
 // UI Editable Custom Colors
 //=============================================================================
@@ -3890,9 +3946,9 @@ void Draw_MaxAccel_Menu() {
     const uint8_t i = menuitem->icon;
     uint16_t color;
     switch (i) {
-      case 0:  color = RGB(31, 0, 0); break; // Red
-      case 1:  color = RGB(0, 63, 0); break; // Green
-      case 2:  color = RGB(0, 0, 31); break; // Blue
+      case 0:  color = RGB(31,  0,  0); break; // Red
+      case 1:  color = RGB( 0, 63,  0); break; // Green
+      case 2:  color = RGB( 0,  0, 31); break; // Blue
       default: color = 0; break;
     }
     DWIN_Draw_Rectangle(0, HMI_data.Highlight_Color, ICOX + 1, MBASE(line) - 1 + 1, ICOX + 18, MBASE(line) - 1 + 18);
@@ -3932,6 +3988,7 @@ void Draw_MaxAccel_Menu() {
     DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
     Draw_SelectColors_Menu();
     hash_changed = true;
+    ui.reset_status(true);
     LCD_MESSAGE(MSG_COLORS_APPLIED);
     DWIN_Draw_Dashboard();
   }
@@ -3970,24 +4027,24 @@ void Draw_MaxAccel_Menu() {
       BACK_ITEM(Draw_Control_Menu);
       MENU_ITEM(ICON_ResetEEPROM, MSG_RESTORE_DEFAULTS, onDrawMenuItem, RestoreDefaultColors);
       EDIT_ITEM_F(0, "Screen Background", onDrawSelColorItem, SelColor, &HMI_data.Background_Color);
-      EDIT_ITEM_F(0, "Cursor", onDrawSelColorItem, SelColor, &HMI_data.Cursor_Color);
-      EDIT_ITEM_F(0, "Title Background", onDrawSelColorItem, SelColor, &HMI_data.TitleBg_Color);
-      EDIT_ITEM_F(0, "Title Text", onDrawSelColorItem, SelColor, &HMI_data.TitleTxt_Color);
-      EDIT_ITEM_F(0, "Text", onDrawSelColorItem, SelColor, &HMI_data.Text_Color);
-      EDIT_ITEM_F(0, "Selected", onDrawSelColorItem, SelColor, &HMI_data.Selected_Color);
-      EDIT_ITEM_F(0, "Split Line", onDrawSelColorItem, SelColor, &HMI_data.SplitLine_Color);
-      EDIT_ITEM_F(0, "Highlight", onDrawSelColorItem, SelColor, &HMI_data.Highlight_Color);
+      EDIT_ITEM_F(0, "Cursor",            onDrawSelColorItem, SelColor, &HMI_data.Cursor_Color);
+      EDIT_ITEM_F(0, "Title Background",  onDrawSelColorItem, SelColor, &HMI_data.TitleBg_Color);
+      EDIT_ITEM_F(0, "Title Text",        onDrawSelColorItem, SelColor, &HMI_data.TitleTxt_Color);
+      EDIT_ITEM_F(0, "Text",              onDrawSelColorItem, SelColor, &HMI_data.Text_Color);
+      EDIT_ITEM_F(0, "Selected",          onDrawSelColorItem, SelColor, &HMI_data.Selected_Color);
+      EDIT_ITEM_F(0, "Split Line",        onDrawSelColorItem, SelColor, &HMI_data.SplitLine_Color);
+      EDIT_ITEM_F(0, "Highlight",         onDrawSelColorItem, SelColor, &HMI_data.Highlight_Color);
       EDIT_ITEM_F(0, "Status Background", onDrawSelColorItem, SelColor, &HMI_data.StatusBg_Color);
-      EDIT_ITEM_F(0, "Status Text", onDrawSelColorItem, SelColor, &HMI_data.StatusTxt_Color);
-      EDIT_ITEM_F(0, "Popup Background", onDrawSelColorItem, SelColor, &HMI_data.PopupBg_Color);
-      EDIT_ITEM_F(0, "Popup Text", onDrawSelColorItem, SelColor, &HMI_data.PopupTxt_Color);
-      EDIT_ITEM_F(0, "Alert Background", onDrawSelColorItem, SelColor, &HMI_data.AlertBg_Color);
-      EDIT_ITEM_F(0, "Alert Text", onDrawSelColorItem, SelColor, &HMI_data.AlertTxt_Color);
-      EDIT_ITEM_F(0, "Percent Text", onDrawSelColorItem, SelColor, &HMI_data.PercentTxt_Color);
-      EDIT_ITEM_F(0, "Bar Fill", onDrawSelColorItem, SelColor, &HMI_data.Barfill_Color);
-      EDIT_ITEM_F(0, "Indicator value", onDrawSelColorItem, SelColor, &HMI_data.Indicator_Color);
-      EDIT_ITEM_F(0, "Coordinate value", onDrawSelColorItem, SelColor, &HMI_data.Coordinate_Color);
-      EDIT_ITEM_F(0, "Bottom Line", onDrawSelColorItem, SelColor, &HMI_data.Bottom_Color);
+      EDIT_ITEM_F(0, "Status Text",       onDrawSelColorItem, SelColor, &HMI_data.StatusTxt_Color);
+      EDIT_ITEM_F(0, "Popup Background",  onDrawSelColorItem, SelColor, &HMI_data.PopupBg_Color);
+      EDIT_ITEM_F(0, "Popup Text",        onDrawSelColorItem, SelColor, &HMI_data.PopupTxt_Color);
+      EDIT_ITEM_F(0, "Alert Background",  onDrawSelColorItem, SelColor, &HMI_data.AlertBg_Color);
+      EDIT_ITEM_F(0, "Alert Text",        onDrawSelColorItem, SelColor, &HMI_data.AlertTxt_Color);
+      EDIT_ITEM_F(0, "Percent Text",      onDrawSelColorItem, SelColor, &HMI_data.PercentTxt_Color);
+      EDIT_ITEM_F(0, "Bar Fill",          onDrawSelColorItem, SelColor, &HMI_data.Barfill_Color);
+      EDIT_ITEM_F(0, "Indicator value",   onDrawSelColorItem, SelColor, &HMI_data.Indicator_Color);
+      EDIT_ITEM_F(0, "Coordinate value",  onDrawSelColorItem, SelColor, &HMI_data.Coordinate_Color);
+      EDIT_ITEM_F(0, "Bottom Line",       onDrawSelColorItem, SelColor, &HMI_data.Bottom_Color);
     }
     UpdateMenu(SelectColorMenu);
   }
@@ -4174,9 +4231,9 @@ void Draw_MaxAccel_Menu() {
         EDIT_ITEM(ICON_PIDCycles, MSG_PID_CYCLE, onDrawPIntMenu, SetPIDCycles, &HMI_data.PIDCycles);
       #endif
       #if ENABLED(PID_EDIT_MENU)
-        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KP, onDrawPFloat2Menu, SetKp, &thermalManager.temp_bed.pid.Kp);
-        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KI, onDrawPIDi, SetKi, &thermalManager.temp_bed.pid.Ki);
-        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KD, onDrawPIDd, SetKd, &thermalManager.temp_bed.pid.Kd);
+        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KP, onDrawPFloat2Menu, SetKp, &thermalManager.temp_chamber.pid.Kp);
+        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KI, onDrawPIDi, SetKi, &thermalManager.temp_chamber.pid.Ki);
+        EDIT_ITEM(ICON_PIDValue, MSG_PID_SET_KD, onDrawPIDd, SetKd, &thermalManager.temp_chamber.pid.Kd);
       #endif
     }
     UpdateMenu(ChamberPIDMenu);
@@ -4261,12 +4318,21 @@ void Draw_MaxAccel_Menu() {
 
 #if HAS_MESH
   //void CreatePlaneFromMesh() { bedLevelTools.create_plane_from_mesh(); }
-  void ApplyMeshPoints() { TERN(PROUI_EX, PRO_data, HMI_data).grid_max_points = MenuData.Value; ReDrawMenu(); }
-  void LiveMeshPoints() { DrawMeshPoints(true, CurrentMenu->line(), MenuData.Value); }
-  void SetMeshPoints() {
-    SetOnClick(SetIntNoDraw, GRID_MIN, GRID_LIMIT, 0, TERN(PROUI_EX, PRO_data, HMI_data).grid_max_points, ApplyMeshPoints, LiveMeshPoints);
-    DrawMeshPoints(true, CurrentMenu->line(), TERN(PROUI_EX, PRO_data, HMI_data).grid_max_points);
-  }
+  #if PROUI_EX
+    void ApplyMeshPoints() { PRO_data.grid_max_points = MenuData.Value; ReDrawMenu(); }
+    void LiveMeshPoints() { DrawMeshPoints(true, CurrentMenu->line(), MenuData.Value); }
+    void SetMeshPoints() {
+      SetOnClick(SetIntNoDraw, GRID_MIN, GRID_LIMIT, 0, PRO_data.grid_max_points, ApplyMeshPoints, LiveMeshPoints);
+      DrawMeshPoints(true, CurrentMenu->line(), PRO_data.grid_max_points);
+    }
+  #elif PROUI_GRID_PNTS
+    void ApplyMeshPoints() { HMI_data.grid_max_points = MenuData.Value; ReDrawMenu(); }
+    void LiveMeshPoints() { DrawMeshPoints(true, CurrentMenu->line(), MenuData.Value); }
+    void SetMeshPoints() {
+      SetOnClick(SetIntNoDraw, GRID_MIN, GRID_LIMIT, 0, HMI_data.grid_max_points, ApplyMeshPoints, LiveMeshPoints);
+      DrawMeshPoints(true, CurrentMenu->line(), HMI_data.grid_max_points);
+    }
+  #endif
 
   #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
     void ApplyMeshFadeHeight() { set_z_fade_height(planner.z_fade_height); }
@@ -4457,7 +4523,8 @@ void Draw_MaxAccel_Menu() {
   void LaserRunRange() {
     if (!laser_device.is_laser_device()) return;
     if (!all_axes_trusted()) return LCD_MESSAGE_F("First set home");
-    DWIN_Draw_Popup(ICON_TempTooHigh, F("LASER"), F("Run Range"), BTN_Cancel);
+    DWIN_Show_Popup(ICON_TempTooHigh, F("LASER"), F("Run Range"), BTN_Cancel);
+    HMI_SaveProcessID(WaitResponse);
     laser_device.laser_range();
   }
 

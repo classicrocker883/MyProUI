@@ -177,9 +177,9 @@
 #endif
 
 #if HAS_PRUSA_MMU3
-  #include "../feature/mmu3/mmu2.h"
+  #include "../feature/mmu3/mmu3.h"
   #include "../feature/mmu3/SpoolJoin.h"
-  #include "../feature/mmu3/mmu2_reporting.h"
+  #include "../feature/mmu3/mmu3_reporting.h"
 #endif
 
 #pragma pack(push, 1) // No padding between variables
@@ -490,11 +490,18 @@ typedef struct SettingsDataStruct {
   #endif
 
   //
+  // EDITABLE_HOMING_FEEDRATE
+  //
+  #if ENABLED(EDITABLE_HOMING_FEEDRATE)
+    xyz_feedrate_t homing_feedrate_mm_m;                // M210 X Y Z I J K U V W
+  #endif
+
+  //
   // !NO_VOLUMETRIC
   //
-  #if DISABLED(NO_VOLUMETRICS)
-    bool parser_volumetric_enabled;                     // M200 S  parser.volumetric_enabled
-    float planner_filament_size[EXTRUDERS];             // M200 T D  planner.filament_size[]
+  bool parser_volumetric_enabled;                       // M200 S  parser.volumetric_enabled
+  float planner_filament_size[EXTRUDERS];               // M200 T D  planner.filament_size[]
+  #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
     float planner_volumetric_extruder_limit[EXTRUDERS]; // M200 T L  planner.volumetric_extruder_limit[]
   #endif
 
@@ -518,20 +525,18 @@ typedef struct SettingsDataStruct {
   //
   // HAS_MOTOR_CURRENT_PWM
   //
-  #if HAS_MOTOR_CURRENT
-    #ifndef MOTOR_CURRENT_COUNT
-      #if HAS_MOTOR_CURRENT_PWM
-        #define MOTOR_CURRENT_COUNT 3
-      #elif HAS_MOTOR_CURRENT_DAC
-        #define MOTOR_CURRENT_COUNT LOGICAL_AXES
-      #elif HAS_MOTOR_CURRENT_I2C
-        #define MOTOR_CURRENT_COUNT DIGIPOT_I2C_NUM_CHANNELS
-      #else // HAS_MOTOR_CURRENT_SPI
-        #define MOTOR_CURRENT_COUNT DISTINCT_AXES
-      #endif
+  #ifndef MOTOR_CURRENT_COUNT
+    #if HAS_MOTOR_CURRENT_PWM
+      #define MOTOR_CURRENT_COUNT 3
+    #elif HAS_MOTOR_CURRENT_DAC
+      #define MOTOR_CURRENT_COUNT LOGICAL_AXES
+    #elif HAS_MOTOR_CURRENT_I2C
+      #define MOTOR_CURRENT_COUNT DIGIPOT_I2C_NUM_CHANNELS
+    #else // HAS_MOTOR_CURRENT_SPI
+      #define MOTOR_CURRENT_COUNT DISTINCT_AXES
     #endif
-    uint32_t motor_current_setting[MOTOR_CURRENT_COUNT]; // M907 X Z E ...
   #endif
+  uint32_t motor_current_setting[MOTOR_CURRENT_COUNT];  // M907 X Z E ...
 
   //
   // Adaptive Step Smoothing state
@@ -893,11 +898,9 @@ void MarlinSettings::postprocess() {
   #if ENABLED(DEBUG_EEPROM_OBSERVE)
     #define EEPROM_READ(V...)        do { SERIAL_ECHOLNPGM("READ: ", F(STRINGIFY(FIRST(V)))); EEPROM_READ_(V); } while (0)
     #define EEPROM_READ_ALWAYS(V...) do { SERIAL_ECHOLNPGM("READ: ", F(STRINGIFY(FIRST(V)))); EEPROM_READ_ALWAYS_(V); } while (0)
-    #define EEPROM_WRITE(V...)       do { SERIAL_ECHOLNPGM("WRITE: ", F(STRINGIFY(FIRST(V)))); EEPROM_WRITE_(V); } while (0)
   #else
     #define EEPROM_READ(V...)        EEPROM_READ_(V)
     #define EEPROM_READ_ALWAYS(V...) EEPROM_READ_ALWAYS_(V)
-    #define EEPROM_WRITE(V...)       EEPROM_WRITE_(V)
   #endif
 
   constexpr char version_str[4] = EEPROM_VERSION;
@@ -971,7 +974,7 @@ void MarlinSettings::postprocess() {
           EEPROM_WRITE(dummyf);
         #endif
       #else
-        const xyze_pos_t planner_max_jerk = LOGICAL_AXIS_ARRAY(5, 10, 10, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4);
+        const xyze_pos_t planner_max_jerk = LOGICAL_AXIS_ARRAY(10, 10, 10, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4);
         EEPROM_WRITE(planner_max_jerk);
       #endif
 
@@ -1000,13 +1003,13 @@ void MarlinSettings::postprocess() {
     //
     // Hotend Offsets, if any
     //
+    #if HAS_HOTEND_OFFSET
     {
-      #if HAS_HOTEND_OFFSET
         // Skip hotend 0 which must be 0
         for (uint8_t e = 1; e < HOTENDS; ++e)
           EEPROM_WRITE(hotend_offset[e]);
-      #endif
     }
+    #endif
 
     //
     // Filament Runout Sensor
@@ -1393,11 +1396,7 @@ void MarlinSettings::postprocess() {
     #if ENABLED(USE_CONTROLLER_FAN)
     {
       _FIELD_TEST(controllerFan_settings);
-      #if ENABLED(CONTROLLER_FAN_EDITABLE)
-        const controllerFan_settings_t &cfs = controllerFan.settings;
-      #else
-        constexpr controllerFan_settings_t cfs = controllerFan_defaults;
-      #endif
+      const controllerFan_settings_t &cfs = controllerFan.settings;
       EEPROM_WRITE(cfs);
     }
     #endif
@@ -1431,21 +1430,36 @@ void MarlinSettings::postprocess() {
     #endif
 
     //
+    // Homing Feedrate
+    //
+    #if ENABLED(EDITABLE_HOMING_FEEDRATE)
+      _FIELD_TEST(homing_feedrate_mm_m);
+      EEPROM_WRITE(homing_feedrate_mm_m);
+    #endif
+
+    //
     // Volumetric & Filament Size
     //
-    #if DISABLED(NO_VOLUMETRICS)
     {
       _FIELD_TEST(parser_volumetric_enabled);
-      EEPROM_WRITE(parser.volumetric_enabled);
-      EEPROM_WRITE(planner.filament_size);
-      #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
-        EEPROM_WRITE(planner.volumetric_extruder_limit);
+
+      #if DISABLED(NO_VOLUMETRICS)
+
+        EEPROM_WRITE(parser.volumetric_enabled);
+        EEPROM_WRITE(planner.filament_size);
+        #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
+          EEPROM_WRITE(planner.volumetric_extruder_limit);
+        #endif
+
       #else
-        dummyf = 0.0;
+
+        const bool volumetric_enabled = false;
+        EEPROM_WRITE(volumetric_enabled);
+        dummyf = DEFAULT_NOMINAL_FILAMENT_DIA;
         for (uint8_t q = EXTRUDERS; q--;) EEPROM_WRITE(dummyf);
+
       #endif
     }
-    #endif
 
     //
     // TMC Configuration
@@ -1639,7 +1653,6 @@ void MarlinSettings::postprocess() {
     //
     // Motor Current PWM
     //
-    #if HAS_MOTOR_CURRENT
     {
       _FIELD_TEST(motor_current_setting);
 
@@ -1650,7 +1663,6 @@ void MarlinSettings::postprocess() {
         EEPROM_WRITE(no_current);
       #endif
     }
-    #endif
 
     //
     // Adaptive Step Smoothing state
@@ -1665,12 +1677,10 @@ void MarlinSettings::postprocess() {
     //
     #if NUM_AXES
       _FIELD_TEST(coordinate_system);
-      #if ENABLED(CNC_COORDINATE_SYSTEMS)
-        EEPROM_WRITE(gcode.coordinate_system);
-      #else
-        xyz_pos_t coordinate_system[MAX_COORDINATE_SYSTEMS];
-        EEPROM_SKIP(coordinate_system);
+      #if DISABLED(CNC_COORDINATE_SYSTEMS)
+        const xyz_pos_t coordinate_system[MAX_COORDINATE_SYSTEMS] = { { 0 } };
       #endif
+      EEPROM_WRITE(TERN(CNC_COORDINATE_SYSTEMS, gcode.coordinate_system, coordinate_system));
     #endif
 
     //
@@ -1694,7 +1704,6 @@ void MarlinSettings::postprocess() {
     //
     // Multiple Extruders
     //
-
     #if HAS_MULTI_EXTRUDER
       _FIELD_TEST(toolchange_settings);
       EEPROM_WRITE(toolchange_settings);
@@ -2103,13 +2112,13 @@ void MarlinSettings::postprocess() {
       //
       // Hotend Offsets, if any
       //
+      #if HAS_HOTEND_OFFSET
       {
-        #if HAS_HOTEND_OFFSET
           // Skip hotend 0 which must be 0
           for (uint8_t e = 1; e < HOTENDS; ++e)
             EEPROM_READ(hotend_offset[e]);
-        #endif
       }
+      #endif
 
       //
       // Filament Runout Sensor
@@ -2557,33 +2566,42 @@ void MarlinSettings::postprocess() {
       #endif
 
       //
+      // Homing Feedrate
+      //
+      #if ENABLED(EDITABLE_HOMING_FEEDRATE)
+        _FIELD_TEST(homing_feedrate_mm_m);
+        EEPROM_READ(homing_feedrate_mm_m);
+      #endif
+
+      //
       // Volumetric & Filament Size
       //
-      #if DISABLED(NO_VOLUMETRICS)
       {
         struct {
           bool volumetric_enabled;
           float filament_size[EXTRUDERS];
-          float volumetric_extruder_limit[EXTRUDERS];
+          #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
+            float volumetric_extruder_limit[EXTRUDERS];
+          #endif
         } storage;
 
         _FIELD_TEST(parser_volumetric_enabled);
         EEPROM_READ(storage);
 
-        if (!validating) {
-          parser.volumetric_enabled = storage.volumetric_enabled;
-          COPY(planner.filament_size, storage.filament_size);
-          #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
-            COPY(planner.volumetric_extruder_limit, storage.volumetric_extruder_limit);
-          #endif
-        }
+        #if DISABLED(NO_VOLUMETRICS)
+          if (!validating) {
+            parser.volumetric_enabled = storage.volumetric_enabled;
+            COPY(planner.filament_size, storage.filament_size);
+            #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
+              COPY(planner.volumetric_extruder_limit, storage.volumetric_extruder_limit);
+            #endif
+          }
+        #endif
       }
-      #endif
 
       //
       // TMC Stepper Settings
       //
-
       if (!validating) reset_stepper_drivers();
 
       // TMC Stepper Current
@@ -2779,7 +2797,6 @@ void MarlinSettings::postprocess() {
       //
       // Motor Current PWM
       //
-      #if HAS_MOTOR_CURRENT
       {
         _FIELD_TEST(motor_current_setting);
         uint32_t motor_current_setting[MOTOR_CURRENT_COUNT]
@@ -2799,7 +2816,6 @@ void MarlinSettings::postprocess() {
             COPY(stepper.motor_current_setting, motor_current_setting);
         #endif
       }
-      #endif
 
       //
       // Adaptive Step Smoothing state
@@ -2819,7 +2835,7 @@ void MarlinSettings::postprocess() {
           EEPROM_READ(gcode.coordinate_system);
         #else
           xyz_pos_t coordinate_system[MAX_COORDINATE_SYSTEMS];
-          EEPROM_SKIP(coordinate_system);
+          EEPROM_READ(coordinate_system);
         #endif
       }
       #endif
@@ -3264,10 +3280,6 @@ void MarlinSettings::postprocess() {
     #if ANY(EEPROM_AUTO_INIT, EEPROM_INIT_NOW)
       (void)save();
       SERIAL_ECHO_MSG("EEPROM Initialized");
-      #if ENABLED(DWIN_LCD_PROUI)
-        safe_delay(200);
-        RebootPrinter();
-      #endif
     #endif
     return false;
   }
@@ -3493,7 +3505,6 @@ void MarlinSettings::reset() {
   //
   // Filament Runout Sensor
   //
-
   #if HAS_FILAMENT_SENSOR
     runout.enabled = FIL_RUNOUT_ENABLED_DEFAULT;
     runout.reset();
@@ -3503,7 +3514,6 @@ void MarlinSettings::reset() {
   //
   // Tool-change Settings
   //
-
   #if HAS_MULTI_EXTRUDER
     #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
       toolchange_settings.swap_length     = TOOLCHANGE_FS_LENGTH;
@@ -3658,7 +3668,6 @@ void MarlinSettings::reset() {
   //
   // Kinematic Settings (Delta, SCARA, TPARA, Polargraph...)
   //
-
   #if IS_KINEMATIC
     segments_per_second = DEFAULT_SEGMENTS_PER_SECOND;
     #if ENABLED(DELTA)
@@ -3679,7 +3688,6 @@ void MarlinSettings::reset() {
   //
   // Endstop Adjustments
   //
-
   #if ENABLED(X_DUAL_ENDSTOPS)
     #ifndef X2_ENDSTOP_ADJUSTMENT
       #define X2_ENDSTOP_ADJUSTMENT 0
@@ -3737,7 +3745,6 @@ void MarlinSettings::reset() {
   //
   // Hotend PID
   //
-
   #if ENABLED(PIDTEMP)
     #if ENABLED(PID_PARAMS_PER_HOTEND)
       constexpr float defKp[] =
@@ -3866,6 +3873,11 @@ void MarlinSettings::reset() {
   TERN_(FWRETRACT, fwretract.reset());
 
   //
+  // Homing Feedrate
+  //
+  TERN_(EDITABLE_HOMING_FEEDRATE, homing_feedrate_mm_m = xyz_feedrate_t(HOMING_FEEDRATE_MM_M));
+
+  //
   // Volumetric & Filament Size
   //
   #if DISABLED(NO_VOLUMETRICS)
@@ -3901,7 +3913,6 @@ void MarlinSettings::reset() {
   //
   // Motor Current PWM
   //
-
   #if HAS_MOTOR_CURRENT_PWM
     constexpr uint32_t tmp_motor_current_setting[MOTOR_CURRENT_COUNT] = PWM_MOTOR_CURRENT;
     for (uint8_t q = 0; q < MOTOR_CURRENT_COUNT; ++q)
@@ -4279,6 +4290,11 @@ void MarlinSettings::reset() {
       gcode.M208_report(forReplay);
       TERN_(FWRETRACT_AUTORETRACT, gcode.M209_report(forReplay));
     #endif
+
+    //
+    // Homing Feedrate
+    //
+    TERN_(EDITABLE_HOMING_FEEDRATE, gcode.M210_report(forReplay));
 
     //
     // Probe Offset

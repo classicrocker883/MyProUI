@@ -203,6 +203,7 @@ void Preview::drawFromSD() {
   DWINUI::Draw_Button(BTN_Cancel, 146, 290);
   if (fileprop.thumbsize) show();
   Draw_Select_Highlight(false, 290);
+  DWIN_UpdateLCD();
 }
 
 void Preview::invalidate() {

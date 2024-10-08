@@ -129,7 +129,7 @@ def fetch_example(url):
     if not url.startswith('http'):
         brch = "HEAD"
         if '@' in url: url, brch = map(str.strip, url.split('@'))
-        if url == 'examples/default': url = 'Andrew427'
+        if url == 'configurations': url = 'Andrew427'
         url = f"https://raw.githubusercontent.com/classicrocker883/MRiscoCProUI/{brch}/configurations/{url}"
     url = url.replace("%", "%25").replace(" ", "%20")
 
@@ -195,7 +195,7 @@ def apply_sections(cp, ckey='all'):
             apply_ini_by_name(cp, 'config:basic')
 
         # Apply historically Configuration_adv.h settings everywhere
-        # (Some of which rely on defines in 'Conditionals_LCD.h')
+        # (Some of which rely on defines in 'Conditionals-2-LCD.h')
         elif ckey in ('adv', 'advanced'):
             apply_ini_by_name(cp, 'config:advanced')
 
@@ -258,13 +258,13 @@ if __name__ == "__main__":
     #
     # From command line use the given file name
     #
-    import sys
+    import sys, os
     args = sys.argv[1:]
     if len(args) > 0:
         if args[0].endswith('.ini'):
             ini_file = args[0]
         else:
-            print("Usage: %s <.ini file>" % sys.argv[0])
+            print("Usage: %s <.ini file>" % os.path.basename(sys.argv[0]))
     else:
         ini_file = config_path('config.ini')
 

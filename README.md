@@ -1,11 +1,11 @@
 # Professional Firmware for the Voxelab Aquila and Creality Ender-3 3D Printers
 **_<sup>(or any other compatible 3D Printer)</sup>_**
 
-![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MRiscoCProUI.svg)  
-![CI Unit Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-unit-tests.yml/badge.svg)  
-![CI Build Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-build-tests.yml/badge.svg)  
-[![Aquila Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)  
-![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)  
+![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MRiscoCProUI.svg)
+![CI Unit Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-unit-tests.yml/badge.svg)
+![CI Build Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-build-tests.yml/badge.svg)
+[![Aquila Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)
+![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)
 ![Ender Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs_Ender.yml/badge.svg)
 
 **Don't forget to checkout the [thingiverse](https://www.thingiverse.com/classicrocker883/designs) models I've designed:**
@@ -31,7 +31,7 @@
 
 ### - Please read this: -
 > [!NOTE]
-Many Updates have been included in the most recent MRiscoCProUI for the **2024-August** release.
+Many Updates have been included in the most recent MRiscoCProUI for the **2024-October** release.
 This release has many changes to the **UI**.
 New ICON's have been added, and old ones enhanced. Whoever edited them before saved directly as .*JPG* which in many editors lowers the quality of the image. I painstakingly remastered almost every single one; preserving the original quality.
 >
@@ -62,7 +62,7 @@ New ICON's have been added, and old ones enhanced. Whoever edited them before sa
 <br>
 
 #### Other Information:
-General information about the firmware and updates is located in the _Wiki_ page [What's New In This Release](https://github.com/classicrocker883/MRiscoCProUI/wiki/What's-New-in-this-Release). <br> 
+General information about the firmware and updates is located in the _Wiki_ page [What's New In This Release](https://github.com/classicrocker883/MRiscoCProUI/wiki/What's-New-in-this-Release). <br>
 Other changes and updates are [addressed here](https://github.com/classicrocker883/MRiscoCProUI/releases/latest).
 
 [Linear Advance Information](https://github.com/MarlinFirmware/MarlinDocumentation/blob/master/_features/lin_advance.md)
@@ -118,9 +118,9 @@ The Precompiled binary files of this firmware can work with STM32 (STM32F103RET6
 ## Donations
 
 Thank you for your support.
-Please consider making a donation, as large or as small and as often as you'd like.  
-[Ko-fi](https://ko-fi.com/classicrocker883)  
-[Venmo](https://venmo.com/u/andrewleduc88)  
+Please consider making a donation, as large or as small and as often as you'd like.
+[Ko-fi](https://ko-fi.com/classicrocker883)
+[Venmo](https://venmo.com/u/andrewleduc88)
 [Paypal](https://www.paypal.com/paypalme/andrewleduc)
 
 [<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">](https://www.paypal.com/donate/?business=PFNSKQX9WQQ8W&no_recurring=0&currency_code=USD)  **PayPal**
@@ -152,12 +152,12 @@ Please consider making a donation, as large or as small and as often as you'd li
 
 The Issue Queue is reserved for Bug Reports and Feature Requests. Please use the following resources for help with configuration and troubleshooting:
 
-- [Marlin Documentation](https://marlinfw.org) - Official Marlin documentation
-- [Marlin Discord](https://discord.com/servers/marlin-firmware-461605380783472640) - Discuss issues with Marlin users and developers
-- Facebook Group ["Marlin Firmware"](https://www.facebook.com/groups/1049718498464482/)
-- RepRap.org [Marlin Forum](https://forums.reprap.org/list.php?415)
-- Facebook Group ["Marlin Firmware for 3D Printers"](https://www.facebook.com/groups/3Dtechtalk/)
-- [Marlin Configuration](https://www.youtube.com/results?search_query=marlin+configuration) on YouTube
+- [Marlin Documentation](//marlinfw.org) - Official Marlin documentation
+- [Marlin Discord](//discord.com/servers/marlin-firmware-461605380783472640) - Discuss issues with Marlin users and developers
+- Facebook Group ["Marlin Firmware"](//www.facebook.com/groups/1049718498464482/)
+- RepRap.org [Marlin Forum](//forums.reprap.org/list.php?415)
+- Facebook Group ["Marlin Firmware for 3D Printers"](//www.facebook.com/groups/3Dtechtalk/)
+- [Marlin Configuration](//www.youtube.com/results?search_query=marlin+configuration) on YouTube
 
 <br>
 
@@ -186,7 +186,7 @@ I would greatly appreciate supporters, helpers, and betatesters whenever possibl
 
 Please show your support by considering making a donation, or giving your input if you end up using this firmware.
 
-It wasn't easy getting it to this point. I am just a basic programmer and the work is mostly trial and error. Thank goodness for VS Code's compiler and also AI like ChatGPT which shows me what changes need to be made as I make them. 
+It wasn't easy getting it to this point. I am just a basic programmer and the work is mostly trial and error. Thank goodness for VS Code's compiler and also AI like ChatGPT which shows me what changes need to be made as I make them.
 
 Marlin firmware is an Open Source project hosted on Github, [Marlin](https://marlinfw.org/) is owned and maintained by the maker community.
 

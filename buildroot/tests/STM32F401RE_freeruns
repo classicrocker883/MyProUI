@@ -22,6 +22,3 @@ use_example_configs "Creality Ender/E3-Free-runs/UBL"
 # opt_enable
 # opt_add
 exec_test $1 $2 "Creality E3-Free-runs - ProUI Unified (UBL)" "$3"
-
-# clean up
-restore_configs

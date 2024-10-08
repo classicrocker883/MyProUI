@@ -80,8 +80,8 @@ struct EnsureDouble {
   // If the compiler breaks on ambiguity here, it's likely because print(X, base) is called with X not a double/float, and
   // a base that's not a PrintBase value. This code is made to detect the error. You MUST set a base explicitly like this:
   //SERIAL_PRINT(v, PrintBase::Hex)
-  EnsureDouble(float  a) : a(a) {}
   EnsureDouble(double a) : a(a) {}
+  EnsureDouble(float  a) : a(a) {}
 };
 
 // Using Curiously-Recurring Template Pattern here to avoid virtual table cost when compiling.
@@ -102,16 +102,16 @@ struct SerialBase {
 
   // Static dispatch methods below:
   // The most important method here is where it all ends to:
-  void write(uint8_t c)            { SerialChild->write(c); }
+  void write(uint8_t c)           { SerialChild->write(c); }
 
   // Called when the parser finished processing an instruction, usually build to nothing
-  void msgDone() const             { SerialChild->msgDone(); }
+  void msgDone() const            { SerialChild->msgDone(); }
 
   // Called on initialization
-  void begin(const long baudRate)  { SerialChild->begin(baudRate); }
+  void begin(const long baudRate) { SerialChild->begin(baudRate); }
 
   // Called on destruction
-  void end()                       { SerialChild->end(); }
+  void end()                      { SerialChild->end(); }
 
   /** Check for available data from the port
       @param index  The port index, usually 0 */

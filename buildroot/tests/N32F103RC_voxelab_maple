@@ -43,6 +43,3 @@ use_example_configs "Voxelab Aquila/X3"
 # opt_enable
 # opt_add
 exec_test $1 $2 "Aquila N32 - ProUI X3" "$3"
-
-# clean up
-restore_configs

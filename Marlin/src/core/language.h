@@ -141,7 +141,7 @@
 #define STR_ACTIVE_EXTRUDER                 "Active Extruder: "
 #define STR_ERR_FANSPEED                    "Fan speed E"
 
-#define STR_PROBE_OFFSET                    "Probe Offset"
+#define STR_Z_PROBE_OFFSET                  "Z-Probe Offset"
 #define STR_SKEW_MIN                        "min_skew_factor: "
 #define STR_SKEW_MAX                        "max_skew_factor: "
 #define STR_ERR_MATERIAL_INDEX              "M145 S<index> out of range (0-1)"
@@ -158,9 +158,11 @@
 #define STR_OFF                             "OFF"
 #define STR_ENDSTOP_HIT                     "TRIGGERED"
 #define STR_ENDSTOP_OPEN                    "Open"
+#define STR_FILAMENT_PRESENT                "PRESENT"
+#define STR_RUNOUT_DETECTED                 "Runout Detected"
 #define STR_DUPLICATION_MODE                "Duplication mode: "
-#define STR_SOFT_MIN                        " Min: "
-#define STR_SOFT_MAX                        " Max: "
+#define STR_SOFT_MIN                        "  Min: "
+#define STR_SOFT_MAX                        "  Max: "
 
 #define STR_SAVED_POSITION                  "Saved position #"
 #define STR_RESTORING_POSITION              "Restoring position #"
@@ -256,7 +258,7 @@
 #define STR_T_MAXTEMP                       "MAXTEMP triggered"
 #define STR_T_MINTEMP                       "MINTEMP triggered"
 #define STR_ERR_PROBING_FAILED              "Probing Failed"
-#define STR_ZPROBE_OUT_SER                  "Z Probe Past Bed"
+#define STR_ZPROBE_OUT_SER                  "Z-Probe Past Bed"
 
 // Debug
 #define STR_DEBUG_PREFIX                    "DEBUG:"
@@ -287,12 +289,17 @@
 #define STR_SCARA_P_T_Z                     "P<theta-psi-offset> T<theta-offset> Z<home-offset>"
 #define STR_ENDSTOP_ADJUSTMENT              "Endstop adjustment"
 #define STR_SKEW_FACTOR                     "Skew Factor"
-#define STR_FILAMENT_SETTINGS               "Filament settings"
+#define STR_VOLUMETRIC_EXTRUSION            "Volumetric Extrusion"
 #define STR_MAX_ACCELERATION                "Max Acceleration (units/s2)"
 #define STR_MAX_FEEDRATES                   "Max feedrates (units/s)"
 #define STR_ACCELERATION_P_R_T              "Acceleration (units/s2) (P<print-accel> R<retract-accel> T<travel-accel>)"
+#define STR_HOMING_FEEDRATE                 "Homing Feedrate"
 #define STR_TOOL_CHANGING                   "Tool-changing"
-#define STR_HOTEND_OFFSETS                  "Hotend offsets"
+#define STR_HOTEND_OFFSETS                  "Hotend Offsets"
+#define STR_MBL                             "Mesh Bed Leveling"
+#define STR_UBL                             "Unified Bed Leveling"
+#define STR_ABL                             "Auto Bed Leveling"
+#define STR_X_TWIST_CORRECTION              "X-Twist Correction"
 #define STR_SERVO_ANGLES                    "Servo Angles"
 #define STR_HOTEND_PID                      "Hotend PID"
 #define STR_BED_PID                         "Bed PID"
@@ -300,30 +307,65 @@
 #define STR_STEPS_PER_UNIT                  "Steps per unit"
 #define STR_LINEAR_ADVANCE                  "Linear Advance"
 #define STR_NONLINEAR_EXTRUSION             "Nonlinear Extrusion"
+#define STR_INPUT_SHAPING                   "Input Shaping"
+#define STR_HOTEND_TIMEOUT                  "Hotend Idle Timeout"
 #define STR_CONTROLLER_FAN                  "Controller Fan"
 #define STR_STEPPER_MOTOR_CURRENTS          "Stepper motor currents"
 #define STR_RETRACT_S_F_Z                   "Retract (S<length> F<feedrate> Z<lift>)"
 #define STR_RECOVER_S_F                     "Recover (S<length> F<feedrate>)"
 #define STR_AUTO_RETRACT_S                  "Auto-Retract (S<enable>)"
 #define STR_FILAMENT_LOAD_UNLOAD            "Filament load/unload"
-#define STR_POWER_LOSS_RECOVERY             "Power-loss recovery"
+#define STR_POWER_LOSS_RECOVERY             "Power-Loss Recovery"
 #define STR_FILAMENT_RUNOUT_SENSOR          "Filament runout sensor"
 #define STR_DRIVER_STEPPING_MODE            "Driver stepping mode"
 #define STR_STEPPER_DRIVER_CURRENT          "Stepper driver current"
 #define STR_TMC_STEALTH                     "StealthChop"
 #define STR_HYBRID_THRESHOLD                "Hybrid Threshold"
-#define STR_STALLGUARD_THRESHOLD            "StallGuard threshold"
-#define STR_HOME_OFFSET                     "Home offset"
+#define STR_STALLGUARD_THRESHOLD            "StallGuard Threshold"
+#define STR_HOME_OFFSET                     "Home Offset"
 #define STR_SOFT_ENDSTOPS                   "Soft endstops"
 #define STR_MATERIAL_HEATUP                 "Material heatup parameters"
 #define STR_LCD_CONTRAST                    "LCD Contrast"
 #define STR_LCD_BRIGHTNESS                  "LCD Brightness"
 #define STR_DISPLAY_SLEEP                   "Display Sleep"
 #define STR_UI_LANGUAGE                     "UI Language"
-#define STR_Z_PROBE_OFFSET                  "Z-Probe Offset"
+#define STR_PROBE_OFFSET                    "Probe Offset"
 #define STR_TEMPERATURE_UNITS               "Temperature Units"
 #define STR_USER_THERMISTORS                "User thermistors"
 #define STR_DELAYED_POWEROFF                "Delayed poweroff"
+#define STR_MPC                             "Model Predictive Control"
+#define STR_MM3_STATS                       "MMU3 Operational Stats"
+
+//
+// General axis names
+//
+#if HAS_X_AXIS
+  #define AXIS1_NAME 'X'
+#endif
+#if HAS_Y_AXIS
+  #define AXIS2_NAME 'Y'
+#endif
+#if HAS_Z_AXIS
+  #define AXIS3_NAME 'Z'
+#endif
+#define STR_X "X"
+#define STR_Y "Y"
+#define STR_Z "Z"
+#define STR_E "E"
+#if IS_KINEMATIC
+  #define STR_A "A"
+  #define STR_B "B"
+  #define STR_C "C"
+#else
+  #define STR_A STR_X
+  #define STR_B STR_Y
+  #define STR_C STR_Z
+#endif
+#define STR_X2 STR_A "2"
+#define STR_Y2 STR_B "2"
+#define STR_Z2 STR_C "2"
+#define STR_Z3 STR_C "3"
+#define STR_Z4 STR_C "4"
 
 //
 // Endstop Names used by Endstops::report_states
@@ -356,28 +398,7 @@
 #define STR_Z_PROBE                         "z_probe"
 #define STR_PROBE_EN                        "probe_en"
 #define STR_FILAMENT                        "filament"
-
 #define STR_CALIBRATION                     "calibration"
-
-// General axis names
-#define STR_X "X"
-#define STR_Y "Y"
-#define STR_Z "Z"
-#define STR_E "E"
-#if IS_KINEMATIC
-  #define STR_A "A"
-  #define STR_B "B"
-  #define STR_C "C"
-#else
-  #define STR_A "X"
-  #define STR_B "Y"
-  #define STR_C "Z"
-#endif
-#define STR_X2 "X2"
-#define STR_Y2 "Y2"
-#define STR_Z2 "Z2"
-#define STR_Z3 "Z3"
-#define STR_Z4 "Z4"
 
 // Extra Axis and Endstop Names
 #if HAS_I_AXIS
