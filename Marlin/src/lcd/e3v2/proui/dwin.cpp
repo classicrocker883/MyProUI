@@ -3118,14 +3118,23 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
 #endif
 
 #if ENABLED(EDITABLE_HOMING_FEEDRATE)
+  void UpdateHomingFR(AxisEnum axis, feedRate_t value) {
+    switch (axis) {
+      case X_AXIS: homing_feedrate_mm_m.x = value; break;
+      case Y_AXIS: homing_feedrate_mm_m.y = value; break;
+      case Z_AXIS: homing_feedrate_mm_m.z = value; break;
+      default: break;
+      }
+  }
+  void ApplyHomingFR() { UpdateHomingFR(HMI_value.axis, MenuData.Value); }
   #if HAS_X_AXIS
-    void SetHomingX() { SetPFloatOnClick(min_homing_edit_values.x, max_homing_edit_values.x, UNITFDIGITS); }
+    void SetHomingX() { HMI_value.axis = X_AXIS; SetIntOnClick(min_homing_edit_values.x, max_homing_edit_values.x, homing_feedrate_mm_m.x, ApplyHomingFR); }
   #endif
   #if HAS_Y_AXIS
-    void SetHomingY() { SetPFloatOnClick(min_homing_edit_values.y, max_homing_edit_values.y, UNITFDIGITS); }
+    void SetHomingY() { HMI_value.axis = Y_AXIS; SetIntOnClick(min_homing_edit_values.y, max_homing_edit_values.y, homing_feedrate_mm_m.y, ApplyHomingFR); }
   #endif
   #if HAS_Z_AXIS
-    void SetHomingZ() { SetPFloatOnClick(min_homing_edit_values.z, max_homing_edit_values.z, UNITFDIGITS); }
+    void SetHomingZ() { HMI_value.axis = Z_AXIS; SetIntOnClick(min_homing_edit_values.z, max_homing_edit_values.z, homing_feedrate_mm_m.z, ApplyHomingFR); }
   #endif
 #endif
 
@@ -3717,7 +3726,7 @@ void Draw_Motion_Menu() {
       MENU_ITEM(ICON_Step, MSG_STEPS_PER_MM, onDrawSubMenu, Draw_Steps_Menu);
     #endif
     #if ENABLED(EDITABLE_HOMING_FEEDRATE)
-      MENU_ITEM(ICON_Homing, MSG_HOMING_FEEDRATE, onDrawSubMenu, Draw_HomingFR_Menu);
+      MENU_ITEM(ICON_Setspeed, MSG_HOMING_FEEDRATE, onDrawSubMenu, Draw_HomingFR_Menu);
     #elif HAS_BED_PROBE
       EDIT_ITEM(ICON_ProbeZSpeed, MSG_Z_FEED_RATE, onDrawPIntMenu, SetProbeZSpeed, TERN(PROUI_EX, &PRO_data, &HMI_data).zprobefeedslow);
     #endif
@@ -3913,13 +3922,16 @@ void Draw_MaxAccel_Menu() {
     if (SET_MENU(HomingFRMenu, MSG_HOMING_FEEDRATE, 4 PLUS_TERN0(HAS_BED_PROBE, 1))) {
       BACK_ITEM(Draw_Motion_Menu);
       #if HAS_X_AXIS
-        EDIT_ITEM(ICON_HomeX, MSG_HOMING_FEEDRATE_X, onDrawPFloatMenu, SetHomingX, &homing_feedrate_mm_m.x);
+        static uint16_t xhome = static_cast<uint16_t>(homing_feedrate_mm_m.x);
+        EDIT_ITEM(ICON_MaxSpeedJerkX, MSG_HOMING_FEEDRATE_X, onDrawPIntMenu, SetHomingX, &xhome);
       #endif
       #if HAS_Y_AXIS
-        EDIT_ITEM(ICON_HomeY, MSG_HOMING_FEEDRATE_Y, onDrawPFloatMenu, SetHomingY, &homing_feedrate_mm_m.y);
+        static uint16_t yhome = static_cast<uint16_t>(homing_feedrate_mm_m.y);
+        EDIT_ITEM(ICON_MaxSpeedJerkY, MSG_HOMING_FEEDRATE_Y, onDrawPIntMenu, SetHomingY, &yhome);
       #endif
       #if HAS_Z_AXIS
-        EDIT_ITEM(ICON_HomeZ, MSG_HOMING_FEEDRATE_Z, onDrawPFloatMenu, SetHomingZ, &homing_feedrate_mm_m.z);
+        static uint16_t zhome = static_cast<uint16_t>(homing_feedrate_mm_m.z);
+        EDIT_ITEM(ICON_MaxSpeedJerkZ, MSG_HOMING_FEEDRATE_Z, onDrawPIntMenu, SetHomingZ, &zhome);
       #endif
       #if HAS_BED_PROBE
         EDIT_ITEM(ICON_ProbeZSpeed, MSG_Z_FEED_RATE, onDrawPIntMenu, SetProbeZSpeed, TERN(PROUI_EX, &PRO_data, &HMI_data).zprobefeedslow);
