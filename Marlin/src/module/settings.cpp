@@ -593,6 +593,9 @@ typedef struct SettingsDataStruct {
   // Ender-3 V2 DWIN
   //
   #if ENABLED(DWIN_LCD_PROUI)
+    #if ENABLED(PROUI_MESH_EDIT)
+      MeshSet_t meshSet;
+    #endif
     uint8_t dwin_data[eeprom_data_size];
   #endif
 
@@ -635,16 +638,6 @@ typedef struct SettingsDataStruct {
   #if ENABLED(SOUND_MENU_ITEM)
     bool sound_on;
     bool tick_on; //encoder beep
-  #endif
-
-  //
-  // MESH_INSET workaround
-  //
-  #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-    float ui_mesh_min_x;
-    float ui_mesh_max_x;
-    float ui_mesh_min_y;
-    float ui_mesh_max_y;
   #endif
 
   //
@@ -1745,6 +1738,9 @@ void MarlinSettings::postprocess() {
     // DWIN UI User Data
     //
     #if ENABLED(DWIN_LCD_PROUI)
+      #if ENABLED(PROUI_MESH_EDIT)
+        EEPROM_WRITE(meshSet);
+      #endif
     {
       _FIELD_TEST(dwin_data);
       char dwin_data[eeprom_data_size] = { 0 };
@@ -1800,16 +1796,6 @@ void MarlinSettings::postprocess() {
     #if ENABLED(SOUND_MENU_ITEM)
       EEPROM_WRITE(ui.sound_on);
       EEPROM_WRITE(ui.tick_on);
-    #endif
-
-    //
-    // MESH_INSET workaround
-    //
-    #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-      EEPROM_WRITE(ui.mesh_min_x);
-      EEPROM_WRITE(ui.mesh_max_x);
-      EEPROM_WRITE(ui.mesh_min_y);
-      EEPROM_WRITE(ui.mesh_max_y);
     #endif
 
     //
@@ -2918,12 +2904,15 @@ void MarlinSettings::postprocess() {
       // DWIN ProUI User Data
       //
       #if ENABLED(DWIN_LCD_PROUI)
-        {
-          const char dwin_data[eeprom_data_size] = { 0 };
-          _FIELD_TEST(dwin_data);
-          EEPROM_READ(dwin_data);
-          if (!validating) DWIN_CopySettingsFrom(dwin_data);
-        }
+        #if ENABLED(PROUI_MESH_EDIT)
+          EEPROM_READ(meshSet);
+        #endif
+      {
+        const char dwin_data[eeprom_data_size] = { 0 };
+        _FIELD_TEST(dwin_data);
+        EEPROM_READ(dwin_data);
+        if (!validating) DWIN_CopySettingsFrom(dwin_data);
+      }
       #endif
 
       //
@@ -2972,20 +2961,6 @@ void MarlinSettings::postprocess() {
         EEPROM_READ(ui.sound_on);
         _FIELD_TEST(tick_on);
         EEPROM_READ(ui.tick_on);
-      #endif
-
-      //
-      // MESH_INSET workaround
-      //
-      #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-        _FIELD_TEST(ui_mesh_min_x);
-        EEPROM_READ(ui.mesh_min_x);
-        _FIELD_TEST(ui_mesh_max_x);
-        EEPROM_READ(ui.mesh_max_x);
-        _FIELD_TEST(ui_mesh_min_y);
-        EEPROM_READ(ui.mesh_min_y);
-        _FIELD_TEST(ui_mesh_max_y);
-        EEPROM_READ(ui.mesh_max_y);
       #endif
 
       //
@@ -3270,17 +3245,24 @@ void MarlinSettings::postprocess() {
   #endif // HAS_EARLY_LCD_SETTINGS
 
   bool MarlinSettings::load() {
+    // If the EEPROM data is valid load it
     if (validate()) {
       const EEPROM_Error err = _load();
       const bool success = (err == ERR_EEPROM_NOERR);
       TERN_(EXTENSIBLE_UI, ExtUI::onSettingsLoaded(success));
       return success;
     }
+
+    // Otherwise reset settings to default "factory settings"
     reset();
+
+    // Options to overwrite the EEPROM on error
     #if ANY(EEPROM_AUTO_INIT, EEPROM_INIT_NOW)
-      (void)save();
-      SERIAL_ECHO_MSG("EEPROM Initialized");
+      (void)init_eeprom();
+      LCD_MESSAGE(MSG_EEPROM_INITIALIZED);
+      SERIAL_ECHO_MSG(STR_EEPROM_INITIALIZED);
     #endif
+
     return false;
   }
 
@@ -3570,16 +3552,6 @@ void MarlinSettings::reset() {
   #if ENABLED(SOUND_MENU_ITEM)
     ui.sound_on = ENABLED(SOUND_ON_DEFAULT);
     ui.tick_on = ENABLED(TICK_ON_DEFAULT); //added encoder beep bool
-  #endif
-
-  //
-  // MESH_INSET workaround
-  //
-  #if ALL(PROUI_MESH_EDIT, HAS_MESH)
-    ui.mesh_min_x = DEF_MESH_MIN_X;
-    ui.mesh_max_x = DEF_MESH_MAX_X;
-    ui.mesh_min_y = DEF_MESH_MIN_Y;
-    ui.mesh_max_y = DEF_MESH_MAX_Y;
   #endif
 
   //

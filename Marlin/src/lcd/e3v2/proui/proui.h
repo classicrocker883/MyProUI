@@ -39,22 +39,14 @@ constexpr uint8_t DEF_GRID_MAX_POINTS = TERN(HAS_MESH, GRID_MAX_POINTS_X, 3);
 #ifndef   MESH_INSET
   #define MESH_INSET 10
 #endif
-#ifndef   MESH_MIN_X
-  #define MESH_MIN_X (MESH_INSET)
-#endif
-#ifndef   MESH_MIN_Y
-  #define MESH_MIN_Y (MESH_INSET)
-#endif
-#ifndef   MESH_MAX_X
-  #define MESH_MAX_X ((X_BED_SIZE) - (MESH_INSET))
-#endif
-#ifndef   MESH_MAX_Y
-  #define MESH_MAX_Y ((Y_BED_SIZE) - (MESH_INSET))
-#endif
-constexpr uint16_t DEF_MESH_MIN_X = MESH_MIN_X;
-constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X;
-constexpr uint16_t DEF_MESH_MIN_Y = MESH_MIN_Y;
-constexpr uint16_t DEF_MESH_MAX_Y = MESH_MAX_Y;
+#define MESH_MIN_X_ (MESH_INSET)
+#define MESH_MIN_Y_ (MESH_INSET)
+#define MESH_MAX_X_ ((X_BED_SIZE) - (MESH_INSET))
+#define MESH_MAX_Y_ ((Y_BED_SIZE) - (MESH_INSET))
+constexpr uint16_t DEF_MESH_MIN_X = MESH_MIN_X_;
+constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X_;
+constexpr uint16_t DEF_MESH_MIN_Y = MESH_MIN_Y_;
+constexpr uint16_t DEF_MESH_MAX_Y = MESH_MAX_Y_;
 constexpr uint16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
 constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
 #ifndef MULTIPLE_PROBING
@@ -69,6 +61,16 @@ constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
   #else
     #error "FIL_RUNOUT_STATE must be HIGH or LOW - defined as opposite in Configuration.h"
   #endif
+#endif
+
+#if ENABLED(PROUI_MESH_EDIT)
+  typedef struct {
+    float mesh_min_x = DEF_MESH_MIN_X;
+    float mesh_max_x = DEF_MESH_MAX_X;
+    float mesh_min_y = DEF_MESH_MIN_Y;
+    float mesh_max_y = DEF_MESH_MAX_Y;
+  } MeshSet_t;
+  extern MeshSet_t meshSet;
 #endif
 
 #if PROUI_EX
@@ -223,10 +225,6 @@ typedef struct {
 #if HAS_EXTRUDERS
   bool Invert_E0 = DEF_INVERT_E0_DIR;
 #endif
-  float mesh_min_x = DEF_MESH_MIN_X;
-  float mesh_max_x = DEF_MESH_MAX_X;
-  float mesh_min_y = DEF_MESH_MIN_Y;
-  float mesh_max_y = DEF_MESH_MAX_Y;
 #endif
 } HMI_data_t;
 

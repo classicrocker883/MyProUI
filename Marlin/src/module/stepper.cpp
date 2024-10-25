@@ -164,7 +164,7 @@ Stepper stepper; // Singleton
 
 #if HAS_MOTOR_CURRENT_SPI || HAS_MOTOR_CURRENT_PWM
   bool Stepper::initialized; // = false
-  uint32_t Stepper::motor_current_setting[MOTOR_CURRENT_COUNT]; // Initialized by settings.load()
+  uint32_t Stepper::motor_current_setting[MOTOR_CURRENT_COUNT]; // Initialized by settings.load
   #if HAS_MOTOR_CURRENT_SPI
     constexpr uint32_t Stepper::digipot_count[];
   #endif
@@ -216,7 +216,7 @@ uint32_t Stepper::acceleration_time, Stepper::deceleration_time;
 
 #if ENABLED(ADAPTIVE_STEP_SMOOTHING)
   #if ENABLED(ADAPTIVE_STEP_SMOOTHING_TOGGLE)
-    bool Stepper::adaptive_step_smoothing_enabled; // Initialized by settings.load()
+    bool Stepper::adaptive_step_smoothing_enabled; // Initialized by settings.load
   #else
     constexpr bool Stepper::adaptive_step_smoothing_enabled; // = true
   #endif

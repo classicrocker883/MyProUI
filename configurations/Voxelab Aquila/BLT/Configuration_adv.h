@@ -209,7 +209,7 @@
 //
 #if DISABLED(PIDTEMPBED)
   #define BED_CHECK_INTERVAL 5000   // (ms) Interval between checks in bang-bang control
-  #if ENABLED(BED_LIMIT_SWITCHING)
+  #if ANY(BED_LIMIT_SWITCHING, PELTIER_BED)
     #define BED_HYSTERESIS 2        // (°C) Only set the relevant heater state when ABS(T-target) > BED_HYSTERESIS
   #endif
 #endif
@@ -1774,9 +1774,9 @@
    * an option on the LCD screen to continue the print from the last-known
    * point in the file.
    */
-  //#define POWER_LOSS_RECOVERY         // (3400 bytes of flash)
+  #define POWER_LOSS_RECOVERY           // (3400 bytes of flash)
   #if ENABLED(POWER_LOSS_RECOVERY)
-    #define PLR_ENABLED_DEFAULT       true  // Power-Loss Recovery enabled by default. (Set with 'M413 Sn' & M500)
+    #define PLR_ENABLED_DEFAULT       false // Power-Loss Recovery enabled by default. (Set with 'M413 Sn' & M500)
     //#define PLR_BED_THRESHOLD BED_MAXTEMP // (°C) Skip user confirmation at or above this bed temperature (0 to disable)
 
     //#define POWER_LOSS_PIN             44 // Pin to detect power-loss. Set to -1 to disable default pin on boards without module, or comment to use board default.

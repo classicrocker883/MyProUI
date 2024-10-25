@@ -1,11 +1,11 @@
 # Professional Firmware for the Voxelab Aquila and Creality Ender-3 3D Printers
 **_<sup>(or any other compatible 3D Printer)</sup>_**
 
-![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MRiscoCProUI.svg)
-![CI Unit Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-unit-tests.yml/badge.svg)
-![CI Build Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-build-tests.yml/badge.svg)
-[![Aquila Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)
-![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)
+![GitHub Release Date](https://img.shields.io/github/release-date/classicrocker883/MRiscoCProUI.svg)  
+![CI Unit Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-unit-tests.yml/badge.svg)  
+![CI Build Status](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/ci-build-tests.yml/badge.svg)  
+[![Aquila Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs.yml/badge.svg?event=release)](https://github.com/classicrocker883/MRiscoCProUI/releases/latest)  
+![HC32 Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs-HC32.yml/badge.svg)  
 ![Ender Build](https://github.com/classicrocker883/MRiscoCProUI/actions/workflows/compile-configs_Ender.yml/badge.svg)
 
 **Don't forget to checkout the [thingiverse](https://www.thingiverse.com/classicrocker883/designs) models I've designed:**
@@ -23,8 +23,6 @@
 <img src="https://cdn.thingiverse.com/assets/73/1e/84/38/f1/card_preview_Pi_Zero_Case_holder.png" style="float:left;width:40px;height:40px;" align="left"/>
 
 ---
-
-<br>
 
 ## Universal Firmware for RET6/RCT6 chips: G32, N32, H32, Creality 4.2.7 and 4.2.2 boards
 **_<sup>(Also available for BTT SKR Mini E3 and others)</sup>_**
@@ -179,6 +177,16 @@ ProUI is a Marlin based firmware maintained by [@mriscoc](https://github.com/mri
 The fork for H32|HC32 firmware is maintained by [@shadow578](https://github.com/shadow578)
 
 Marlin is maintained mainly by [@thinkyhead](https://github.com/thinkyhead)
+
+## Star History
+
+<a id="starchart" href="https://star-history.com/#classicrocker883/MRiscoCProUI&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=classicrocker883/MRiscoCProUI&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=classicrocker883/MRiscoCProUI&type=Date" />
+    <img height=320 alt="Star History Chart" src="https://api.star-history.com/svg?repos=classicrocker883/MRiscoCProUI&type=Date" />
+  </picture>
+</a>
 
 This work would not be possible without me spending time working on it for free.
 
