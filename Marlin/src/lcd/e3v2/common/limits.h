@@ -127,7 +127,7 @@ constexpr xyze_float_t max_steps_edit_values =
   #endif
   constexpr xyz_uint_t max_homing_edit_values =
                            #if !defined(DEFAULT_MAX_MULTIPLIER)
-                             { 10000, 10000, 2000 }
+                             { 10000, 10000, 3000 }
                            #else
                              default_homing * DEFAULT_MAX_MULTIPLIER
                            #endif

@@ -502,10 +502,12 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
   #elif ENABLED(BABYSTEP_XY) && !defined(BABYSTEP_MULTIPLICATOR_XY)
     #error "BABYSTEP_XY requires BABYSTEP_MULTIPLICATOR_XY."
   #elif ENABLED(BABYSTEP_MILLIMETER_UNITS)
-    static_assert(BABYSTEP_MULTIPLICATOR_Z <= 0.1f, "BABYSTEP_MULTIPLICATOR_Z must be less or equal to 0.1mm.");
+    static_assert(BABYSTEP_MULTIPLICATOR_Z <= 0.1f, "BABYSTEP_MULTIPLICATOR_Z with BABYSTEP_MILLIMETER_UNITS must be less or equal to 0.1mm.");
     #if ENABLED(BABYSTEP_XY)
       static_assert(BABYSTEP_MULTIPLICATOR_XY <= 0.25f, "BABYSTEP_MULTIPLICATOR_XY must be less than or equal to 0.25mm.");
     #endif
+  #else
+    static_assert(BABYSTEP_MULTIPLICATOR_Z && BABYSTEP_MULTIPLICATOR_Z == int(BABYSTEP_MULTIPLICATOR_Z), "BABYSTEP_MULTIPLICATOR_Z must be a non-zero integer.");
   #endif
 #endif
 
@@ -1078,8 +1080,8 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
   #error "DIRECT_STEPPING does not currently support more than 3 axes (i.e., XYZ)."
 #elif ENABLED(FOAMCUTTER_XYUV) && !(HAS_I_AXIS && HAS_J_AXIS)
   #error "FOAMCUTTER_XYUV requires I and J steppers to be enabled."
-#elif ENABLED(LINEAR_ADVANCE) && HAS_I_AXIS
-  #error "LINEAR_ADVANCE does not currently support the inclusion of an I axis."
+#elif ENABLED(LIN_ADVANCE) && HAS_I_AXIS
+  #error "LIN_ADVANCE does not currently support the inclusion of an I axis."
 #endif
 
 /**
