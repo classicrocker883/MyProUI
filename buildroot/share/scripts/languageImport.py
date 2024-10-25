@@ -17,7 +17,7 @@ TODO: Use the defines and comments above the namespace from existing language fi
 """
 
 import sys, re, requests, csv, datetime
-#from languageUtil import namebyid
+#from languageExport import namebyid
 
 LANGHOME = "Marlin/src/lcd/language"
 OUTDIR = 'out-language'
