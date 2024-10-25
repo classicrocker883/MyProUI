@@ -158,7 +158,9 @@
 HMI_value_t HMI_value;
 HMI_flag_t HMI_flag{0};
 HMI_data_t HMI_data;
-MeshSet_t meshSet;
+#if ENABLED(PROUI_MESH_EDIT)
+  MeshSet_t meshSet;
+#endif
 
 enum SelectItem : uint8_t {
   PAGE_PRINT = 0,
