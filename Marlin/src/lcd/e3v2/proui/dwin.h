@@ -157,7 +157,7 @@ void ResetEeprom();
 #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
   void SetHSMode();
 #endif
-#if PROUI_EX
+#if ANY(PROUI_EX, MESH_BED_LEVELING)
   void ApplyPhySet();
   void SetData();
 #endif
@@ -331,6 +331,7 @@ void Draw_MaxAccel_Menu();
     void Draw_MeshInset_Menu();
     void Draw_EditMesh_Menu();
     void ApplyMeshInset();
+    void ResetMeshInset();
     void SetXMeshInset();
     void SetYMeshInset();
     void MaxMeshArea();

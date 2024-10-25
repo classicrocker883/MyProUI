@@ -110,13 +110,6 @@
 // Only for Professional Firmware UI extensions
 //=============================================================================
 
-#if HAS_TOOLBAR && !PROUI_EX
-  #error "HAS_TOOLBAR requires PROUI_EX."
-#endif
-#if ENABLED(CV_LASER_MODULE) && !PROUI_EX
-  #error "CV_LASER_MODULE requires PROUI_EX."
-#endif
-
 #if PROUI_EX
 
   #include <stddef.h>
@@ -157,14 +150,6 @@
     #define GRID_MAX_POINTS_X PRO_data.grid_max_points
     #define GRID_MAX_POINTS_Y PRO_data.grid_max_points
     #define GRID_MAX_POINTS  (PRO_data.grid_max_points * PRO_data.grid_max_points)
-    #undef  MESH_MIN_X
-    #undef  MESH_MAX_X
-    #undef  MESH_MIN_Y
-    #undef  MESH_MAX_Y
-    #define MESH_MIN_X (float)PRO_data.mesh_min_x
-    #define MESH_MAX_X (float)PRO_data.mesh_max_x
-    #define MESH_MIN_Y (float)PRO_data.mesh_min_y
-    #define MESH_MAX_Y (float)PRO_data.mesh_max_y
   #endif
   #if HAS_BED_PROBE
     #undef  Z_PROBE_FEEDRATE_SLOW
@@ -202,14 +187,15 @@
     #undef  INVERT_E0_DIR
     #define INVERT_E0_DIR HMI_data.Invert_E0
   #endif
-  #if ENABLED(PROUI_MESH_EDIT)
-    #undef  MESH_MIN_X
-    #undef  MESH_MAX_X
-    #undef  MESH_MIN_Y
-    #undef  MESH_MAX_Y
-    #define MESH_MIN_X (float)HMI_data.mesh_min_x
-    #define MESH_MAX_X (float)HMI_data.mesh_max_x
-    #define MESH_MIN_Y (float)HMI_data.mesh_min_y
-    #define MESH_MAX_Y (float)HMI_data.mesh_max_y
-  #endif
 #endif // PROUI_EX
+
+#if ENABLED(PROUI_MESH_EDIT)
+  #undef  MESH_MIN_X
+  #undef  MESH_MAX_X
+  #undef  MESH_MIN_Y
+  #undef  MESH_MAX_Y
+  #define MESH_MIN_X meshSet.mesh_min_x
+  #define MESH_MAX_X meshSet.mesh_max_x
+  #define MESH_MIN_Y meshSet.mesh_min_y
+  #define MESH_MAX_Y meshSet.mesh_max_y
+#endif

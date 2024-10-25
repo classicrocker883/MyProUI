@@ -2928,6 +2928,10 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
     #error "PROUI_ITEM_PLOT or PROUI_TUNING_GRAPH requires PIDTEMP, MPCTEMP, PIDTEMPBED, or PIDTEMPCHAMBER."
   #elif ENABLED(LCD_BED_TRAMMING) && DISABLED(BED_TRAMMING_INSET_LFRB)
     #error "BED_TRAMMING_INSET_LFRB must be defined with LCD_BED_TRAMMING."
+  #elif HAS_TOOLBAR && !PROUI_EX
+    #error "HAS_TOOLBAR requires PROUI_EX."
+  #elif ENABLED(CV_LASER_MODULE) && !PROUI_EX
+    #error "CV_LASER_MODULE requires PROUI_EX."
   #endif
 #endif
 

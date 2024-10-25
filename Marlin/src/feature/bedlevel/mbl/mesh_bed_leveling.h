@@ -50,9 +50,11 @@ public:
 
   mesh_bed_leveling();
 
-  static void report_mesh();
-
   static void reset();
+
+  static void initialize();
+
+  static void report_mesh();
 
   FORCE_INLINE static bool has_mesh() {
     GRID_LOOP(x, y) if (z_values[x][y]) return true;
