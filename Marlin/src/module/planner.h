@@ -356,12 +356,12 @@ typedef struct PlannerSettings {
     #undef _DLIM
   #endif
 
- feedRate_t max_feedrate_mm_s[DISTINCT_AXES];   // (mm/s)   M203 XYZE - Max speeds
-      float acceleration,                       // (mm/s^2) M204 S - Normal acceleration. DEFAULT ACCELERATION for all printing moves.
-            retract_acceleration,               // (mm/s^2) M204 R - Retract acceleration. Filament pull-back and push-forward while standing still in the other axes
-            travel_acceleration;                // (mm/s^2) M204 T - Travel acceleration. DEFAULT ACCELERATION for all NON printing moves.
- feedRate_t min_feedrate_mm_s,                  // (mm/s)   M205 S - Minimum linear feedrate
-            min_travel_feedrate_mm_s;           // (mm/s)   M205 T - Minimum travel feedrate
+ feedRate_t max_feedrate_mm_s[DISTINCT_AXES]; // (mm/s)   M203 XYZE - Max speeds
+      float acceleration,                     // (mm/s^2) M204 S - Normal acceleration. DEFAULT ACCELERATION for all printing moves.
+            retract_acceleration,             // (mm/s^2) M204 R - Retract acceleration. Filament pull-back and push-forward while standing still in the other axes
+            travel_acceleration;              // (mm/s^2) M204 T - Travel acceleration. DEFAULT ACCELERATION for all NON printing moves.
+ feedRate_t min_feedrate_mm_s,                // (mm/s)   M205 S - Minimum linear feedrate
+            min_travel_feedrate_mm_s;         // (mm/s)   M205 T - Minimum travel feedrate
 } planner_settings_t;
 
 #if ENABLED(IMPROVE_HOMING_RELIABILITY)
@@ -812,14 +812,14 @@ class Planner {
     FORCE_INLINE static uint8_t moves_free() { return (BLOCK_BUFFER_SIZE) - 1 - movesplanned(); }
 
     /**
-     * Planner::get_next_free_block
+     * @fn Planner::get_next_free_block
      *
-     * - Get the next head indices (passed by reference)
-     * - Wait for the number of spaces to open up in the planner
-     * - Return the first head block
+     * @details Get the next head indices (passed by reference)
+     *          Wait for the number of spaces to open up in the planner
+     *
+     * @return  The first head block
      */
     FORCE_INLINE static block_t* get_next_free_block(uint8_t &next_buffer_head, const uint8_t count=1) {
-
       // Wait until there are enough slots free
       while (moves_free() < count) { idle(); }
 
@@ -829,16 +829,18 @@ class Planner {
     }
 
     /**
-     * Planner::_buffer_steps
+     * @fn Planner::_buffer_steps
      *
-     * Add a new linear movement to the buffer (in terms of steps).
+     * @brief Add a new linear movement to the planner queue (in terms of steps).
      *
-     *  target      - target position in steps units
-     *  fr_mm_s     - (target) speed of the move
-     *  extruder    - target extruder
-     *  hints       - parameters to aid planner calculations
+     * @param target        Target position in steps units
+     * @param target_float  Target position in direct (mm, degrees) units.
+     * @param cart_dist_mm  The pre-calculated move lengths for all axes, in mm
+     * @param fr_mm_s       (Target) speed of the move
+     * @param extruder      Target extruder
+     * @param hints         Parameters to aid planner calculations
      *
-     * Returns true if movement was buffered, false otherwise
+     * @return  true if movement was properly queued, false otherwise (if cleaning)
      */
     static bool _buffer_steps(const xyze_long_t &target
       OPTARG(HAS_POSITION_FLOAT, const xyze_pos_t &target_float)
@@ -847,7 +849,9 @@ class Planner {
     );
 
     /**
-     * @brief Populate a block in preparation for insertion
+     * @fn Planner::_populate_block
+     *
+     * @brief Populate a block in preparation for insertion.
      * @details Populate the fields of a new linear movement block
      *          that will be added to the queue and processed soon
      *          by the Stepper ISR.
@@ -856,9 +860,9 @@ class Planner {
      * @param target        Target position in steps units
      * @param target_float  Target position in native mm
      * @param cart_dist_mm  The pre-calculated move lengths for all axes, in mm
-     * @param fr_mm_s       (target) speed of the move
-     * @param extruder      target extruder
-     * @param hints         parameters to aid planner calculations
+     * @param fr_mm_s       (Target) speed of the move
+     * @param extruder      Target extruder
+     * @param hints         Parameters to aid planner calculations
      *
      * @return  true if movement is acceptable, false otherwise
      */
@@ -870,31 +874,31 @@ class Planner {
     );
 
     /**
-     * Planner::buffer_sync_block
-     * Add a block to the buffer that just updates the position
-     * @param sync_flag sets a condition bit to process additional items
-     * such as sync fan pwm or sync M3/M4 laser power into a queued block
+     * @fn Planner::buffer_sync_block
+     *
+     * @brief Add a block to the buffer that just updates the position.
+     * @details Supports LASER_SYNCHRONOUS_M106_M107 and LASER_POWER_SYNC power sync block buffer queueing.
+     *
+     * @param sync_flag  The sync flag to set, determining the type of sync the block will do
+     *                   Sets a condition bit to process additional items such as sync fan pwm
+     *                   or sync M3/M4 laser power into a queued block
      */
-      static void buffer_sync_block(const BlockFlagBit flag=BLOCK_BIT_SYNC_POSITION);
-
-  #if IS_KINEMATIC
-    private:
-
-      // Allow do_homing_move to access internal functions, such as buffer_segment.
-      friend void do_homing_move(const AxisEnum, const float, const feedRate_t, const bool);
-  #endif
+    static void buffer_sync_block(const BlockFlagBit flag=BLOCK_BIT_SYNC_POSITION);
 
     /**
-     * Planner::buffer_segment
+     * @fn Planner::buffer_segment
      *
-     * Add a new linear movement to the buffer in axis units.
+     * @brief Add a single linear movement.
+     * @details Add a new linear movement to the buffer in axis units.
+     *          Leveling and kinematics should be applied before calling this.
      *
-     * Leveling and kinematics should be applied ahead of calling this.
+     * @param abce          Target position in mm and/or degrees
+     * @param cart_dist_mm  The pre-calculated move lengths for all axes, in mm
+     * @param fr_mm_s       (Target) speed of the move
+     * @param extruder      Optional target extruder (otherwise active_extruder)
+     * @param hints         Optional parameters to aid planner calculations
      *
-     *  a,b,c,e     - target positions in mm and/or degrees
-     *  fr_mm_s     - (target) speed of the move
-     *  extruder    - optional target extruder (otherwise active_extruder)
-     *  hints       - optional parameters to aid planner calculations
+     * @return  false if no segment was queued due to cleaning, cold extrusion, full queue, etc...
      */
     static bool buffer_segment(const abce_pos_t &abce
       OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm),
@@ -903,17 +907,19 @@ class Planner {
       const PlannerHints &hints=PlannerHints()
     );
 
-  public:
-
     /**
-     * Add a new linear movement to the buffer.
-     * The target is cartesian. It's translated to
-     * delta/scara if needed.
+     * @fn Planner::buffer_line
      *
-     *  cart         - target position in mm or degrees
-     *  fr_mm_s      - (target) speed of the move (mm/s)
-     *  extruder     - optional target extruder (otherwise active_extruder)
-     *  hints        - optional parameters to aid planner calculations
+     * @brief Add a new linear movement to the buffer.
+     * @details The target is cartesian. It's translated to
+     *          delta/scara if needed.
+     *
+     * @param cart      Target position in mm or degrees
+     * @param fr_mm_s   (Target) speed of the move (mm/s)
+     * @param extruder  Optional target extruder (otherwise active_extruder)
+     * @param hints     Optional parameters to aid planner calculations
+     *
+     * @return  false if no segment was queued due to cleaning, cold extrusion, full queue, etc...
      */
     static bool buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s,
       const uint8_t extruder=active_extruder,
@@ -1090,6 +1096,11 @@ class Planner {
     static void recalculate_trapezoids(const_float_t safe_exit_speed_sqr);
 
     static void recalculate(const_float_t safe_exit_speed_sqr);
+
+    #if IS_KINEMATIC
+      // Allow do_homing_move to access internal functions, such as buffer_segment.
+      friend void do_homing_move(const AxisEnum, const float, const feedRate_t, const bool);
+    #endif
 
     #if HAS_JUNCTION_DEVIATION
 
