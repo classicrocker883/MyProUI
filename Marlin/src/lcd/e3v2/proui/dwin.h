@@ -27,7 +27,7 @@
 #include "../common/limits.h"
 #include "../../../MarlinCore.h"
 
-#if ENABLED(LED_CONTROL_MENU)
+#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
   #include "../../../feature/leds/leds.h"
 #endif
 
@@ -71,19 +71,19 @@ enum processID : uint8_t {
 #if ANY(HAS_PID_HEATING, MPCTEMP)
   enum tempcontrol_t : uint8_t {
     AUTOTUNE_DONE,
-    #if HAS_PID_HEATING
-      OPTITEM(PIDTEMP, PID_EXTR_START)
-      OPTITEM(PIDTEMPBED, PID_BED_START)
-      OPTITEM(PIDTEMPCHAMBER, PID_CHAMBER_START)
-      PID_BAD_HEATER_ID,
-      PID_TEMP_TOO_HIGH,
-      PID_TUNING_TIMEOUT,
-    #endif
-    #if ENABLED(MPCTEMP)
-      MPC_STARTED,
-      MPC_TEMP_ERROR,
-      MPC_INTERRUPTED,
-    #endif
+  #if HAS_PID_HEATING
+    OPTITEM(PIDTEMP, PID_EXTR_START)
+    OPTITEM(PIDTEMPBED, PID_BED_START)
+    OPTITEM(PIDTEMPCHAMBER, PID_CHAMBER_START)
+    PID_BAD_HEATER_ID,
+    PID_TEMP_TOO_HIGH,
+    PID_TUNING_TIMEOUT,
+  #endif
+  #if ENABLED(MPCTEMP)
+    MPC_STARTED,
+    MPC_TEMP_ERROR,
+    MPC_INTERRUPTED,
+  #endif
   };
 #endif
 
@@ -101,10 +101,15 @@ typedef struct {
 } rgb_t;
 
 typedef struct {
+#if HAS_CUSTOM_COLORS
   rgb_t Color; // Color
-  #if ANY(HAS_PID_HEATING, MPCTEMP, PROUI_ITEM_PLOT)
-    tempcontrol_t tempControl = AUTOTUNE_DONE;
-  #endif
+#endif
+#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
+  LEDColor Led_Color = Def_Leds_Color; // Moved from HMI_data
+#endif
+#if ANY(HAS_PID_HEATING, MPCTEMP, PROUI_ITEM_PLOT)
+  tempcontrol_t tempControl = AUTOTUNE_DONE;
+#endif
   uint8_t Select = 0;     // Auxiliary selector variable
   AxisEnum axis = X_AXIS; // Axis Select
 } HMI_value_t;
