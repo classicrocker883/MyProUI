@@ -48,10 +48,10 @@ jobs:
 
     steps:
     - name: Check out the PR
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@main
 
     - name: Cache pip
-      uses: actions/cache@v4.0.2
+      uses: actions/cache@main
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -59,15 +59,15 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Cache PlatformIO
-      uses: actions/cache@v4.0.2
+      uses: actions/cache@main
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
-    - name: Select Python 3.10
-      uses: actions/setup-python@v5.2.0
+    - name: Select Python 3.11
+      uses: actions/setup-python@main
       with:
-        python-version: '3.10'
+        python-version: '3.11'
         architecture: 'x64'
 
     - name: Install PlatformIO

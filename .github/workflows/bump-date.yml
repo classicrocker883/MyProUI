@@ -19,7 +19,7 @@ jobs:
     steps:
 
     - name: Check out 2024-October
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@main
       with:
         ref: 2024-October
 
