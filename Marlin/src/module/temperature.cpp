@@ -339,16 +339,16 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
 #if HAS_HOTEND
   hotend_info_t Temperature::temp_hotend[HOTENDS];
 
-  #if ENABLED(MPCTEMP)
-    bool MPC::e_paused; // = false
-    int32_t MPC::e_position; // = 0
-  #endif
-
   #if PROUI_EX
     celsius_t Temperature::hotend_maxtemp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_MAXTEMP, HEATER_1_MAXTEMP, HEATER_2_MAXTEMP, HEATER_3_MAXTEMP, HEATER_4_MAXTEMP, HEATER_5_MAXTEMP, HEATER_6_MAXTEMP, HEATER_7_MAXTEMP);
   #else
     constexpr celsius_t Temperature::hotend_maxtemp[HOTENDS];
-  #endif // PROUI_EX
+  #endif
+
+  #if ENABLED(MPCTEMP)
+    bool MPC::e_paused; // = false
+    int32_t MPC::e_position; // = 0
+  #endif
 
   // Sanity-check max readable temperatures
   #define CHECK_MAXTEMP_(N,M,S) static_assert( \
@@ -910,7 +910,7 @@ volatile bool Temperature::raw_temps_ready = false;
             }
           }
         #endif
-      } // every 2 seconds
+      } // Every 2 seconds
 
       // Timeout after PID_AUTOTUNE_MAX_CYCLE_MINS minutes since the last undershoot/overshoot cycle
       #ifndef PID_AUTOTUNE_MAX_CYCLE_MINS
@@ -1715,7 +1715,7 @@ void Temperature::mintemp_error(const heater_id_t heater_id OPTARG(ERR_INCLUDE_T
 
       // At startup, initialize modeled temperatures
       if (isnan(hotend.modeled_block_temp)) {
-        hotend.modeled_ambient_temp = _MIN(30.0f, hotend.celsius);   // Cap initial value at reasonable max room temperature of 30C
+        hotend.modeled_ambient_temp = _MIN(30.0f, hotend.celsius); // Cap initial value at reasonable max room temperature of 30C
         hotend.modeled_block_temp = hotend.modeled_sensor_temp = hotend.celsius;
       }
 
@@ -1770,7 +1770,7 @@ void Temperature::mintemp_error(const heater_id_t heater_id OPTARG(ERR_INCLUDE_T
         power -= (hotend.modeled_ambient_temp - hotend.modeled_block_temp) * ambient_xfer_coeff;
       }
 
-      float pid_output = power * 254.0f / mpc.heater_power + 1.0f;        // Ensure correct quantization into a range of 0 to 127
+      float pid_output = power * 254.0f / mpc.heater_power + 1.0f; // Ensure correct quantization into a range of 0 to 127
       LIMIT(pid_output, 0, MPC_MAX);
 
       /* <-- add a slash to enable
@@ -4449,14 +4449,14 @@ void Temperature::isr() {
   /**
    * Print a single heater state in the form:
    *     Extruder: " T0:nnn.nn /nnn.nn"
+   *     With ADC: " T0:nnn.nn /nnn.nn (nnn.nn)"
    *          Bed: " B:nnn.nn /nnn.nn"
    *      Chamber: " C:nnn.nn /nnn.nn"
-   *       Cooler: " L:nnn.nn /nnn.nn"
    *        Probe: " P:nnn.nn"
+   *       Cooler: " L:nnn.nn /nnn.nn"
    *        Board: " M:nnn.nn"
    *          SoC: " S:nnn.nn"
    *    Redundant: " R:nnn.nn /nnn.nn"
-   *     With ADC: " T0:nnn.nn /nnn.nn (nnn.nn)"
    */
   static void print_heater_state(const heater_id_t e, const_celsius_float_t c, const_celsius_float_t t
     OPTARG(SHOW_TEMP_ADC_VALUES, const float r)
@@ -4474,11 +4474,11 @@ void Temperature::isr() {
       #if HAS_TEMP_CHAMBER
         case H_CHAMBER: k = 'C'; break;
       #endif
-      #if HAS_TEMP_COOLER
-        case H_COOLER: k = 'L'; break;
-      #endif
       #if HAS_TEMP_PROBE
         case H_PROBE: k = 'P'; show_t = false; break;
+      #endif
+      #if HAS_TEMP_COOLER
+        case H_COOLER: k = 'L'; break;
       #endif
       #if HAS_TEMP_BOARD
         case H_BOARD: k = 'M'; show_t = false; break;
@@ -4511,11 +4511,11 @@ void Temperature::isr() {
    * See print_heater_state for heater output strings.
    * Power output strings are in the format:
    *     Extruder: " @:nnn"
+   *      Hotends: " @0:nnn @1:nnn ..."
    *          Bed: " B@:nnn"
    *      Peltier: " P@:H/C"
    *      Chamber: " C@:nnn"
    *       Cooler: " L@:nnn"
-   *      Hotends: " @0:nnn @1:nnn ..."
    */
   void Temperature::print_heater_states(const int8_t target_extruder
     OPTARG(HAS_TEMP_REDUNDANT, const bool include_r/*=false*/)
@@ -4523,17 +4523,20 @@ void Temperature::isr() {
     #if HAS_TEMP_HOTEND
       print_heater_state(H_NONE, degHotend(target_extruder), degTargetHotend(target_extruder) OPTARG(SHOW_TEMP_ADC_VALUES, rawHotendTemp(target_extruder)));
     #endif
+    #if HAS_MULTI_HOTEND
+      HOTEND_LOOP() print_heater_state((heater_id_t)e, degHotend(e), degTargetHotend(e) OPTARG(SHOW_TEMP_ADC_VALUES, rawHotendTemp(e)));
+    #endif
     #if HAS_HEATED_BED
       print_heater_state(H_BED, degBed(), degTargetBed() OPTARG(SHOW_TEMP_ADC_VALUES, rawBedTemp()));
     #endif
     #if HAS_TEMP_CHAMBER
       print_heater_state(H_CHAMBER, degChamber(), TERN0(HAS_HEATED_CHAMBER, degTargetChamber()) OPTARG(SHOW_TEMP_ADC_VALUES, rawChamberTemp()));
     #endif
-    #if HAS_TEMP_COOLER
-      print_heater_state(H_COOLER, degCooler(), TERN0(HAS_COOLER, degTargetCooler()) OPTARG(SHOW_TEMP_ADC_VALUES, rawCoolerTemp()));
-    #endif
     #if HAS_TEMP_PROBE
       print_heater_state(H_PROBE, degProbe(), 0 OPTARG(SHOW_TEMP_ADC_VALUES, rawProbeTemp()));
+    #endif
+    #if HAS_TEMP_COOLER
+      print_heater_state(H_COOLER, degCooler(), TERN0(HAS_COOLER, degTargetCooler()) OPTARG(SHOW_TEMP_ADC_VALUES, rawCoolerTemp()));
     #endif
     #if HAS_TEMP_BOARD
       print_heater_state(H_BOARD, degBoard(), 0 OPTARG(SHOW_TEMP_ADC_VALUES, rawBoardTemp()));
@@ -4544,17 +4547,15 @@ void Temperature::isr() {
     #if HAS_TEMP_REDUNDANT
       if (include_r) print_heater_state(H_REDUNDANT, degRedundant(), degRedundantTarget() OPTARG(SHOW_TEMP_ADC_VALUES, rawRedundantTemp()));
     #endif
-    #if HAS_MULTI_HOTEND
-      HOTEND_LOOP() print_heater_state((heater_id_t)e, degHotend(e), degTargetHotend(e) OPTARG(SHOW_TEMP_ADC_VALUES, rawHotendTemp(e)));
-    #endif
+
     SString<100> s(F(" @:"), getHeaterPower((heater_id_t)target_extruder));
+    #if HAS_MULTI_HOTEND
+      HOTEND_LOOP() s.append(F(" @"), e, ':', getHeaterPower((heater_id_t)e));
+    #endif
     TERN_(HAS_HEATED_BED,     s.append(F(" B@:"), getHeaterPower(H_BED)));
     TERN_(PELTIER_BED,        s.append(F(" P@:"), temp_bed.peltier_dir_heating ? 'H' : 'C'));
     TERN_(HAS_HEATED_CHAMBER, s.append(F(" C@:"), getHeaterPower(H_CHAMBER)));
     TERN_(HAS_COOLER,         s.append(F(" L@:"), getHeaterPower(H_COOLER)));
-    #if HAS_MULTI_HOTEND
-      HOTEND_LOOP() s.append(F(" @"), e, ':', getHeaterPower((heater_id_t)e));
-    #endif
     s.echo();
   }
 
