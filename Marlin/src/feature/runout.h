@@ -30,7 +30,7 @@
 #include "../module/planner.h"
 #include "../module/stepper.h" // for block_t
 #include "../gcode/queue.h"
-#include "../feature/pause.h" // for did_pause_print
+#include "pause.h" // for did_pause_print
 #include "../MarlinCore.h" // for printingIsActive()
 
 #include "../inc/MarlinConfig.h"

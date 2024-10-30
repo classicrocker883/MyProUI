@@ -232,6 +232,7 @@ void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POW
     info.zraise = zraise;
     info.flag.raised = raised;                      // Was Z raised before power-off?
 
+    TERN_(CANCEL_OBJECTS, info.cancel_state = cancelable.state);
     TERN_(GCODE_REPEAT_MARKERS, info.stored_repeat = repeat);
     TERN_(HAS_HOME_OFFSET, info.home_offset = home_offset);
     TERN_(HAS_WORKSPACE_OFFSET, info.workspace_offset = workspace_offset);
@@ -614,6 +615,11 @@ void PrintJobRecovery::resume() {
   PROCESS_SUBCOMMANDS_NOW(TS(F("G92.9E"), p_float_t(resume_pos.e, 3)));
   DEBUG_ECHOLNPGM("Extruder: ",cmd);
 
+  #if ENABLED(CANCEL_OBJECTS)
+    cancelable.state = info.cancel_state;
+    cancelable.set_active_object(); // Sets the status message
+  #endif
+
   TERN_(GCODE_REPEAT_MARKERS, repeat = info.stored_repeat);
   TERN_(HAS_HOME_OFFSET, home_offset = info.home_offset);
   TERN_(HAS_WORKSPACE_OFFSET, workspace_offset = info.workspace_offset);
@@ -651,6 +657,14 @@ void PrintJobRecovery::resume() {
         EXTRUDER_LOOP() DEBUG_ECHOLN('E', e + 1, F(" flow %: "), info.flow_percentage[e]);
 
         DEBUG_ECHOLNPGM("zraise: ", info.zraise, " ", info.flag.raised ? "(before)" : "");
+
+        #if ENABLED(CANCEL_OBJECTS)
+          const cancel_state_t cs = info.cancel_state;
+          DEBUG_ECHOPGM("Canceled:");
+          for (int i = 0; i < cs.object_count; i++)
+            if (TEST(cs.canceled, i)) { DEBUG_CHAR(' '); DEBUG_ECHO(i); }
+          DEBUG_EOL();
+        #endif
 
         #if ENABLED(GCODE_REPEAT_MARKERS)
           const uint8_t ind = info.stored_repeat.count();

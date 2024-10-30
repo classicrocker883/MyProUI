@@ -2876,7 +2876,7 @@ bool Planner::buffer_segment(const abce_pos_t &abce
 
   #if HAS_EXTRUDERS
     // DRYRUN prevents E moves from taking place
-    if (DEBUGGING(DRYRUN) || TERN0(CANCEL_OBJECTS, cancelable.skipping)) {
+    if (DEBUGGING(DRYRUN) || TERN0(CANCEL_OBJECTS, cancelable.state.skipping)) {
       position.e = target.e;
       TERN_(HAS_POSITION_FLOAT, position_float.e = abce.e);
     }
@@ -2962,7 +2962,7 @@ bool Planner::buffer_segment(const abce_pos_t &abce
  * @param extruder  Optional target extruder (otherwise active_extruder)
  * @param hints     Optional parameters to aid planner calculations
  *
- * @return  false if no segment was queued due to cleaning, cold extrusion, full queue, etc...
+ * @return  false if no segment was queued due to cleaning, cold extrusion, full queue, etc.
  */
 bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s,
   const uint8_t extruder/*=active_extruder*/,

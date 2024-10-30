@@ -43,7 +43,7 @@
 
 #include "../../core/language.h"
 #include "../../gcode/gcode.h"
-#include "../../feature/host_actions.h"
+#include "../host_actions.h"
 #include "../../lcd/marlinui.h"
 #include "../../lcd/menu/menu.h"
 #include "../../lcd/menu/menu_item.h"

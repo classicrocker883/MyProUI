@@ -34,7 +34,7 @@
 #include "../../module/planner.h"
 #include "../../module/temperature.h"
 
-#include "../../feature/pause.h"
+#include "../pause.h"
 #include "../../libs/nozzle.h"
 #include "mmu3_marlin.h"
 
