@@ -33,7 +33,7 @@ jobs:
           - "Needs: Work"
 
     steps:
-      - uses: actions/checkout@v4.2.0
+      - uses: actions/checkout@main
       - name: Remove Labels
         uses: actions-ecosystem/action-remove-labels@v1
         with:
