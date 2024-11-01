@@ -75,7 +75,7 @@
 #define Def_Coordinate_Color  Color_Brown //
 #define Def_Bottom_Color      Color_Silver //
 
-#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS) && DISABLED(LED_COLOR_PRESETS)
+#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
   #define Def_Leds_Color      LEDColorWhite()
 #endif
 

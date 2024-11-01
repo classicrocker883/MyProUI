@@ -209,9 +209,6 @@ typedef struct {
   bool MediaAutoMount;
   bool EnablePreview;
   OPTCODE(MESH_BED_LEVELING, uint8_t z_after_homing)
-#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
-  uint32_t Led_Color;
-#endif
   IF_DISABLED(HAS_BED_PROBE, float ManualZOffset;)
 #if ENABLED(PROUI_ITEM_ABRT)
   bool auto_abort;
