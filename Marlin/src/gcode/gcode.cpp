@@ -173,7 +173,7 @@ void GcodeSuite::get_destination_from_command() {
   xyze_bool_t seen{false};
 
   #if ENABLED(CANCEL_OBJECTS)
-    const bool &skip_move = cancelable.skipping;
+    const bool &skip_move = cancelable.state.skipping;
   #else
     constexpr bool skip_move = false;
   #endif

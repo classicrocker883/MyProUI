@@ -424,10 +424,10 @@ namespace LanguageNarrow_it {
   LSTR MSG_A_RETRACT                      = _UxGT("A-Ritrazione");
   LSTR MSG_A_TRAVEL                       = _UxGT("A-Spostamento");
   LSTR MSG_INPUT_SHAPING                  = _UxGT("Input shaping");
-  LSTR MSG_SHAPING_ENABLE                 = _UxGT("Abilita shaping @");
-  LSTR MSG_SHAPING_DISABLE                = _UxGT("Disabil. shaping @");
-  LSTR MSG_SHAPING_FREQ                   = _UxGT("Frequenza @");
-  LSTR MSG_SHAPING_ZETA                   = _UxGT("Smorzamento @");
+  LSTR MSG_SHAPING_ENABLE_N               = _UxGT("Abilita shaping @");
+  LSTR MSG_SHAPING_DISABLE_N              = _UxGT("Disabil. shaping @");
+  LSTR MSG_SHAPING_FREQ_N                 = _UxGT("Frequenza @");
+  LSTR MSG_SHAPING_ZETA_N                 = _UxGT("Smorzamento @");
   LSTR MSG_SHAPING_A_FREQ                 = _UxGT("Frequenza ") STR_A;    // ProUI
   LSTR MSG_SHAPING_B_FREQ                 = _UxGT("Frequenza ") STR_B;    // ProUI
   LSTR MSG_SHAPING_C_FREQ                 = _UxGT("Frequenza ") STR_C;    // ProUI

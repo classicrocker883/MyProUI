@@ -731,10 +731,10 @@ namespace LanguageNarrow_ru {
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_FAN       = _UxGT("Коэфф.кулера");
   LSTR MSG_MPC_AMBIENT_XFER_COEFF_FAN_E     = _UxGT("Коэфф.кулер *");
   LSTR MSG_INPUT_SHAPING                    = _UxGT("Input Shaping");
-  LSTR MSG_SHAPING_ENABLE                   = _UxGT("Включить шейпинг @");
-  LSTR MSG_SHAPING_DISABLE                  = _UxGT("Выключить шейпинг @");
-  LSTR MSG_SHAPING_FREQ                     = _UxGT("@ частота");
-  LSTR MSG_SHAPING_ZETA                     = _UxGT("@ подавление");
+  LSTR MSG_SHAPING_ENABLE_N                 = _UxGT("Включить шейпинг @");
+  LSTR MSG_SHAPING_DISABLE_N                = _UxGT("Выключить шейпинг @");
+  LSTR MSG_SHAPING_FREQ_N                   = _UxGT("@ частота");
+  LSTR MSG_SHAPING_ZETA_N                   = _UxGT("@ подавление");
   LSTR MSG_FILAMENT_EN                      = _UxGT("Филамент *");
   LSTR MSG_SEGMENTS_PER_SECOND              = _UxGT("Сегментов/сек");
   LSTR MSG_DRAW_MIN_X                       = _UxGT("Рисовать мин X");
