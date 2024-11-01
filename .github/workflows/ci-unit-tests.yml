@@ -8,7 +8,7 @@ name: CI - Unit Tests
 on:
   pull_request:
     branches:
-    - 2024-October
+    - 2024-November
     paths-ignore:
     - configurations/**
     - display assets/**
@@ -22,7 +22,7 @@ on:
     - '**/*.md'
   push:
     branches:
-    - 2024-October
+    - 2024-November
     paths-ignore:
     - configurations/**
     - display assets/**
