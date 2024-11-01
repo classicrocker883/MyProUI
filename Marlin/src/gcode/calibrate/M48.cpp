@@ -130,8 +130,8 @@ void GcodeSuite::M48() {
   float mean = 0.0,     // The average of all points so far, used to calculate deviation
         sigma = 0.0,    // Standard deviation of all points so far
         min = 99999.9,  // Smallest value sampled so far
-        max = -99999.9, // Largest value sampled so far
-        sample_set[n_samples];  // Storage for sampled values
+        max = -99999.9; // Largest value sampled so far
+  float sample_set[n_samples]; // Storage for sampled values
 
   auto dev_report = [](const bool verbose, const_float_t mean, const_float_t sigma, const_float_t min, const_float_t max, const bool final=false) {
     if (verbose) {

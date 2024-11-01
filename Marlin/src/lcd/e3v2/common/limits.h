@@ -123,9 +123,9 @@ constexpr xyze_float_t max_steps_edit_values =
 
   constexpr xyz_uint_t min_homing_edit_values = NUM_AXIS_ARRAY_1(MIN_HOMING_EDIT_VALUE);
   #if defined(DEFAULT_MAX_MULTIPLIER)
-    constexpr xyz_uint_t default_homing = HOMING_FEEDRATE_MM_M;
+    constexpr xyz_ulong_t default_homing = HOMING_FEEDRATE_MM_M;
   #endif
-  constexpr xyz_uint_t max_homing_edit_values =
+  constexpr xyz_ulong_t max_homing_edit_values =
                            #if !defined(DEFAULT_MAX_MULTIPLIER)
                              { 10000, 10000, 3000 }
                            #else

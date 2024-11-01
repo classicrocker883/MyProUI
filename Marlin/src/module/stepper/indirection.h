@@ -715,7 +715,7 @@ void reset_stepper_drivers();    // Called by settings.load / settings.reset
 #elif E_STEPPERS == 1
   #define E_STEP_WRITE(E,V) E0_STEP_WRITE(V)
   #define    FWD_E_DIR(E)   E0_DIR_WRITE(TERN(DWIN_LCD_PROUI, !INVERT_E0_DIR, HIGH))
-  #define    REV_E_DIR(E)   E0_DIR_WRITE(TERN(DWIN_LCD_PROUI, INVERT_E0_DIR, LOW))
+  #define    REV_E_DIR(E)   E0_DIR_WRITE(TERN(DWIN_LCD_PROUI,  INVERT_E0_DIR,  LOW))
 
 #else
   #define E_STEP_WRITE(E,V) NOOP
@@ -981,12 +981,6 @@ void reset_stepper_drivers();    // Called by settings.load / settings.reset
   #define AFTER_CHANGE(N,TF) NOOP
 #endif
 
-#ifdef Z_IDLE_HEIGHT
-  #define Z_RESET() do{ current_position.z = Z_IDLE_HEIGHT; sync_plan_position(); }while(0)
-#else
-  #define Z_RESET()
-#endif
-
 #if HAS_X_AXIS
   #define  ENABLE_AXIS_X() if (SHOULD_ENABLE(x))  {  ENABLE_STEPPER_X();  ENABLE_STEPPER_X2(); AFTER_CHANGE(x, true); }
   #define DISABLE_AXIS_X() if (SHOULD_DISABLE(x)) { DISABLE_STEPPER_X(); DISABLE_STEPPER_X2(); AFTER_CHANGE(x, false); set_axis_untrusted(X_AXIS); }
@@ -1001,6 +995,12 @@ void reset_stepper_drivers();    // Called by settings.load / settings.reset
 #else
   #define  ENABLE_AXIS_Y() NOOP
   #define DISABLE_AXIS_Y() NOOP
+#endif
+
+#ifdef Z_IDLE_HEIGHT
+  #define Z_RESET() do{ current_position.z = Z_IDLE_HEIGHT; sync_plan_position(); }while(0)
+#else
+  #define Z_RESET()
 #endif
 
 #if HAS_Z_AXIS

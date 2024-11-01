@@ -30,7 +30,7 @@
 #include "../module/planner.h"
 #include "../module/stepper.h" // for block_t
 #include "../gcode/queue.h"
-#include "../feature/pause.h" // for did_pause_print
+#include "pause.h" // for did_pause_print
 #include "../MarlinCore.h" // for printingIsActive()
 
 #include "../inc/MarlinConfig.h"
@@ -264,7 +264,7 @@ class FilamentSensorBase {
       #else
         UNUSED(extruder);
       #endif
-      return !!runout_states;                   // Any extruder ran out
+      return !!runout_states; // Any extruder ran out
     }
   };
 
@@ -440,8 +440,8 @@ class FilamentSensorBase {
           // Reset runout only if it is smaller than runout_distance or printing is paused.
           // On Bowden systems retract may be larger than runout_distance_mm, so if retract
           // was added leave it in place, or the following unretract will cause runout event.
-          (TERN(PROUI_EX, runout_mm_countdown[extruder], mm_countdown.runout[extruder])) = runout_distance_mm;
-            mm_countdown.runout_reset.clear(extruder);
+          TERN(PROUI_EX, runout_mm_countdown[extruder], mm_countdown.runout[extruder]) = runout_distance_mm;
+          mm_countdown.runout_reset.clear(extruder);
         }
         else {
           // If runout is larger than runout distance, we cannot reset right now, as Bowden and retract
