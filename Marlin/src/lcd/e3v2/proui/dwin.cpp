@@ -2124,18 +2124,8 @@ void DWIN_SetDataDefaults() {
   #endif
   IF_DISABLED(HAS_BED_PROBE, HMI_data.ManualZOffset = 0;)
   #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
-    #if ENABLED(LED_COLOR_PRESETS)
-      leds.set_default();
-      ApplyLEDColor();
-    #else
-      HMI_data.Led_Color = Def_Leds_Color;
-      leds.set_color(
-        (HMI_data.Led_Color >> 16) & 0xFF,
-        (HMI_data.Led_Color >>  8) & 0xFF,
-        (HMI_data.Led_Color >>  0) & 0xFF
-        OPTARG(HAS_WHITE_LED, (HMI_data.Led_Color >> 24) & 0xFF)
-      );
-    #endif
+    TERN_(LED_COLOR_PRESETS, leds.set_default();)
+    ApplyLEDColor();
   #endif
   TERN_(HAS_GCODE_PREVIEW, HMI_data.EnablePreview = true;)
   TERN_(PROUI_ITEM_ABRT, HMI_data.auto_abort = true;)
@@ -2209,10 +2199,10 @@ void DWIN_CopySettingsFrom(PGM_P const buff) {
   TERN_(PROUI_MEDIASORT, card.setSortOn(HMI_data.MediaSort ? TERN(SDSORT_REVERSE, AS_REV, AS_FWD) : AS_OFF);)
   #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
     leds.set_color(
-      (HMI_data.Led_Color >> 16) & 0xFF,
-      (HMI_data.Led_Color >>  8) & 0xFF,
-      (HMI_data.Led_Color >>  0) & 0xFF
-      OPTARG(HAS_WHITE_LED, (HMI_data.Led_Color >> 24) & 0xFF)
+      HMI_value.Led_Color.r,
+      HMI_value.Led_Color.g,
+      HMI_value.Led_Color.b
+      OPTARG(HAS_WHITE_LED, HMI_value.Led_Color.w)
     );
     leds.update();
   #endif
@@ -2544,7 +2534,7 @@ void ApplyMove() {
   #endif
 
   #if HAS_COLOR_LEDS
-    void ApplyLEDColor() { HMI_data.Led_Color = LEDColor({ leds.color.r, leds.color.g, leds.color.b OPTARG(HAS_WHITE_LED, leds.color.w) }); }
+    void ApplyLEDColor() { HMI_value.Led_Color = LEDColor({ leds.color.r, leds.color.g, leds.color.b OPTARG(HAS_WHITE_LED, leds.color.w) }); }
     void LiveLEDColor(uint8_t *color) { *color = MenuData.Value; leds.update(); }
     void LiveLEDColorR() { LiveLEDColor(&leds.color.r); }
     void LiveLEDColorG() { LiveLEDColor(&leds.color.g); }
