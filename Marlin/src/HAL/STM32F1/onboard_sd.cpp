@@ -278,7 +278,8 @@ static BYTE send_cmd( // Return value: R1 resp (bit7==1:Failed to send)
 DSTATUS disk_initialize (
   BYTE drv                                                            // Physical drive number (0)
 ) {
-  BYTE n, cmd, ty, ocr[4];
+  BYTE n, cmd, ty;
+  BYTE ocr[4];
 
   if (drv) return STA_NOINIT;                                         // Supports only drive 0
   sd_power_on();                                                      // Initialize SPI

@@ -45,8 +45,8 @@ MediaFile PrintJobRecovery::file;
 job_recovery_info_t PrintJobRecovery::info;
 const char PrintJobRecovery::filename[5] = "/PLR";
 uint8_t PrintJobRecovery::queue_index_r;
-uint32_t PrintJobRecovery::cmd_sdpos, // = 0
-         PrintJobRecovery::sdpos[BUFSIZE];
+uint32_t PrintJobRecovery::cmd_sdpos; // = 0
+uint32_t PrintJobRecovery::sdpos[BUFSIZE];
 
 #if HAS_PLR_UI_FLAG
   bool PrintJobRecovery::ui_flag_resume; // = false
@@ -103,7 +103,7 @@ PrintJobRecovery recovery;
 /**
  * Clear the recovery info
  */
-void PrintJobRecovery::init() { memset(&info, 0, sizeof(info)); }
+void PrintJobRecovery::init() { info = {}; }
 
 /**
  * Enable or disable then call changed()

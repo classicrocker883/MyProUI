@@ -160,8 +160,8 @@ class PrintJobRecovery {
     static job_recovery_info_t info;
 
     static uint8_t queue_index_r;     //!< Queue index of the active command
-    static uint32_t cmd_sdpos,        //!< SD position of the next command
-                    sdpos[BUFSIZE];   //!< SD positions of queued commands
+    static uint32_t cmd_sdpos;        //!< SD position of the next command
+    static uint32_t sdpos[BUFSIZE];   //!< SD positions of queued commands
 
     #if HAS_PLR_UI_FLAG
       static bool ui_flag_resume;     //!< Flag the UI to show a dialog to Resume (M1000) or Cancel (M1000C)
