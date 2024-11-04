@@ -336,6 +336,7 @@
 #define STR_DELAYED_POWEROFF                "Delayed poweroff"
 #define STR_MPC                             "Model Predictive Control"
 #define STR_MM3_STATS                       "MMU3 Operational Stats"
+#define STR_STORED_MACROS                   "Stored macros"
 
 //
 // General axis names
