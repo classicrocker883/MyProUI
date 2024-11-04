@@ -729,8 +729,12 @@
   #endif
 #endif
 
-#if ENABLED(QUICK_HOME) && (X_SPI_SENSORLESS || Y_SPI_SENSORLESS)
-  #warning "SPI_ENDSTOPS may be unreliable with QUICK_HOME. Adjust SENSORLESS_BACKOFF_MM for better results."
+#if ENABLED(QUICK_HOME)
+  #if X_SPI_SENSORLESS || Y_SPI_SENSORLESS
+    #warning "If SPI_ENDSTOPS are unreliable with QUICK_HOME try adjusting SENSORLESS_BACKOFF_MM, Travel Acceleration (M204 T), Homing Feedrate (M210 XY), or disable QUICK_HOME."
+  #elif X_SENSORLESS || Y_SENSORLESS
+    #warning "If SENSORLESS_HOMING is unreliable with QUICK_HOME try adjusting SENSORLESS_BACKOFF_MM, Travel Acceleration (M204 T), Homing Feedrate (M210 XY), or disable QUICK_HOME."
+  #endif
 #endif
 
 #if HIGHER_CURRENT_HOME_WARNING

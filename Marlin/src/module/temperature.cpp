@@ -3490,13 +3490,14 @@ void Temperature::disable_all_heaters() {
 #endif // SINGLENOZZLE_STANDBY_TEMP || SINGLENOZZLE_STANDBY_FAN
 
 #if HAS_MAX_TC
-
   typedef TERN(HAS_MAX31855, uint32_t, uint16_t) max_tc_temp_t;
 
   #ifndef THERMOCOUPLE_MAX_ERRORS
     #define THERMOCOUPLE_MAX_ERRORS 15
   #endif
+#endif
 
+#if TEMP_SENSOR_IS_MAX_TC(0) || TEMP_SENSOR_IS_MAX_TC(1) || TEMP_SENSOR_IS_MAX_TC(2)
   /**
    * @brief Read MAX Thermocouple temperature.
    *
@@ -3753,7 +3754,7 @@ void Temperature::disable_all_heaters() {
         #endif
 
         // Set thermocouple above max temperature (TMAX)
-        max_tc_temp = TEMP_SENSOR_BED_MAX_TC_TMAX << (BED_MAX_TC_DISCARD_BITS + 1);
+        max_tc_temp = max_tc_temp_t(TEMP_SENSOR_BED_MAX_TC_TMAX) << (BED_MAX_TC_DISCARD_BITS + 1);
       }
     }
     else {

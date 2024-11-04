@@ -1198,6 +1198,7 @@ private:
 
   #if ENABLED(GCODE_MACROS)
     static void M810_819();
+    static void M820();
   #endif
 
   #if HAS_BED_PROBE

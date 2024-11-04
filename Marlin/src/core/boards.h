@@ -170,19 +170,19 @@
 #define BOARD_GT2560_V3_A20           1319  // Geeetech GT2560 Rev B for A20(M/T/D)
 #define BOARD_GT2560_V4               1320  // Geeetech GT2560 Rev B for A10(M/T/D)
 #define BOARD_GT2560_V4_A20           1321  // Geeetech GT2560 Rev B for A20(M/T/D)
-#define BOARD_EINSTART_S              1322  // Einstart retrofit
-#define BOARD_WANHAO_ONEPLUS          1323  // Wanhao 0ne+ i3 Mini
-#define BOARD_OVERLORD                1324  // Overlord/Overlord Pro
-#define BOARD_HJC2560C_REV1           1325  // ADIMLab Gantry v1
-#define BOARD_HJC2560C_REV2           1326  // ADIMLab Gantry v2
-#define BOARD_LEAPFROG_XEED2015       1327  // Leapfrog Xeed 2015
-#define BOARD_PICA_REVB               1328  // PICA Shield (original version)
-#define BOARD_PICA                    1329  // PICA Shield (rev C or later)
-#define BOARD_INTAMSYS40              1330  // Intamsys 4.0 (Funmat HT)
-#define BOARD_MALYAN_M180             1331  // Malyan M180 Mainboard Version 2 (no display function, direct G-code only)
-#define BOARD_PROTONEER_CNC_SHIELD_V3 1332  // Mega controller & Protoneer CNC Shield V3.00
-#define BOARD_WEEDO_62A               1333  // WEEDO 62A board (TINA2, Monoprice Cadet, etc.)
-#define BOARD_GT2560_V41B             1334  // Geeetech GT2560 V4.1B for A10(M/T/D)
+#define BOARD_GT2560_V41B             1322  // Geeetech GT2560 V4.1B for A10(M/T/D)
+#define BOARD_EINSTART_S              1323  // Einstart retrofit
+#define BOARD_WANHAO_ONEPLUS          1324  // Wanhao 0ne+ i3 Mini
+#define BOARD_OVERLORD                1325  // Overlord/Overlord Pro
+#define BOARD_HJC2560C_REV1           1326  // ADIMLab Gantry v1
+#define BOARD_HJC2560C_REV2           1327  // ADIMLab Gantry v2
+#define BOARD_LEAPFROG_XEED2015       1328  // Leapfrog Xeed 2015
+#define BOARD_PICA_REVB               1329  // PICA Shield (original version)
+#define BOARD_PICA                    1330  // PICA Shield (rev C or later)
+#define BOARD_INTAMSYS40              1331  // Intamsys 4.0 (Funmat HT)
+#define BOARD_MALYAN_M180             1332  // Malyan M180 Mainboard Version 2 (no display function, direct G-code only)
+#define BOARD_PROTONEER_CNC_SHIELD_V3 1333  // Mega controller & Protoneer CNC Shield V3.00
+#define BOARD_WEEDO_62A               1334  // WEEDO 62A board (TINA2, Monoprice Cadet, etc.)
 
 //
 // ATmega1281, ATmega2561
@@ -533,6 +533,13 @@
 
 #define BOARD_AQUILA_V101             7200  // Voxelab Aquila V1.0.0/V1.0.1/V1.0.2/V1.0.3 as found in the Voxelab Aquila X2 and C2
 #define BOARD_CREALITY_ENDER2P_V24S4  7201  // Creality Ender 2 Pro v2.4.S4_170 (HC32f460kcta)
+
+//
+// Raspberry Pi
+//
+
+#define BOARD_RP2040                  6200 // Generic RP2040 Test board
+#define BOARD_BTT_SKR_PICO            6201 // BigTreeTech SKR Pico 1.x
 
 //
 // Custom board

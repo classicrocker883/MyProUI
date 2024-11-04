@@ -307,6 +307,7 @@
   #define E7_CS_PIN -1
 #endif
 
+// If only TX is defined, use the same pin for RX
 #if HAS_TMC_UART
   #if !defined(X_SERIAL_RX_PIN) && PIN_EXISTS(X_SERIAL_TX)
     #define X_SERIAL_RX_PIN      X_SERIAL_TX_PIN
@@ -331,6 +332,24 @@
   #endif
   #if !defined(Z4_SERIAL_RX_PIN) && PIN_EXISTS(Z4_SERIAL_TX)
     #define Z4_SERIAL_RX_PIN    Z4_SERIAL_TX_PIN
+  #endif
+  #if !defined(I_SERIAL_RX_PIN) && PIN_EXISTS(I_SERIAL_TX)
+    #define I_SERIAL_RX_PIN      I_SERIAL_TX_PIN
+  #endif
+  #if !defined(J_SERIAL_RX_PIN) && PIN_EXISTS(J_SERIAL_TX)
+    #define J_SERIAL_RX_PIN      J_SERIAL_TX_PIN
+  #endif
+  #if !defined(K_SERIAL_RX_PIN) && PIN_EXISTS(K_SERIAL_TX)
+    #define K_SERIAL_RX_PIN      K_SERIAL_TX_PIN
+  #endif
+  #if !defined(U_SERIAL_RX_PIN) && PIN_EXISTS(U_SERIAL_TX)
+    #define U_SERIAL_RX_PIN      U_SERIAL_TX_PIN
+  #endif
+  #if !defined(V_SERIAL_RX_PIN) && PIN_EXISTS(V_SERIAL_TX)
+    #define V_SERIAL_RX_PIN      V_SERIAL_TX_PIN
+  #endif
+  #if !defined(W_SERIAL_RX_PIN) && PIN_EXISTS(W_SERIAL_TX)
+    #define W_SERIAL_RX_PIN      W_SERIAL_TX_PIN
   #endif
   #if !defined(EX_SERIAL_RX_PIN) && PIN_EXISTS(EX_SERIAL_TX)
     #define EX_SERIAL_RX_PIN    EX_SERIAL_TX_PIN
@@ -530,9 +549,13 @@
   #define TEMP_BED_PIN -1
 #endif
 
-// Use ATEMP if TEMP_SOC_PIN is not defined
-#if !defined(TEMP_SOC_PIN) && defined(ATEMP)
-  #define TEMP_SOC_PIN ATEMP
+// Get TEMP_SOC_PIN from the platform, if not defined
+#ifndef TEMP_SOC_PIN
+  #ifdef ATEMP
+    #define TEMP_SOC_PIN ATEMP
+  #elif defined(HAL_ADC_MCU_TEMP_DUMMY_PIN)
+    #define TEMP_SOC_PIN HAL_ADC_MCU_TEMP_DUMMY_PIN
+  #endif
 #endif
 
 #ifndef SD_DETECT_PIN
