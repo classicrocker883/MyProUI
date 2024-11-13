@@ -3121,7 +3121,9 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
   void ApplyPhySet() {
     TERN_(PROUI_EX, ProEx.CheckParkingPos();)
     TERN_(MESH_BED_LEVELING, bedlevel.initialize();)
-    update_software_endstops(ALL_AXES_ENUM);
+    update_software_endstops(X_AXIS);
+    update_software_endstops(Y_AXIS);
+    update_software_endstops(Z_AXIS);
   }
   void SetData() {
     ApplyPhySet();

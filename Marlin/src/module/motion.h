@@ -130,19 +130,19 @@ extern int16_t feedrate_percentage;
 inline float pgm_read_any(const float *p)   { return TERN(__IMXRT1062__, *p, pgm_read_float(p)); }
 inline int8_t pgm_read_any(const int8_t *p) { return TERN(__IMXRT1062__, *p, pgm_read_byte(p)); }
 
-/* #if ENABLED(DWIN_LCD_PROUI)
+#if ENABLED(DWIN_LCD_PROUI)
   #define XYZ_DEFS(T, NAME, OPT) \
     inline T NAME(const AxisEnum axis) { \
-      const XYZval<T> Value = NUM_AXIS_ARRAY(X_##OPT, Y_##OPT, Z_##OPT, I_##OPT, J_##OPT, K_##OPT, U_##OPT, V_##OPT, W_##OPT); \
-      return Value[axis]; \
+      const XYZval<T> NAME##_P = NUM_AXIS_ARRAY(X_##OPT, Y_##OPT, Z_##OPT, I_##OPT, J_##OPT, K_##OPT, U_##OPT, V_##OPT, W_##OPT); \
+      return NAME##_P[axis]; \
     }
-#else */
+#else
   #define XYZ_DEFS(T, NAME, OPT) \
     inline T NAME(const AxisEnum axis) { \
       static const XYZval<T> NAME##_P DEFS_PROGMEM = NUM_AXIS_ARRAY(X_##OPT, Y_##OPT, Z_##OPT, I_##OPT, J_##OPT, K_##OPT, U_##OPT, V_##OPT, W_##OPT); \
       return pgm_read_any(&NAME##_P[axis]); \
     }
-//#endif
+#endif
 
 XYZ_DEFS(float, base_min_pos,  MIN_POS);
 XYZ_DEFS(float, base_max_pos,  MAX_POS);
