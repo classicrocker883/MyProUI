@@ -41,14 +41,14 @@ constexpr xyze_feedrate_t min_feedrate_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_FE
   constexpr xyze_feedrate_t default_max_feedrate = DEFAULT_MAX_FEEDRATE;
 #endif
 constexpr xyze_feedrate_t max_feedrate_edit_values =
-                         #ifdef MAX_FEEDRATE_EDIT_VALUES
-                           MAX_FEEDRATE_EDIT_VALUES
-                         #elif !defined(DEFAULT_MAX_MULTIPLIER)
-                           { 1000, 1000, 40, 200 }
-                         #else
-                           default_max_feedrate * DEFAULT_MAX_MULTIPLIER
-                         #endif
-                       ;
+                            #ifdef MAX_FEEDRATE_EDIT_VALUES
+                              MAX_FEEDRATE_EDIT_VALUES
+                            #elif defined(DEFAULT_MAX_MULTIPLIER)
+                              default_max_feedrate * DEFAULT_MAX_MULTIPLIER
+                            #else
+                              { 1000, 1000, 40, 200 }
+                            #endif
+                          ;
 
 //
 // Acceleration limits
@@ -62,10 +62,10 @@ constexpr xyze_float_t min_acceleration_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_A
 constexpr xyze_float_t max_acceleration_edit_values =
                          #ifdef MAX_ACCEL_EDIT_VALUES
                            MAX_ACCEL_EDIT_VALUES
-                         #elif !defined(DEFAULT_MAX_MULTIPLIER)
-                            { 6000, 6000, 300, 9999 }
-                         #else
+                         #elif defined(DEFAULT_MAX_MULTIPLIER)
                            default_max_acceleration * DEFAULT_MAX_MULTIPLIER
+                         #else
+                           { 6000, 6000, 300, 9999 }
                          #endif
                        ;
 
@@ -88,10 +88,10 @@ constexpr xyze_float_t max_acceleration_edit_values =
   constexpr xyze_float_t max_jerk_edit_values =
                            #ifdef MAX_JERK_EDIT_VALUES
                              MAX_JERK_EDIT_VALUES
-                           #elif !defined(DEFAULT_MAX_MULTIPLIER)
-                             { DEFAULT_XJERK * 2, DEFAULT_YJERK * 2, DEFAULT_ZJERK * 4, DEFAULT_EJERK * 4 }
-                           #else
+                           #elif defined(DEFAULT_MAX_MULTIPLIER)
                              default_jerk * DEFAULT_MAX_JERK_MULTIPLIER
+                           #else
+                             { DEFAULT_XJERK * 2, DEFAULT_YJERK * 2, DEFAULT_ZJERK * 4, DEFAULT_EJERK * 4 }
                            #endif
                          ;
 #endif
@@ -108,10 +108,10 @@ constexpr xyze_float_t min_steps_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_STEPS_ED
 constexpr xyze_float_t max_steps_edit_values =
                          #ifdef MAX_STEPS_EDIT_VALUES
                            MAX_STEPS_EDIT_VALUES
-                         #elif !defined(DEFAULT_MAX_MULTIPLIER)
-                           { 200, 200, 2000, 2000 }
-                         #else
+                         #elif defined(DEFAULT_MAX_MULTIPLIER)
                            default_steps * DEFAULT_MAX_MULTIPLIER
+                         #else
+                           { 200, 200, 2000, 2000 }
                          #endif
                        ;
 
@@ -123,15 +123,15 @@ constexpr xyze_float_t max_steps_edit_values =
 
   constexpr xyz_uint_t min_homing_edit_values = NUM_AXIS_ARRAY_1(MIN_HOMING_EDIT_VALUE);
   #if defined(DEFAULT_MAX_MULTIPLIER)
-    constexpr xyz_ulong_t default_homing = HOMING_FEEDRATE_MM_M;
+    constexpr xyz_long_t default_homing = HOMING_FEEDRATE_MM_M;
   #endif
-  constexpr xyz_ulong_t max_homing_edit_values =
-                           #if !defined(DEFAULT_MAX_MULTIPLIER)
-                             { 10000, 10000, 3000 }
-                           #else
-                             default_homing * DEFAULT_MAX_MULTIPLIER
-                           #endif
-                         ;
+  constexpr xyz_long_t max_homing_edit_values =
+                         #ifdef DEFAULT_MAX_MULTIPLIER
+                           default_homing * DEFAULT_MAX_MULTIPLIER
+                         #else
+                           { 10000, 10000, 3000 }
+                         #endif
+                       ;
 #endif
 
 //

@@ -51,6 +51,8 @@ if pioutil.is_pio_build():
 
     # Make sure the local variant sub-folder exists
     if marlin_variant_pattern.match(str(variant).lower()):
-        source_dir = Path("buildroot/share/PlatformIO/variants", variant)
+        here = Path.cwd()
+        variants_dir = here / 'buildroot' / 'share' / 'PlatformIO' / 'variants'
+        source_dir = variants_dir / variant
         assert source_dir.is_dir()
-        board.update("build.variants_dir", "buildroot/share/PlatformIO/variants");
+        board.update("build.variants_dir", str(variants_dir))
