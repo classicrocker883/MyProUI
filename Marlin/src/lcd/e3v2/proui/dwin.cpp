@@ -2161,7 +2161,7 @@ void DWIN_SetDataDefaults() {
       const uint8_t _def[] = DEF_TBOPT;
       for (uint8_t i = 0; i < TBMaxOpt; ++i) PRO_data.TBopt[i] = _def[i];
     #endif
-    SetData();
+    ProEx.SetData();
   #else
     #if HAS_BED_PROBE
       HMI_data.zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
@@ -2189,7 +2189,9 @@ void DWIN_CopySettingsFrom(PGM_P const buff) {
   DEBUG_ECHOLNPGM("DWIN_CopySettingsFrom");
   memcpy(&HMI_data, buff, sizeof(HMI_data_t));
   TERN_(PROUI_EX, memcpy(&PRO_data, buff + sizeof(HMI_data_t), sizeof(PRO_data_t));)
-  #if ANY(PROUI_EX, MESH_BED_LEVELING)
+  #if PROUI_EX
+    ProEx.SetData();
+  #elif ENABLED(MESH_BED_LEVELING)
     SetData();
   #endif
   DWINUI::SetColors(HMI_data.Text_Color, HMI_data.Background_Color, HMI_data.TitleBg_Color);
@@ -2568,8 +2570,8 @@ void ApplyMove() {
 
 #if HAS_BED_PROBE
 
-  void SetProbeOffsetX() { SetPFloatOnClick(-60, 60, UNITFDIGITS, TERN(PROUI_EX, ApplyPhySet, nullptr)); }
-  void SetProbeOffsetY() { SetPFloatOnClick(-60, 60, UNITFDIGITS, TERN(PROUI_EX, ApplyPhySet, nullptr)); }
+  void SetProbeOffsetX() { SetPFloatOnClick(-60, 60, UNITFDIGITS, TERN(PROUI_EX, ProEx.ApplyPhySet, nullptr)); }
+  void SetProbeOffsetY() { SetPFloatOnClick(-60, 60, UNITFDIGITS, TERN(PROUI_EX, ProEx.ApplyPhySet, nullptr)); }
   void SetProbeOffsetZ() { SetPFloatOnClick(-10, 10, 2); }
   void SetProbeZSpeed()  { SetPIntOnClick(60, 1000); }
   #if DISABLED(BD_SENSOR)
@@ -3117,10 +3119,9 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
   #endif
 #endif
 
-#if ANY(PROUI_EX, MESH_BED_LEVELING)
+#if !PROUI_EX && ENABLED(MESH_BED_LEVELING)
   void ApplyPhySet() {
-    TERN_(PROUI_EX, ProEx.CheckParkingPos();)
-    TERN_(MESH_BED_LEVELING, bedlevel.initialize();)
+    bedlevel.initialize();
     update_software_endstops(X_AXIS);
     update_software_endstops(Y_AXIS);
     update_software_endstops(Z_AXIS);
@@ -3131,13 +3132,13 @@ void ApplyMaxAccel() { planner.set_max_acceleration(HMI_value.axis, MenuData.Val
 #endif
 
 #if PROUI_EX
-  void SetBedSizeX() { HMI_value.axis = NO_AXIS_ENUM; SetPIntOnClick(X_BED_MIN, X_MAX_POS, ApplyPhySet); }
-  void SetBedSizeY() { HMI_value.axis = NO_AXIS_ENUM; SetPIntOnClick(Y_BED_MIN, Y_MAX_POS, ApplyPhySet); }
-  void SetMinPosX()  { HMI_value.axis = X_AXIS;       SetPIntOnClick(     -100,       100, ApplyPhySet); }
-  void SetMinPosY()  { HMI_value.axis = Y_AXIS;       SetPIntOnClick(     -100,       100, ApplyPhySet); }
-  void SetMaxPosX()  { HMI_value.axis = X_AXIS;       SetPIntOnClick(X_BED_MIN,       999, ApplyPhySet); }
-  void SetMaxPosY()  { HMI_value.axis = Y_AXIS;       SetPIntOnClick(Y_BED_MIN,       999, ApplyPhySet); }
-  void SetMaxPosZ()  { HMI_value.axis = Z_AXIS;       SetPIntOnClick(      100,       999, ApplyPhySet); }
+  void SetBedSizeX() { HMI_value.axis = NO_AXIS_ENUM; SetPIntOnClick(X_BED_MIN, X_MAX_POS, ProEx.ApplyPhySet); }
+  void SetBedSizeY() { HMI_value.axis = NO_AXIS_ENUM; SetPIntOnClick(Y_BED_MIN, Y_MAX_POS, ProEx.ApplyPhySet); }
+  void SetMinPosX()  { HMI_value.axis = X_AXIS;       SetPIntOnClick(     -100,       100, ProEx.ApplyPhySet); }
+  void SetMinPosY()  { HMI_value.axis = Y_AXIS;       SetPIntOnClick(     -100,       100, ProEx.ApplyPhySet); }
+  void SetMaxPosX()  { HMI_value.axis = X_AXIS;       SetPIntOnClick(X_BED_MIN,       999, ProEx.ApplyPhySet); }
+  void SetMaxPosY()  { HMI_value.axis = Y_AXIS;       SetPIntOnClick(Y_BED_MIN,       999, ProEx.ApplyPhySet); }
+  void SetMaxPosZ()  { HMI_value.axis = Z_AXIS;       SetPIntOnClick(      100,       999, ProEx.ApplyPhySet); }
 #endif
 
 #if HAS_EXTRUDERS

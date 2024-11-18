@@ -85,7 +85,7 @@ void GcodeSuite::M851() {
   // Save the new offsets
   if (ok) {
     probe.offset = offs;
-    TERN_(PROUI_EX, ApplyPhySet();)
+    TERN_(PROUI_EX, ProEx.ApplyPhySet();)
   }
 }
 
