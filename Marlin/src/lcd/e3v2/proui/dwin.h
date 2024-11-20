@@ -162,7 +162,7 @@ void ResetEeprom();
 #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
   void SetHSMode();
 #endif
-#if ANY(PROUI_EX, MESH_BED_LEVELING)
+#if !PROUI_EX && ENABLED(MESH_BED_LEVELING)
   void ApplyPhySet();
   void SetData();
 #endif
