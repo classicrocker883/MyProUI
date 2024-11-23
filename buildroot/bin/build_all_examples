@@ -151,8 +151,10 @@ fi
 echo -e "=====================\nProceed with builds...\n====================="
 shopt -s nullglob
 
+export PAUSE=1
+
 # Get a list of all folders that contain a file matching "Configuration*.h"
-find -ds "$CBASE"/configurations -type d -name 'Configuration.h' -o -name 'Configuration_adv.h' -print0 | while IFS= read -r -d '' CONF; do
+find -ds "$CBASE"/configurations -type d -name 'Configuration.h' -o -name 'Configuration_adv.h' -print0 | while IFS= read -r -d $'\0' CONF; do
 
   # Remove the file name and slash from the end of the path
   CONF=${CONF%/*}
@@ -198,10 +200,14 @@ find -ds "$CBASE"/configurations -type d -name 'Configuration.h' -o -name 'Confi
   fi
 
   echo
-  ((--LIMIT)) || { echo "Specified limit reached" ; PAUSE=1 ; break ; }
+  ((--LIMIT)) || { echo "Specified limit reached" ; break ; }
   echo
+
+  export PAUSE=0
 
 done
 
+echo "Exiting"
+
 # Delete the build state if not paused early
-[[ $PAUSE ]] || rm -f "$STAT_FILE"
+((PAUSE)) || rm -f "$STAT_FILE"

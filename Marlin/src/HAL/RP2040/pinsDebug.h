@@ -112,7 +112,7 @@ uint8_t get_pin_mode(const pin_t Ard_num) {
 
 }
 
-bool GET_PINMODE(const pin_t Ard_num) {
+bool getValidPinMode(const pin_t Ard_num) {
   const uint8_t pin_mode = get_pin_mode(Ard_num);
   return pin_mode == MODE_PIN_OUTPUT || pin_mode == MODE_PIN_ALT;  // assume all alt definitions are PWM
 }
@@ -122,7 +122,7 @@ int8_t digital_pin_to_analog_pin(pin_t Ard_num) {
   return (Ard_num >= 0 && Ard_num < NUM_ANALOG_INPUTS) ? Ard_num : -1;
 }
 
-bool IS_ANALOG(const pin_t Ard_num) {
+bool isAnalogPin(const pin_t Ard_num) {
   return digital_pin_to_analog_pin(Ard_num) != -1;
 }
 
@@ -131,7 +131,7 @@ bool is_digital(const pin_t x) {
   return pin_mode == MODE_PIN_INPUT || pin_mode == MODE_PIN_OUTPUT;
 }
 
-void print_port(const pin_t Ard_num) {
+void printPinPort(const pin_t Ard_num) {
   SERIAL_ECHOPGM("Pin: ");
   SERIAL_ECHO(Ard_num);
 }
@@ -140,7 +140,7 @@ bool pwm_status(const pin_t Ard_num) {
   return get_pin_mode(Ard_num) == MODE_PIN_ALT;
 }
 
-void pwm_details(const pin_t Ard_num) {
+void printPinPWM(const pin_t Ard_num) {
   if (PWM_PIN(Ard_num)) {
   }
 }

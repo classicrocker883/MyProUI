@@ -109,7 +109,7 @@ void GcodeSuite::M115() {
       SERIAL_ECHO(F("CEDE2A2F-"));
       for (uint8_t i = 1; i <= 6; i++) {
         print_hex_word(UID[(i % 2) ? i : i - 2]);       // 1111-0000-3333-222255554444
-        if (i <= 3) SERIAL_ECHO(C('-'));
+        if (i <= 3) SERIAL_CHAR('-');
       }
     #endif
   #endif

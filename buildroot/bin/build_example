@@ -37,6 +37,7 @@ PATH="$HERE:$PATH"
 . mfutil
 
 annc() { echo -e "\033[0;32m$1\033[0m" ; }
+alrt() { echo -e "\033[0;31m$1\033[0m" ; }
 
 # Get arguments
 BUILD=./.pio/build
@@ -153,8 +154,7 @@ ENAME=("-name" "marlin_config.json" \
   "-o" "-name" "schema.yml")
 
 # Possible built firmware names (in the build folder)
-BNAME=("-type" "f" \
-       "-name" 'firmware*.hex' \
+BNAME=("-name" 'firmware*.hex' \
   "-o" "-name" "firmware*.bin" \
   "-o" "-name" "project*.bin" \
   "-o" "-name" "Robin*.bin" \
@@ -176,44 +176,54 @@ set +e
 echo "Building example $CONFIG ..."
 mftest -s -a -n1 ; ERR=$?
 
-((ERR)) && echo "Failed" || echo "Success"
+((ERR)) && alrt "Failed ($ERR)" || annc "Success"
 
 set -e
 
-# Copy exports back to the configs
-if [[ -n $EXPNUM ]]; then
-  annc "Exporting $EXPNUM"
-  [[ -f Marlin/Config-export.h ]] && { cp Marlin/Config-export.h "$ARCSUB"/Config.h ; }
-  find "$BUILD" "${ENAME[@]}" -exec cp "{}" "$ARCSUB" \;
+if [[ $ERR -gt 0 ]]; then
+
+  # Error? For --nofail simply log. Otherwise return the error.
+  if [[ -n $NOFAIL ]]; then
+    date +"%F %T [FAIL] $CONFIG" >>./.pio/error-log.txt
+  else
+    exit $ERR
+  fi
+
+else
+
+  # Copy exports back to the configs
+  if [[ -n $EXPNUM ]]; then
+    annc "Exporting $EXPNUM"
+    [[ -f Marlin/Config-export.h ]] && { cp Marlin/Config-export.h "$ARCSUB"/Config.h ; }
+    find "$BUILD" \( "${ENAME[@]}" \) -exec cp "{}" "$ARCSUB" \;
+  fi
+
+  # Copy potential firmware files into the config folder
+  # TODO: Consider firmware that needs an STM32F4_UPDATE folder.
+  #       Currently only BOARD_CREALITY_F401RE env:STM32F401RE_creality
+  if ((ARCHIVE)); then
+    annc "Archiving"
+    rm -f "$ARCSUB"/*.tar.gz "$ARCSUB"/*.sha256.txt
+    find "$BUILD" \( "${BNAME[@]}" \) -exec sh -c '
+      ARCSUB="$1"
+      CONFIG="$2"
+      shift 2
+      for FILE in "$@"; do
+        cd "${FILE%/*}"
+        NAME=${FILE##*/}
+        SHRT=${NAME%.*}
+        SHASUM=$(sha256sum "$NAME" | cut -d" " -f1)
+        tar -czf "$ARCSUB/$SHRT.tar.gz" "$NAME"
+        echo "$CONFIG\n$SHASUM" > "$ARCSUB/$NAME.sha256.txt"
+        rm "$NAME"
+        cd - >/dev/null
+      done
+    ' sh "$ARCSUB" "$CONFIG" {} +
+  fi
+
+  # Reveal the configs after the build, if requested
+  ((REVEAL)) && { annc "Revealing $ARCSUB" ; open "$ARCSUB" ; }
+
 fi
-
-# Copy potential firmware files into the config folder
-# TODO: Consider firmware that needs an STM32F4_UPDATE folder.
-#       Currently only BOARD_CREALITY_F401RE env:STM32F401RE_creality
-if ((ARCHIVE)); then
-  annc "Archiving"
-  rm -f "$ARCSUB"/*.bin.tar.gz "$ARCSUB"/*.hex.tar.gz
-  find "$BUILD" \( "${BNAME[@]}" \) -exec sh -c '
-    ARCSUB="$1"
-    CONFIG="$2"
-    shift 2
-    for FILE in "$@"; do
-      cd "${FILE%/*}"
-      BASE=${FILE##*/}
-      SHRT=${BASE%.*}
-      SHASUM=$(sha256sum "$BASE" | cut -d" " -f1)
-      tar -czf "$ARCSUB/$SHRT.tar.gz" "$BASE"
-      echo "$CONFIG\n$SHASUM" > "$ARCSUB/$BASE.sha256.txt"
-      rm "$BASE"
-      cd - >/dev/null
-    done
-  ' sh "$ARCSUB" "$CONFIG" {} +
-fi
-
-# Exit with error unless --nofail is set
-[[ $ERR -gt 0 && -z $NOFAIL ]] && exit $ERR
-
-# Reveal the configs after the build, if requested
-((REVEAL)) && { annc "Revealing $ARCSUB" ; open "$ARCSUB" ; }
 
 exit 0
