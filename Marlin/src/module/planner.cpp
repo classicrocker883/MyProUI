@@ -2152,9 +2152,12 @@ bool Planner::_populate_block(
   #endif
   #if ANY(CORE_IS_XY, MARKFORGED_XY, MARKFORGED_YX)
     SECONDARY_AXIS_CODE(
-      if (block->steps.i) stepper.enable_axis(I_AXIS), if (block->steps.j) stepper.enable_axis(J_AXIS),
-      if (block->steps.k) stepper.enable_axis(K_AXIS), if (block->steps.u) stepper.enable_axis(U_AXIS),
-      if (block->steps.v) stepper.enable_axis(V_AXIS), if (block->steps.w) stepper.enable_axis(W_AXIS)
+      if (block->steps.i) stepper.enable_axis(I_AXIS),
+      if (block->steps.j) stepper.enable_axis(J_AXIS),
+      if (block->steps.k) stepper.enable_axis(K_AXIS),
+      if (block->steps.u) stepper.enable_axis(U_AXIS),
+      if (block->steps.v) stepper.enable_axis(V_AXIS),
+      if (block->steps.w) stepper.enable_axis(W_AXIS)
     );
   #endif
 

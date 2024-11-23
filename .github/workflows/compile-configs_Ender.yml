@@ -171,6 +171,7 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
         t13: [true,false]
+        t5: [true,false]
         bmp: [true,false]
     steps:
     - uses: actions/checkout@main
@@ -204,8 +205,9 @@ jobs:
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
+        if ($T5); then SDTMP=_SPDY5; else SDTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=${DTMP}Ender${TTMP}${MPTMP}_GD32_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender${TTMP}${SDTMP}${MPTMP}_GD32_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -222,7 +224,7 @@ jobs:
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
-        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
+        if ($T13); then THMP="13"; DSMP="424.9"; elif ($T5); then THMP="5"; DSMP="98"; else THMP="1"; DSMP="98"; fi;
         sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
@@ -240,6 +242,7 @@ jobs:
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
         T13: ${{ matrix.t13 }}
+        T5: ${{ matrix.t5 }}
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
@@ -596,6 +599,7 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
         t13: [true,false]
+        t5: [true,false]
         bmp: [true,false]
     steps:
     - uses: actions/checkout@main
@@ -630,8 +634,9 @@ jobs:
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=_SPRT13; else TTMP=; fi
+        if ($T5); then SDTMP=_SPDY5; else SDTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=${DTMP}Ender${TTMP}${MPTMP}_${EVTMP}_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender${TTMP}${SDTMP}${MPTMP}_${EVTMP}_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -649,7 +654,7 @@ jobs:
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
-        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
+        if ($T13); then THMP="13"; DSMP="424.9"; elif ($T5); then THMP="5"; DSMP="98"; else THMP="1"; DSMP="98"; fi;
         sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
@@ -668,6 +673,7 @@ jobs:
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
         T13: ${{ matrix.t13 }}
+        T5: ${{ matrix.t5 }}
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
@@ -783,6 +789,7 @@ jobs:
         inshape: [true,false]
         tjc: [true,false]
         t13: [true,false]
+        t5: [true,false]
         bmp: [true,false]
     steps:
     - uses: actions/checkout@main
@@ -816,8 +823,9 @@ jobs:
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($T13); then TTMP=_SPRT13; else TTMP=; fi;
+        if ($T5); then SDTMP=_SPDY5; else SDTMP=; fi;
         if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
-        echo "filename=${DTMP}Ender_E3-Free-runs${TTMP}${MPTMP}_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        echo "filename=${DTMP}Ender_E3-Free-runs${TTMP}${SDTMP}${MPTMP}_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
         > Marlin/Version.h
@@ -834,7 +842,7 @@ jobs:
         sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
         if ($TJC); then TJEMP=; else TJEMP='\/\/'; fi;
         sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
-        if ($T13); then THMP="13"; DSMP="424.9"; else THMP="1"; DSMP="98"; fi;
+        if ($T13); then THMP="13"; DSMP="424.9"; elif ($T5); then THMP="5"; DSMP="98"; else THMP="1"; DSMP="98"; fi;
         sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
         sed -i "s/.*#define DEFAULT_AXIS_STEPS_PER_UNIT.*/#define DEFAULT_AXIS_STEPS_PER_UNIT { 80,80,400,${DSMP} }/" Marlin/Configuration.h
         if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
@@ -852,6 +860,7 @@ jobs:
         IS: ${{ matrix.inshape }}
         TJC: ${{ matrix.tjc }}
         T13: ${{ matrix.t13 }}
+        T5: ${{ matrix.t5 }}
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
