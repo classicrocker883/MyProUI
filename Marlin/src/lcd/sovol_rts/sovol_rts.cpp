@@ -55,7 +55,7 @@ RTS rts;
 #include "../../feature/tmc_util.h"
 #include "../../gcode/queue.h"
 #include "../../gcode/gcode.h"
-//#include "../marlinui.h"
+#include "../marlinui.h"
 //#include "../utf8.h"
 #include "../../libs/BL24CXX.h"
 
@@ -118,7 +118,7 @@ char commandbuf[30];
 
 static SovolPage change_page_number = ID_Startup;
 
-uint16_t remain_time = 0;
+uint32_t remain_time = 0;
 
 static bool last_card_insert_st;
 bool card_insert_st;
@@ -1365,7 +1365,7 @@ void RTS::handleData() {
     #if HAS_FILAMENT_SENSOR
       case FilamentChange: // Automatic material
         switch (recdat.data[0]) {
-          case 1: if (runout.filament_ran_out) break;
+          case 1: if (FILAMENT_IS_OUT()) break;
           case 2:
             updateTempE0();
             wait_for_heatup = wait_for_user = false;
@@ -1530,7 +1530,7 @@ void RTS::handleData() {
 
       updateFan0();
 
-      job_percent = card.percentDone() + 1;
+      job_percent = ui.get_progress_percent();
       if (job_percent <= 100) sendData(uint8_t(job_percent), PRINT_PROCESS_ICON_VP);
 
       sendData(uint8_t(card.percentDone()), PRINT_PROCESS_VP);
@@ -1626,13 +1626,13 @@ void RTS::onIdle() {
 
     if (card.isPrinting() && (last_cardpercentValue != card.percentDone())) {
       if (card.percentDone() > 0) {
-        job_percent = card.percentDone();
+        job_percent = ui.get_progress_percent();
         if (job_percent <= 100) sendData(uint8_t(job_percent), PRINT_PROCESS_ICON_VP);
         // Estimate remaining time every 20 seconds
         static millis_t next_remain_time_update = 0;
         if (ELAPSED(ms, next_remain_time_update)) {
           if (thermalManager.degHotend(0) >= thermalManager.degTargetHotend(0) - 5) {
-            remain_time = elapsed.value / (job_percent * 0.01f) - elapsed.value;
+            remain_time = ui.get_remaining_time();
             next_remain_time_update += 20 * 1000UL;
             sendData(remain_time / 3600, PRINT_SURPLUS_TIME_HOUR_VP);
             sendData((remain_time % 3600) / 60, PRINT_SURPLUS_TIME_MIN_VP);

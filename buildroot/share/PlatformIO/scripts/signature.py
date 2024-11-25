@@ -2,9 +2,7 @@
 #
 # signature.py
 #
-import schema
-
-import subprocess,re,json,hashlib
+import schema, subprocess, re, json, hashlib
 from datetime import datetime
 from pathlib import Path
 from functools import reduce
