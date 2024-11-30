@@ -173,8 +173,7 @@ def extract_files(filekey):
                         comment_buff = []
                         if cline != '':
                             # A (block or slash) comment was already added
-                            if 'comment' in last_added_ref:
-                                cfield = 'notes'
+                            cfield = 'notes' if 'comment' in last_added_ref else 'comment'
                             last_added_ref[cfield] = cline
 
                 #

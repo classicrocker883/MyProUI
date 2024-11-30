@@ -4,6 +4,7 @@
 #
 #  build_example  -b|--base=<path>    - Configurations root folder (e.g., ./.pio/build-BRANCH)
 #                 -c|--config=<rel>   - Sub-path of the configs to build (within config/examples)
+#                [-n|--index=N]       - Which environment to build, by index (Based on pins.h comments)
 #                [-e|--export=N]      - Use CONFIG_EXPORT N to export the config to the export location
 #                [-a|--archive]       - Archive the build (to the export location)
 #                [-o|--output]        - Redirect export / archiving to another location
@@ -19,6 +20,7 @@ usage() { echo "Usage:
 
 build_example  -b|--base=<path>    - Configurations root folder (e.g., ./.pio/build-BRANCH)
                -c|--config=<rel>   - Sub-path of the configs to build (within config/examples)
+              [-n|--index=N]       - Which environment to build, by index (Based on pins.h comments)
               [-e|--export=N]      - Use CONFIG_EXPORT N to export the config to the export location
               [-a|--archive]       - Archive the build (to the export location)
               [-o|--output]        - Redirect export / archiving to another location
@@ -50,12 +52,14 @@ REVEAL=
 EXPNUM=
 NOFAIL=
 OUTBASE=
-while getopts 'ab:c:e:fhio:r-:' OFLAG; do
+BUILDINDEX=1
+while getopts 'ab:c:e:fhin:o:r-:' OFLAG; do
   case "${OFLAG}" in
     a) ARCHIVE=1 ;;
     b) BASE="${OPTARG%/}" ;;
     c) CONFIG="${OPTARG%/}" ;;
     e) EXPNUM="$OPTARG" ;;
+    n) BUILDINDEX="$OPTARG" ;;
     o) OUTBASE="${OPTARG%/}" ;;
     h) EXIT_USAGE=1 ; break ;;
     f) NOFAIL=1 ;;
@@ -66,6 +70,7 @@ while getopts 'ab:c:e:fhio:r-:' OFLAG; do
           allow) ALLOW=1 ;;
            base) BASE="${OVAL%/}" ;;
          config) CONFIG="${OVAL%/}" ;;
+          index) BUILDINDEX="$OVAL" ;;
          export) EXPNUM="$OVAL" ;;
          output) OUTBASE="${OVAL%/}" ;;
            help) EXIT_USAGE=1 ; break ;;
@@ -174,7 +179,7 @@ fi
 set +e
 
 echo "Building example $CONFIG ..."
-mftest -s -a -n1 ; ERR=$?
+mftest -s -a -n$BUILDINDEX ; ERR=$?
 
 ((ERR)) && alrt "Failed ($ERR)" || annc "Success"
 
