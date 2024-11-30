@@ -21,13 +21,6 @@
  */
 #pragma once
 
-#ifndef LOW
-  #define LOW  0x0
-#endif
-#ifndef HIGH
-  #define HIGH 0x1
-#endif
-
 #if ENABLED(NOZZLE_PARK_FEATURE)
   constexpr xyz_int_t DEF_NOZZLE_PARK_POINT = NOZZLE_PARK_POINT;
 #else
@@ -73,7 +66,18 @@ constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
   extern MeshSet_t meshSet;
 #endif
 
+/**
+ * ProUI Extras
+ */
 #if PROUI_EX
+
+#ifndef LOW
+  #define LOW  0x0
+#endif
+#ifndef HIGH
+  #define HIGH 0x1
+#endif
+
 #define X_BED_MIN 150
 #define Y_BED_MIN 150
 constexpr uint16_t DEF_X_BED_SIZE = X_BED_SIZE;
@@ -173,7 +177,11 @@ public:
 };
 
 extern ProUIClass ProEx;
-#endif
+
+#undef LOW
+#undef HIGH
+
+#endif // PROUI_EX
 
 typedef struct {
   uint16_t Background_Color;
