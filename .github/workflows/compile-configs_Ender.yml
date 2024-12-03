@@ -77,7 +77,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -154,7 +154,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -247,7 +247,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -335,7 +335,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -417,7 +417,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -504,7 +504,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -585,7 +585,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -666,7 +666,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -763,7 +763,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -855,7 +855,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -946,7 +946,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1039,7 +1039,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1127,7 +1127,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1204,7 +1204,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/action-upload-release-asset@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
