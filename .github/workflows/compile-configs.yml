@@ -81,7 +81,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -162,7 +162,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -264,7 +264,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -361,7 +361,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -454,7 +454,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -542,7 +542,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -641,7 +641,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -737,7 +737,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -822,7 +822,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -904,7 +904,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -986,7 +986,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1084,7 +1084,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1177,7 +1177,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1269,7 +1269,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1343,7 +1343,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1443,7 +1443,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1531,7 +1531,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: classicrocker883/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
