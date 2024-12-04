@@ -53,16 +53,17 @@ EXPNUM=
 NOFAIL=
 OUTBASE=
 BUILDINDEX=1
-while getopts 'ab:c:e:fhin:o:r-:' OFLAG; do
+
+while getopts 'ab:c:e:fhn:o:r-:' OFLAG; do
   case "${OFLAG}" in
     a) ARCHIVE=1 ;;
     b) BASE="${OPTARG%/}" ;;
     c) CONFIG="${OPTARG%/}" ;;
     e) EXPNUM="$OPTARG" ;;
+    f) NOFAIL=1 ;;
+    h) EXIT_USAGE=1 ; break ;;
     n) BUILDINDEX="$OPTARG" ;;
     o) OUTBASE="${OPTARG%/}" ;;
-    h) EXIT_USAGE=1 ; break ;;
-    f) NOFAIL=1 ;;
     r) REVEAL=1 ;;
     -) ONAM="${OPTARG%%=*}" ; OVAL="${OPTARG#*=}"
        case "$ONAM" in
@@ -159,11 +160,12 @@ ENAME=("-name" "marlin_config.json" \
   "-o" "-name" "schema.yml")
 
 # Possible built firmware names (in the build folder)
-BNAME=("-name" 'firmware*.hex' \
+BNAME=("-name" "firmware*.hex" \
   "-o" "-name" "firmware*.bin" \
   "-o" "-name" "project*.bin" \
   "-o" "-name" "Robin*.bin" \
-  "-o" "-name" "main_*.bin")
+  "-o" "-name" "main_*.bin" \
+  "-o" "-name" "MarlinSimulator*")
 
 mkdir -p "$BUILD"
 
@@ -171,10 +173,10 @@ mkdir -p "$BUILD"
 if [[ $EXPNUM ]]; then
   opt_set CONFIG_EXPORT $EXPNUM
   # Clean up old exports
-  find "$BUILD" \( "${ENAME[@]}" \) -exec rm "{}" \;
+  find "$BUILD" -type f \( "${ENAME[@]}" \) -exec rm "{}" \;
 fi
 
-((ARCHIVE)) && find "$BUILD" \( "${BNAME[@]}" \) -exec rm "{}" \;
+((ARCHIVE)) && find "$BUILD" -type f \( "${BNAME[@]}" \) -exec rm "{}" \;
 
 set +e
 
@@ -200,7 +202,7 @@ else
   if [[ -n $EXPNUM ]]; then
     annc "Exporting $EXPNUM"
     [[ -f Marlin/Config-export.h ]] && { cp Marlin/Config-export.h "$ARCSUB"/Config.h ; }
-    find "$BUILD" \( "${ENAME[@]}" \) -exec cp "{}" "$ARCSUB" \;
+    find "$BUILD" -type f \( "${ENAME[@]}" \) -exec cp "{}" "$ARCSUB" \;
   fi
 
   # Copy potential firmware files into the config folder
@@ -208,21 +210,30 @@ else
   #       Currently only BOARD_CREALITY_F401RE env:STM32F401RE_creality
   if ((ARCHIVE)); then
     annc "Archiving"
-    rm -f "$ARCSUB"/*.tar.gz "$ARCSUB"/*.sha256.txt
-    find "$BUILD" \( "${BNAME[@]}" \) -exec sh -c '
-      ARCSUB="$1"
-      CONFIG="$2"
-      shift 2
-      for FILE in "$@"; do
-        cd "${FILE%/*}"
-        NAME=${FILE##*/}
-        SHRT=${NAME%.*}
-        SHASUM=$(sha256sum "$NAME" | cut -d" " -f1)
-        tar -czf "$ARCSUB/$SHRT.tar.gz" "$NAME"
-        echo "$CONFIG\n$SHASUM" > "$ARCSUB/$NAME.sha256.txt"
-        rm "$NAME"
-        cd - >/dev/null
-      done
+    find "$BUILD" -type f \( "${BNAME[@]}" \) -exec sh -c '
+      ARCSUB="$1" ; CONFIG="$2" ; FILE="$3" ; shift 3
+      NAME=${FILE##*/} ; SHRT=${NAME%.*} ; DIR=${FILE%/*}
+      ZIPX=
+      if [[ $CONFIG == *Simulator* ]]; then
+        case $(uname | tr '[:upper:]' '[:lower:]') in
+          darwin) SUB="macOS" ; ZIPX="-X" ;;
+          *linux) SUB="Linux" ;;
+            win*) SUB="Windows" ;;
+           msys*) SUB="Windows" ;;
+         cygwin*) SUB="Windows" ;;
+          mingw*) SUB="Windows" ;;
+               *) SUB='Unix' ;;
+        esac
+        ARCH=$(uname -m | tr '[:lower:]' '[:upper:]')
+        ARCSUB="$ARCSUB/$SUB-$ARCH"
+      fi
+      mkdir -p "$ARCSUB"
+      rm -f "$ARCSUB"/*.zip "$ARCSUB"/*.sha256.txt
+      cd "$DIR"
+      SHASUM=$(sha256sum "$NAME" | cut -d" " -f1)
+      echo "$CONFIG\n$SHASUM" > "$ARCSUB/$NAME.sha256.txt"
+      zip $ZIPX "$ARCSUB/$SHRT.zip" "$NAME" && rm "$NAME"
+      cd - >/dev/null
     ' sh "$ARCSUB" "$CONFIG" {} +
   fi
 

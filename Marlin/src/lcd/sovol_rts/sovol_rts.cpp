@@ -39,8 +39,6 @@ RTS rts;
 #include <stdio.h>
 #include <string.h>
 #include "../../MarlinCore.h"
-#include "../../core/serial.h"
-#include "../../core/macros.h"
 #include "../../sd/cardreader.h"
 #include "../../module/temperature.h"
 #include "../../module/planner.h"
@@ -56,7 +54,6 @@ RTS rts;
 #include "../../gcode/queue.h"
 #include "../../gcode/gcode.h"
 #include "../marlinui.h"
-//#include "../utf8.h"
 #include "../../libs/BL24CXX.h"
 
 #if ENABLED(FIX_MOUNTED_PROBE)

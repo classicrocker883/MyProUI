@@ -126,7 +126,7 @@ def extract_files(filekey):
     sid = 0
     # Loop through files and parse them line by line
     for fn, fk in filekey.items():
-        with Path("Marlin", fn).open() as fileobj:
+        with Path("Marlin", fn).open(encoding='utf-8') as fileobj:
             section = 'none'        # Current Settings section
             line_number = 0         # Counter for the line number of the file
             conditions = []         # Create a condition stack for the current file
@@ -343,14 +343,14 @@ def extract_files(filekey):
                         # Type is based on the value
                         value_type = \
                              'switch'  if val == '' \
-                        else 'bool'    if re.match(r'^(true|false)$', val) \
                         else 'int'     if re.match(r'^[-+]?\s*\d+$', val) \
                         else 'ints'    if re.match(r'^([-+]?\s*\d+)(\s*,\s*[-+]?\s*\d+)+$', val) \
                         else 'floats'  if re.match(rf'({flt}(\s*,\s*{flt})+)', val) \
                         else 'float'   if re.match(f'^({flt})$', val) \
                         else 'string'  if val[0] == '"' \
                         else 'char'    if val[0] == "'" \
-                        else 'state'   if re.match(r'^(LOW|HIGH)$', val) \
+                        else 'bool'    if val in ('true', 'false') \
+                        else 'state'   if val in ('HIGH', 'LOW') \
                         else 'enum'    if re.match(r'^[A-Za-z0-9_]{3,}$', val) \
                         else 'int[]'   if re.match(r'^{\s*[-+]?\s*\d+(\s*,\s*[-+]?\s*\d+)*\s*}$', val) \
                         else 'float[]' if re.match(r'^{{\s*{flt}(\s*,\s*{flt})*\s*}}$', val) \
@@ -385,7 +385,7 @@ def extract_files(filekey):
                             units = re.match(r'^\(([^)]+)\)', full_comment)
                             if units:
                                 units = units[1]
-                                if units == 's' or units == 'sec': units = 'seconds'
+                                if units in ('s', 'sec'): units = 'seconds'
                                 define_info['units'] = units
 
                         if 'comment' not in define_info or define_info['comment'] == '':
@@ -428,12 +428,12 @@ def extract():
     return extract_files({ 'Configuration.h':'basic', 'Configuration_adv.h':'advanced' })
 
 def dump_json(schema:dict, jpath:Path):
-    with jpath.open('w') as jfile:
+    with jpath.open('w', encoding='utf-8') as jfile:
         json.dump(schema, jfile, ensure_ascii=False, indent=2)
 
 def dump_yaml(schema:dict, ypath:Path):
     import yaml
-    with ypath.open('w') as yfile:
+    with ypath.open('w', encoding='utf-8') as yfile:
         yaml.dump(schema, yfile, default_flow_style=False, width=120, indent=2)
 
 def main():

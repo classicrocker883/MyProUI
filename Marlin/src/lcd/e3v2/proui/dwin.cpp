@@ -27,8 +27,6 @@
 #include "menus.h"
 #include "../../utf8.h"
 #include "../../marlinui.h"
-#include "../../../core/macros.h"
-#include "../../../core/serial.h"
 #include "../../../gcode/gcode.h"
 #include "../../../gcode/queue.h"
 #include "../../../libs/numtostr.h"
