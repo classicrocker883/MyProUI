@@ -58,6 +58,10 @@
   #include "probe.h"
 #endif
 
+#if HAS_FILAMENT_SENSOR
+  #include "../feature/runout.h"
+#endif
+
 #define DEBUG_OUT ALL(USE_SENSORLESS, DEBUG_LEVELING_FEATURE)
 #include "../core/debug_out.h"
 
@@ -526,7 +530,7 @@ void __O2 Endstops::report_states() {
     }
     #undef _CASE_RUNOUT
   #elif HAS_FILAMENT_SENSOR
-    print_es_state(READ(FIL_RUNOUT1_PIN) != TERN(PROUI_EX, PRO_data.Runout_active_state, FIL_RUNOUT1_STATE), F(STR_FILAMENT));
+    print_es_state(!FILAMENT_IS_OUT());
   #endif
 
   TERN_(BLTOUCH, bltouch._reset_SW_mode());

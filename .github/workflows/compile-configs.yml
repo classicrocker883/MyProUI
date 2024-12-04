@@ -18,25 +18,25 @@ jobs:
         temp: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -77,11 +77,11 @@ jobs:
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -99,25 +99,25 @@ jobs:
         temp: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -158,11 +158,11 @@ jobs:
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -182,25 +182,25 @@ jobs:
         t13: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -260,11 +260,108 @@ jobs:
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-UBL-EX-T5-A:            # UBL EX T5 Speedy for Aquila
+    name: Build UBL EX T5 Files A
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [GD32,N32]
+        inshape: [true,false]
+        temp: [true,false]
+        tjc: [true,false]
+        bmp: [true,false]
+    steps:
+    - uses: actions/checkout@v4.2.2
+    - name: Setup node
+      uses: actions/setup-node@v4.1.0
+      with:
+        node-version: 20
+    - name: Cache pip
+      uses: actions/cache@v4.1.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v4.1.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v5.3.0
+      with:
+        python-version: '3.11'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip wheel platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
+        echo "filename=${DTMP}Aquila_${AVTMP}_SPDY5${MPTMP}_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Voxelab\ Aquila/UBL/Configuration.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/UBL/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/UBL/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
+        if ($IS); then STEMP=; else STEMP='\/\/'; fi;
+        sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Z/${STEMP}#define INPUT_SHAPING_Z/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define SHOW_SPEED_IND/${PTEMP}#define SHOW_SPEED_IND/" Marlin/Configuration.h
+        if [[ $IS && $TP ]]; then
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/\/\/#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
+        sed -i "s/.*#define MARLIN_SMALL_BUILD/#define MARLIN_SMALL_BUILD/" Marlin/Configuration_adv.h
+        fi;
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 5/" Marlin/Configuration.h
+        if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/${MPDEMP}#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        pio run
+        mkdir temp
+        mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
+      env:
+        AQUILA_VER: ${{ matrix.chip }}
+        IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
+        TJC: ${{ matrix.tjc }}
+        BMP: ${{ matrix.bmp }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -283,25 +380,25 @@ jobs:
         tjc: [true,false]
         t13: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -353,11 +450,99 @@ jobs:
         T13: ${{ matrix.t13 }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-UBL-EX-IND-T5-A:            # UBL EX IND T5 Speedy for Aquila X3/S2
+    name: Build UBL EX IND T5 Files A
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [GD32,N32]
+        inshape: [true,false]
+        temp: [true,false]
+        tjc: [true,false]
+    steps:
+    - uses: actions/checkout@v4.2.2
+    - name: Setup node
+      uses: actions/setup-node@v4.1.0
+      with:
+        node-version: 20
+    - name: Cache pip
+      uses: actions/cache@v4.1.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v4.1.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v5.3.0
+      with:
+        python-version: '3.11'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip wheel platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if [ "$AQUILA_VER" = GD32 ]; then AVTMP="GD32"; else AVTMP="N32"; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        echo "filename=${DTMP}Aquila_${AVTMP}_IND_SPDY5_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Voxelab\ Aquila/X3/Configuration.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila/X3/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila/X3/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
+        if ($IS); then STEMP=; ITEMP='\/\/'; else STEMP='\/\/'; ITEMP=; fi;
+        sed -i "s/.*#define HAS_CGCODE 1/${ITEMP}#define HAS_CGCODE 1/" Marlin/Configuration.h
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${ITEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Z/${STEMP}#define INPUT_SHAPING_Z/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define HAS_CUSTOM_COLORS 1/${PTEMP}#define HAS_CUSTOM_COLORS 1/" Marlin/Configuration.h
+        if [[ $IS && $TP ]]; then
+        sed -i "s/.*#define MARLIN_SMALL_BUILD/#define MARLIN_SMALL_BUILD/" Marlin/Configuration_adv.h
+        fi;
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 5/" Marlin/Configuration.h
+        pio run
+        mkdir temp
+        mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
+      env:
+        AQUILA_VER: ${{ matrix.chip }}
+        IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
+        TJC: ${{ matrix.tjc }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -377,25 +562,25 @@ jobs:
         tjc: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -452,11 +637,11 @@ jobs:
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -473,25 +658,25 @@ jobs:
         tjc: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -548,11 +733,11 @@ jobs:
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -568,25 +753,25 @@ jobs:
         chip: [V3_0,V2_0,V3_0_1]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -633,11 +818,11 @@ jobs:
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -655,25 +840,25 @@ jobs:
         temp: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -715,11 +900,11 @@ jobs:
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -737,25 +922,25 @@ jobs:
         temp: [true,false]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -797,11 +982,11 @@ jobs:
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -821,25 +1006,25 @@ jobs:
         t13: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -895,11 +1080,104 @@ jobs:
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: temp/build.bin
+        asset_name: ${{ steps.build_configs.outputs.filename }}
+        asset_content_type: application/x-binary
+  Build-UBL-EX-T5-A4:            # UBL EX T5 Speedy for Aquila 427
+    name: Build UBL EX T5 Files A4
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chip: [427,422]
+        inshape: [true,false]
+        temp: [true,false]
+        tjc: [true,false]
+        bmp: [true,false]
+    steps:
+    - uses: actions/checkout@v4.2.2
+    - name: Setup node
+      uses: actions/setup-node@v4.1.0
+      with:
+        node-version: 20
+    - name: Cache pip
+      uses: actions/cache@v4.1.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v4.1.2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v5.3.0
+      with:
+        python-version: '3.11'
+    - name: Install PlatformIO
+      run: |
+        python3 -m pip install --upgrade pip wheel platformio
+    - name: Run PlatformIO
+      id: build_configs
+      run: |
+        if [ "$AQUILA_VER" = 427 ]; then AVTMP="427"; DBORD='CREALITY_V427'; else AVTMP="422"; DBORD='CREALITY_V422'; fi;
+        if ($IS); then ISTMP=-IS; else ISTMP=; fi;
+        if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
+        if ($TJC); then DTMP=TJC-; else DTMP=; fi;
+        if ($BMP); then MPTMP=_BMP; else MPTMP=; fi;
+        echo "filename=${DTMP}Aquila_${AVTMP}_SPDY5${MPTMP}_UBL-ProUI-EX${ISTMP}${TPTMP}$(date +"-%m-%d").bin" >> $GITHUB_OUTPUT
+        > Marlin/Configuration.h
+        > Marlin/Configuration_adv.h
+        > Marlin/Version.h
+        cp configurations/Voxelab\ Aquila\ 427/UBL/Configuration.h Marlin/Configuration.h
+        cp configurations/Voxelab\ Aquila\ 427/UBL/Configuration_adv.h Marlin/Configuration_adv.h
+        cp configurations/Voxelab\ Aquila\ 427/UBL/Version.h Marlin/Version.h
+        sed -i "s/default_envs =.*/default_envs = STM32F103RE_creality/" platformio.ini
+        sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
+        if ($IS); then STEMP=; else STEMP='\/\/'; fi;
+        sed -i "s/.*#define INPUT_SHAPING_X/${STEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${STEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Z/${STEMP}#define INPUT_SHAPING_Z/" Marlin/Configuration_adv.h
+        if ($TP); then PTEMP='\/\/'; MTEMP=; else PTEMP=; MTEMP='\/\/'; fi;
+        sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
+        sed -i "s/.*#define MPCTEMP/${MTEMP}#define MPCTEMP/" Marlin/Configuration.h
+        if ($TJC); then TJEMP=; REMP='\/\/'; else TJEMP='\/\/'; REMP=; fi;
+        sed -i "s/.*#define TJC_DISPLAY/${TJEMP}#define TJC_DISPLAY/" Marlin/Configuration.h
+        sed -i "s/.*#define REVERSE_ENCODER_DIRECTION/${REMP}#define REVERSE_ENCODER_DIRECTION/" Marlin/Configuration.h
+        sed -i "s/^#define TEMP_SENSOR_0.*/#define TEMP_SENSOR_0 5/" Marlin/Configuration.h
+        if ($BMP); then MPDEMP=; MPEMP='\/\/'; MPHS="LOW"; else MPDEMP='\/\/'; MPEMP=; MPHS="HIGH"; fi;
+        sed -i "s/.*#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/${MPDEMP}#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_ENDSTOP_HIT_STATE.*/#define Z_MIN_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define Z_MIN_PROBE_ENDSTOP_HIT_STATE.*/#define Z_MIN_PROBE_ENDSTOP_HIT_STATE ${MPHS}/" Marlin/Configuration.h
+        sed -i "s/.*#define BLTOUCH/${MPEMP}#define BLTOUCH/" Marlin/Configuration.h
+        sed -i "s/.*#define BIQU_MICROPROBE_V2/${MPDEMP}#define BIQU_MICROPROBE_V2/" Marlin/Configuration.h
+        sed -i "s/.*#define PROBE_ENABLE_DISABLE/${MPDEMP}#define PROBE_ENABLE_DISABLE/" Marlin/Configuration.h
+        pio run
+        mkdir temp
+        mv .pio/build/STM32F103RE_creality/*.bin temp/build.bin
+      env:
+        AQUILA_VER: ${{ matrix.chip }}
+        IS: ${{ matrix.inshape }}
+        TP: ${{ matrix.temp }}
+        TJC: ${{ matrix.tjc }}
+        BMP: ${{ matrix.bmp }}
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.3.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload Release Asset
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -918,25 +1196,25 @@ jobs:
         tjc: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -987,11 +1265,11 @@ jobs:
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1007,25 +1285,25 @@ jobs:
         chip: [427,422]
         tjc: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -1061,11 +1339,11 @@ jobs:
         TJC: ${{ matrix.tjc }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1084,25 +1362,25 @@ jobs:
         temp: [true,false]
         bmp: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -1161,11 +1439,11 @@ jobs:
         BMP: ${{ matrix.bmp }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1183,25 +1461,25 @@ jobs:
         inshape: [true,false]
         temp: [true,false]
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v4.2.2
     - name: Setup node
-      uses: actions/setup-node@main
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@main
+      uses: actions/cache@v4.1.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
-      uses: actions/setup-python@main
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: '3.11'
     - name: Install PlatformIO
@@ -1249,11 +1527,11 @@ jobs:
         TP: ${{ matrix.temp }}
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@main
+      uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: Upload Release Asset
-      uses: tanyagray/action-upload-release-asset@main
+      uses: classicrocker883/upload-a-release-asset@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:

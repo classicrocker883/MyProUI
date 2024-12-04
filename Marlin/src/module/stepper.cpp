@@ -318,131 +318,132 @@ xyze_int8_t Stepper::count_direction{0};
 #define MAXDIR(A) (count_direction[_AXIS(A)] > 0)
 
 #define STEPTEST(A,M,I) TERN0(USE_##A##I##_##M, !(TEST(endstops.state(), A##I##_##M) && M## DIR(A)) && !locked_ ##A##I##_motor)
+#define _STEP_WRITE(A,I,V) A##I##_STEP_WRITE(V)
 
 #define DUAL_ENDSTOP_APPLY_STEP(A,V)             \
   if (separate_multi_axis) {                     \
     if (ENABLED(A##_HOME_TO_MIN)) {              \
-      if (STEPTEST(A,MIN, )) A## _STEP_WRITE(V); \
-      if (STEPTEST(A,MIN,2)) A##2_STEP_WRITE(V); \
+      if (STEPTEST(A,MIN, )) _STEP_WRITE(A, ,V); \
+      if (STEPTEST(A,MIN,2)) _STEP_WRITE(A,2,V); \
     }                                            \
     else if (ENABLED(A##_HOME_TO_MAX)) {         \
-      if (STEPTEST(A,MAX, )) A## _STEP_WRITE(V); \
-      if (STEPTEST(A,MAX,2)) A##2_STEP_WRITE(V); \
+      if (STEPTEST(A,MAX, )) _STEP_WRITE(A, ,V); \
+      if (STEPTEST(A,MAX,2)) _STEP_WRITE(A,2,V); \
     }                                            \
   }                                              \
   else {                                         \
-    A##_STEP_WRITE(V);                           \
-    A##2_STEP_WRITE(V);                          \
+    _STEP_WRITE(A, ,V);                          \
+    _STEP_WRITE(A,2,V);                          \
   }
 
 #define DUAL_SEPARATE_APPLY_STEP(A,V)             \
   if (separate_multi_axis) {                      \
-    if (!locked_##A## _motor) A## _STEP_WRITE(V); \
-    if (!locked_##A##2_motor) A##2_STEP_WRITE(V); \
+    if (!locked_##A## _motor) _STEP_WRITE(A, ,V); \
+    if (!locked_##A##2_motor) _STEP_WRITE(A,2,V); \
   }                                               \
   else {                                          \
-    A##_STEP_WRITE(V);                            \
-    A##2_STEP_WRITE(V);                           \
+    _STEP_WRITE(A, ,V);                           \
+    _STEP_WRITE(A,2,V);                           \
   }
 
 #define TRIPLE_ENDSTOP_APPLY_STEP(A,V)           \
   if (separate_multi_axis) {                     \
     if (ENABLED(A##_HOME_TO_MIN)) {              \
-      if (STEPTEST(A,MIN, )) A## _STEP_WRITE(V); \
-      if (STEPTEST(A,MIN,2)) A##2_STEP_WRITE(V); \
-      if (STEPTEST(A,MIN,3)) A##3_STEP_WRITE(V); \
+      if (STEPTEST(A,MIN, )) _STEP_WRITE(A, ,V); \
+      if (STEPTEST(A,MIN,2)) _STEP_WRITE(A,2,V); \
+      if (STEPTEST(A,MIN,3)) _STEP_WRITE(A,3,V); \
     }                                            \
     else if (ENABLED(A##_HOME_TO_MAX)) {         \
-      if (STEPTEST(A,MAX, )) A## _STEP_WRITE(V); \
-      if (STEPTEST(A,MAX,2)) A##2_STEP_WRITE(V); \
-      if (STEPTEST(A,MAX,3)) A##3_STEP_WRITE(V); \
+      if (STEPTEST(A,MAX, )) _STEP_WRITE(A, ,V); \
+      if (STEPTEST(A,MAX,2)) _STEP_WRITE(A,2,V); \
+      if (STEPTEST(A,MAX,3)) _STEP_WRITE(A,3,V); \
     }                                            \
   }                                              \
   else {                                         \
-    A##_STEP_WRITE(V);                           \
-    A##2_STEP_WRITE(V);                          \
-    A##3_STEP_WRITE(V);                          \
+    _STEP_WRITE(A, ,V);                          \
+    _STEP_WRITE(A,2,V);                          \
+    _STEP_WRITE(A,3,V);                          \
   }
 
 #define TRIPLE_SEPARATE_APPLY_STEP(A,V)           \
   if (separate_multi_axis) {                      \
-    if (!locked_##A## _motor) A## _STEP_WRITE(V); \
-    if (!locked_##A##2_motor) A##2_STEP_WRITE(V); \
-    if (!locked_##A##3_motor) A##3_STEP_WRITE(V); \
+    if (!locked_##A## _motor) _STEP_WRITE(A, ,V); \
+    if (!locked_##A##2_motor) _STEP_WRITE(A,2,V); \
+    if (!locked_##A##3_motor) _STEP_WRITE(A,3,V); \
   }                                               \
   else {                                          \
-    A## _STEP_WRITE(V);                           \
-    A##2_STEP_WRITE(V);                           \
-    A##3_STEP_WRITE(V);                           \
+    _STEP_WRITE(A, ,V);                           \
+    _STEP_WRITE(A,2,V);                           \
+    _STEP_WRITE(A,3,V);                           \
   }
 
 #define QUAD_ENDSTOP_APPLY_STEP(A,V)             \
   if (separate_multi_axis) {                     \
     if (ENABLED(A##_HOME_TO_MIN)) {              \
-      if (STEPTEST(A,MIN, )) A## _STEP_WRITE(V); \
-      if (STEPTEST(A,MIN,2)) A##2_STEP_WRITE(V); \
-      if (STEPTEST(A,MIN,3)) A##3_STEP_WRITE(V); \
-      if (STEPTEST(A,MIN,4)) A##4_STEP_WRITE(V); \
+      if (STEPTEST(A,MIN, )) _STEP_WRITE(A, ,V); \
+      if (STEPTEST(A,MIN,2)) _STEP_WRITE(A,2,V); \
+      if (STEPTEST(A,MIN,3)) _STEP_WRITE(A,3,V); \
+      if (STEPTEST(A,MIN,4)) _STEP_WRITE(A,4,V); \
     }                                            \
     else if (ENABLED(A##_HOME_TO_MAX)) {         \
-      if (STEPTEST(A,MAX, )) A## _STEP_WRITE(V); \
-      if (STEPTEST(A,MAX,2)) A##2_STEP_WRITE(V); \
-      if (STEPTEST(A,MAX,3)) A##3_STEP_WRITE(V); \
-      if (STEPTEST(A,MAX,4)) A##4_STEP_WRITE(V); \
+      if (STEPTEST(A,MAX, )) _STEP_WRITE(A, ,V); \
+      if (STEPTEST(A,MAX,2)) _STEP_WRITE(A,2,V); \
+      if (STEPTEST(A,MAX,3)) _STEP_WRITE(A,3,V); \
+      if (STEPTEST(A,MAX,4)) _STEP_WRITE(A,4,V); \
     }                                            \
   }                                              \
   else {                                         \
-    A## _STEP_WRITE(V);                          \
-    A##2_STEP_WRITE(V);                          \
-    A##3_STEP_WRITE(V);                          \
-    A##4_STEP_WRITE(V);                          \
+    _STEP_WRITE(A, ,V);                          \
+    _STEP_WRITE(A,2,V);                          \
+    _STEP_WRITE(A,3,V);                          \
+    _STEP_WRITE(A,4,V);                          \
   }
 
 #define QUAD_SEPARATE_APPLY_STEP(A,V)             \
   if (separate_multi_axis) {                      \
-    if (!locked_##A## _motor) A## _STEP_WRITE(V); \
-    if (!locked_##A##2_motor) A##2_STEP_WRITE(V); \
-    if (!locked_##A##3_motor) A##3_STEP_WRITE(V); \
-    if (!locked_##A##4_motor) A##4_STEP_WRITE(V); \
+    if (!locked_##A## _motor) _STEP_WRITE(A, ,V); \
+    if (!locked_##A##2_motor) _STEP_WRITE(A,2,V); \
+    if (!locked_##A##3_motor) _STEP_WRITE(A,3,V); \
+    if (!locked_##A##4_motor) _STEP_WRITE(A,4,V); \
   }                                               \
   else {                                          \
-    A## _STEP_WRITE(V);                           \
-    A##2_STEP_WRITE(V);                           \
-    A##3_STEP_WRITE(V);                           \
-    A##4_STEP_WRITE(V);                           \
+    _STEP_WRITE(A, ,V);                           \
+    _STEP_WRITE(A,2,V);                           \
+    _STEP_WRITE(A,3,V);                           \
+    _STEP_WRITE(A,4,V);                           \
   }
 
 #if HAS_SYNCED_X_STEPPERS
   #define X_APPLY_DIR(FWD,Q) do{ X_DIR_WRITE(FWD); X2_DIR_WRITE(INVERT_DIR(X2_VS_X, FWD)); }while(0)
   #if ENABLED(X_DUAL_ENDSTOPS)
-    #define X_APPLY_STEP(FWD,Q) DUAL_ENDSTOP_APPLY_STEP(X,FWD)
+    #define X_APPLY_STEP(STATE,Q) DUAL_ENDSTOP_APPLY_STEP(X,STATE)
   #else
-    #define X_APPLY_STEP(FWD,Q) do{ X_STEP_WRITE(FWD); X2_STEP_WRITE(FWD); }while(0)
+    #define X_APPLY_STEP(STATE,Q) do{ X_STEP_WRITE(STATE); X2_STEP_WRITE(STATE); }while(0)
   #endif
 #elif ENABLED(DUAL_X_CARRIAGE)
   #define X_APPLY_DIR(FWD,ALWAYS) do{ \
     if (extruder_duplication_enabled || ALWAYS) { X_DIR_WRITE(FWD); X2_DIR_WRITE((FWD) ^ idex_mirrored_mode); } \
     else if (last_moved_extruder) X2_DIR_WRITE(FWD); else X_DIR_WRITE(FWD); \
   }while(0)
-  #define X_APPLY_STEP(FWD,ALWAYS) do{ \
-    if (extruder_duplication_enabled || ALWAYS) { X_STEP_WRITE(FWD); X2_STEP_WRITE(FWD); } \
-    else if (last_moved_extruder) X2_STEP_WRITE(FWD); else X_STEP_WRITE(FWD); \
+  #define X_APPLY_STEP(STATE,ALWAYS) do{ \
+    if (extruder_duplication_enabled || ALWAYS) { X_STEP_WRITE(STATE); X2_STEP_WRITE(STATE); } \
+    else if (last_moved_extruder) X2_STEP_WRITE(STATE); else X_STEP_WRITE(STATE); \
   }while(0)
 #elif HAS_X_AXIS
-  #define X_APPLY_DIR(FWD,Q)  X_DIR_WRITE(FWD)
-  #define X_APPLY_STEP(FWD,Q) X_STEP_WRITE(FWD)
+  #define X_APPLY_DIR(FWD,Q)    X_DIR_WRITE(FWD)
+  #define X_APPLY_STEP(STATE,Q) X_STEP_WRITE(STATE)
 #endif
 
 #if HAS_SYNCED_Y_STEPPERS
   #define Y_APPLY_DIR(FWD,Q) do{ Y_DIR_WRITE(FWD); Y2_DIR_WRITE(INVERT_DIR(Y2_VS_Y, FWD)); }while(0)
   #if ENABLED(Y_DUAL_ENDSTOPS)
-    #define Y_APPLY_STEP(FWD,Q) DUAL_ENDSTOP_APPLY_STEP(Y,FWD)
+    #define Y_APPLY_STEP(STATE,Q) DUAL_ENDSTOP_APPLY_STEP(Y,STATE)
   #else
-    #define Y_APPLY_STEP(FWD,Q) do{ Y_STEP_WRITE(FWD); Y2_STEP_WRITE(FWD); }while(0)
+    #define Y_APPLY_STEP(STATE,Q) do{ Y_STEP_WRITE(STATE); Y2_STEP_WRITE(STATE); }while(0)
   #endif
 #elif HAS_Y_AXIS
-  #define Y_APPLY_DIR(FWD,Q)  Y_DIR_WRITE(FWD)
-  #define Y_APPLY_STEP(FWD,Q) Y_STEP_WRITE(FWD)
+  #define Y_APPLY_DIR(FWD,Q)    Y_DIR_WRITE(FWD)
+  #define Y_APPLY_STEP(STATE,Q) Y_STEP_WRITE(STATE)
 #endif
 
 #if NUM_Z_STEPPERS == 4
@@ -451,60 +452,60 @@ xyze_int8_t Stepper::count_direction{0};
     Z3_DIR_WRITE(INVERT_DIR(Z3_VS_Z, FWD)); Z4_DIR_WRITE(INVERT_DIR(Z4_VS_Z, FWD)); \
   }while(0)
   #if ENABLED(Z_MULTI_ENDSTOPS)
-    #define Z_APPLY_STEP(FWD,Q) QUAD_ENDSTOP_APPLY_STEP(Z,FWD)
+    #define Z_APPLY_STEP(STATE,Q) QUAD_ENDSTOP_APPLY_STEP(Z,STATE)
   #elif ENABLED(Z_STEPPER_AUTO_ALIGN)
-    #define Z_APPLY_STEP(FWD,Q) QUAD_SEPARATE_APPLY_STEP(Z,FWD)
+    #define Z_APPLY_STEP(STATE,Q) QUAD_SEPARATE_APPLY_STEP(Z,STATE)
   #else
-    #define Z_APPLY_STEP(FWD,Q) do{ Z_STEP_WRITE(FWD); Z2_STEP_WRITE(FWD); Z3_STEP_WRITE(FWD); Z4_STEP_WRITE(FWD); }while(0)
+    #define Z_APPLY_STEP(STATE,Q) do{ Z_STEP_WRITE(STATE); Z2_STEP_WRITE(STATE); Z3_STEP_WRITE(STATE); Z4_STEP_WRITE(STATE); }while(0)
   #endif
 #elif NUM_Z_STEPPERS == 3
   #define Z_APPLY_DIR(FWD,Q) do{ \
     Z_DIR_WRITE(FWD); Z2_DIR_WRITE(INVERT_DIR(Z2_VS_Z, FWD)); Z3_DIR_WRITE(INVERT_DIR(Z3_VS_Z, FWD)); \
   }while(0)
   #if ENABLED(Z_MULTI_ENDSTOPS)
-    #define Z_APPLY_STEP(FWD,Q) TRIPLE_ENDSTOP_APPLY_STEP(Z,FWD)
+    #define Z_APPLY_STEP(STATE,Q) TRIPLE_ENDSTOP_APPLY_STEP(Z,STATE)
   #elif ENABLED(Z_STEPPER_AUTO_ALIGN)
-    #define Z_APPLY_STEP(FWD,Q) TRIPLE_SEPARATE_APPLY_STEP(Z,FWD)
+    #define Z_APPLY_STEP(STATE,Q) TRIPLE_SEPARATE_APPLY_STEP(Z,STATE)
   #else
-    #define Z_APPLY_STEP(FWD,Q) do{ Z_STEP_WRITE(FWD); Z2_STEP_WRITE(FWD); Z3_STEP_WRITE(FWD); }while(0)
+    #define Z_APPLY_STEP(STATE,Q) do{ Z_STEP_WRITE(STATE); Z2_STEP_WRITE(STATE); Z3_STEP_WRITE(STATE); }while(0)
   #endif
 #elif NUM_Z_STEPPERS == 2
   #define Z_APPLY_DIR(FWD,Q) do{ Z_DIR_WRITE(FWD); Z2_DIR_WRITE(INVERT_DIR(Z2_VS_Z, FWD)); }while(0)
   #if ENABLED(Z_MULTI_ENDSTOPS)
-    #define Z_APPLY_STEP(FWD,Q) DUAL_ENDSTOP_APPLY_STEP(Z,FWD)
+    #define Z_APPLY_STEP(STATE,Q) DUAL_ENDSTOP_APPLY_STEP(Z,STATE)
   #elif ENABLED(Z_STEPPER_AUTO_ALIGN)
-    #define Z_APPLY_STEP(FWD,Q) DUAL_SEPARATE_APPLY_STEP(Z,FWD)
+    #define Z_APPLY_STEP(STATE,Q) DUAL_SEPARATE_APPLY_STEP(Z,STATE)
   #else
-    #define Z_APPLY_STEP(FWD,Q) do{ Z_STEP_WRITE(FWD); Z2_STEP_WRITE(FWD); }while(0)
+    #define Z_APPLY_STEP(STATE,Q) do{ Z_STEP_WRITE(STATE); Z2_STEP_WRITE(STATE); }while(0)
   #endif
 #elif HAS_Z_AXIS
-  #define Z_APPLY_DIR(FWD,Q)  Z_DIR_WRITE(FWD)
-  #define Z_APPLY_STEP(FWD,Q) Z_STEP_WRITE(FWD)
+  #define Z_APPLY_DIR(FWD,Q)    Z_DIR_WRITE(FWD)
+  #define Z_APPLY_STEP(STATE,Q) Z_STEP_WRITE(STATE)
 #endif
 
 #if HAS_I_AXIS
-  #define I_APPLY_DIR(FWD,Q)  I_DIR_WRITE(FWD)
-  #define I_APPLY_STEP(FWD,Q) I_STEP_WRITE(FWD)
+  #define I_APPLY_DIR(FWD,Q)    I_DIR_WRITE(FWD)
+  #define I_APPLY_STEP(STATE,Q) I_STEP_WRITE(STATE)
 #endif
 #if HAS_J_AXIS
-  #define J_APPLY_DIR(FWD,Q)  J_DIR_WRITE(FWD)
-  #define J_APPLY_STEP(FWD,Q) J_STEP_WRITE(FWD)
+  #define J_APPLY_DIR(FWD,Q)    J_DIR_WRITE(FWD)
+  #define J_APPLY_STEP(STATE,Q) J_STEP_WRITE(STATE)
 #endif
 #if HAS_K_AXIS
-  #define K_APPLY_DIR(FWD,Q)  K_DIR_WRITE(FWD)
-  #define K_APPLY_STEP(FWD,Q) K_STEP_WRITE(FWD)
+  #define K_APPLY_DIR(FWD,Q)    K_DIR_WRITE(FWD)
+  #define K_APPLY_STEP(STATE,Q) K_STEP_WRITE(STATE)
 #endif
 #if HAS_U_AXIS
-  #define U_APPLY_DIR(FWD,Q)  U_DIR_WRITE(FWD)
-  #define U_APPLY_STEP(FWD,Q) U_STEP_WRITE(FWD)
+  #define U_APPLY_DIR(FWD,Q)    U_DIR_WRITE(FWD)
+  #define U_APPLY_STEP(STATE,Q) U_STEP_WRITE(STATE)
 #endif
 #if HAS_V_AXIS
-  #define V_APPLY_DIR(FWD,Q)  V_DIR_WRITE(FWD)
-  #define V_APPLY_STEP(FWD,Q) V_STEP_WRITE(FWD)
+  #define V_APPLY_DIR(FWD,Q)    V_DIR_WRITE(FWD)
+  #define V_APPLY_STEP(STATE,Q) V_STEP_WRITE(STATE)
 #endif
 #if HAS_W_AXIS
-  #define W_APPLY_DIR(FWD,Q)  W_DIR_WRITE(FWD)
-  #define W_APPLY_STEP(FWD,Q) W_STEP_WRITE(FWD)
+  #define W_APPLY_DIR(FWD,Q)    W_DIR_WRITE(FWD)
+  #define W_APPLY_STEP(STATE,Q) W_STEP_WRITE(STATE)
 #endif
 
 //#define E0_APPLY_DIR(FWD) do{ (FWD) ? FWD_E_DIR(0) : REV_E_DIR(0); }while(0)
@@ -519,8 +520,8 @@ xyze_int8_t Stepper::count_direction{0};
 #if ENABLED(MIXING_EXTRUDER)
   #define E_APPLY_DIR(FWD,Q) do{ if (FWD) { MIXER_STEPPER_LOOP(j) FWD_E_DIR(j); } else { MIXER_STEPPER_LOOP(j) REV_E_DIR(j); } }while(0)
 #else
-  #define E_APPLY_STEP(FWD,Q) E_STEP_WRITE(stepper_extruder, FWD)
   #define E_APPLY_DIR(FWD,Q) do{ if (FWD) { FWD_E_DIR(stepper_extruder); } else { REV_E_DIR(stepper_extruder); } }while(0)
+  #define E_APPLY_STEP(STATE,Q) E_STEP_WRITE(stepper_extruder, STATE)
 #endif
 
 constexpr uint32_t cycles_to_ns(const uint32_t CYC) { return 1000UL * (CYC) / ((F_CPU) / 1000000); }
@@ -1787,7 +1788,7 @@ void Stepper::pulse_phase_isr() {
   do {
     AxisFlags step_needed{0};
 
-    #define _APPLY_STEP(AXIS, INV, ALWAYS) AXIS ##_APPLY_STEP(INV, ALWAYS)
+    #define _APPLY_STEP(AXIS, STATE, ALWAYS) AXIS ##_APPLY_STEP(STATE, ALWAYS)
     #define _STEP_STATE(AXIS) STEP_STATE_## AXIS
 
     // Determine if a pulse is needed using Bresenham

@@ -82,12 +82,10 @@ typedef bool (*statusResetFunc_t)();
 
   #endif // HAS_MARLINUI_MENU
 
-#endif // HAS_WIRED_LCD
-
-#if HAS_WIRED_LCD
   #define LCD_WITH_BLINK 1
   #define LCD_UPDATE_INTERVAL DIV_TERN(DOUBLE_LCD_FRAMERATE, TERN(HAS_TOUCH_BUTTONS, 50, 100), 2)
-#endif
+
+#endif // HAS_WIRED_LCD
 
 #if HAS_MARLINUI_U8GLIB
   enum MarlinFont : uint8_t {
@@ -210,23 +208,6 @@ public:
   #endif
 
   static void init();
-
-  #if HAS_DISPLAY || HAS_DWIN_E3V2
-    static void init_lcd();
-    // Erase the LCD contents. Do the lowest-level thing required to clear the LCD.
-    static void clear_lcd();
-  #else
-    static void init_lcd() {}
-    static void clear_lcd() {}
-  #endif
-
-  static void reinit_lcd() { TERN_(REINIT_NOISY_LCD, init_lcd()); }
-
-  #if HAS_WIRED_LCD
-    static bool detected();
-  #else
-    static bool detected() { return true; }
-  #endif
 
   #if HAS_MULTI_LANGUAGE
     static uint8_t language;
@@ -517,15 +498,20 @@ public:
    */
   static void status_printf(int8_t level, FSTR_P const ffmt, ...);
 
-  // Periodic or as-needed display update
-  static void update() IF_DISABLED(HAS_UI_UPDATE, {});
-
   // Tell the screen to redraw on the next call
   FORCE_INLINE static void refresh() {
     TERN_(HAS_WIRED_LCD, refresh(LCDVIEW_CLEAR_CALL_REDRAW));
   }
 
   #if HAS_DISPLAY
+
+    // Periodic or as-needed display update
+    static void update();
+
+    static void init_lcd();
+
+    // Erase the LCD contents. Do the lowest-level thing required to clear the LCD.
+    static void clear_lcd();
 
     // Clear the LCD before new drawing. Some LCDs do nothing because they redraw frequently.
     static void clear_for_drawing();
@@ -640,10 +626,16 @@ public:
 
   #else // No LCD
 
+    static void update() {}
+    static void init_lcd() {}
+    static void clear_lcd() {}
     static void clear_for_drawing() {}
     static void kill_screen(FSTR_P const, FSTR_P const) {}
 
   #endif
+
+  static bool detected() IF_DISABLED(HAS_WIRED_LCD, { return true; });
+  static void reinit_lcd() { TERN_(REINIT_NOISY_LCD, init_lcd()); }
 
   #if !HAS_WIRED_LCD
     static void quick_feedback(const bool=true) {}
