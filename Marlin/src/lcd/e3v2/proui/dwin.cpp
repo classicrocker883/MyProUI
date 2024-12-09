@@ -2478,6 +2478,13 @@ void ApplyMove() {
   void SetMoveZ() { HMI_value.axis = Z_AXIS; SetPFloatOnClick(Z_MIN_POS, Z_MAX_POS, UNITFDIGITS, ApplyMove, LiveMove); }
 #endif
 
+#if ENABLED(Z_STEPPER_AUTO_ALIGN)
+  void autoZAlign() {
+    LCD_MESSAGE(MSG_AUTO_Z_ALIGN);
+    queue.inject(F("G34"));
+  }
+#endif
+
 #if HAS_HOTEND
   void SetMoveE() {
     #define E_MIN_POS (current_position.e - (EXTRUDE_MAXLENGTH))
@@ -3548,7 +3555,7 @@ void Draw_Tune_Menu() {
       EDIT_ITEM_F(ICON_File, "Auto Abort GCodes", onDrawChkbMenu, SetAutoAbort, &HMI_data.auto_abort);
     #endif
     #if ENABLED(FWRETRACT)
-      MENU_ITEM(ICON_FWRetract, MSG_FWRETRACT, onDrawSubMenu, Draw_FWRetract_Menu);
+      MENU_ITEM(ICON_FWRetLength, MSG_FWRETRACT, onDrawSubMenu, Draw_FWRetract_Menu);
     #endif
     #if ALL(PROUI_ITEM_JD, HAS_JUNCTION_DEVIATION)
       EDIT_ITEM(ICON_JDmm, MSG_JUNCTION_DEVIATION, onDrawPFloat3Menu, SetJDmm, &planner.junction_deviation_mm);
@@ -3735,7 +3742,7 @@ void Draw_FilamentMan_Menu() {
     BACK_ITEM(Draw_Prepare_Menu);
     MENU_ITEM(ICON_FilSet, MSG_FILAMENT_SET, onDrawSubMenu, Draw_FilSet_Menu);
     #if ENABLED(FWRETRACT)
-      MENU_ITEM(ICON_FWRetract, MSG_FWRETRACT, onDrawSubMenu, Draw_FWRetract_Menu);
+      MENU_ITEM(ICON_FWRetLength, MSG_FWRETRACT, onDrawSubMenu, Draw_FWRetract_Menu);
     #endif
     #if HAS_FEEDRATE_EDIT
       EDIT_ITEM(ICON_Speed, MSG_SPEED, onDrawPIntMenu, SetSpeed, &feedrate_percentage);
@@ -4268,7 +4275,7 @@ void Draw_MaxAccel_Menu() {
 #if ENABLED(INDIVIDUAL_AXIS_HOMING_SUBMENU)
   void Draw_Homing_Menu() {
     checkkey = Menu;
-    if (SET_MENU(HomingMenu, MSG_HOMING, 8)) {
+    if (SET_MENU(HomingMenu, MSG_HOMING, 9)) {
       BACK_ITEM(Draw_Prepare_Menu);
       MENU_ITEM(ICON_Homing, MSG_AUTO_HOME, onDrawMenuItem, AutoHome);
       #if HAS_X_AXIS
@@ -4287,6 +4294,9 @@ void Draw_MaxAccel_Menu() {
       #if ENABLED(MESH_BED_LEVELING)
         EDIT_ITEM(ICON_ZAfterHome, MSG_Z_AFTER_HOME, onDrawPInt8Menu, SetZAfterHoming, &HMI_data.z_after_homing);
       #endif
+      #if ENABLED(Z_STEPPER_AUTO_ALIGN)
+        MENU_ITEM(ICON_HomeZ, MSG_AUTO_Z_ALIGN, onDrawMenuItem, autoZAlign);
+      #endif
     }
     UpdateMenu(HomingMenu);
   }
@@ -4297,11 +4307,11 @@ void Draw_MaxAccel_Menu() {
     checkkey = Menu;
     if (SET_MENU(FWRetractMenu, MSG_FWRETRACT, 6)) {
       BACK_ITEM(ReturnToPreviousMenu);
-      EDIT_ITEM(ICON_FWRetract, MSG_CONTROL_RETRACT, onDrawPFloatMenu, SetRetractLength, &fwretract.settings.retract_length);
-      EDIT_ITEM(ICON_FWSpeed, MSG_SINGLENOZZLE_RETRACT_SPEED, onDrawPFloatMenu, SetRetractSpeed, &fwretract.settings.retract_feedrate_mm_s);
-      EDIT_ITEM(ICON_FWZRaise, MSG_CONTROL_RETRACT_ZHOP, onDrawPFloat2Menu, SetZRaise, &fwretract.settings.retract_zraise);
-      EDIT_ITEM(ICON_FWSpeed, MSG_SINGLENOZZLE_UNRETRACT_SPEED, onDrawPFloatMenu, SetRetractSpeed, &fwretract.settings.retract_recover_feedrate_mm_s);
-      EDIT_ITEM(ICON_FWRetract, MSG_CONTROL_RETRACT_RECOVER, onDrawPFloatMenu, SetAddRecover, &fwretract.settings.retract_recover_extra);
+      EDIT_ITEM(ICON_FWRetLength, MSG_CONTROL_RETRACT, onDrawPFloatMenu, SetRetractLength, &fwretract.settings.retract_length);
+      EDIT_ITEM(ICON_FWRetSpeed, MSG_SINGLENOZZLE_RETRACT_SPEED, onDrawPFloatMenu, SetRetractSpeed, &fwretract.settings.retract_feedrate_mm_s);
+      EDIT_ITEM(ICON_FWRetZRaise, MSG_CONTROL_RETRACT_ZHOP, onDrawPFloat2Menu, SetZRaise, &fwretract.settings.retract_zraise);
+      EDIT_ITEM(ICON_FWRecSpeed, MSG_SINGLENOZZLE_UNRETRACT_SPEED, onDrawPFloatMenu, SetRetractSpeed, &fwretract.settings.retract_recover_feedrate_mm_s);
+      EDIT_ITEM(ICON_FWRecExtra, MSG_CONTROL_RETRACT_RECOVER, onDrawPFloatMenu, SetAddRecover, &fwretract.settings.retract_recover_extra);
     }
     UpdateMenu(FWRetractMenu);
   }

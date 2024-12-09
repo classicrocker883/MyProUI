@@ -124,7 +124,7 @@
 #define ICON_Info_0             90
 #define ICON_Info_1             91
 
-// Additional Icons
+// Extra Icons
 #define ICON_Printer_0          93
 #define ICON_Box               200
 #define ICON_Checkbox          201

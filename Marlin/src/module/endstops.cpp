@@ -27,9 +27,10 @@
 #include "endstops.h"
 #include "stepper.h"
 
-#include "../sd/cardreader.h"
-#include "temperature.h"
-#include "../lcd/marlinui.h"
+#if HAS_STATUS_MESSAGE
+  #include "../lcd/marlinui.h"
+#endif
+
 #if ENABLED(SOVOL_SV06_RTS)
   #include "../lcd/sovol_rts/sovol_rts.h"
 #endif
@@ -44,6 +45,8 @@
 
 #if ENABLED(SD_ABORT_ON_ENDSTOP_HIT)
   #include "printcounter.h" // for print_job_timer
+  #include "temperature.h"
+  #include "../sd/cardreader.h"
 #endif
 
 #if ENABLED(BLTOUCH)
@@ -52,6 +55,10 @@
 
 #if ENABLED(JOYSTICK)
   #include "../feature/joystick.h"
+#endif
+
+#if HAS_FILAMENT_SENSOR
+  #include "../feature/runout.h"
 #endif
 
 #if HAS_BED_PROBE
