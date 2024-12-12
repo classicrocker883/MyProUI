@@ -402,6 +402,7 @@ G29_TYPE GcodeSuite::G29() {
     #if ABL_USES_GRID
 
       xy_probe_feedrate_mm_s = MMM_TO_MMS(parser.linearval('S', XY_PROBE_FEEDRATE));
+      if (xy_probe_feedrate_mm_s == 0) xy_probe_feedrate_mm_s = XY_PROBE_FEEDRATE; // Don't let "UBL Save Slot #0" break G29
 
       const float x_min = probe.min_x(), x_max = probe.max_x(),
                   y_min = probe.min_y(), y_max = probe.max_y();
