@@ -59,8 +59,8 @@ e-mail   :  support@circuitsathome.com
 // D6-5         Type (0- standard, 1 - class, 2 - vendor, 3 - reserved)
 // D4-0         Recipient (0 - device, 1 - interface, 2 - endpoint, 3 - other, 4..31 - reserved)
 
-// TO-DO: Use the python script to generate these.
-// TO-DO: Add _all_ subclasses here.
+/// TODO: Use the python script to generate these.
+/// TODO: Add _all_ subclasses here.
 // USB Device Classes, Subclasses and Protocols
 ////////////////////////////////////////////////////////////////////////////////
 // Use Class Info in the Interface Descriptors

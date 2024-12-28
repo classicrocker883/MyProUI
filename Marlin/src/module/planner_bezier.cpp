@@ -185,16 +185,17 @@ void cubic_b_spline(
 
     // Compute and send new position
     xyze_pos_t new_bez = LOGICAL_AXIS_ARRAY(
-      interp(position.e, target.e, t),  // FIXME. Wrong, since t is not linear in the distance.
+      interp(position.e, target.e, t),
       new_pos0,
       new_pos1,
-      interp(position.z, target.z, t),  // FIXME. Wrong, since t is not linear in the distance.
-      interp(position.i, target.i, t),  // FIXME. Wrong, since t is not linear in the distance.
-      interp(position.j, target.j, t),  // FIXME. Wrong, since t is not linear in the distance.
-      interp(position.k, target.k, t),  // FIXME. Wrong, since t is not linear in the distance.
-      interp(position.u, target.u, t),  // FIXME. Wrong, since t is not linear in the distance.
-      interp(position.v, target.v, t),  // FIXME. Wrong, since t is not linear in the distance.
-      interp(position.w, target.w, t)   // FIXME. Wrong, since t is not linear in the distance.
+      interp(position.z, target.z, t),
+      interp(position.i, target.i, t),
+      interp(position.j, target.j, t),
+      interp(position.k, target.k, t),
+      interp(position.u, target.u, t),
+      interp(position.v, target.v, t),
+      interp(position.w, target.w, t)
+      /// FIXME: Wrong, since t is not linear in the distance.
     );
     apply_motion_limits(new_bez);
     bez_target = new_bez;

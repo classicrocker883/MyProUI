@@ -28,9 +28,12 @@
  *
  * An array of values / counters that tick together
  */
-
-#define FORCE_INLINE  __attribute__((always_inline)) inline
-#define __O3          __attribute__((optimize("O3")))
+#ifndef FORCE_INLINE
+  #define FORCE_INLINE  __attribute__((always_inline)) inline
+#endif
+#ifndef __O3
+  #define __O3          __attribute__((optimize("O3")))
+#endif
 
 template <uint8_t uid, uint8_t size>
 struct BresenhamCfg { static constexpr uint8_t UID = uid, SIZE = size; };
@@ -44,7 +47,8 @@ private:
 
 public:
 
-  static T divisor, value[Cfg::SIZE], dir[Cfg::SIZE], dividend[Cfg::SIZE], counter[Cfg::SIZE];
+  static T divisor;
+  static T value[Cfg::SIZE], dir[Cfg::SIZE], dividend[Cfg::SIZE], counter[Cfg::SIZE];
 
   // Default: Instantiate all items with the identical parameters
   Bresenham(const T &inDivisor=1, const int8_t &inDir=1, const T &inDividend=1, const T &inValue=0) {

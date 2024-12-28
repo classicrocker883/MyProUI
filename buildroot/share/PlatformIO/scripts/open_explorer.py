@@ -4,10 +4,8 @@
 def open_file_explorer():
     import subprocess
     from pathlib import Path
-    from SCons.Script import Import
     from SCons.Script import DefaultEnvironment
     env = DefaultEnvironment()
-    Import("env")
     BUILD_PATH = Path(env['PROJECT_BUILD_DIR'], env['PIOENV'])
     script = f"{BUILD_PATH}"
     import platform

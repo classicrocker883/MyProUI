@@ -52,9 +52,6 @@ bool FilamentMonitorBase::enabled = true,
     uint8_t FilamentSensorDevice::motion_detected;
     countdown_t RunoutResponseDelayed::mm_countdown;
   #else
-    #if ENABLED(FILAMENT_MOTION_SENSOR)
-      uint8_t FilamentSensorDevice::motion_detected;
-    #endif
     countdown_t RunoutResponseDelayed::mm_countdown;
     #if ENABLED(FILAMENT_MOTION_SENSOR)
       uint8_t FilamentSensorEncoder::motion_detected;
@@ -68,7 +65,7 @@ bool FilamentMonitorBase::enabled = true,
 // Filament Runout event handler
 //
 #include "../MarlinCore.h"
-#include "../feature/pause.h"
+#include "pause.h"
 #include "../gcode/queue.h"
 
 #if ENABLED(HOST_ACTION_COMMANDS)
@@ -101,7 +98,7 @@ void event_filament_runout(const uint8_t extruder) {
   TERN_(DWIN_LCD_PROUI, LCD_MESSAGE(MSG_RUNOUT_SENSOR));
 
   #if ANY(HOST_PROMPT_SUPPORT, HOST_ACTION_COMMANDS, MULTI_FILAMENT_SENSOR)
-    const char tool = '0' + TERN0(MULTI_FILAMENT_SENSOR, extruder);
+    const char tool = '0' PLUS_TERN0(MULTI_FILAMENT_SENSOR, extruder);
   #endif
 
   //action:out_of_filament

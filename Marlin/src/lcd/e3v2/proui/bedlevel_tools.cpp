@@ -1,8 +1,5 @@
 /**
  * Bed Level Tools for Pro UI
- * Extended by: Miguel A. Risco-Castillo (MRISCOC)
- * Version: 3.2.0
- * Date: 2023/05/03
  *
  * Based on the original work of: Henri-J-Norden
  * https://github.com/Jyers/Marlin/pull/126
@@ -31,12 +28,11 @@
 #include "../../../module/probe.h"
 #include "../../../gcode/gcode.h"
 #include "../../../module/planner.h"
-#include "../../../gcode/queue.h"
-#include "../../../libs/least_squares_fit.h"
-#include "../../../libs/vector_3.h"
 
-#include "dwin_popup.h"
 #include "bedlevel_tools.h"
+
+#define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
+#include "../../../core/debug_out.h"
 
 BedLevelToolsClass bedLevelTools;
 
@@ -48,6 +44,8 @@ uint8_t BedLevelToolsClass::tilt_grid = 2;
 bool drawing_mesh = false;
 
 #if ENABLED(AUTO_BED_LEVELING_UBL)
+#include "../../../libs/least_squares_fit.h"
+#include "../../../libs/vector_3.h"
 
   bool BedLevelToolsClass::create_plane_from_mesh() {
     struct linear_fit_data lsf_results;
@@ -71,17 +69,21 @@ bool drawing_mesh = false;
     GRID_LOOP(i, j) {
       float mx = bedlevel.get_mesh_x(i), my = bedlevel.get_mesh_y(j), mz = bedlevel.z_values[i][j];
 
-      if (DEBUGGING(LEVELING)) {
-        DEBUG_ECHOLN(F("before rotation = ["), p_float_t(mx, 7), C(','), p_float_t(my, 7), C(','), p_float_t(mz, 7), F("]   ---> "));
-        DEBUG_DELAY(20);
-      }
+      #if DEBUG_OUT
+        if (DEBUGGING(LEVELING)) {
+          DEBUG_ECHOLN(F("before rotation = ["), p_float_t(mx, 7), C(','), p_float_t(my, 7), C(','), p_float_t(mz, 7), F("]   ---> "));
+          DEBUG_DELAY(20);
+        }
+      #endif
 
       rotation.apply_rotation_xyz(mx, my, mz);
 
-      if (DEBUGGING(LEVELING)) {
-        DEBUG_ECHOLN(F("after rotation = ["), p_float_t(mx, 7), C(','), p_float_t(my, 7), C(','), p_float_t(mz, 7), F("]   ---> "));
-        DEBUG_DELAY(20);
-      }
+      #if DEBUG_OUT
+        if (DEBUGGING(LEVELING)) {
+          DEBUG_ECHOLN(F("after rotation = ["), p_float_t(mx, 7), C(','), p_float_t(my, 7), C(','), p_float_t(mz, 7), F("]   ---> "));
+          DEBUG_DELAY(20);
+        }
+      #endif
 
       bedlevel.z_values[i][j] = mz - lsf_results.D;
     }
@@ -94,31 +96,23 @@ void BedLevelToolsClass::manual_value_update(const uint8_t mesh_x, const uint8_t
   float zval;
   if (reset) { zval = 0; }
   else { zval = current_position.z; }
-  gcode.process_subcommands_now(
-  TS(F(TERN(AUTO_BED_LEVELING_UBL, "M421 I", "G29 I")), mesh_x, 'J', mesh_y, 'Z', p_float_t(zval, 3))
-  );
+  gcode.process_subcommands_now(TS(F("M421I"), mesh_x, F("J"), mesh_y, F("Z"), p_float_t(zval, 3)));
   planner.synchronize();
 }
 
 void BedLevelToolsClass::manual_move(const uint8_t mesh_x, const uint8_t mesh_y, bool zmove/*=false*/) {
   gcode.process_subcommands_now(F("G28O"));
-  if (zmove) {
-    planner.synchronize();
-    current_position.z = goto_mesh_value ? bedlevel.z_values[mesh_x][mesh_y] : Z_CLEARANCE_BETWEEN_PROBES;
-    planner.buffer_line(current_position, homing_feedrate(Z_AXIS), active_extruder);
-    planner.synchronize();
-  }
-  else {
+  if (!zmove) {
     DWIN_Show_Popup(ICON_BLTouch, F("Moving to Point"), F("Please wait until done."));
     HMI_SaveProcessID(NothingToDo);
-    gcode.process_subcommands_now(TS(F("G0 F300 Z"), p_float_t(Z_CLEARANCE_BETWEEN_PROBES, 3)));
-    gcode.process_subcommands_now(TS(F("G42 F4000 I"), mesh_x, F(" J"), mesh_y));
-    planner.synchronize();
-    current_position.z = goto_mesh_value ? bedlevel.z_values[mesh_x][mesh_y] : Z_CLEARANCE_BETWEEN_PROBES;
-    planner.buffer_line(current_position, homing_feedrate(Z_AXIS), active_extruder);
-    planner.synchronize();
-    HMI_ReturnScreen();
+    gcode.process_subcommands_now(F("G0F600Z" STRINGIFY(Z_CLEARANCE_BETWEEN_PROBES))); // gcode.process_subcommands_now(TS(F("G0F600Z"), p_float_t(Z_CLEARANCE_BETWEEN_PROBES, 3)));
+    gcode.process_subcommands_now(TS(F("G42F4000I"), mesh_x, F("J"), mesh_y));
   }
+  planner.synchronize();
+  current_position.z = goto_mesh_value ? bedlevel.z_values[mesh_x][mesh_y] : Z_CLEARANCE_BETWEEN_PROBES;
+  planner.buffer_line(current_position, homing_feedrate(Z_AXIS), active_extruder);
+  planner.synchronize();
+  if (!zmove) HMI_ReturnScreen();
 }
 
 // Move / Probe methods
@@ -169,7 +163,7 @@ float BedLevelToolsClass::get_min_value() {
 
 // Return 'true' if mesh is good and within LCD limits
 bool BedLevelToolsClass::meshValidate() {
-  if ((MESH_MAX_X <= MESH_MIN_X) || (MESH_MAX_Y <= MESH_MIN_Y)) return false;
+  TERN_(PROUI_MESH_EDIT, if ((MESH_MAX_X <= MESH_MIN_X) || (MESH_MAX_Y <= MESH_MIN_Y)) return false;)
   GRID_LOOP(x, y) {
     const float z = bedlevel.z_values[x][y];
     if (isnan(z) || !WITHIN(z, Z_OFFSET_MIN, Z_OFFSET_MAX)) return false;
@@ -210,6 +204,17 @@ bool BedLevelToolsClass::meshValidate() {
                : uint16_t(round(0x3F * -z / rmax)) << 5) // Green for negative mesh point
                | _MIN(0x1F, (uint8_t(abs(z) * 0.4)))     // + Blue stepping for every mm
       );                                                 // RGB565 colors: https://rgbcolorpicker.com/565
+
+      /*
+      const int16_t v = round(z * 100);
+      const uint16_t color = isnan(z) ? Color_Grey : DWINUI::RainbowInt(v, -rmax, rmax);
+      const uint16_t color = isnan(z) ? Color_Grey : (   // Gray if undefined
+        (z > 0 ? uint16_t(round(0x1F *  z / rmax)) << 11 // Red for positive mesh point
+               : uint16_t(round(0x3F * -z / rmax)) << 5) // Green for negative mesh point
+               | _MIN(0x1F, (uint8_t(abs(z) * 0.4)))     // + Blue stepping for every mm
+      );                                                 // RGB565 colors: https://rgbcolorpicker.com/565
+      */
+
       DWIN_Draw_Rectangle(1, color, start_x_px, start_y_px, end_x_px, end_y_px);
       safe_delay(10);
       LCD_SERIAL.flushTX();
@@ -217,10 +222,10 @@ bool BedLevelToolsClass::meshValidate() {
       // Draw value text on
       const uint8_t fs = DWINUI::fontWidth(MeshViewer.meshfont);
       const int8_t offset_y = cell_height_px / 2 - fs;
-      if (isnan(z)) { // undefined
+      if (isnan(z)) { // Undefined
         DWIN_Draw_String(false, MeshViewer.meshfont, DWINUI::textcolor, DWINUI::backcolor, start_x_px + cell_width_px / 2 - 5, start_y_px + offset_y, F("X"));
       }
-      else {          // has value
+      else {          // Has value
         MString<12> msg;
         if ((GRID_MAX_POINTS_X) >= TERN(TJC_DISPLAY, 8, 10))
           msg.setf(F("%02i"), uint16_t(z * 100) % 100);
@@ -237,7 +242,7 @@ bool BedLevelToolsClass::meshValidate() {
   }
 
   void BedLevelToolsClass::Set_Mesh_Viewer_Status() {
-    /// TODO: draw gradient with values as a legend instead
+    /// TODO: Draw gradient with values as a legend instead
     float v_max = abs(get_max_value()), v_min = abs(get_min_value()), rmax = _MAX(v_min, v_max), rmin = _MIN(v_min, v_max);
     if (rmax > 3e+10f) { rmax = 0.0000001f; }
     if (rmin > 3e+10f) { rmin = 0.0000001f; }

@@ -31,9 +31,7 @@ const TBItem_t TBItemA[] = {
   TB_ITEM(0, MSG_OPTION_DISABLED, nullptr),
   TB_ITEM(ICON_Homing, MSG_AUTO_HOME, AutoHome),
   #if HAS_BED_PROBE
-    #if ENABLED(PROUI_ITEM_TRAM)
-      TB_ITEM(ICON_Tram, MSG_TRAMMING_WIZARD, Trammingwizard),
-    #endif
+    OPTITEM(PROUI_ITEM_TRAM, TB_ITEM(ICON_Tram, MSG_TRAMMING_WIZARD, TramwizStart))
     TB_ITEM(ICON_SetZOffset, MSG_PROBE_WIZARD, Draw_ZOffsetWiz_Menu),
     TB_ITEM(ICON_Level, MSG_AUTO_MESH, AutoLevStart),
   #else
@@ -48,5 +46,6 @@ const TBItem_t TBItemA[] = {
   TB_ITEM(ICON_Box, MSG_BRIGHTNESS_OFF, TurnOffBacklight),
   TB_ITEM(ICON_Reboot, MSG_RESET_PRINTER, RebootPrinter),
   TB_ITEM(ICON_WriteEEPROM, MSG_STORE_EEPROM, WriteEeprom),
-  TB_ITEM(ICON_Park, MSG_FILAMENT_PARK_ENABLED, ParkHead)
+  TB_ITEM(ICON_MoveZ, MSG_TOOL_CHANGE_ZLIFT, RaiseHead)
+  OPTARG(NOZZLE_PARK_FEATURE, TB_ITEM(ICON_Park, MSG_FILAMENT_PARK_ENABLED, ParkHead))
 };

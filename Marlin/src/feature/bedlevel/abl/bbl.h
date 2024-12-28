@@ -23,6 +23,11 @@
 
 #include "../../../inc/MarlinConfigPre.h"
 
+#if ENABLED(PROUI_MESH_EDIT)
+  #define MESH_X_DIST (float((MESH_MAX_X) - (MESH_MIN_X)) / (GRID_MAX_CELLS_X))
+  #define MESH_Y_DIST (float((MESH_MAX_Y) - (MESH_MIN_Y)) / (GRID_MAX_CELLS_Y))
+#endif
+
 class LevelingBilinear {
 public:
   static bed_mesh_t z_values;
@@ -38,7 +43,7 @@ private:
 
   #if ENABLED(ABL_BILINEAR_SUBDIVISION)
     #if ANY(PROUI_EX, PROUI_GRID_PNTS)
-      #define ABL_GRID_POINTS_VIRT_N (GRID_LIMIT - 1) * (BILINEAR_SUBDIVISIONS) + 1
+      #define ABL_GRID_POINTS_VIRT_N ((GRID_LIMIT - 1) * (BILINEAR_SUBDIVISIONS) + 1)
       #define ABL_GRID_POINTS_VIRT_X ABL_GRID_POINTS_VIRT_N
       #define ABL_GRID_POINTS_VIRT_Y ABL_GRID_POINTS_VIRT_N
     #else

@@ -30,17 +30,13 @@
 #include "../module/planner.h"
 #include "../module/stepper.h" // for block_t
 #include "../gcode/queue.h"
-#include "../feature/pause.h" // for did_pause_print
+#include "pause.h" // for did_pause_print
 #include "../MarlinCore.h" // for printingIsActive()
 
 #include "../inc/MarlinConfig.h"
 
 #if ENABLED(EXTENSIBLE_UI)
   #include "../lcd/extui/ui_api.h"
-#endif
-
-#if PROUI_EX
-  #include "../lcd/e3v2/proui/proui.h"
 #endif
 
 //#define FILAMENT_RUNOUT_SENSOR_DEBUG
@@ -54,6 +50,8 @@
 #if DISABLED(FILAMENT_MOTION_SENSOR) || ENABLED(FILAMENT_SWITCH_AND_MOTION)
   #define HAS_FILAMENT_SWITCH 1
 #endif
+
+#define FILAMENT_IS_OUT() (READ(FIL_RUNOUT_PIN) == TERN(PROUI_EX, PRO_data.Runout_active_state, FIL_RUNOUT_STATE))
 
 typedef Flags<
           #if NUM_MOTION_SENSORS > NUM_RUNOUT_SENSORS
@@ -268,7 +266,7 @@ class FilamentSensorBase {
       #else
         UNUSED(extruder);
       #endif
-      return !!runout_states;                   // Any extruder ran out
+      return !!runout_states; // Any extruder ran out
     }
   };
 
@@ -444,8 +442,8 @@ class FilamentSensorBase {
           // Reset runout only if it is smaller than runout_distance or printing is paused.
           // On Bowden systems retract may be larger than runout_distance_mm, so if retract
           // was added leave it in place, or the following unretract will cause runout event.
-          (TERN(PROUI_EX, runout_mm_countdown[extruder], mm_countdown.runout[extruder])) = runout_distance_mm;
-            mm_countdown.runout_reset.clear(extruder);
+          TERN(PROUI_EX, runout_mm_countdown[extruder], mm_countdown.runout[extruder]) = runout_distance_mm;
+          mm_countdown.runout_reset.clear(extruder);
         }
         else {
           // If runout is larger than runout distance, we cannot reset right now, as Bowden and retract

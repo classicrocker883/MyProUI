@@ -8,21 +8,31 @@ name: CI - Unit Tests
 on:
   pull_request:
     branches:
-    #- HEAD need to be tested
-    - 2024-April
+    - 2024-December
     paths-ignore:
-    - config/**
+    - configurations/**
+    - display assets/**
     - data/**
     - docs/**
+    - docker/**
+    - slicer scripts/**
+    - test/**
+    - themes/**
+    - Marlin/tests/**
     - '**/*.md'
   push:
     branches:
-    #- HEAD need to be tested
-    - 2024-April
+    - 2024-December
     paths-ignore:
-    - config/**
+    - configurations/**
+    - display assets/**
     - data/**
     - docs/**
+    - docker/**
+    - slicer scripts/**
+    - test/**
+    - themes/**
+    - Marlin/tests/**
     - '**/*.md'
 
 jobs:
@@ -38,10 +48,10 @@ jobs:
 
     steps:
     - name: Check out the PR
-      uses: actions/checkout@v4
+      uses: actions/checkout@main
 
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@main
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -49,22 +59,20 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Cache PlatformIO
-      uses: actions/cache@v4
+      uses: actions/cache@main
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
-    - name: Select Python 3.9
-      uses: actions/setup-python@v5
+    - name: Select Python 3.11
+      uses: actions/setup-python@main
       with:
-        python-version: '3.9'
+        python-version: '3.11'
         architecture: 'x64'
 
     - name: Install PlatformIO
       run: |
-        pip install --upgrade pip
-        pip install --upgrade wheel
-        pip install --upgrade platformio
+        pip install -U pip wheel platformio
         pio upgrade --dev
         pio pkg update --global
 

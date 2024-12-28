@@ -122,8 +122,8 @@ public:
   #endif
 
   #if DISABLED(DWIN_LCD_PROUI)
-    static const bed_mesh_t _mesh_index_to_xpos,
-                            _mesh_index_to_ypos;
+    static const float _mesh_index_to_xpos[GRID_MAX_POINTS_X],
+                       _mesh_index_to_ypos[GRID_MAX_POINTS_Y];
   #endif
 
   #if HAS_MARLINUI_MENU
@@ -294,7 +294,7 @@ public:
 
   static constexpr float get_z_offset() { return 0.0f; }
 
-  #if ENABLED(DWIN_LCD_PROUI)
+  #if ENABLED(PROUI_MESH_EDIT)
     static float get_mesh_x(const uint8_t i) {
       return MESH_MIN_X + i * (MESH_X_DIST);
     }

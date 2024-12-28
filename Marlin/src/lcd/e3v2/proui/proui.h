@@ -21,13 +21,6 @@
  */
 #pragma once
 
-#ifndef LOW
-  #define LOW  0x0
-#endif
-#ifndef HIGH
-  #define HIGH 0x1
-#endif
-
 #if ENABLED(NOZZLE_PARK_FEATURE)
   constexpr xyz_int_t DEF_NOZZLE_PARK_POINT = NOZZLE_PARK_POINT;
 #else
@@ -39,48 +32,61 @@ constexpr uint8_t DEF_GRID_MAX_POINTS = TERN(HAS_MESH, GRID_MAX_POINTS_X, 3);
 #ifndef   MESH_INSET
   #define MESH_INSET 10
 #endif
-#ifndef   MESH_MIN_X
-  #define MESH_MIN_X MESH_INSET
-#endif
-#ifndef   MESH_MIN_Y
-  #define MESH_MIN_Y MESH_INSET
-#endif
-#ifndef   MESH_MAX_X
-  #define MESH_MAX_X  X_BED_SIZE - (MESH_INSET)
-#endif
-#ifndef   MESH_MAX_Y
-  #define MESH_MAX_Y  Y_BED_SIZE - (MESH_INSET)
-#endif
-constexpr uint16_t DEF_MESH_MIN_X = MESH_MIN_X;
-constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X;
-constexpr uint16_t DEF_MESH_MIN_Y = MESH_MIN_Y;
-constexpr uint16_t DEF_MESH_MAX_Y = MESH_MAX_Y;
+#define MESH_MIN_X_ (MESH_INSET)
+#define MESH_MIN_Y_ (MESH_INSET)
+#define MESH_MAX_X_ ((X_BED_SIZE) - (MESH_INSET))
+#define MESH_MAX_Y_ ((Y_BED_SIZE) - (MESH_INSET))
+constexpr uint16_t DEF_MESH_MIN_X = MESH_MIN_X_;
+constexpr uint16_t DEF_MESH_MAX_X = MESH_MAX_X_;
+constexpr uint16_t DEF_MESH_MIN_Y = MESH_MIN_Y_;
+constexpr uint16_t DEF_MESH_MAX_Y = MESH_MAX_Y_;
 constexpr uint16_t DEF_Z_PROBE_FEEDRATE_SLOW = Z_PROBE_FEEDRATE_SLOW;
 constexpr bool DEF_INVERT_E0_DIR = INVERT_E0_DIR;
 #ifndef MULTIPLE_PROBING
   #define MULTIPLE_PROBING 2
 #endif
 #define DEF_FIL_MOTION_SENSOR ENABLED(FILAMENT_MOTION_SENSOR)
-#if DISABLED(FILAMENT_RUNOUT_SENSOR) // must be defined opposite FIL_RUNOUT_STATE in as Configuration.h
+#if DISABLED(FILAMENT_RUNOUT_SENSOR) // must be defined as opposite FIL_RUNOUT_STATE in Configuration.h
   #if MOTHERBOARD == BOARD_CREALITY_V427 || MOTHERBOARD == BOARD_CREALITY_V24S1_301F4 || MOTHERBOARD == BOARD_CREALITY_V24S1_301 || MOTHERBOARD == BOARD_VOXELAB_AQUILA || MOTHERBOARD == BOARD_AQUILA_V101
     #define FIL_RUNOUT_STATE LOW
   #elif MOTHERBOARD == BOARD_CREALITY_V422 || MOTHERBOARD == BOARD_CREALITY_V4
     #define FIL_RUNOUT_STATE HIGH
   #else
-    #error "FIL_RUNOUT_STATE must be HIGH or LOW - defined opposite as in Configuration.h"
+    #error "FIL_RUNOUT_STATE must be HIGH or LOW - defined as opposite in Configuration.h"
   #endif
 #endif
 
+#if ENABLED(PROUI_MESH_EDIT)
+  typedef struct {
+    float mesh_min_x = DEF_MESH_MIN_X;
+    float mesh_max_x = DEF_MESH_MAX_X;
+    float mesh_min_y = DEF_MESH_MIN_Y;
+    float mesh_max_y = DEF_MESH_MAX_Y;
+  } MeshSet_t;
+  extern MeshSet_t meshSet;
+#endif
+
+/**
+ * ProUI Extras
+ */
 #if PROUI_EX
+
+#ifndef LOW
+  #define LOW  0x0
+#endif
+#ifndef HIGH
+  #define HIGH 0x1
+#endif
+
 #define X_BED_MIN 150
 #define Y_BED_MIN 150
 constexpr uint16_t DEF_X_BED_SIZE = X_BED_SIZE;
 constexpr uint16_t DEF_Y_BED_SIZE = Y_BED_SIZE;
-constexpr int16_t DEF_X_MIN_POS = X_MIN_POS;
-constexpr int16_t DEF_Y_MIN_POS = Y_MIN_POS;
-constexpr int16_t DEF_X_MAX_POS = X_MAX_POS;
-constexpr int16_t DEF_Y_MAX_POS = Y_MAX_POS;
-constexpr int16_t DEF_Z_MAX_POS = Z_MAX_POS;
+constexpr int16_t  DEF_X_MIN_POS  = X_MIN_POS;
+constexpr int16_t  DEF_Y_MIN_POS  = Y_MIN_POS;
+constexpr int16_t  DEF_X_MAX_POS  = X_MAX_POS;
+constexpr int16_t  DEF_Y_MAX_POS  = Y_MAX_POS;
+constexpr int16_t  DEF_Z_MAX_POS  = Z_MAX_POS;
 
 typedef struct {
   uint16_t x_bed_size = DEF_X_BED_SIZE;
@@ -171,7 +177,11 @@ public:
 };
 
 extern ProUIClass ProEx;
-#endif
+
+#undef LOW
+#undef HIGH
+
+#endif // PROUI_EX
 
 typedef struct {
   uint16_t Background_Color;
@@ -200,28 +210,22 @@ typedef struct {
   OPTCODE(PREVENT_COLD_EXTRUSION, celsius_t ExtMinT)
   OPTCODE(PREHEAT_BEFORE_LEVELING, celsius_t BedLevT)
   OPTCODE(BAUD_RATE_GCODE, bool Baud250K)
-  OPTCODE(HAS_BED_PROBE, bool CalcAvg)
+  OPTCODE(PROUI_ITEM_TRAM, bool CalcAvg)
   OPTCODE(SHOW_SPEED_IND, bool SpdInd)
   OPTCODE(HAS_BED_PROBE, bool FullManualTramming)
   bool MediaSort;
   bool MediaAutoMount;
   bool EnablePreview;
   OPTCODE(MESH_BED_LEVELING, uint8_t z_after_homing)
-#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
-  uint32_t Led_Color;
-#endif
   IF_DISABLED(HAS_BED_PROBE, float ManualZOffset;)
-#if ENABLED(PROUI_MESH_EDIT)
-  float mesh_min_x = DEF_MESH_MIN_X;
-  float mesh_max_x = DEF_MESH_MAX_X;
-  float mesh_min_y = DEF_MESH_MIN_Y;
-  float mesh_max_y = DEF_MESH_MAX_Y;
+#if ENABLED(PROUI_ITEM_ABRT)
+  bool auto_abort;
 #endif
 #if !PROUI_EX
   TERN_(PROUI_GRID_PNTS, uint8_t grid_max_points = DEF_GRID_MAX_POINTS;)
 #if HAS_BED_PROBE
   IF_DISABLED(BD_SENSOR, uint8_t multiple_probing = MULTIPLE_PROBING;)
-  uint16_t zprobeFeed = DEF_Z_PROBE_FEEDRATE_SLOW ;
+  uint16_t zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW ;
 #endif
 #if HAS_EXTRUDERS
   bool Invert_E0 = DEF_INVERT_E0_DIR;
@@ -231,4 +235,4 @@ typedef struct {
 
 extern HMI_data_t HMI_data;
 
-static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) + TERN0(PROUI_EX, sizeof(PRO_data_t));
+static constexpr size_t eeprom_data_size = sizeof(HMI_data_t) PLUS_TERN0(PROUI_EX, sizeof(PRO_data_t));

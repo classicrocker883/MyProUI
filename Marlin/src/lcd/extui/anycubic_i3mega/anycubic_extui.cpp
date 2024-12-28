@@ -39,7 +39,7 @@ namespace ExtUI {
   void onIdle()           { anycubicTFT.onCommandScan(); }
   void onPrinterKilled(FSTR_P const error, FSTR_P const component) { anycubicTFT.onKillTFT(); }
 
-  void onMediaInserted()  { anycubicTFT.onSDCardStateChange(true); }
+  void onMediaMounted()   { anycubicTFT.onSDCardStateChange(true); }
   void onMediaError()     { anycubicTFT.onSDCardError(); }
   void onMediaRemoved()   { anycubicTFT.onSDCardStateChange(false); }
 
@@ -91,7 +91,7 @@ namespace ExtUI {
     // permanent data to be stored, it can write up to eeprom_data_size bytes
     // into buff.
 
-    // Example:
+    /// EXAMPLE:
     //  static_assert(sizeof(myDataStruct) <= eeprom_data_size);
     //  memcpy(buff, &myDataStruct, sizeof(myDataStruct));
   }
@@ -101,7 +101,7 @@ namespace ExtUI {
     // needs to retrieve data, it should copy up to eeprom_data_size bytes
     // from buff
 
-    // Example:
+    /// EXAMPLE:
     //  static_assert(sizeof(myDataStruct) <= eeprom_data_size);
     //  memcpy(&myDataStruct, buff, sizeof(myDataStruct));
   }

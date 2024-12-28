@@ -1,6 +1,6 @@
 /**
  * DWIN Enhanced implementation for PRO UI
- * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * Based on the original work of: Miguel A. Risco-Castillo (MRISCOC)
  * Version: 3.25.3
  * Date: 2023/05/18
  *
@@ -26,7 +26,8 @@
 #include "../common/encoder.h"
 #include "../common/limits.h"
 #include "../../../MarlinCore.h"
-#if ENABLED(LED_CONTROL_MENU)
+
+#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
   #include "../../../feature/leds/leds.h"
 #endif
 
@@ -70,19 +71,19 @@ enum processID : uint8_t {
 #if ANY(HAS_PID_HEATING, MPCTEMP)
   enum tempcontrol_t : uint8_t {
     AUTOTUNE_DONE,
-    #if HAS_PID_HEATING
-      OPTITEM(PIDTEMP, PID_EXTR_START)
-      OPTITEM(PIDTEMPBED, PID_BED_START)
-      OPTITEM(PIDTEMPCHAMBER, PID_CHAMBER_START)
-      PID_BAD_HEATER_ID,
-      PID_TEMP_TOO_HIGH,
-      PID_TUNING_TIMEOUT,
-    #endif
-    #if ENABLED(MPCTEMP)
-      MPCTEMP_START,
-      MPC_TEMP_ERROR,
-      MPC_INTERRUPTED,
-    #endif
+  #if HAS_PID_HEATING
+    OPTITEM(PIDTEMP, PID_EXTR_START)
+    OPTITEM(PIDTEMPBED, PID_BED_START)
+    OPTITEM(PIDTEMPCHAMBER, PID_CHAMBER_START)
+    PID_BAD_HEATER_ID,
+    PID_TEMP_TOO_HIGH,
+    PID_TUNING_TIMEOUT,
+  #endif
+  #if ENABLED(MPCTEMP)
+    MPC_STARTED,
+    MPC_TEMP_ERROR,
+    MPC_INTERRUPTED,
+  #endif
   };
 #endif
 
@@ -100,22 +101,27 @@ typedef struct {
 } rgb_t;
 
 typedef struct {
-  rgb_t Color;                        // Color
-  #if ANY(HAS_PID_HEATING, MPCTEMP)
-    tempcontrol_t tempControl = AUTOTUNE_DONE;
-  #endif
-  uint8_t Select = 0;                 // Auxiliary selector variable
-  AxisEnum axis = X_AXIS;             // Axis Select
+#if HAS_CUSTOM_COLORS
+  rgb_t Color; // Color
+#endif
+#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
+  LEDColor Led_Color = Def_Leds_Color; // Moved from HMI_data
+#endif
+#if ANY(HAS_PID_HEATING, MPCTEMP, PROUI_ITEM_PLOT)
+  tempcontrol_t tempControl = AUTOTUNE_DONE;
+#endif
+  uint8_t Select = 0;     // Auxiliary selector variable
+  AxisEnum axis = X_AXIS; // Axis Select
 } HMI_value_t;
 
 extern HMI_value_t HMI_value;
 
 typedef struct {
-  bool printing_flag:1; // sd or host printing
-  bool abort_flag:1;    // sd or host was aborted
-  bool pause_flag:1;    // printing is paused
+  bool printing_flag:1; // SD or host printing
+  bool abort_flag:1;    // SD or host was aborted
+  bool pause_flag:1;    // Printing is paused
   bool select_flag:1;   // Popup button selected
-  bool cancel_lev:1;    // cancel current abl
+  bool cancel_lev:1;    // Cancel current ABL
 } HMI_flag_t;
 
 extern HMI_flag_t HMI_flag;
@@ -135,20 +141,16 @@ inline bool Host_Printing() { return Printing() && !IS_SD_FILE_OPEN(); }
 
 // Tool Functions
 uint32_t GetHash(char * str);
+void WriteEeprom();
 #if ENABLED(EEPROM_SETTINGS)
-  void WriteEeprom();
   void ReadEeprom();
-  void ResetEeprom();
-  #if HAS_MESH
-    void ManualMeshSave();
-    void SaveMesh();
-  #endif
 #endif
+void ResetEeprom();
 #if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
   void dwinDrawPlot(tempcontrol_t result);
-  void drawHPlot();
-  void drawBPlot();
-  void drawCPlot();
+  void drawHotendPlot();
+  void drawBedPlot();
+  void drawChamberPlot();
 #endif
 #if ENABLED(ENC_MENU_ITEM)
   void SetEncRateA();
@@ -160,12 +162,9 @@ uint32_t GetHash(char * str);
 #if ALL(HAS_BLTOUCH_HS_MODE, HS_MENU_ITEM)
   void SetHSMode();
 #endif
-#if PROUI_EX
-  void SetMeshPoints();
-  void SetXMeshInset();
-  void SetYMeshInset();
-  void MaxMeshArea();
-  void CenterMeshArea();
+#if !PROUI_EX && ENABLED(MESH_BED_LEVELING)
+  void ApplyPhySet();
+  void SetData();
 #endif
 #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
   void SetMeshFadeHeight();
@@ -195,7 +194,6 @@ void DoCoolDown();
   void TurnOffBacklight();
 #endif
 void ApplyExtMinT();
-void ParkHead();
 void RaiseHead();
 TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool stow_probe=true));
 #if HAS_BED_PROBE && ENABLED(PROUI_ITEM_TRAM)
@@ -207,16 +205,15 @@ TERN(HAS_BED_PROBE, float, void) tram(uint8_t point OPTARG(HAS_BED_PROBE, bool s
 #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
   void ApplyLEDColor();
 #endif
-#if ENABLED(AUTO_BED_LEVELING_UBL)
-  void UBLMeshTilt();
-  void UBLMeshSave();
-  void UBLMeshLoad();
-#endif
 #if ENABLED(HOST_SHUTDOWN_MENU_ITEM) && defined(SHUTDOWN_ACTION)
   void HostShutDown();
 #endif
 
 // Other
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
+  void ChangeFilament();
+  void Goto_FilamentPurge();
+#endif
 void Goto_PrintProcess();
 void Goto_Main_Menu();
 void Goto_Info_Menu();
@@ -231,6 +228,7 @@ void DWIN_RedrawScreen();   // Redraw all screen elements
 void HMI_MainMenu();        // Main process screen
 void HMI_Printing();        // Print page
 void HMI_ReturnScreen();    // Return to previous screen before popups
+void ReturnToPreviousMenu();
 void HMI_WaitForUser();
 void HMI_SaveProcessID(const uint8_t id);
 void HMI_SDCardUpdate();
@@ -240,15 +238,9 @@ void Init();
 void DWIN_InitScreen();
 void DWIN_HandleScreen();
 void DWIN_CheckStatusMessage();
+void DWIN_DrawStatusMessage();
 void DWIN_HomingStart();
 void DWIN_HomingDone();
-#if HAS_MESH
-  void DWIN_MeshUpdate(const int8_t cpos, const int8_t tpos, const_float_t zval);
-#endif
-#if HAS_LEVELING
-  void DWIN_LevelingStart();
-  void DWIN_LevelingDone();
-#endif
 void DWIN_Print_Started();
 void DWIN_Print_Pause();
 void DWIN_Print_Resume();
@@ -261,11 +253,6 @@ void DWIN_CopySettingsFrom(PGM_P const buff);
 void DWIN_SetDataDefaults();
 void DWIN_RebootScreen();
 
-#if ENABLED(ADVANCED_PAUSE_FEATURE)
-  void Draw_Popup_FilamentPurge();
-  void Goto_FilamentPurge();
-#endif
-
 // Utility and extensions
 #if HAS_LOCKSCREEN
   void DWIN_LockScreen();
@@ -273,13 +260,21 @@ void DWIN_RebootScreen();
   void HMI_LockScreen();
 #endif
 #if HAS_MESH
+  void DWIN_MeshUpdate(const int8_t xpos, const int8_t ypos, const_float_t zval);
+  void DWIN_PointUpdate(const int8_t cpos, const int8_t tpos, const_float_t zval);
   void DWIN_MeshViewer();
+  #if ENABLED(MESH_BED_LEVELING)
+    void ManualMeshSave();
+  #elif ENABLED(AUTO_BED_LEVELING_UBL)
+    void UBLMeshSave();
+  #endif
   #if USE_GRID_MESHVIEWER
     void SetViewMesh();
   #endif
 #endif
-#if HAS_ESDIAG
-  void Draw_EndStopDiag();
+#if HAS_LEVELING
+  void DWIN_LevelingStart();
+  void DWIN_LevelingDone();
 #endif
 
 // Menu drawing functions
@@ -290,6 +285,9 @@ void Draw_AdvancedSettings_Menu();
 void Draw_Prepare_Menu();
 void Draw_Move_Menu();
 void Draw_Tramming_Menu();
+#if HAS_ESDIAG
+  void Draw_EndStopDiag();
+#endif
 #if HAS_HOME_OFFSET
   void Draw_HomeOffset_Menu();
 #endif
@@ -299,6 +297,7 @@ void Draw_Tramming_Menu();
 void Draw_FilSet_Menu();
 #if ENABLED(NOZZLE_PARK_FEATURE)
   void Draw_ParkPos_Menu();
+  void ParkHead();
 #endif
 void Draw_PhySet_Menu();
 #if ALL(CASE_LIGHT_MENU, CASELIGHT_USES_BRIGHTNESS)
@@ -309,9 +308,6 @@ void Draw_PhySet_Menu();
 #endif
 void Draw_Tune_Menu();
 void Draw_Motion_Menu();
-#if ENABLED(ADVANCED_PAUSE_FEATURE)
-  void ChangeFilament();
-#endif
 void Draw_FilamentMan_Menu();
 void Draw_Temperature_Menu();
 void Draw_MaxSpeed_Menu();
@@ -328,14 +324,26 @@ void Draw_MaxAccel_Menu();
 #if ENABLED(INDIVIDUAL_AXIS_HOMING_SUBMENU)
   void Draw_Homing_Menu();
 #endif
+#if ENABLED(EDITABLE_HOMING_FEEDRATE)
+  void Draw_HomingFR_Menu();
+#endif
 #if ENABLED(FWRETRACT)
   void Draw_FWRetract_Menu();
 #endif
 #if HAS_MESH
   void Draw_MeshSet_Menu();
-  void Draw_MeshInset_Menu();
   #if ENABLED(PROUI_MESH_EDIT)
+    void Draw_MeshInset_Menu();
     void Draw_EditMesh_Menu();
+    void ApplyMeshInset();
+    void ResetMeshInset();
+    void SetXMeshInset();
+    void SetYMeshInset();
+    void MaxMeshArea();
+    void CenterMeshArea();
+  #endif
+  #if ANY(PROUI_EX, PROUI_GRID_PNTS)
+    void SetMeshPoints();
   #endif
 #endif
 #if HAS_TRINAMIC_CONFIG
@@ -345,7 +353,7 @@ void Draw_MaxAccel_Menu();
 // Custom colors editing
 #if HAS_CUSTOM_COLORS
   void DWIN_ApplyColor();
-  void DWIN_ApplyColor(const int8_t element, const bool ldef=false);
+  void DWIN_ApplyColor(const int8_t element);
   void Draw_SelectColors_Menu();
   void Draw_GetColor_Menu();
 #endif
@@ -406,5 +414,5 @@ void Draw_MaxAccel_Menu();
 #endif
 
 #if DEBUG_DWIN
-  void DWIN_Debug(PGM_P msg);
+  void DWIN_Debug(PGM_P msg1=nullptr, PGM_P msg2=nullptr, PGM_P msg3=nullptr, PGM_P msg4=nullptr);
 #endif

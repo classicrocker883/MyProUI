@@ -28,7 +28,7 @@
 /**
  * Marlin release version identifier
  */
-#define SHORT_BUILD_VERSION "2.1.3f-4"
+#define SHORT_BUILD_VERSION "2.1.3f-12"
 
 /**
  * Verbose version identifier which should contain a reference to the location
@@ -41,7 +41,7 @@
  * here we define this default string as the date where the latest release
  * version was tagged.
  */
-//#define STRING_DISTRIBUTION_DATE "2024-04-21"
+//#define STRING_DISTRIBUTION_DATE "2024-12-27"
 
 #define STRING_DISTRIBUTION_DATE __DATE__
 #define STRING_DISTRIBUTION_TIME __TIME__
@@ -57,7 +57,7 @@
  * has a distinct Github fork— the Source Code URL should just be the main
  * Marlin repository.
  */
-#define SOURCE_CODE_URL "github.com/classicrocker883/MriscocProUI"
+#define SOURCE_CODE_URL "github.com/classicrocker883/MRiscoCProUI"
 
 /**
  * Default generic printer UUID.
@@ -68,11 +68,11 @@
  * The WEBSITE_URL is the location where users can get more information such as
  * documentation about a specific Marlin release.
  */
-#define WEBSITE_URL "github.com/classicrocker883/MriscocProUI"
+#define WEBSITE_URL "github.com/classicrocker883/MRiscoCProUI"
 
 /**
- * Set the vendor info the serial USB interface, if changable
- * Currently only supported by DUE platform
+ * Set the vendor info the serial USB interface, if changeable.
+ * Currently only supported by DUE platform.
  */
 //#define USB_DEVICE_VENDOR_ID           0x0000
 //#define USB_DEVICE_PRODUCT_ID          0x0000

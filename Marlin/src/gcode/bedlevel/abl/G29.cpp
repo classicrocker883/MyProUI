@@ -33,6 +33,7 @@
 #include "../../../module/motion.h"
 #include "../../../module/planner.h"
 #include "../../../module/probe.h"
+#include "../../../module/temperature.h"
 #include "../../queue.h"
 
 #if ENABLED(AUTO_BED_LEVELING_LINEAR)
@@ -52,6 +53,8 @@
 #elif ENABLED(DWIN_LCD_PROUI)
   #include "../../../lcd/e3v2/proui/dwin.h"
   #include "../../../lcd/e3v2/proui/meshviewer.h"
+#elif ENABLED(SOVOL_SV06_RTS)
+  #include "../../../lcd/sovol_rts/sovol_rts.h"
 #endif
 
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
@@ -71,14 +74,21 @@
   #endif
 #endif
 
+/**
+ * @brief Do some things before returning from G29.
+ * @param retry : true if the G29 can and should be retried. false if the failure is too serious.
+ * @param   did : true if the leveling procedure completed successfully.
+ */
 static void pre_g29_return(const bool retry, const bool did) {
   if (!retry) {
     TERN_(FULL_REPORT_TO_HOST_FEATURE, set_and_report_grblstate(M_IDLE, false));
   }
-  if (did) {
-    TERN_(HAS_DWIN_E3V2_BASIC, DWIN_LevelingDone());
-    TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
-  }
+  #if DISABLED(G29_RETRY_AND_RECOVER)
+    if (!retry || did) {
+      TERN_(HAS_DWIN_E3V2_BASIC, DWIN_LevelingDone());
+      TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
+    }
+  #endif
 }
 
 #define G29_RETURN(retry, did) do{ \
@@ -131,8 +141,8 @@ public:
     #if ENABLED(AUTO_BED_LEVELING_LINEAR)
       int indexIntoAB[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
       float eqnAMatrix[GRID_MAX_POINTS * 3],  // "A" matrix of the linear system of equations
-            eqnBVector[GRID_MAX_POINTS],      // "B" vector of Z points
-            mean;
+            eqnBVector[GRID_MAX_POINTS];      // "B" vector of Z points
+      float mean;
     #endif
   #endif
 };
@@ -158,19 +168,19 @@ public:
  *
  *  J  Jettison current bed leveling data
  *
- *  V  Set the verbose level (0-4). Example: "G29 V3"
+ *  V  Set the verbose level (0-4). EXAMPLE: "G29 V3"
  *
  * Parameters With LINEAR leveling only:
  *
  *  P  Set the size of the grid that will be probed (P x P points).
- *     Example: "G29 P4"
+ *     EXAMPLE: "G29 P4"
  *
  *  X  Set the X size of the grid that will be probed (X x Y points).
- *     Example: "G29 X7 Y5"
+ *     EXAMPLE: "G29 X7 Y5"
  *
  *  Y  Set the Y size of the grid that will be probed (X x Y points).
  *
- *  T  Generate a Bed Topology Report. Example: "G29 P5 T" for a detailed report.
+ *  T  Generate a Bed Topology Report. EXAMPLE: "G29 P5 T" for a detailed report.
  *     This is useful for manual bed leveling and finding flaws in the bed (to
  *     assist with part placement).
  *     Not supported by non-linear delta printer bed leveling.
@@ -258,7 +268,6 @@ G29_TYPE GcodeSuite::G29() {
   #if ENABLED(DWIN_LCD_PROUI)
     else {
       process_subcommands_now(F("G28Z"));
-      process_subcommands_now(F("G28XY"));
     }
   #endif
 
@@ -393,6 +402,7 @@ G29_TYPE GcodeSuite::G29() {
     #if ABL_USES_GRID
 
       xy_probe_feedrate_mm_s = MMM_TO_MMS(parser.linearval('S', XY_PROBE_FEEDRATE));
+      if (xy_probe_feedrate_mm_s == 0) xy_probe_feedrate_mm_s = XY_PROBE_FEEDRATE; // Don't let "UBL Save Slot #0" break G29
 
       const float x_min = probe.min_x(), x_max = probe.max_x(),
                   y_min = probe.min_y(), y_max = probe.max_y();
@@ -443,6 +453,12 @@ G29_TYPE GcodeSuite::G29() {
       remember_feedrate_scaling_off();
 
       #if ENABLED(PREHEAT_BEFORE_LEVELING)
+        #if ENABLED(SOVOL_SV06_RTS)
+          rts.updateTempE0();
+          rts.updateTempBed();
+          rts.sendData(1, Wait_VP);
+          rts.gotoPage(ID_ABL_HeatWait_L, ID_ABL_HeatWait_D);
+        #endif
         if (!abl.dryrun) probe.preheat_for_probing(LEVELING_NOZZLE_TEMP,
           #if ALL(DWIN_LCD_PROUI, HAS_HEATED_BED)
             HMI_data.BedLevT
@@ -704,7 +720,7 @@ G29_TYPE GcodeSuite::G29() {
           if (TERN0(IS_KINEMATIC, !probe.can_reach(abl.probePos))) continue;
 
           if (abl.verbose_level) SERIAL_ECHOLNPGM("Probing mesh point ", pt_index, "/", abl.abl_points, ".");
-          TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/%i"), GET_TEXT(MSG_PROBING_POINT), int(pt_index), int(abl.abl_points)));
+          TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/%i"), GET_TEXT_F(MSG_PROBING_POINT), int(pt_index), int(abl.abl_points)));
 
           #if ENABLED(BD_SENSOR_PROBE_NO_STOP)
             if (PR_INNER_VAR == inStart) {
@@ -790,6 +806,12 @@ G29_TYPE GcodeSuite::G29() {
             TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(abl.meshCount, z));
             TERN_(DWIN_LCD_PROUI, MeshViewer.DrawMeshPoint(abl.meshCount.x, abl.meshCount.y, z));
 
+            #if ENABLED(SOVOL_SV06_RTS)
+              if (pt_index <= GRID_MAX_POINTS) rts.sendData(pt_index, AUTO_BED_LEVEL_ICON_VP);
+              rts.sendData(z * 100.0f, AUTO_BED_LEVEL_1POINT_VP + (pt_index - 1) * 2);
+              rts.gotoPage(ID_ABL_Wait_L, ID_ABL_Wait_D);
+            #endif
+
           #endif
 
           abl.reenable = false; // Don't re-enable after modifying the mesh
@@ -805,7 +827,7 @@ G29_TYPE GcodeSuite::G29() {
 
       for (uint8_t i = 0; i < 3; ++i) {
         if (abl.verbose_level) SERIAL_ECHOLNPGM("Probing point ", i + 1, "/3.");
-        TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/3"), GET_TEXT(MSG_PROBING_POINT), int(i + 1)));
+        TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/3"), GET_TEXT_F(MSG_PROBING_POINT), int(i + 1)));
 
         // Retain the last probe position
         abl.probePos = xy_pos_t(points[i]);
@@ -828,7 +850,7 @@ G29_TYPE GcodeSuite::G29() {
 
     #endif // AUTO_BED_LEVELING_3POINT
 
-    TERN_(HAS_STATUS_MESSAGE, ui.reset_status());
+    ui.reset_status();
 
     // Stow the probe. No raise for FIX_MOUNTED_PROBE.
     if (probe.stow()) {
@@ -865,6 +887,8 @@ G29_TYPE GcodeSuite::G29() {
         bedlevel.set_grid(abl.gridSpacing, abl.probe_position_lf);
         COPY(bedlevel.z_values, abl.z_values);
         TERN_(IS_KINEMATIC, bedlevel.extrapolate_unprobed_bed_levels());
+        if (parser.boolval('K')) { bedlevel.extrapolate_unprobed_bed_levels(); }
+        else if (ENABLED(DWIN_LCD_PROUI)) { bedlevel.extrapolate_unprobed_bed_levels(); }
         bedlevel.refresh_bed_level();
 
         bedlevel.print_leveling_grid();
@@ -1007,6 +1031,8 @@ G29_TYPE GcodeSuite::G29() {
     planner.synchronize();
     process_subcommands_now(F(EVENT_GCODE_AFTER_G29));
   #endif
+
+  TERN_(SOVOL_SV06_RTS, RTS_AutoBedLevelPage());
 
   probe.use_probing_tool(false);
 

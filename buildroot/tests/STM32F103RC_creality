@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# Build tests for STM32F103RC_creality
+#
+
+# exit on first failure
+set -e
+
+#
+# Build with included configs
+#
+use_example_configs "Creality Ender/S1/UBL"
+opt_set MOTHERBOARD BOARD_CREALITY_V24S1_301
+# opt_disable
+# opt_enable
+# opt_add
+exec_test $1 $2 "Ender-3 S1-F1 - ProUI Unified (UBL)" "$3"

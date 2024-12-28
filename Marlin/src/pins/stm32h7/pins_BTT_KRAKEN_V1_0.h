@@ -426,7 +426,6 @@
   #define E4_CS_PIN                  EXP1_06_PIN
   #if HAS_TMC_UART
     #define E4_SERIAL_TX_PIN         EXP1_06_PIN
-    #define E4_SERIAL_RX_PIN    E4_SERIAL_TX_PIN
   #endif
 
   // M2 on Driver Expansion Module
@@ -437,7 +436,6 @@
   #define E5_CS_PIN                  EXP1_04_PIN
   #if HAS_TMC_UART
     #define E5_SERIAL_TX_PIN         EXP1_04_PIN
-    #define E5_SERIAL_RX_PIN    E5_SERIAL_TX_PIN
   #endif
 
   // M3 on Driver Expansion Module
@@ -448,7 +446,6 @@
   #define E6_CS_PIN                  EXP1_02_PIN
   #if HAS_TMC_UART
     #define E6_SERIAL_TX_PIN         EXP1_02_PIN
-    #define E6_SERIAL_RX_PIN    E6_SERIAL_TX_PIN
   #endif
 
 #endif // BTT_MOTOR_EXPANSION
@@ -478,9 +475,7 @@
    * orientation as the existing plug/DWIN to EXP1. TX/RX need to be connected to the TFT port, with TX->RX, RX->TX.
    */
 
-  #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
-    #error "CAUTION! Ender-3 V2 display requires a custom cable. See 'pins_BTT_OCTOPUS_V1_common.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
-  #endif
+  CONTROLLER_WARNING("BTT_KRAKEN_V1_0", "Ender-3 V2 display")
 
   #define BEEPER_PIN                 EXP1_06_PIN
   #define BTN_EN1                    EXP1_08_PIN

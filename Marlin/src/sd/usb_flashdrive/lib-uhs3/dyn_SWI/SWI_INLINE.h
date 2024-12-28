@@ -74,7 +74,7 @@ void softISR() {
 #endif
 
         //
-        // TO-DO: Perhaps limit to 8, and inline this?
+        /// TODO: Perhaps limit to 8, and inline this?
         //
 
         // Make a working copy, while clearing the queue.

@@ -148,7 +148,7 @@ class AddressPool {
                         for(uint8_t i = 1; (i = FindChildIndex(uda, i));)
                                 FreeAddressByIndex(i);
 
-                        // FIXME: use BIT MASKS
+                        /// FIXME: Use BIT MASKS
                         // If the hub had the last allocated address, hubCounter should be decremented
                         if(hubCounter == uda.bmAddress)
                                 hubCounter--;
@@ -201,7 +201,7 @@ public:
                         //if(parent > 127 || port > 7)
                         return 0;
 
-                // FIXME: use BIT MASKS
+                /// FIXME: Use BIT MASKS
                 if(is_hub && hubCounter == 7)
                         return 0;
 
@@ -215,7 +215,7 @@ public:
                 addr.devAddress = port;
                 addr.bmParent = _parent.bmAddress;
 
-                // FIXME: use BIT MASKS
+                /// FIXME: Use BIT MASKS
                 if(is_hub) {
                         hubCounter++;
                         addr.bmHub = 1;

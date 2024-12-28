@@ -579,7 +579,7 @@
  * The fan turns on automatically whenever any driver is enabled and turns
  * off (or reduces to idle speed) shortly after drivers are turned off.
  */
-//#define USE_CONTROLLER_FAN
+#define USE_CONTROLLER_FAN
 #if ENABLED(USE_CONTROLLER_FAN)
   //#define CONTROLLER_FAN_PIN -1           // Set a custom pin for the controller fan
   //#define CONTROLLER_FAN2_PIN -1          // Set a custom pin for second controller fan
@@ -601,6 +601,12 @@
   #if ENABLED(CONTROLLER_FAN_EDITABLE)
     #define CONTROLLER_FAN_MENU             // Enable the Controller Fan submenu (456 bytes of flash)
   #endif
+
+  #define AUTO_FAN_EDITABLE                 // Enable M712 configurable settings     (320 bytes of flash)
+  #if ENABLED(AUTO_FAN_EDITABLE)
+    #define AUTO_FAN_MENU                   // Enable the Extruder Auto Fans submenu (104 bytes of flash)
+  #endif
+
 #endif
 
 /**
@@ -711,11 +717,6 @@
 #define CHAMBER_AUTO_FAN_SPEED 255
 #define COOLER_AUTO_FAN_TEMPERATURE 18
 #define COOLER_AUTO_FAN_SPEED 255
-
-#define AUTO_FAN_EDITABLE             // Enable M712 configurable settings     (320 bytes of flash)
-#if ENABLED(AUTO_FAN_EDITABLE)
-  #define AUTO_FAN_MENU               // Enable the Extruder Auto Fans submenu (104 bytes of flash)
-#endif
 
 /**
  * Hotend Cooling Fans tachometers

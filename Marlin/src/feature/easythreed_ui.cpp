@@ -189,7 +189,7 @@ void EasythreedUI::printButton() {
             blink_interval_ms = LED_BLINK_2;                        // Blink the indicator LED at 1 second intervals
             print_key_flag = PF_PAUSE;                              // The "Print" button now pauses the print
             card.mount();                                           // Force SD card to mount - now!
-            if (!card.isMounted) {                                  // Failed to mount?
+            if (!card.isMounted()) {                                // Failed to mount?
               blink_interval_ms = LED_OFF;                          // Turn off LED
               print_key_flag = PF_START;
               return;                                               // Bail out
@@ -217,7 +217,7 @@ void EasythreedUI::printButton() {
       else {                                                        // Register a longer press
         if (print_key_flag == PF_START && !printingIsActive())  {   // While not printing, this moves Z up 10mm
           blink_interval_ms = LED_ON;
-          queue.inject(F("G91\nG0 Z10 F600\nG90"));                 // Raise Z soon after returning to main loop
+          queue.inject(F("G91\nG0Z10F600\nG90"));                   // Raise Z soon after returning to main loop
         }
         else {                                                      // While printing, cancel print
           card.abortFilePrintSoon();                                // There is a delay while the current steps play out

@@ -1,0 +1,51 @@
+#
+# ci-validate-pins.yml
+# Validate that all of the pins files are unchanged by pinsformat.py
+#
+
+name: CI - Validate Pins Files
+
+on:
+  pull_request:
+    branches:
+    - 2024-December
+    # Cannot be enabled on 2.1.x until it contains the unit test framework
+    #- 2.1.x
+    paths:
+    - 'Marlin/src/pins/*/**'
+  push:
+    branches:
+    - 2024-December
+    # Cannot be enabled on 2.1.x until it contains the unit test framework
+    #- 2.1.x
+    paths:
+    - 'Marlin/src/pins/*/**'
+
+jobs:
+  validate_pins_files:
+    name: Validate Pins Files
+    if: github.repository == 'classicrocker883/MRiscoCProUI'
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the PR
+      uses: actions/checkout@main
+
+    - name: Cache pip
+      uses: actions/cache@main
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Select Python 3.11
+      uses: actions/setup-python@main
+      with:
+        python-version: '3.11'
+        architecture: 'x64'
+
+    - name: Validate all pins files
+      run: |
+        make validate-pins -j

@@ -48,7 +48,7 @@ namespace ExtUI {
   void onIdle() {}
   void onPrinterKilled(FSTR_P const error, FSTR_P const component) {}
 
-  void onMediaInserted() {}
+  void onMediaMounted() {}
   void onMediaError() {}
   void onMediaRemoved() {}
 
@@ -94,7 +94,7 @@ namespace ExtUI {
     // permanent data to be stored, it can write up to eeprom_data_size bytes
     // into buff.
 
-    // Example:
+    /// EXAMPLE:
     //  static_assert(sizeof(myDataStruct) <= eeprom_data_size);
     //  memcpy(buff, &myDataStruct, sizeof(myDataStruct));
   }
@@ -104,7 +104,7 @@ namespace ExtUI {
     // needs to retrieve data, it should copy up to eeprom_data_size bytes
     // from buff
 
-    // Example:
+    /// EXAMPLE:
     //  static_assert(sizeof(myDataStruct) <= eeprom_data_size);
     //  memcpy(&myDataStruct, buff, sizeof(myDataStruct));
   }

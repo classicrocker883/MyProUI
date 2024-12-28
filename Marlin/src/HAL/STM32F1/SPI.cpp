@@ -198,7 +198,7 @@ void SPIClass::end() {
   // Follows RM0008's sequence for disabling a SPI in master/slave
   // full duplex mode.
   while (spi_is_rx_nonempty(_currentSetting->spi_d)) {
-    // FIXME [0.1.0] remove this once you have an interrupt based driver
+    /// FIXME: [0.1.0] remove this once you have an interrupt based driver
     volatile uint16_t rx __attribute__((unused)) = spi_rx_reg(_currentSetting->spi_d);
   }
   waitSpiTxEnd(_currentSetting->spi_d);

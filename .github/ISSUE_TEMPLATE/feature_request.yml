@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: >
-        Do you want to ask a question? Are you looking for support? Please use one of the [support links](https://github.com/classicrocker883/MriscocProUI/issues/new/choose).
+        Do you want to ask a question? Are you looking for support? Please use one of the [support links](https://github.com/classicrocker883/MRiscoCProUI/issues/new/choose).
 
   - type: markdown
     attributes:
@@ -17,7 +17,7 @@ body:
 
         - Read and understand Marlin's [Code of Conduct](https://github.com/MarlinFirmware/Marlin/blob/master/.github/code_of_conduct.md). You are expected to comply with it, including treating everyone with respect.
 
-        - Check the latest [branch](https://github.com/classicrocker883/MriscocProUI) to see if the feature already exists.
+        - Check the latest [branch](https://github.com/classicrocker883/MRiscoCProUI) to see if the feature already exists.
 
         - Before you proceed, please consider all aspects necessary to make it into a firmware feature, or what may be involved building and testing it before it becomes fully ulilized in the next updated release.
         Also think if it may be better suited for a slicer or host feature.

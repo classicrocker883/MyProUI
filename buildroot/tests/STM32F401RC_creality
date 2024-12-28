@@ -6,11 +6,12 @@
 # exit on first failure
 set -e
 
-use_example_configs "Creality/Ender-3 V2/CrealityV422/MarlinUI"
-opt_enable AUTO_BED_LEVELING_BILINEAR Z_SAFE_HOMING
+#
+# Build with included configs
+#
+use_example_configs "Creality Ender/S1/UBL"
 opt_set MOTHERBOARD BOARD_CREALITY_V24S1_301F4
-opt_add SDCARD_EEPROM_EMULATION
-exec_test $1 $2 "Ender-3 v2 with MarlinUI" "$3"
-
-# clean up
-restore_configs
+# opt_disable
+# opt_enable
+# opt_add
+exec_test $1 $2 "Ender-3 S1-F4 - ProUI Unified (UBL)" "$3"

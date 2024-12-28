@@ -413,6 +413,7 @@ void unified_bed_leveling::G29() {
             ExtUI::onMeshUpdate(x, x, z_values[x][x]);
             ExtUI::onMeshUpdate(x, x2, z_values[x][x2]);
           #elif ENABLED(DWIN_LCD_PROUI)
+            DWIN_MeshUpdate(x, x, z_values[x][x]);
             DWIN_MeshUpdate(x, x2, z_values[x][x2]);
           #endif
         }
@@ -779,7 +780,7 @@ void unified_bed_leveling::shift_mesh_height() {
 
       const grid_count_t point_num = (GRID_MAX_POINTS - count) + 1;
       SERIAL_ECHOLNPGM("Probing mesh point ", point_num, "/", GRID_MAX_POINTS, ".");
-      TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/%i"), GET_TEXT(MSG_PROBING_POINT), point_num, int(GRID_MAX_POINTS)));
+      TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/%i"), GET_TEXT_F(MSG_PROBING_POINT), point_num, int(GRID_MAX_POINTS)));
       TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
       TERN_(DWIN_LCD_PROUI, if (!HMI_flag.cancel_lev) { DWIN_RedrawScreen(); } else { break; })
 
@@ -1199,9 +1200,9 @@ bool unified_bed_leveling::G29_parse_parameters() {
   }
 
   param.XY_seen.x = parser.seenval('X');
-  float sx = param.XY_seen.x ? parser.value_float() : TERN(DWIN_LCD_PROUI, 0, current_position.x - TERN0(HAS_BED_PROBE, probe.offset.x));
+  float sx = param.XY_seen.x ? parser.value_float() : TERN(DWIN_LCD_PROUI, 0, current_position.x MINUS_TERN0(HAS_BED_PROBE, probe.offset.x));
   param.XY_seen.y = parser.seenval('Y');
-  float sy = param.XY_seen.y ? parser.value_float() : TERN(DWIN_LCD_PROUI, 0, current_position.y - TERN0(HAS_BED_PROBE, probe.offset.y));
+  float sy = param.XY_seen.y ? parser.value_float() : TERN(DWIN_LCD_PROUI, 0, current_position.y MINUS_TERN0(HAS_BED_PROBE, probe.offset.y));
 
   if (param.XY_seen.x != param.XY_seen.y) {
     SERIAL_ECHOLNPGM("Both X & Y locations must be specified.\n");
@@ -1210,8 +1211,8 @@ bool unified_bed_leveling::G29_parse_parameters() {
 
   // If X or Y are not valid, use center of the bed values
   // (for UBL_HILBERT_CURVE default to lower-left corner instead)
-  if (!COORDINATE_OKAY(sx, X_MIN_BED, X_MAX_BED)) sx = TERN(UBL_HILBERT_CURVE, 0, X_CENTER - TERN0(HAS_BED_PROBE, probe.offset.x));
-  if (!COORDINATE_OKAY(sy, Y_MIN_BED, Y_MAX_BED)) sy = TERN(UBL_HILBERT_CURVE, 0, Y_CENTER - TERN0(HAS_BED_PROBE, probe.offset.y));
+  if (!COORDINATE_OKAY(sx, X_MIN_BED, X_MAX_BED)) sx = TERN(UBL_HILBERT_CURVE, 0, X_CENTER MINUS_TERN0(HAS_BED_PROBE, probe.offset.x));
+  if (!COORDINATE_OKAY(sy, Y_MIN_BED, Y_MAX_BED)) sy = TERN(UBL_HILBERT_CURVE, 0, Y_CENTER MINUS_TERN0(HAS_BED_PROBE, probe.offset.y));
 
   if (err_flag) return UBL_ERR;
 
@@ -1519,7 +1520,7 @@ void unified_bed_leveling::smart_mesh_fill() {
 
       for (uint8_t i = 0; i < 3; ++i) {
         SERIAL_ECHOLNPGM("Tilting mesh (", i + 1, "/3)");
-        TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/3"), GET_TEXT(MSG_LCD_TILTING_MESH), i + 1));
+        TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/3"), GET_TEXT_F(MSG_LCD_TILTING_MESH), i + 1));
 
         measured_z = probe.probe_at_point(points[i], i < 2 ? PROBE_PT_RAISE : PROBE_PT_LAST_STOW, param.V_verbosity);
         if ((abort_flag = isnan(measured_z))) break;
@@ -1581,7 +1582,7 @@ void unified_bed_leveling::smart_mesh_fill() {
           #endif
 
           SERIAL_ECHOLNPGM("Tilting mesh point ", point_num, "/", total_points, "\n");
-          TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/%i"), GET_TEXT(MSG_LCD_TILTING_MESH), point_num, total_points));
+          TERN_(HAS_STATUS_MESSAGE, ui.status_printf(0, F(S_FMT " %i/%i"), GET_TEXT_F(MSG_LCD_TILTING_MESH), point_num, total_points));
 
           measured_z = probe.probe_at_point(rpos, parser.seen_test('E') ? PROBE_PT_STOW : PROBE_PT_RAISE, param.V_verbosity); // TODO: Needs error handling
 
@@ -1708,7 +1709,7 @@ void unified_bed_leveling::smart_mesh_fill() {
     // the point being extrapolated.  Then extrapolate the mesh point from WLSF.
 
     #if ANY(PROUI_EX, PROUI_GRID_PNTS)
-      static_assert((GRID_LIMIT) <= 16, "GRID_MAX_POINTS_Y too big");
+      static_assert((GRID_LIMIT) <= 9, "GRID_MAX_POINTS_Y too big");
     #else
       static_assert((GRID_MAX_POINTS_Y) <= 16, "GRID_MAX_POINTS_Y too big");
     #endif
