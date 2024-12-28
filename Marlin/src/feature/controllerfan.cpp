@@ -86,7 +86,7 @@ void ControllerFan::update() {
      *  - If AutoMode is on and hot components have been powered for CONTROLLERFAN_IDLE_TIME seconds.
      *  - If System is on idle and idle fan speed settings is activated.
      */
-    speed = CALC_CONTROLLER_FAN_SPEED(settings.auto_mode && lastComponentOn && PENDING(ms, lastComponentOn + SEC_TO_MS(settings.duration))
+    speed = CALC_FAN_SPEED(settings.auto_mode && lastComponentOn && PENDING(ms, lastComponentOn + SEC_TO_MS(settings.duration))
       ? settings.active_speed : settings.idle_speed);
 
     #if FAN_KICKSTART_TIME
