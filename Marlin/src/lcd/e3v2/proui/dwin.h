@@ -358,6 +358,14 @@ void Draw_MaxAccel_Menu();
   void Draw_GetColor_Menu();
 #endif
 
+// Controller Fan / Kickstart Menu
+#if ENABLED(CONTROLLER_FAN_MENU)
+  void Draw_ControllerFan_menu();
+#endif
+#if ENABLED(FAN_KICKSTART_MENU)
+  void Draw_Kickstart_menu();
+#endif
+
 // PID
 #if HAS_PID_HEATING
   #include "../../../module/temperature.h"
