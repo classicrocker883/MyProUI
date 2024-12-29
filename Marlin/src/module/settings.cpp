@@ -141,11 +141,15 @@
   #include "../feature/probe_temp_comp.h"
 #endif
 
-#include "../feature/controllerfan.h"
-
-#include "../feature/kickstart.h"
-
-#include "../feature/autofans.h"
+#if ENABLED(CONTROLLER_FAN_EDITABLE)
+  #include "../feature/controllerfan.h"
+#endif
+#if ENABLED(FAN_KICKSTART_EDITABLE)
+  #include "../feature/kickstart.h"
+#endif
+#if HAS_AUTO_FAN
+  #include "../feature/autofans.h"
+#endif
 
 #if ENABLED(CASE_LIGHT_ENABLE)
   #include "../feature/caselight.h"
@@ -471,24 +475,24 @@ typedef struct SettingsDataStruct {
   #endif
 
   //
+  // Controller fan
+  //
+  #if ENABLED(USE_CONTROLLER_FAN)
+    controllerFan_settings_t controllerFan_settings;    // M710
+  #endif
+
+  //
   // Fan Kickstart settings
   //
-  #ifdef FAN_KICKSTART_TIME
+  #if ENABLED(FAN_KICKSTART_EDITABLE)
     kickstart_settings_t kickstart_settings;              // M711
   #endif
 
   //
   // Auto Fans settings
   //
-  #if ENABLED(AUTO_FAN_EDITABLE)
-    autofans_settings_t autofans_settings;                // M712
-  #endif
-
-  //
-  // Controller fan
-  //
-  #if ENABLED(USE_CONTROLLER_FAN)
-    controllerFan_settings_t controllerFan_settings;    // M710
+  #if HAS_AUTO_FAN
+    autofans_settings_t autofans_settings;              // M712
   #endif
 
   //
@@ -1427,6 +1431,7 @@ void MarlinSettings::postprocess() {
     //
     // Fan Kickstart
     //
+    #if ENABLED(FAN_KICKSTART_EDITABLE)
     {
       _FIELD_TEST(kickstart_settings);
       #if ENABLED(FAN_KICKSTART_EDITABLE)
@@ -1436,10 +1441,12 @@ void MarlinSettings::postprocess() {
       #endif
       EEPROM_WRITE(fks);
     }
+    #endif
 
     //
     // Auto Fans
     //
+    #if HAS_AUTO_FAN
     {
       _FIELD_TEST(autofans_settings);
       #if ENABLED(AUTO_FAN_EDITABLE)
@@ -1449,6 +1456,7 @@ void MarlinSettings::postprocess() {
       #endif
       EEPROM_WRITE(eauto);
     }
+    #endif
 
     //
     // Power-Loss Recovery
@@ -2578,22 +2586,26 @@ void MarlinSettings::postprocess() {
       //
       // Fan Kickstart
       //
+      #if ENABLED(FAN_KICKSTART_EDITABLE)
       {
         kickstart_settings_t fks = { 0 };
         _FIELD_TEST(kickstart_settings);
         EEPROM_READ(fks);
         TERN_(FAN_KICKSTART_EDITABLE, if (!validating) kickstart.settings = fks);
       }
+      #endif
 
       //
       // Auto Fans
       //
+      #if HAS_AUTO_FAN
       {
         autofans_settings_t eauto = { 0 };
         _FIELD_TEST(autofans_settings);
         EEPROM_READ(eauto);
         TERN_(AUTO_FAN_EDITABLE, if (!validating) autofans.settings = eauto);
       }
+      #endif
 
       //
       // Power-Loss Recovery

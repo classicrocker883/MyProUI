@@ -605,12 +605,6 @@
   #if ENABLED(CONTROLLER_FAN_EDITABLE)
     #define CONTROLLER_FAN_MENU             // Enable the Controller Fan submenu
   #endif
-
-  #define AUTO_FAN_EDITABLE                 // Enable M712 configurable settings
-  #if ENABLED(AUTO_FAN_EDITABLE)
-    #define AUTO_FAN_MENU                   // Enable the Extruder Auto Fans submenu
-  #endif
-
 #endif
 
 /**
@@ -623,13 +617,11 @@
 //#define FAN_KICKSTART_POWER 180  // 64-255
 //#define FAN_KICKSTART_LINEAR     // Set kickstart time linearly based on the speed, e.g., for 20% (51) it will be FAN_KICKSTART_TIME * 0.2.
                                    // Useful for quick speed up to low speed. Kickstart power must be set to 255.
-
-#if FAN_KICKSTART_TIME
-  #define FAN_KICKSTART_EDITABLE            // Enable M711 configurable settings
-  #if ENABLED(FAN_KICKSTART_EDITABLE)
-    #define FAN_KICKSTART_MENU              // Enable the Fan Kickstart submenu
-  #endif
+//#define FAN_KICKSTART_EDITABLE              // Enable M711 configurable settings
+#if ENABLED(FAN_KICKSTART_EDITABLE)
+  #define FAN_KICKSTART_MENU                // Enable the Fan Kickstart submenu
 #endif
+
 // Some coolers may require a non-zero "off" state.
 //#define FAN_OFF_PWM  1
 
@@ -695,18 +687,22 @@
 #endif
 
 /**
- * Extruder cooling fans
+ * Cooling fans
  *
- * Extruder auto fans automatically turn on when their extruders'
- * temperatures go above EXTRUDER_AUTO_FAN_TEMPERATURE.
+ * Fans automatically turn on when their extruders'
+ * temperatures go above threshold.
  *
  * Your board's pins file specifies the recommended pins. Override those here
  * or set to -1 to disable completely.
  *
  * Multiple extruders can be assigned to the same pin in which case
  * the fan will turn on when any selected extruder is above the threshold.
+ *
+ * EXAMPLE: When 'EXTRUDER_AUTO_FAN_TEMPERATURE' >= 50
+ *          Fan spins at full speed:
+ *          'EXTRUDER_AUTO_FAN_SPEED' 255 == full speed
  */
-#define E0_AUTO_FAN_PIN -1  // Ender3V2 Configs
+#define E0_AUTO_FAN_PIN -1//PC0  // Ender3V2 Configs
 #define E1_AUTO_FAN_PIN -1
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
@@ -718,11 +714,19 @@
 #define COOLER_AUTO_FAN_PIN -1
 
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
-#define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == full speed
+#define EXTRUDER_AUTO_FAN_SPEED 255
 #define CHAMBER_AUTO_FAN_TEMPERATURE 30
 #define CHAMBER_AUTO_FAN_SPEED 255
 #define COOLER_AUTO_FAN_TEMPERATURE 18
 #define COOLER_AUTO_FAN_SPEED 255
+
+/**
+ * Allow Auto Cooling Fans to be editable
+ */
+//#define AUTO_FAN_EDITABLE                   // Enable M712 configurable settings
+#if ENABLED(AUTO_FAN_EDITABLE)
+  #define AUTO_FAN_MENU                     // Enable the Editable Auto Fans submenu
+#endif
 
 /**
  * Hotend Cooling Fans tachometers

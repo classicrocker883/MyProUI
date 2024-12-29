@@ -89,22 +89,20 @@ void ControllerFan::update() {
     speed = CALC_FAN_SPEED(settings.auto_mode && lastComponentOn && PENDING(ms, lastComponentOn + SEC_TO_MS(settings.duration))
       ? settings.active_speed : settings.idle_speed);
 
-    #if FAN_KICKSTART_TIME
-      static millis_t fan_kick_end = 0;
-      #if ENABLED(FAN_KICKSTART_EDITABLE)
+    static millis_t fan_kick_end = 0;
+    #if ENABLED(FAN_KICKSTART_EDITABLE)
       if (speed > FAN_OFF_PWM && kickstart.settings.enabled) {
         if (!fan_kick_end) {
           fan_kick_end = ms + kickstart.settings.duration_ms;
           speed = map(kickstart.settings.speed, 0, 255, 0, CONTROLLERFAN_SPEED_MAX);
           nextFanCheck = ms + 20UL; // reduce update interval for controller fn check while Kickstart is active.
         }
-        else if (PENDING(ms, fan_kick_end))
-        {
+        else if (PENDING(ms, fan_kick_end)) {
           speed = map(kickstart.settings.speed, 0, 255, 0, CONTROLLERFAN_SPEED_MAX);
           nextFanCheck = ms + 20UL; // reduce update interval for controller fn check while Kickstart is active.
         }
       }
-      #else
+    #else
       if (speed > FAN_OFF_PWM) {
         if (!fan_kick_end) {
           fan_kick_end = ms + FAN_KICKSTART_TIME;
@@ -119,7 +117,6 @@ void ControllerFan::update() {
       #endif
       else
         fan_kick_end = 0;
-    #endif
 
     #if ENABLED(FAN_SOFT_PWM)
       soft_pwm_speed = speed;

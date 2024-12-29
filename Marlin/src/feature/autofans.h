@@ -21,11 +21,12 @@
 #pragma once
 
 #include "../inc/MarlinConfigPre.h"
+#if HAS_AUTO_FAN
 
 typedef struct {
-  uint8_t   extruder_temp;           // Auto fans temperature thresholds
-  uint8_t   chamber_temp;
-  uint8_t   cooler_temp;
+  uint8_t extruder_temp;           // Auto fans temperature thresholds
+  uint8_t chamber_temp;
+  uint8_t cooler_temp;
 } autofans_settings_t;
 
 #ifndef EXTRUDER_AUTO_FAN_TEMPERATURE
@@ -63,4 +64,5 @@ extern Autofans autofans;
 #undef  COOLER_AUTO_FAN_TEMPERATURE
 #define COOLER_AUTO_FAN_TEMPERATURE   (autofans.settings.cooler_temp)
 
+#endif
 #endif

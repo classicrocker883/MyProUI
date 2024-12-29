@@ -22,19 +22,26 @@
 
 #include "../inc/MarlinConfigPre.h"
 
+#if ENABLED(FAN_KICKSTART_EDITABLE)
+
 typedef struct {
   uint16_t  duration_ms;     // Duration in milliseconds for the fan to run at kickstart speed
   uint8_t   speed;           // 0-255 (fullspeed); Fans first start speed
   bool      enabled;
 } kickstart_settings_t;
 
+#ifndef FAN_KICKSTART_TIME
+  #define FAN_KICKSTART_TIME  100
+#endif
+#ifndef FAN_KICKSTART_POWER
+  #define FAN_KICKSTART_POWER 180
+#endif
+
 static constexpr kickstart_settings_t kickstart_defaults = {
   FAN_KICKSTART_TIME,
   FAN_KICKSTART_POWER,
   true
 };
-
-#if ENABLED(FAN_KICKSTART_EDITABLE)
 
 class Kickstart {
   public:
