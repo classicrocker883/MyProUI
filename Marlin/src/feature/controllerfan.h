@@ -52,6 +52,7 @@ static constexpr controllerFan_settings_t controllerFan_defaults = {
 class ControllerFan {
   private:
     static uint8_t speed;
+    static void set_fan_speed(const uint8_t s);
 
   public:
     #if ENABLED(CONTROLLER_FAN_EDITABLE)
