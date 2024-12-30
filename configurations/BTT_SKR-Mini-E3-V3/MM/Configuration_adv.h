@@ -588,6 +588,7 @@
   //#define CONTROLLER_FAN_USE_Z_ONLY       // With this option only the Z axis is considered
   //#define CONTROLLER_FAN_IGNORE_Z         // Ignore Z stepper. Useful when stepper timeout is disabled.
   #define CONTROLLERFAN_SPEED_MIN         0 // (0-255) Minimum speed. (If set below this value the fan is turned off.)
+  #define CONTROLLERFAN_SPEED_MAX       127 // (0-255) Maximum speed. (Use only for a specific hardware build, or with non default PWM Scale, needs testing with other builds)
   #define CONTROLLERFAN_SPEED_ACTIVE    255 // (0-255) Active speed, used when any motor is enabled
   #define CONTROLLERFAN_SPEED_IDLE        0 // (0-255) Idle speed, used when motors are disabled
   #define CONTROLLERFAN_IDLE_TIME        60 // (seconds) Extra time to keep the fan running after disabling motors
@@ -616,6 +617,10 @@
 //#define FAN_KICKSTART_POWER 180  // 64-255
 //#define FAN_KICKSTART_LINEAR     // Set kickstart time linearly based on the speed, e.g., for 20% (51) it will be FAN_KICKSTART_TIME * 0.2.
                                    // Useful for quick speed up to low speed. Kickstart power must be set to 255.
+//#define FAN_KICKSTART_EDITABLE            // Enable M711 configurable settings
+#if ENABLED(FAN_KICKSTART_EDITABLE)
+  #define FAN_KICKSTART_MENU                // Enable the Fan Kickstart submenu
+#endif
 
 // Some coolers may require a non-zero "off" state.
 //#define FAN_OFF_PWM  1
@@ -682,16 +687,20 @@
 #endif
 
 /**
- * Extruder cooling fans
+ * Cooling fans
  *
- * Extruder auto fans automatically turn on when their extruders'
- * temperatures go above EXTRUDER_AUTO_FAN_TEMPERATURE.
+ * Fans automatically turn on when their
+ * temperatures go above threshold.
  *
  * Your board's pins file specifies the recommended pins. Override those here
  * or set to -1 to disable completely.
  *
  * Multiple extruders can be assigned to the same pin in which case
  * the fan will turn on when any selected extruder is above the threshold.
+ *
+ * EXAMPLE: When 'EXTRUDER_AUTO_FAN_TEMPERATURE' >= 50
+ *          Fan spins at full speed:
+ *          EXTRUDER_AUTO_FAN_SPEED 255 == full speed
  */
 #define E0_AUTO_FAN_PIN FAN1_PIN
 #define E1_AUTO_FAN_PIN -1
@@ -705,11 +714,19 @@
 #define COOLER_AUTO_FAN_PIN -1
 
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
-#define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == full speed
+#define EXTRUDER_AUTO_FAN_SPEED 255
 #define CHAMBER_AUTO_FAN_TEMPERATURE 30
 #define CHAMBER_AUTO_FAN_SPEED 255
 #define COOLER_AUTO_FAN_TEMPERATURE 18
 #define COOLER_AUTO_FAN_SPEED 255
+
+/**
+ * Allow Auto Cooling Fans to be editable
+ */
+//#define AUTO_FAN_EDITABLE                 // Enable M712 configurable settings
+#if ENABLED(AUTO_FAN_EDITABLE)
+  #define AUTO_FAN_MENU                     // Enable the Editable Auto Fans submenu
+#endif
 
 /**
  * Hotend Cooling Fans tachometers
