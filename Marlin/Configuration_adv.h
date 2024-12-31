@@ -601,7 +601,7 @@
 
   #define CONTROLLER_FAN_BED_HEATING        // Turn on the fan when heating the bed
 
-  #define CONTROLLER_FAN_EDITABLE           // Enable M710 configurable settings
+  //#define CONTROLLER_FAN_EDITABLE         // Enable M710 configurable settings
   #if ENABLED(CONTROLLER_FAN_EDITABLE)
     #define CONTROLLER_FAN_MENU             // Enable the Controller Fan submenu
   #endif
@@ -617,7 +617,7 @@
 //#define FAN_KICKSTART_POWER 180  // 64-255
 //#define FAN_KICKSTART_LINEAR     // Set kickstart time linearly based on the speed, e.g., for 20% (51) it will be FAN_KICKSTART_TIME * 0.2.
                                    // Useful for quick speed up to low speed. Kickstart power must be set to 255.
-//#define FAN_KICKSTART_EDITABLE              // Enable M711 configurable settings
+//#define FAN_KICKSTART_EDITABLE            // Enable M711 configurable settings
 #if ENABLED(FAN_KICKSTART_EDITABLE)
   #define FAN_KICKSTART_MENU                // Enable the Fan Kickstart submenu
 #endif
@@ -723,7 +723,7 @@
 /**
  * Allow Auto Cooling Fans to be editable
  */
-//#define AUTO_FAN_EDITABLE                   // Enable M712 configurable settings
+//#define AUTO_FAN_EDITABLE                 // Enable M712 configurable settings
 #if ENABLED(AUTO_FAN_EDITABLE)
   #define AUTO_FAN_MENU                     // Enable the Editable Auto Fans submenu
 #endif

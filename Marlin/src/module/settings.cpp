@@ -141,10 +141,10 @@
   #include "../feature/probe_temp_comp.h"
 #endif
 
-#if ENABLED(CONTROLLER_FAN_EDITABLE)
+#if ENABLED(USE_CONTROLLER_FAN)
   #include "../feature/controllerfan.h"
 #endif
-#if ENABLED(FAN_KICKSTART_EDITABLE)
+#if FAN_KICKSTART_TIME
   #include "../feature/kickstart.h"
 #endif
 #if HAS_AUTO_FAN
@@ -484,8 +484,8 @@ typedef struct SettingsDataStruct {
   //
   // Fan Kickstart settings
   //
-  #if ENABLED(FAN_KICKSTART_EDITABLE)
-    kickstart_settings_t kickstart_settings;              // M711
+  #if FAN_KICKSTART_TIME
+    kickstart_settings_t kickstart_settings;            // M711
   #endif
 
   //
@@ -1423,7 +1423,11 @@ void MarlinSettings::postprocess() {
     #if ENABLED(USE_CONTROLLER_FAN)
     {
       _FIELD_TEST(controllerFan_settings);
-      const controllerFan_settings_t &cfs = controllerFan.settings;
+      #if ENABLED(CONTROLLER_FAN_EDITABLE)
+        const controllerFan_settings_t &cfs = controllerFan.settings;
+      #else
+        constexpr controllerFan_settings_t cfs = controllerFan_defaults;
+      #endif
       EEPROM_WRITE(cfs);
     }
     #endif
@@ -1431,7 +1435,7 @@ void MarlinSettings::postprocess() {
     //
     // Fan Kickstart
     //
-    #if ENABLED(FAN_KICKSTART_EDITABLE)
+    #if FAN_KICKSTART_TIME
     {
       _FIELD_TEST(kickstart_settings);
       #if ENABLED(FAN_KICKSTART_EDITABLE)
@@ -2586,7 +2590,7 @@ void MarlinSettings::postprocess() {
       //
       // Fan Kickstart
       //
-      #if ENABLED(FAN_KICKSTART_EDITABLE)
+      #if FAN_KICKSTART_TIME
       {
         kickstart_settings_t fks = { 0 };
         _FIELD_TEST(kickstart_settings);

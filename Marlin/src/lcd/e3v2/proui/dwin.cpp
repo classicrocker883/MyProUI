@@ -327,7 +327,7 @@ MenuClass *MaxAccelMenu = nullptr;
 #if HAS_TRINAMIC_CONFIG
   MenuClass *TrinamicConfigMenu = nullptr;
 #endif
-#if ANY(CONTROLLER_FAN_MENU, EXTRUDER_AUTO_FAN_MENU, FAN_KICKSTART_MENU)
+#if ANY(CONTROLLER_FAN_MENU, AUTO_FAN_MENU, FAN_KICKSTART_MENU)
   MenuClass *AdvancedFanMenu = nullptr;
 #endif
 #if ENABLED(CONTROLLER_FAN_MENU)

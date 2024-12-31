@@ -47,7 +47,7 @@ class Kickstart {
   public:
     static kickstart_settings_t settings;
 
-    static void reset() { TERN_(FAN_KICKSTART_EDITABLE, settings = kickstart_defaults); }
+    static void reset() { settings = kickstart_defaults; }
     static void setup() { reset(); }
 };
 

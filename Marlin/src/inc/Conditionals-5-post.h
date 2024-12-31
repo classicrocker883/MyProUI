@@ -2729,12 +2729,8 @@
 #endif
 
 #if !HAS_AUTO_FAN
-  #ifdef AUTO_FAN_MENU
-    #undef AUTO_FAN_MENU
-  #endif
-  #ifdef AUTO_FAN_EDITABLE
-    #undef AUTO_FAN_EDITABLE
-  #endif
+  #undef AUTO_FAN_MENU
+  #undef AUTO_FAN_EDITABLE
 #endif
 
 // Fans check
@@ -2816,12 +2812,8 @@
     #undef CONTROLLER_FAN_TRIGGER_TEMP
   #endif
 #else
-  #ifdef CONTROLLER_FAN_MENU
-    #undef CONTROLLER_FAN_MENU
-  #endif
-  #ifdef CONTROLLER_FAN_EDITABLE
-    #undef CONTROLLER_FAN_EDITABLE
-  #endif
+  #undef CONTROLLER_FAN_MENU
+  #undef CONTROLLER_FAN_EDITABLE
 #endif
 
 /**

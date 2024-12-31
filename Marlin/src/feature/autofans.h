@@ -21,6 +21,7 @@
 #pragma once
 
 #include "../inc/MarlinConfigPre.h"
+
 #if HAS_AUTO_FAN
 
 typedef struct {
@@ -45,24 +46,24 @@ static constexpr autofans_settings_t autofans_defaults = {
   COOLER_AUTO_FAN_TEMPERATURE
 };
 
-#if ENABLED(AUTO_FAN_EDITABLE)
+  #if ENABLED(AUTO_FAN_EDITABLE)
 
-class Autofans {
-  public:
-    static autofans_settings_t settings;
+  class Autofans {
+    public:
+      static autofans_settings_t settings;
 
-    static void reset() { TERN_(AUTO_FAN_EDITABLE, settings = autofans_defaults); }
-    static void setup() { reset(); }
-};
+      static void reset() { settings = autofans_defaults; }
+      static void setup() { reset(); }
+  };
 
-extern Autofans autofans;
+  extern Autofans autofans;
 
-#undef  EXTRUDER_AUTO_FAN_TEMPERATURE
-#define EXTRUDER_AUTO_FAN_TEMPERATURE (autofans.settings.extruder_temp)
-#undef  CHAMBER_AUTO_FAN_TEMPERATURE
-#define CHAMBER_AUTO_FAN_TEMPERATURE  (autofans.settings.chamber_temp)
-#undef  COOLER_AUTO_FAN_TEMPERATURE
-#define COOLER_AUTO_FAN_TEMPERATURE   (autofans.settings.cooler_temp)
+  #undef  EXTRUDER_AUTO_FAN_TEMPERATURE
+  #define EXTRUDER_AUTO_FAN_TEMPERATURE (autofans.settings.extruder_temp)
+  #undef  CHAMBER_AUTO_FAN_TEMPERATURE
+  #define CHAMBER_AUTO_FAN_TEMPERATURE  (autofans.settings.chamber_temp)
+  #undef  COOLER_AUTO_FAN_TEMPERATURE
+  #define COOLER_AUTO_FAN_TEMPERATURE   (autofans.settings.cooler_temp)
 
-#endif
+  #endif
 #endif
