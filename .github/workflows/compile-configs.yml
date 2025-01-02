@@ -24,14 +24,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -80,8 +80,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -105,14 +105,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -161,8 +161,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -188,14 +188,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -263,8 +263,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -289,14 +289,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -360,8 +360,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -386,14 +386,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -453,8 +453,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -478,14 +478,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -541,8 +541,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -568,14 +568,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -640,8 +640,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -664,14 +664,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -736,8 +736,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -759,14 +759,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -821,8 +821,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -846,14 +846,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -903,8 +903,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -928,14 +928,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -985,8 +985,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1012,14 +1012,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -1083,8 +1083,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1109,14 +1109,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -1176,8 +1176,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1202,14 +1202,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -1268,8 +1268,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1291,14 +1291,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -1342,8 +1342,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1368,14 +1368,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -1442,8 +1442,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -1467,14 +1467,14 @@ jobs:
       with:
         node-version: 20
     - name: Cache pip
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Cache PlatformIO
-      uses: actions/cache@v4.1.2
+      uses: actions/cache@v4.2.0
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
@@ -1530,8 +1530,8 @@ jobs:
       uses: bruceadams/get-release@v1.3.2
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload Release Asset
-      uses: classicrocker883/upload-a-release-asset@v1.1.0
+    - name: Upload A Release Asset
+      uses: classicrocker883/upload-a-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
