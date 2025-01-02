@@ -33,9 +33,9 @@ jobs:
           - "Needs: Work"
 
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v4.2.2
       - name: Remove Labels
-        uses: actions-ecosystem/action-remove-labels@v1
+        uses: actions-ecosystem/action-remove-labels@v1.3.0
         with:
           github_token: ${{ github.token }}
           labels: ${{ matrix.label }}
