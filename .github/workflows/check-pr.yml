@@ -8,6 +8,8 @@ name: PR Bad Target
 on:
   pull_request_target:
     types: [opened]
+    branches:
+    - 2024-*
 
 jobs:
   bad_target:
@@ -17,9 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Close invalid PR
-      if: ${{ github.event.pull_request.base.ref != '2024-December' }}
-      uses: superbrothers/close-pull-request@v3.1.2
+    - uses: superbrothers/close-pull-request@v3.1.2
       with:
         comment: >
           Thanks for your contribution!
