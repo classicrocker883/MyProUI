@@ -22,7 +22,7 @@
 
 #include "../../../inc/MarlinConfig.h"
 
-#if ALL(DWIN_LCD_PROUI, PROUI_TUNING_GRAPH)
+#if ENABLED(DWIN_LCD_PROUI) && ANY(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
 
 #include "../../marlinui.h"
 #include "dwin.h"
@@ -69,4 +69,4 @@ void Plot::update(const_celsius_float_t value) {
   TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
 }
 
-#endif // DWIN_LCD_PROUI && PROUI_TUNING_GRAPH
+#endif // DWIN_LCD_PROUI && PROUI_TUNING_GRAPH || PROUI_ITEM_PLOT

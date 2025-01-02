@@ -25,6 +25,7 @@
 
 #include "dwin_api.h"
 #include "dwin_set.h"
+#include "dwin_font.h"
 
 #include "../../../inc/MarlinConfig.h"
 

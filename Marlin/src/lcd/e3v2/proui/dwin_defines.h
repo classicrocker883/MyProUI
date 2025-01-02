@@ -1,6 +1,6 @@
 /**
  * DWIN general defines and data structs for PRO UI
- * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * Based on the original work of: Miguel A. Risco-Castillo (MRISCOC)
  * Version: 3.13.3
  * Date: 2022/05/18
  *
@@ -25,7 +25,7 @@
 //#define DEBUG_DWIN 1
 //#define TJC_DISPLAY         // Enable for TJC display
 //#define DACAI_DISPLAY       // Enable for DACAI display
-//#define TITLE_CENTERED      // Center Menu Title Text
+#define TITLE_CENTERED        // Center Menu Title Text
 
 #if HAS_MESH
   #define PROUI_MESH_EDIT     // Add a menu to edit mesh inset + points
@@ -35,7 +35,14 @@
   #endif
 #endif
 
-#if defined(__STM32F1__) || defined(STM32F1)//#if MB(CREALITY_V24S1_301, CREALITY_V24S1_301F4)
+#if ENABLED(HYBRID_THRESHOLD)
+  #define HYBRID_THRESHOLD_MENU // Enable Hybrid Threshold menu
+#endif
+#if HAS_STEALTHCHOP
+  #define STEALTHCHOP_MENU      // Enable StealthChop menu (352 bytes)
+#endif
+
+#if defined(__STM32F1__) || defined(STM32F1) || MB(CREALITY_V24S1_301, CREALITY_V24S1_301F4)
   #define DASH_REDRAW 1
 #endif
 
@@ -44,11 +51,11 @@
 #endif
 
 #if (ALT_COLOR_MENU == 2)
-#define Def_Background_Color  RGB( 0, 8, 6) // Dark Green/Blue
-#define Def_TitleBg_Color     RGB( 0, 23, 16) // Orient Blue
+  #define Def_Background_Color  RGB( 0, 8, 6) // Dark Green/Blue
+  #define Def_TitleBg_Color     RGB( 0, 23, 16) // Orient Blue
 #else
-#define Def_Background_Color  Color_Bg_Black //
-#define Def_TitleBg_Color     Color_Voxelab_Red //
+  #define Def_Background_Color  Color_Bg_Black //
+  #define Def_TitleBg_Color     Color_Voxelab_Red //
 #endif
 #define Def_Cursor_Color      Color_Cyan //
 #define Def_TitleTxt_Color    Color_White
@@ -67,15 +74,21 @@
 #define Def_Indicator_Color   Color_Cyan //
 #define Def_Coordinate_Color  Color_Brown //
 #define Def_Bottom_Color      Color_Silver //
-#define Def_Leds_Color        LEDColorWhite()
+
+#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
+  #define Def_Leds_Color      LEDColorWhite()
+#endif
+
 #if CASELIGHT_USES_BRIGHTNESS
   #define Def_CaseLight_Brightness 255
 #endif
 
-#ifdef Z_AFTER_HOMING
-  #define DEF_Z_AFTER_HOMING Z_AFTER_HOMING
-#elif ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
-  #define DEF_Z_AFTER_HOMING 10
+#if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
+  #ifdef Z_AFTER_HOMING
+    #define DEF_Z_AFTER_HOMING Z_AFTER_HOMING
+  #else
+    #define DEF_Z_AFTER_HOMING 10
+  #endif
 #endif
 
 #ifndef PREHEAT_1_TEMP_HOTEND
@@ -97,27 +110,18 @@
 // Only for Professional Firmware UI extensions
 //=============================================================================
 
-// #if HAS_GCODE_PREVIEW && !PROUI_EX
-//   #error "HAS_GCODE_PREVIEW requires PROUI_EX."
-// #endif
-#if HAS_TOOLBAR && !PROUI_EX
-  #error "HAS_TOOLBAR requires PROUI_EX."
-#endif
-#if ENABLED(CV_LASER_MODULE) && !PROUI_EX
-  #error "CV_LASER_MODULE requires PROUI_EX."
-#endif
-
 #if PROUI_EX
 
   #include <stddef.h>
   #include "../../../core/types.h"
 
+  #define HAS_TOOLBAR 1
   #if HAS_TOOLBAR
-    constexpr uint8_t TBMaxOpt = 5;       // Amount of shortcuts on screen
+    constexpr uint8_t TBMaxOpt = 5;      // Amount of shortcuts on screen
     #if HAS_BED_PROBE
-      #define DEF_TBOPT {1, 7, 6, 2, 4}   // Default shorcuts for ALB/UBL
+      #define DEF_TBOPT {1, 7, 6, 2, 4}  // Default shorcuts for ABL/UBL
     #else
-      #define DEF_TBOPT {1, 5, 4, 2, 3};  // Default shortcuts for MM
+      #define DEF_TBOPT {1, 5, 4, 2, 3}; // Default shortcuts for MM
     #endif
   #endif
 
@@ -131,20 +135,6 @@
   #undef Y_MAX_POS
   #undef Z_MAX_POS
   #undef NOZZLE_PARK_POINT
-  #if HAS_MESH
-    #undef GRID_MAX_POINTS_X
-    #undef GRID_MAX_POINTS_Y
-    #undef GRID_MAX_POINTS
-    // #undef MESH_MIN_X
-    // #undef MESH_MAX_X
-    // #undef MESH_MIN_Y
-    // #undef MESH_MAX_Y
-  #endif
-  #if HAS_BED_PROBE
-    #undef Z_PROBE_FEEDRATE_SLOW
-  #endif
-  #undef INVERT_E0_DIR
-
   #define X_BED_SIZE (float)PRO_data.x_bed_size
   #define Y_BED_SIZE (float)PRO_data.y_bed_size
   #define X_MIN_POS  (float)PRO_data.x_min_pos
@@ -154,35 +144,33 @@
   #define Z_MAX_POS  (float)PRO_data.z_max_pos
   #define NOZZLE_PARK_POINT {(float)PRO_data.Park_point.x, (float)PRO_data.Park_point.y, (float)PRO_data.Park_point.z}
   #if HAS_MESH
+    #undef  GRID_MAX_POINTS_X
+    #undef  GRID_MAX_POINTS_Y
+    #undef  GRID_MAX_POINTS
     #define GRID_MAX_POINTS_X PRO_data.grid_max_points
     #define GRID_MAX_POINTS_Y PRO_data.grid_max_points
     #define GRID_MAX_POINTS  (PRO_data.grid_max_points * PRO_data.grid_max_points)
-    // #define MESH_MIN_X (float)PRO_data.mesh_min_x
-    // #define MESH_MAX_X (float)PRO_data.mesh_max_x
-    // #define MESH_MIN_Y (float)PRO_data.mesh_min_y
-    // #define MESH_MAX_Y (float)PRO_data.mesh_max_y
   #endif
   #if HAS_BED_PROBE
+    #undef  Z_PROBE_FEEDRATE_SLOW
     #define Z_PROBE_FEEDRATE_SLOW PRO_data.zprobefeedslow
   #endif
-  #define INVERT_E0_DIR PRO_data.Invert_E0
+  #if HAS_EXTRUDERS
+    #undef  INVERT_E0_DIR
+    #define INVERT_E0_DIR PRO_data.Invert_E0
+  #endif
 
 #else
+
+  #if HAS_MESH
+    #define PROUI_GRID_PNTS 1
+  #endif
 
   #include <stddef.h>
   #include "../../../core/types.h"
   #include "proui.h"
+
 // ProUI extra feature redefines
-  #if HAS_MESH
-    #undef  MESH_MIN_X
-    #undef  MESH_MAX_X
-    #undef  MESH_MIN_Y
-    #undef  MESH_MAX_Y
-    #define MESH_MIN_X HMI_data.mesh_min_x
-    #define MESH_MAX_X HMI_data.mesh_max_x
-    #define MESH_MIN_Y HMI_data.mesh_min_y
-    #define MESH_MAX_Y HMI_data.mesh_max_y
-  #endif
   #if PROUI_GRID_PNTS
     #undef  GRID_MAX_POINTS_X
     #undef  GRID_MAX_POINTS_Y
@@ -192,12 +180,22 @@
     #define GRID_MAX_POINTS  (HMI_data.grid_max_points * HMI_data.grid_max_points)
   #endif
   #if HAS_BED_PROBE
-    #undef Z_PROBE_FEEDRATE_SLOW
-    #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobeFeed
+    #undef  Z_PROBE_FEEDRATE_SLOW
+    #define Z_PROBE_FEEDRATE_SLOW HMI_data.zprobefeedslow
   #endif
   #if HAS_EXTRUDERS
-    #undef INVERT_E0_DIR
+    #undef  INVERT_E0_DIR
     #define INVERT_E0_DIR HMI_data.Invert_E0
   #endif
 #endif // PROUI_EX
 
+#if ENABLED(PROUI_MESH_EDIT)
+  #undef  MESH_MIN_X
+  #undef  MESH_MAX_X
+  #undef  MESH_MIN_Y
+  #undef  MESH_MAX_Y
+  #define MESH_MIN_X meshSet.mesh_min_x
+  #define MESH_MAX_X meshSet.mesh_max_x
+  #define MESH_MIN_Y meshSet.mesh_min_y
+  #define MESH_MAX_Y meshSet.mesh_max_y
+#endif

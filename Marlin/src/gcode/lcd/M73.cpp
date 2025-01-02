@@ -29,14 +29,10 @@
 #include "../../sd/cardreader.h"
 #include "../../libs/numtostr.h"
 
-#if ENABLED(DWIN_LCD_PROUI)
-  #include "../../lcd/e3v2/proui/dwin.h"
-#endif
-
 /**
  * M73: Set percentage complete (for display on LCD)
  *
- * Example:
+ * EXAMPLE:
  *   M73 P25.63 ; Set progress to 25.63%
  *   M73 R456   ; Set remaining time to 456 minutes
  *   M73 C12    ; Set next interaction countdown to 12 minutes

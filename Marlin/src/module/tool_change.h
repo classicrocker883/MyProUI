@@ -101,11 +101,11 @@
 #elif ENABLED(MAGNETIC_PARKING_EXTRUDER)
 
   typedef struct MPESettings {
-      float parking_xpos[2],      // M951 L R
-            grab_distance;        // M951 I
+      float parking_xpos[2];      // M951 L R
  feedRate_t slow_feedrate,        // M951 J
             fast_feedrate;        // M951 H
       float travel_distance,      // M951 D
+            grab_distance,         // M951 I
             compensation_factor;  // M951 C
   } mpe_settings_t;
 

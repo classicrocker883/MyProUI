@@ -26,9 +26,7 @@
 
 #if ENABLED(EXTENSIBLE_UI)
   #include "../../lcd/extui/ui_api.h"
-#endif
-
-#if ENABLED(DWIN_LCD_PROUI)
+#elif ENABLED(DWIN_LCD_PROUI)
   #include "../../lcd/e3v2/proui/dwin.h"
 #endif
 

@@ -22,9 +22,6 @@
 #pragma once
 
  /**
-  *  ╦╔═╗╔═╗┬ ┬┬─┐┌─┐┬─┐┌─┐╔═╗┌─┐┬─┐┬ ┬┌┬┐ ┌─┐┌─┐┌┬┐
-  *  ║║ ╦╠═╣│ │├┬┘│ │├┬┘├─┤╠╣ │ │├┬┘│ ││││ │  │ ││││
-  * ╚╝╚═╝╩ ╩└─┘┴└─└─┘┴└─┴ ┴╚  └─┘┴└─└─┘┴ ┴o└─┘└─┘┴ ┴
   *   Pin assignments for 32-bit JGAurora A5S & A1
   *
   * https://jgaurorawiki.com/_media/jgaurora_a5s_a1_pinout.png
@@ -112,14 +109,13 @@
 // TFT with FSMC interface
 //
 #if HAS_FSMC_TFT
-  #define LCD_BACKLIGHT_PIN                 PF11
+  #define LCD_USE_DMA_FSMC
   #define FSMC_CS_PIN                       PD7
   #define FSMC_RS_PIN                       PG0
-
-  #define LCD_USE_DMA_FSMC                        // Use DMA transfers to send data to the TFT
-
   #define TFT_CS_PIN                 FSMC_CS_PIN
   #define TFT_RS_PIN                 FSMC_RS_PIN
+
+  #define LCD_BACKLIGHT_PIN                 PF11
 #endif
 
 //

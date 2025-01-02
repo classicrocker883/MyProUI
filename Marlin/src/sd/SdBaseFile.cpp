@@ -253,7 +253,7 @@ bool SdBaseFile::exists(const char *name) {
  *
  * \return For success fgets() returns the length of the string in \a str.
  * If no data is read, fgets() returns zero for EOF or -1 if an error occurred.
- **/
+ */
 int16_t SdBaseFile::fgets(char *str, int16_t num, char *delim) {
   char ch;
   int16_t n = 0;
@@ -643,9 +643,9 @@ bool SdBaseFile::open(SdBaseFile * const dirFile, const uint8_t dname[11]
             emptyIndex = 0,
             reqEntriesNum = useLFN ? getLFNEntriesNum((char*)dlname) + 1 : 1,
             lfnNameLength = useLFN ? strlen((char*)dlname) : 0,
-            lfnName[LONG_FILENAME_LENGTH],
             lfnSequenceNumber = 0,
             lfnChecksum = 0;
+    uint8_t lfnName[LONG_FILENAME_LENGTH];
   #endif
 
   // Rewind this dir

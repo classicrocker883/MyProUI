@@ -90,7 +90,7 @@ typedef struct LEDColor {
   bool operator!=(const LEDColor &right) { return !operator==(right); }
 
   bool is_off() const {
-    return 3 > r + g + b + TERN0(HAS_WHITE_LED, w);
+    return 3 > r + g + b PLUS_TERN0(HAS_WHITE_LED, w);
   }
 } LEDColor;
 
@@ -164,11 +164,11 @@ public:
   #if ENABLED(LED_CONTROL_MENU)
     static void toggle();  // swap "off" with color
   #endif
-  #if ANY(LED_CONTROL_MENU, CASE_LIGHT_USE_RGB_LED) || LED_POWEROFF_TIMEOUT > 0
+  #if ANY(LED_CONTROL_MENU, CASE_LIGHT_USE_RGB_LED, HAS_LED_POWEROFF_TIMEOUT)
     static void update() { set_color(color); }
   #endif
 
-  #if LED_POWEROFF_TIMEOUT > 0
+  #if HAS_LED_POWEROFF_TIMEOUT
     private:
       static millis_t led_off_time;
     public:

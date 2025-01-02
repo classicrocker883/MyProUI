@@ -31,7 +31,9 @@
 // Defines
 // ------------------------
 
-#define FORCE_INLINE __attribute__((always_inline)) inline
+#ifndef FORCE_INLINE
+  #define FORCE_INLINE __attribute__((always_inline)) inline
+#endif
 
 typedef uint64_t hal_timer_t;
 #define HAL_TIMER_TYPE_MAX 0xFFFFFFFFFFFFFFFF

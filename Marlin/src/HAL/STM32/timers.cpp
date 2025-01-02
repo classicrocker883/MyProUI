@@ -407,7 +407,7 @@ static_assert(verify_no_timer_conflicts(), "One or more timer conflict detected.
 
   void laser_timer_soft_pwm_close() {
     // SERIAL_ECHO_MSG("laser_timer_soft_pwm_close()");
-    if(timer_laser == nullptr) return;
+    if (timer_laser == nullptr) return;
     timer_laser->pause();
     WRITE(LASER_SOFT_PWM_PIN, 0);
   }
@@ -415,7 +415,7 @@ static_assert(verify_no_timer_conflicts(), "One or more timer conflict detected.
   // 初始化 frequency: 频率
   void laser_timer_soft_pwm_init() {
     const uint32_t frequency = LASER_TIMER_FREQUENCY;
-    if(timer_laser == nullptr) {
+    if (timer_laser == nullptr) {
       // 创建硬件定时器。
       timer_laser = new HardwareTimer(LASER_TIMER_DEV);
 
@@ -430,7 +430,7 @@ static_assert(verify_no_timer_conflicts(), "One or more timer conflict detected.
       timer_laser->setPreloadEnable(false);
 
       // 设置中断处理函数
-      if(!timer_laser->hasInterrupt()) timer_laser->attachInterrupt(laser_timer_handler);
+      if (!timer_laser->hasInterrupt()) timer_laser->attachInterrupt(laser_timer_handler);
 
       // 停止定时器
       timer_laser->pause();

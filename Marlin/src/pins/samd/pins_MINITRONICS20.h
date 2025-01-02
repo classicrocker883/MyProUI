@@ -22,7 +22,9 @@
 #pragma once
 
 /**
- * ReprapWorld's Minitronics v2.0
+ * ReprapWorld Minitronics v2.0
+ * https://reprap.org/wiki/Minitronics_20
+ * 48MHz Atmel SAMD21J18 ARM Cortex-M0+
  */
 
 #if NOT_TARGET(__SAMD21__)
@@ -123,6 +125,11 @@
 
   #define FIL_RUNOUT2_PIN                     14
 
+#endif
+
+// Verify that drivers match the hardware
+#if (HAS_X_AXIS && !AXIS_DRIVER_TYPE_X(DRV8825)) || (HAS_Y_AXIS && !AXIS_DRIVER_TYPE_Y(DRV8825)) || (HAS_Z_AXIS && !AXIS_DRIVER_TYPE_Z(DRV8825)) || (HAS_EXTRUDER && !AXIS_DRIVER_TYPE_E0(DRV8825))
+  #error "Minitronics v2.0 has hard-wired DRV8825 drivers. Comment out this line to continue."
 #endif
 
 //
@@ -308,6 +315,7 @@
       //#define BTN_ENC                       32
       //#define LCD_SDSS                    SDSS
       //#define KILL_PIN             EXP1_01_PIN
+      //#undef LCD_PINS_EN                        // not used, causes false pin conflict report
 
     #elif ENABLED(LCD_I2C_VIKI)
 
@@ -497,27 +505,6 @@
 #define SD_DETECT_PIN                         22
 
 #if HAS_TMC_UART
-
-  /**
-   * TMC2209 UART Address. Override in Configuration files.
-   * To test TMC2209 Steppers enable TMC_DEBUG and test M122 with voltage on the steppers.
-   */
-  #ifndef X_SLAVE_ADDRESS
-    #define X_SLAVE_ADDRESS                 0b00
-  #endif
-  #ifndef Y_SLAVE_ADDRESS
-    #define Y_SLAVE_ADDRESS                 0b01
-  #endif
-  #ifndef Z_SLAVE_ADDRESS
-    #define Z_SLAVE_ADDRESS                 0b10
-  #endif
-  #ifndef E0_SLAVE_ADDRESS
-    #define E0_SLAVE_ADDRESS                0b11
-  #endif
-  #ifndef E1_SLAVE_ADDRESS
-    #define E1_SLAVE_ADDRESS                0b00
-  #endif
-
   /**
    * TMC2208/TMC2209 stepper drivers
    * Seems to work fine with Software Serial. If you want to test, use SAMD51 Serial1 and Serial2. Be careful with the Sercom configurations.
@@ -530,7 +517,32 @@
   //#define E0_HARDWARE_SERIAL Serial1
   //#define E1_HARDWARE_SERIAL Serial2
 
-  #define TMC_BAUD_RATE 250000
+  // Default TMC slave addresses
+  #ifndef X_SLAVE_ADDRESS
+    #define X_SLAVE_ADDRESS                  0
+  #endif
+  #ifndef Y_SLAVE_ADDRESS
+    #define Y_SLAVE_ADDRESS                  1
+  #endif
+  #ifndef Z_SLAVE_ADDRESS
+    #define Z_SLAVE_ADDRESS                  2
+  #endif
+  #ifndef E0_SLAVE_ADDRESS
+    #define E0_SLAVE_ADDRESS                 3
+  #endif
+  #ifndef E1_SLAVE_ADDRESS
+    #define E1_SLAVE_ADDRESS                 0
+  #endif
+  static_assert(X_SLAVE_ADDRESS == 0, "X_SLAVE_ADDRESS must be 0 for BOARD_MINITRONICS20.");
+  static_assert(Y_SLAVE_ADDRESS == 1, "Y_SLAVE_ADDRESS must be 1 for BOARD_MINITRONICS20.");
+  static_assert(Z_SLAVE_ADDRESS == 2, "Z_SLAVE_ADDRESS must be 2 for BOARD_MINITRONICS20.");
+  static_assert(E0_SLAVE_ADDRESS == 3, "E0_SLAVE_ADDRESS must be 3 for BOARD_MINITRONICS20.");
+  static_assert(E1_SLAVE_ADDRESS == 0, "E1_SLAVE_ADDRESS must be 0 for BOARD_MINITRONICS20.");
+
+  // Reduce baud rate to improve software serial reliability
+  #ifndef TMC_BAUD_RATE
+    #define TMC_BAUD_RATE                  19200 // 250000
+  #endif
 
   //
   // Software serial

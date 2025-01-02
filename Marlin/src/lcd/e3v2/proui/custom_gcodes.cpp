@@ -29,6 +29,9 @@
 
 #include "dwin.h"
 
+#define DEBUG_OUT ENABLED(DEBUG_DWIN)
+#include "../../../core/debug_out.h"
+
 //=============================================================================
 // Extended G-CODES
 //=============================================================================
@@ -47,7 +50,10 @@ void CError() {
       HMI_value.Color.g = parser.seenval('G') ? parser.value_byte() : 0;
       HMI_value.Color.b = parser.seenval('B') ? parser.value_byte() : 0;
       DWIN_ApplyColor(E);
-    } else DWIN_RedrawScreen();
+    }
+    else { // Set default colors
+      DWIN_ApplyColor(1);
+    }
   }
 #endif
 
@@ -65,8 +71,8 @@ void CError() {
 // Cancel a Wait for User without an Emergecy Parser
 void C108() {
   #if DEBUG_DWIN
-    SERIAL_ECHOLNPGM(F("wait_for_user was "), wait_for_user);
-    SERIAL_ECHOLNPGM(F("checkkey was "), checkkey);
+    DEBUG_ECHOLNPGM(F("wait_for_user was "), wait_for_user);
+    DEBUG_ECHOLNPGM(F("checkkey was "), checkkey);
   #endif
   TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout();)
   if (!ui.backlight) ui.refresh_brightness();
@@ -96,7 +102,7 @@ void C250() {
   #include "../../../module/planner.h"
   void C997() {
     DWIN_RebootScreen();
-    SERIAL_ECHOLNPGM("Simulating a printer freeze");
+    DEBUG_ECHOLNPGM("Simulating a printer freeze");
     while (1) {};
   }
 #endif

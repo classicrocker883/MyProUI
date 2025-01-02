@@ -35,8 +35,8 @@ public:
                measured_mm,         // Measured filament diameter
                e_count, delay_dist;
   static uint8_t meas_delay_cm;     // Distance delay setting
-  static int8_t ratios[MMD_CM],     // Ring buffer to delay measurement. (Extruder factor minus 100)
-                index_r, index_w;   // Indexes into ring buffer
+  static int8_t ratios[MMD_CM];     // Ring buffer to delay measurement. (Extruder factor minus 100)
+  static int8_t index_r, index_w;   // Indexes into ring buffer
 
   FilamentWidthSensor() { init(); }
   static void init();

@@ -76,8 +76,6 @@ void GcodeSuite::M1000() {
         ExtUI::onPowerLossResume();
       #elif HAS_PLR_UI_FLAG
         recovery.ui_flag_resume = true;
-      #elif ENABLED(DWIN_CREALITY_LCD_JYERSUI) // Temporary fix until it can be better implemented
-        jyersDWIN.popupHandler(Popup_Resume);
       #else
         SERIAL_ECHO_MSG("Resume requires LCD.");
       #endif

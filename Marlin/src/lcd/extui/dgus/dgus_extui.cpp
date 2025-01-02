@@ -48,9 +48,9 @@ namespace ExtUI {
     while (!screen.loop());  // Wait while anything is left to be sent
   }
 
-  void onMediaInserted() { TERN_(HAS_MEDIA, screen.sdCardInserted()); }
-  void onMediaError()    { TERN_(HAS_MEDIA, screen.sdCardError()); }
-  void onMediaRemoved()  { TERN_(HAS_MEDIA, screen.sdCardRemoved()); }
+  void onMediaMounted() { TERN_(HAS_MEDIA, screen.sdCardInserted()); }
+  void onMediaError()   { TERN_(HAS_MEDIA, screen.sdCardError()); }
+  void onMediaRemoved() { TERN_(HAS_MEDIA, screen.sdCardRemoved()); }
 
   void onHeatingError(const heater_id_t header_id) {}
   void onMinTempError(const heater_id_t header_id) {}
@@ -108,7 +108,7 @@ namespace ExtUI {
     // permanent data to be stored, it can write up to eeprom_data_size bytes
     // into buff.
 
-    // Example:
+    /// EXAMPLE:
     //  static_assert(sizeof(myDataStruct) <= eeprom_data_size);
     //  memcpy(buff, &myDataStruct, sizeof(myDataStruct));
   }
@@ -118,7 +118,7 @@ namespace ExtUI {
     // needs to retrieve data, it should copy up to eeprom_data_size bytes
     // from buff
 
-    // Example:
+    /// EXAMPLE:
     //  static_assert(sizeof(myDataStruct) <= eeprom_data_size);
     //  memcpy(&myDataStruct, buff, sizeof(myDataStruct));
   }

@@ -1,6 +1,6 @@
 /**
  * DWIN Enhanced implementation for PRO UI
- * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * Based on the original work of: Miguel A. Risco-Castillo (MRISCOC)
  * Version: 3.21.1
  * Date: 2023/03/21
  *
@@ -43,9 +43,11 @@
 #define ICON_FilUnload        ICON_ReadEEPROM
 #define ICON_Flow             ICON_StepE
 #define ICON_Folder           ICON_More
-#define ICON_FWRetract        ICON_StepE
-#define ICON_FWZRaise         ICON_MoveZ
-#define ICON_FWSpeed          ICON_Setspeed
+#define ICON_FWRetLength      ICON_StepE
+#define ICON_FWRetSpeed       ICON_Setspeed
+#define ICON_FWRetZRaise      ICON_MoveZ
+#define ICON_FWRecSpeed       ICON_Setspeed
+#define ICON_FWRecExtra       ICON_StepE
 #define ICON_HomeX            ICON_MoveX
 #define ICON_HomeY            ICON_MoveY
 #define ICON_HomeZ            ICON_MoveZ
@@ -124,6 +126,7 @@
 #define ICON_SetPreheat10     ICON_SetCustomPreheat
 #define ICON_ShapingX         ICON_MoveX
 #define ICON_ShapingY         ICON_MoveY
+#define ICON_ShapingZ         ICON_MoveZ
 #define ICON_Sound            ICON_Cool
 #define ICON_TBSetup          ICON_Contact
 #define ICON_TMCSet           ICON_PrintSize
@@ -190,7 +193,7 @@
 #define DWIN_FONT_HEAD  font10x20
 #define DWIN_FONT_ALERT font10x20
 #define STATUS_Y 354
-#define LCD_WIDTH (DWIN_WIDTH / 8)  // only if the default fontid is font8x16
+#define LCD_WIDTH (DWIN_WIDTH / 8) // Only if the default fontid is font8x16
 
 // Minimum unit (0.1) : multiple (10)
 #define UNITFDIGITS 1
@@ -208,7 +211,6 @@
  * @param VALX Menu item value X position
  * @param MENU_CHR_W/MENU_CHR_H Menu font 8x16
  * @param STAT_CHR_W Menu Stats character width
- *
  */
 constexpr uint8_t  TITLE_HEIGHT = 30,
                    MLINE = 53,
@@ -545,16 +547,6 @@ namespace DWINUI {
   //  frame: Box coordinates and size
   inline void Draw_Box(uint8_t mode, uint16_t color, frame_rect_t frame) {
     DWIN_Draw_Box(mode, color, frame.x, frame.y, frame.w, frame.h);
-  }
-
-  // Draw a circle
-  //  Color: circle color
-  //  x: abscissa of the center of the circle
-  //  y: ordinate of the center of the circle
-  //  r: circle radius
-  void Draw_Circle(uint16_t color, uint16_t x, uint16_t y, uint8_t r);
-  inline void Draw_Circle(uint16_t color, uint8_t r) {
-    Draw_Circle(color, cursor.x, cursor.y, r);
   }
 
   // Draw a checkbox

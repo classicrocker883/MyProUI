@@ -46,9 +46,8 @@
   #define THUMBHEIGHT 200
 #endif
 
-// When `getLine`, `getValue`, `getFileHeader` are enabled - uncomment this
+// `getLine`, `getValue`, `getFileHeader`
 // ??? what they do... Maybe Laser related?
-//IF_DISABLED(PROUI_EX, fileprop_t fileprop;)
 fileprop_t fileprop;
 
 void fileprop_t::setnames(const char * const fn) {
@@ -68,7 +67,7 @@ void fileprop_t::clears() {
   height = width = length = 0;
 }
 
-void getValue(const char * const buf, PGM_P const key, float &value) {
+void getValue(PGM_P const buf, PGM_P const key, float &value) {
   if (value != 0.0f) return;
 
   const char *posptr = strstr_P(buf, key);

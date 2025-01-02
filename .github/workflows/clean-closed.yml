@@ -23,7 +23,8 @@ jobs:
           - "S: Please Merge"
           - "S: Please Test"
           - "help wanted"
-          - "Bug: Potential ?"
+          - "bug"
+          - "work-in-progress"
           - "Needs: Discussion"
           - "Needs: Documentation"
           - "Needs: More Data"
@@ -32,9 +33,9 @@ jobs:
           - "Needs: Work"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
       - name: Remove Labels
-        uses: actions-ecosystem/action-remove-labels@v1
+        uses: actions-ecosystem/action-remove-labels@v1.3.0
         with:
           github_token: ${{ github.token }}
           labels: ${{ matrix.label }}

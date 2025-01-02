@@ -36,13 +36,13 @@
 #define _FORCE_INLINE_ __attribute__((__always_inline__)) __inline__
 #define  FORCE_INLINE  __attribute__((always_inline)) inline
 #define NO_INLINE      __attribute__((noinline))
-#define _UNUSED      __attribute__((unused))
-#define __O0         __attribute__((optimize("O0")))  // No optimization and less debug info
-#define __Og         __attribute__((optimize("Og")))  // Optimize the debugging experience
-#define __Os         __attribute__((optimize("Os")))  // Optimize for size
-#define __O1         __attribute__((optimize("O1")))  // Try to reduce size and cycles; nothing that takes a lot of time to compile
-#define __O2         __attribute__((optimize("O2")))  // Optimize even more
-#define __O3         __attribute__((optimize("O3")))  // Optimize yet more
+#define _UNUSED        __attribute__((unused))
+#define __O0           __attribute__((optimize("O0"))) // No optimization and less debug info
+#define __Og           __attribute__((optimize("Og"))) // Optimize the debugging experience
+#define __Os           __attribute__((optimize("Os"))) // Optimize for size
+#define __O1           __attribute__((optimize("O1"))) // Try to reduce size and cycles; nothing that takes a lot of time to compile
+#define __O2           __attribute__((optimize("O2"))) // Optimize even more
+#define __O3           __attribute__((optimize("O3"))) // Optimize yet more
 
 #define IS_CONSTEXPR(...) __builtin_constant_p(__VA_ARGS__) // Only valid solution with C++14. Should use std::is_constant_evaluated() in C++20 instead
 
@@ -55,27 +55,17 @@
   #define CYCLES_PER_MICROSECOND (F_CPU / 1000000UL) // 16 or 20 on AVR
 #endif
 
-// Nanoseconds per cycle
-#define NANOSECONDS_PER_CYCLE (1000000000.0 / F_CPU)
-
-// Macros to make a string from a macro
-#define STRINGIFY_(M) #M
-#define STRINGIFY(M) STRINGIFY_(M)
-
-#define A(CODE) " " CODE "\n\t"
-#define L(CODE) CODE ":\n\t"
-
 // Macros for bit masks
 #undef _BV
-#define _BV(n) (1<<(n))
-#define TEST(n,b) (!!((n)&_BV(b)))
-#define SET_BIT_TO(N,B,TF) do{ if (TF) SBI(N,B); else CBI(N,B); }while(0)
+#define _BV(b) (1 << (b))
 #ifndef SBI
   #define SBI(A,B) (A |= _BV(B))
 #endif
 #ifndef CBI
   #define CBI(A,B) (A &= ~_BV(B))
 #endif
+#define TEST(n,b) (!!((n)&_BV(b)))
+#define SET_BIT_TO(N,B,TF) do{ if (TF) SBI(N,B); else CBI(N,B); }while(0)
 #define TBI(N,B) (N ^= _BV(B))
 #define _BV32(b) (1UL << (b))
 #define TEST32(n,b) !!((n)&_BV32(b))
@@ -89,7 +79,8 @@
 #define HYPOT2(x,y) (sq(x)+sq(y))
 #define NORMSQ(x,y,z) (sq(x)+sq(y)+sq(z))
 
-#define CIRCLE_AREA(R) (float(M_PI) * sq(float(R)))
+#define FLOAT_SQ(I) sq(float(I))
+#define CIRCLE_AREA(R) (float(M_PI) * FLOAT_SQ(R))
 #define CIRCLE_CIRC(R) (2 * float(M_PI) * float(R))
 
 #define SIGN(a) ({__typeof__(a) _a = (a); (_a>0)-(_a<0);})
@@ -141,10 +132,6 @@
 #define SECOND(a,b,...)   b
 #define THIRD( a,b,c,...) c
 
-// Concatenate symbol names, without or with pre-expansion
-#define _CAT(a,V...) a##V
-#define CAT( a,V...) _CAT(a,V)
-
 // Defer expansion
 #define EMPTY()
 #define DEFER( M) M EMPTY()
@@ -153,7 +140,6 @@
 #define DEFER4(M) M EMPTY EMPTY EMPTY EMPTY()()()()
 
 // Force define expansion
-#define EVAL           EVAL16
 #define EVAL1(V...)    V
 #define EVAL2(V...)    EVAL1(EVAL1(V))
 #define EVAL4(V...)    EVAL2(EVAL2(V))
@@ -167,6 +153,11 @@
 #define EVAL1024(V...) EVAL512(EVAL512(V))
 #define EVAL2048(V...) EVAL1024(EVAL1024(V))
 #define EVAL4096(V...) EVAL2048(EVAL2048(V))
+#define EVAL(V...)     EVAL16(V)
+
+// Concatenate symbol names, without or with pre-expansion
+#define _CAT(a,V...) a##V
+#define CAT( a,V...) _CAT(a,V)
 
 #define IS_PROBE(V...) SECOND(V, 0)     // Get the second item passed, or 0
 #define PROBE() ~, 1                    // Second item will be 1 if this is passed
@@ -174,22 +165,22 @@
 #define NOT(x) IS_PROBE(_CAT(_NOT_, x)) //   NOT('0') gets '1'. Anything else gets '0'.
 #define _BOOL(x) NOT(NOT(x))            // _BOOL('0') gets '0'. Anything else gets '1'.
 
+#define _END_OF_ARGUMENTS_() 0
+#define HAS_ARGS(V...) _BOOL(FIRST(_END_OF_ARGUMENTS_ V)())
+
 #define _IF_ELSE(TF) _CAT(_IF_, TF)
 #define IF_ELSE(TF) _IF_ELSE(_BOOL(TF))
 
-#define _IF_1(V...) V _IF_1_ELSE
-#define _IF_0(...)    _IF_0_ELSE
-
 #define _IF_1_ELSE(...)
 #define _IF_0_ELSE(V...) V
+
+#define _IF_1(V...) V _IF_1_ELSE
+#define _IF_0(...)    _IF_0_ELSE
 
 // Simple Inline IF Macros, friendly to use in other macro definitions
 #define IF(O, A, B) ((O) ? (A) : (B))
 #define IF_0(O, A) IF(O, A, 0)
 #define IF_1(O, A) IF(O, A, 1)
-
-#define HAS_ARGS(V...) _BOOL(FIRST(_END_OF_ARGUMENTS_ V)())
-#define _END_OF_ARGUMENTS_() 0
 
 // Use NUM_ARGS(__VA_ARGS__) to get the number of variadic arguments
 #define _NUM_ARGS(_,n,m,l,k,j,i,h,g,f,e,d,c,b,a,Z,Y,X,W,V,U,T,S,R,Q,P,O,N,M,L,K,J,I,H,G,F,E,D,C,B,A,OUT,...) OUT
@@ -241,8 +232,8 @@
 #define _DO_39(W,C,A,V...) (_##W##_1(A) C _DO_38(W,C,V))
 #define _DO_40(W,C,A,V...) (_##W##_1(A) C _DO_39(W,C,V))
 #define __DO_N(W,C,N,V...) _DO_##N(W,C,V)
-#define _DO_N( W,C,N,V...) __DO_N(W,C,N,V)
-#define DO(W,C,V...)       (_DO_N(W,C,NUM_ARGS(V),V))
+#define _DO_N( W,C,N,V...)  __DO_N(W,C,N,V)
+#define DO(W,C,V...)        (_DO_N(W,C,NUM_ARGS(V),V))
 
 // Recognize "true" values: blank, 1, 0x1, true
 #define _ISENA_     ~,1
@@ -257,8 +248,8 @@
 #define ENABLED(V...)       DO(ENA,&&,V)
 #define DISABLED(V...)      DO(DIS,&&,V)
 #define ANY(V...)          !DISABLED(V)
-#define ALL                 ENABLED
-#define NONE                DISABLED
+#define ALL(V...)           ENABLED(V)
+#define NONE(V...)          DISABLED(V)
 #define COUNT_ENABLED(V...) DO(ENA,+,V)
 #define MANY(V...)          (COUNT_ENABLED(V) > 1)
 
@@ -310,14 +301,6 @@
 #define HEXCHR(a)           (NUMERIC(a) ? (a) - '0' : WITHIN(a, 'a', 'f') ? ((a) - 'a' + 10)  : WITHIN(a, 'A', 'F') ? ((a) - 'A' + 10) : -1)
 #define NUMERIC_SIGNED(a)   (NUMERIC(a) || (a) == '-' || (a) == '+')
 #define DECIMAL_SIGNED(a)   (DECIMAL(a) || (a) == '-' || (a) == '+')
-
-// Array shorthand
-#define COUNT(a)            (sizeof(a)/sizeof(*a))
-#define ZERO(a)             memset((void*)a,0,sizeof(a))
-#define COPY(a,b) do{ \
-    static_assert(sizeof(a[0]) == sizeof(b[0]), "COPY: '" STRINGIFY(a) "' and '" STRINGIFY(b) "' types (sizes) don't match!"); \
-    memcpy(&a[0],&b[0],_MIN(sizeof(a),sizeof(b))); \
-  }while(0)
 
 // Expansion of some code
 #define CODE_16(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,...) A; B; C; D; E; F; G; H; I; J; K; L; M; N; O; P
@@ -666,6 +649,7 @@
 #define SUB8( N) SUB4(SUB4(N))
 #define SUB9( N) SUB4(SUB5(N))
 #define SUB10(N) SUB5(SUB5(N))
+#define DIFF(A,B) _CAT(SUB,A)(B)
 
 //
 // REPEAT core macros. Recurse N times with ascending I.
@@ -764,3 +748,18 @@
 #define _UI_E3S1PRO     107
 #define _DGUS_UI_IS(N) || (CAT(_UI_, DGUS_LCD_UI) == CAT(_UI_, N))
 #define DGUS_UI_IS(V...) (0 MAP(_DGUS_UI_IS, V))
+
+// Macros to make a string from a macro
+#define STRINGIFY_(M) #M
+#define STRINGIFY( M) STRINGIFY_(M)
+
+#define A(CODE) " " CODE "\n\t"
+#define L(CODE) CODE ":\n\t"
+
+// Array shorthand
+#define COUNT(a)            (sizeof(a)/sizeof(*a))
+#define ZERO(a)             memset((void*)a,0,sizeof(a))
+#define COPY(a,b) do{ \
+    static_assert(sizeof(a[0]) == sizeof(b[0]), "COPY: '" STRINGIFY(a) "' and '" STRINGIFY(b) "' types (sizes) don't match!"); \
+    memcpy(&a[0],&b[0],_MIN(sizeof(a),sizeof(b))); \
+  }while(0)

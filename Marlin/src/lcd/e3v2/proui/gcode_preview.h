@@ -41,9 +41,11 @@ private:
 extern Preview preview;
 
 typedef struct {
+#if ENABLED(CV_LASER_MODULE)
   bool isConfig;
   bool isLaser;
-  char name[13] = "";   // 8.3 + null
+#endif
+  char name[13] = ""; // 8.3 + null
   uint32_t thumbstart;
   int thumbsize, thumbheight, thumbwidth;
   float time,
@@ -59,6 +61,8 @@ typedef struct {
 extern fileprop_t fileprop;
 
 // These can be enabled, but function use is unknown
-//void getLine(char *buf, const uint8_t bufsize);
-//bool //void getValue(const char *buf, const char * const key, float &value);
-//void getFileHeader();
+#if ENABLED(CV_LASER_MODULE)
+  void getLine(char *buf, const uint8_t bufsize);
+  void getValue(const char *buf, const char * const key, float &value);
+  void getFileHeader();
+#endif

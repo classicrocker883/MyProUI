@@ -27,6 +27,9 @@
 #include "../gcode.h"
 #include "../../feature/bedlevel/bedlevel.h"
 #include "../../module/probe.h"
+#if PROUI_EX
+  #include "../../lcd/e3v2/proui/dwin.h"
+#endif
 
 /**
  * M851: Set the nozzle-to-probe offsets in current units
@@ -80,20 +83,16 @@ void GcodeSuite::M851() {
   }
 
   // Save the new offsets
-  #if PROUI_EX
-    if (ok) {
-      probe.offset = offs;
-      ProEx.ApplyPhySet();
-    }
-  #else
-    if (ok) probe.offset = offs;
-  #endif
+  if (ok) {
+    probe.offset = offs;
+    TERN_(PROUI_EX, ProEx.ApplyPhySet();)
+  }
 }
 
 void GcodeSuite::M851_report(const bool forReplay/*=true*/) {
   TERN_(MARLIN_SMALL_BUILD, return);
 
-  report_heading_etc(forReplay, F(STR_Z_PROBE_OFFSET));
+  report_heading_etc(forReplay, F(STR_PROBE_OFFSET));
   SERIAL_ECHOPGM_P(
     #if HAS_PROBE_XY_OFFSET
       PSTR("  M851 X"), LINEAR_UNIT(probe.offset_xy.x),
