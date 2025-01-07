@@ -8,21 +8,18 @@ name: PR Bad Target
 on:
   pull_request_target:
     types: [opened]
-    branches:
-    - 2024-*
-    - HC32-*
 
 jobs:
   bad_target:
     name: PR Bad Target
-    if: github.repository == 'classicrocker883/MRiscoCProUI'
+    if: github.repository == 'classicrocker883/MRiscoCProUI' && github.event.pull_request.base.ref != '2025-January'
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: superbrothers/close-pull-request@v3.1.2
       with:
-        comment: >
+        comment: |
           Thanks for your contribution!  
 
           Unfortunately, we can only accept **PR**s targeting the **default** branch.  
