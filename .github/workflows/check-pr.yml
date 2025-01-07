@@ -8,28 +8,34 @@ name: PR Bad Target
 on:
   pull_request_target:
     types: [opened]
-    branches:
-    - 2024-*
-    - HC32-*
 
 jobs:
   bad_target:
     name: PR Bad Target
-    if: github.repository == 'classicrocker883/MRiscoCProUI'
+    if: github.repository == 'classicrocker883/MRiscoCProUI' && github.event.pull_request.base.ref != '2025-January'
 
     runs-on: ubuntu-latest
 
     steps:
+    - name: Add "invalid" label
+      uses: actions-ecosystem/action-add-labels@v1.1.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        labels: invalid
+
     - uses: superbrothers/close-pull-request@v3.1.2
       with:
-        comment: >
+        comment: |
           Thanks for your contribution!  
 
           Unfortunately, we can only accept **PR**s targeting the **default** branch.  
+
           Anything Marlin specific, or `HC32-*` branches should be submitted [here](https://github.com/MarlinFirmware/Marlin/issues/new/choose).  
+
           To fix this:  
+
           1. Rebase your branch onto `default`.
-          2. Submit a new **PR** targeting the most recent.
+          2. Submit a new **PR** targeting the most recent.  
 
           Please redo this **PR** starting with the most recent branch and be careful to target it when resubmitting the **PR**.  
 
