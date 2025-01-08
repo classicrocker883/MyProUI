@@ -33,3 +33,8 @@ jobs:
             Please redo this **PR** starting with the most recent branch and be careful to target it when resubmitting the **PR**.
 
             See [this page](https://marlinfw.org/docs/development/getting_started_pull_requests.html) for full instructions.
+
+      - uses: actions-ecosystem/action-add-labels@v1.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: 'invalid'
