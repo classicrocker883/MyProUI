@@ -154,7 +154,7 @@ void DWIN_Frame_Clear(const uint16_t color) {
   //  map_rows: rows in the point map
   //  map: point bitmap. 2D array of points, 1 bit per point
   // Note: somewhat similar to U8G's drawBitmap() function, see https://github.com/olikraus/u8glib/wiki/userreference#drawbitmap
-  void dwinDrawPointMap(
+  void DWIN_Draw_PointMap(
     const uint16_t color,
     const uint8_t point_width, const uint8_t point_height,
     const uint16_t x, const uint16_t y,
@@ -164,7 +164,7 @@ void DWIN_Frame_Clear(const uint16_t color) {
     // At how many bytes should we flush the send buffer?
     // One byte is used (hidden) for F_HONE, and we need 4 bytes when appending a point.
     // So we should flush the send buffer when we have less than 5 bytes left.
-    constexpr size_t flush_send_buffer_at = (COUNT(dwinSendBuf) - 1 - 4);
+    constexpr size_t flush_send_buffer_at = (COUNT(DWIN_SendBuf) - 1 - 4);
 
     // How long is the header of each draw command?
     // => 1B CMD, 2B COLOR, 1B WIDTH, 1B HEIGHT
@@ -182,26 +182,26 @@ void DWIN_Frame_Clear(const uint16_t color) {
             // b) This is the first point to draw
             if (i >= flush_send_buffer_at || i == 0) {
               // Dispatch the current draw command
-              if (i > command_header_size) dwinSend(i);
+              if (i > command_header_size) DWIN_Send(i);
 
               // Prepare the next draw command
               i = 0;
-              dwinByte(i, 0x02); // cmd: draw point(s)
-              dwinWord(i, color);
-              dwinByte(i, point_width);
-              dwinByte(i, point_height);
+              DWIN_Byte(i, 0x02); // cmd: draw point(s)
+              DWIN_Word(i, color);
+              DWIN_Byte(i, point_width);
+              DWIN_Byte(i, point_height);
             }
 
             // Append point coordinates to draw command
-            dwinWord(i, x + (point_width * ((8 * col) + (7 - bit)))); // x
-            dwinWord(i, y + (point_height * (row)));                  // y
+            DWIN_Word(i, x + (point_width * ((8 * col) + (7 - bit)))); // x
+            DWIN_Word(i, y + (point_height * (row)));                  // y
           }
         }
       }
     }
 
     // Dispatch final draw command if the buffer contains any points
-    if (i > command_header_size) dwinSend(i);
+    if (i > command_header_size) DWIN_Send(i);
   }
 
 #endif // !TJC_DISPLAY

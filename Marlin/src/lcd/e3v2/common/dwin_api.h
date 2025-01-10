@@ -173,7 +173,7 @@ inline void DWIN_Draw_Box(uint8_t mode, uint16_t color, uint16_t xStart, uint16_
 //  map_rows: rows in the point map
 //  map: point bitmap. 2D array of points, 1 bit per point
 #if DISABLED(TJC_DISPLAY)
-  void dwinDrawPointMap(
+  void DWIN_Draw_PointMap(
     const uint16_t color,
     const uint8_t point_width, const uint8_t point_height,
     const uint16_t x, const uint16_t y,
