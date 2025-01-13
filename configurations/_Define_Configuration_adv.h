@@ -74,6 +74,7 @@
 // #define MAX31865_WIRE_OHMS_0              0.95f
 // #define MAX31865_WIRE_OHMS_1              0.0f
 // #define MAX31865_WIRE_OHMS_2              0.0f
+// #define MAX31865_WIRE_OHMS_BED            0.0f
 // #define HEPHESTOS2_HEATED_BED_KIT
 // #define HEATER_BED_INVERTING true
 // #define BED_CHECK_INTERVAL 5000
@@ -645,12 +646,12 @@
 // #define STATUS_FAN_FRAMES 3
 // #define STATUS_HEAT_PERCENT
 // #define STATUS_HEAT_POWER
+// #define MENU_HOLLOW_FRAME
+// #define OVERLAY_GFX_REVERSE
 // #define MARLIN_BRICKOUT
 // #define MARLIN_INVADERS
 // #define MARLIN_SNAKE
 // #define GAMES_EASTER_EGG
-// #define MENU_HOLLOW_FRAME
-// #define OVERLAY_GFX_REVERSE
 // #define LCD_BAUDRATE 115200
 // #define DGUS_RX_BUFFER_SIZE 128
 // #define DGUS_TX_BUFFER_SIZE 48
