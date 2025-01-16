@@ -51,7 +51,7 @@
   #define HAS_FILAMENT_SWITCH 1
 #endif
 
-#define FILAMENT_IS_OUT() (READ(FIL_RUNOUT_PIN) == TERN(PROUI_EX, PRO_data.Runout_active_state, FIL_RUNOUT_STATE))
+#define FILAMENT_IS_OUT(N...) (READ(FIL_RUNOUT##N##_PIN) == TERN(PROUI_EX, PRO_data.Runout_active_state, FIL_RUNOUT##N##_STATE))
 
 typedef Flags<
           #if NUM_MOTION_SENSORS > NUM_RUNOUT_SENSORS
