@@ -3985,7 +3985,11 @@ void MarlinSettings::reset() {
   // DWIN ProUI User Data
   //
   TERN_(DWIN_LCD_PROUI, DWIN_SetDataDefaults());
-
+  /*#if PROUI_EX
+    ProEx.LoadSettings();
+  #elif ENABLED(DWIN_LCD_PROUI)
+    DWIN_SetDataDefaults();
+  #endif*/
   //
   // Model Predictive Control
   //

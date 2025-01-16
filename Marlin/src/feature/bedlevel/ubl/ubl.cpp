@@ -58,6 +58,15 @@ void unified_bed_leveling::report_current_mesh() {
     }
 }
 
+#if ENABLED(PROUI_MESH_EDIT) && !PROUI_EX
+  float unified_bed_leveling::get_mesh_x(const uint8_t i) {
+    return MESH_MIN_X + i * (MESH_X_DIST);
+  }
+  float unified_bed_leveling::get_mesh_y(const uint8_t j) {
+    return MESH_MIN_Y + j * (MESH_Y_DIST);
+  }
+#endif
+
 void unified_bed_leveling::report_state() {
   echo_name();
   serial_ternary(F(" System v" UBL_VERSION " "), planner.leveling_active, nullptr, F("in"), F("active\n"));
@@ -67,6 +76,12 @@ void unified_bed_leveling::report_state() {
 int8_t unified_bed_leveling::storage_slot;
 
 bed_mesh_t unified_bed_leveling::z_values;
+
+#if ENABLED(DWIN_LCD_PROUI)
+  float unified_bed_leveling::z_values[GRID_LIMIT][GRID_LIMIT];
+#else
+  float unified_bed_leveling::z_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
+#endif
 
 #if DISABLED(DWIN_LCD_PROUI)
   #define _GRIDPOS(A,N) (MESH_MIN_##A + N * (MESH_##A##_DIST))
@@ -126,14 +141,24 @@ void unified_bed_leveling::set_all_mesh_points_to_value(const_float_t value) {
         return Z_STEPS_NAN; // If Z is out of range, return our custom 'NaN'
       return int16_t(z_scaled);
     };
-    GRID_LOOP(x, y) stored_values[x][y] = z_to_store(in_values[x][y]);
+    #if PROUI_EX
+      for (uint8_t x = 0; x < GRID_LIMIT; ++x) for (uint8_t y = 0; y < GRID_LIMIT; ++y)
+    #else
+      GRID_LOOP(x, y)
+    #endif
+      stored_values[x][y] = z_to_store(in_values[x][y]);
   }
 
   void unified_bed_leveling::set_mesh_from_store(const mesh_store_t &stored_values, bed_mesh_t &out_values) {
     auto store_to_z = [](const int16_t z_scaled) {
       return z_scaled == Z_STEPS_NAN ? NAN : z_scaled / mesh_store_scaling;
     };
-    GRID_LOOP(x, y) out_values[x][y] = store_to_z(stored_values[x][y]);
+    #if PROUI_EX
+      for (uint8_t x = 0; x < GRID_LIMIT; ++x) for (uint8_t y = 0; y < GRID_LIMIT; ++y)
+    #else
+      GRID_LOOP(x, y)
+    #endif
+      out_values[x][y] = store_to_z(stored_values[x][y]);
   }
 
 #endif // OPTIMIZED_MESH_STORAGE
@@ -170,8 +195,8 @@ static void serial_echo_column_labels(const uint8_t sp) {
 void unified_bed_leveling::display_map(const uint8_t map_type) {
   const bool was = gcode.set_autoreport_paused(true);
 
-  constexpr uint8_t eachsp = 1 + 6 + 1; // [-3.567]
-  IF_DISABLED(DWIN_LCD_PROUI, constexpr) uint8_t twixt = eachsp * (GRID_MAX_POINTS_X) - 9 * 2; // Leading 4sp, Coordinates 9sp each
+  IF_DISABLED(DWIN_LCD_PROUI, constexpr) uint8_t eachsp = 1 + 6 + 1,
+                    twixt = eachsp * (GRID_MAX_POINTS_X) - 9 * 2; // Leading 4sp, Coordinates 9sp each
 
   const bool human = !(map_type & 0x3), csv = map_type == 1, lcd = map_type == 2, comp = map_type & 0x4;
 
