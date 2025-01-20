@@ -46,7 +46,7 @@
 // Enable EEPROM Emulation for this board, so that we don't overwrite factory data
 #if NO_EEPROM_SELECTED
   //#define I2C_EEPROM                            // AT24C64
-  //#define FLASH_EEPROM_EMULATION
+  #define FLASH_EEPROM_EMULATION
 #endif
 
 #if ENABLED(I2C_EEPROM)

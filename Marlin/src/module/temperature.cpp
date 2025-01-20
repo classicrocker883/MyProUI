@@ -46,6 +46,10 @@
   #include "../feature/controllerfan.h"
 #endif
 
+#if ENABLED(AUTO_FAN_EDITABLE)
+  #include "../feature/autofans.h"
+#endif
+
 #if ENABLED(EMERGENCY_PARSER)
   #include "motion.h"
 #endif

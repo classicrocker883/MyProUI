@@ -1028,6 +1028,14 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         case 710: M710(); break;                                  // M710: Set Controller Fan settings
       #endif
 
+      #if ENABLED(FAN_KICKSTART_EDITABLE)
+        case 711: M711(); break;                                  // M711: Set Fan Kickstart settings
+      #endif
+
+      #if ENABLED(AUTO_FAN_EDITABLE)
+        case 712: M712(); break;                                  // M712: Set Auto Fans settings
+      #endif
+
       #if ENABLED(GCODE_MACROS)
         case 810: case 811: case 812: case 813: case 814:
         case 815: case 816: case 817: case 818: case 819:

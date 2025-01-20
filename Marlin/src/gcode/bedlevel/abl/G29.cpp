@@ -295,6 +295,11 @@ G29_TYPE GcodeSuite::G29() {
 
     probe.use_probing_tool();
 
+    #ifdef EVENT_GCODE_BEFORE_G29
+      if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Before G29 G-code: ", EVENT_GCODE_BEFORE_G29);
+      gcode.process_subcommands_now(F(EVENT_GCODE_BEFORE_G29));
+    #endif
+
     #if ANY(PROBE_MANUALLY, AUTO_BED_LEVELING_LINEAR)
       abl.abl_probe_index = -1;
     #endif
@@ -1031,7 +1036,7 @@ G29_TYPE GcodeSuite::G29() {
   TERN_(Z_AFTER_PROBING, probe.move_z_after_probing());
 
   #ifdef EVENT_GCODE_AFTER_G29
-    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Z Probe End Script: ", EVENT_GCODE_AFTER_G29);
+    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("After G29 G-code: ", EVENT_GCODE_AFTER_G29);
     planner.synchronize();
     process_subcommands_now(F(EVENT_GCODE_AFTER_G29));
   #endif

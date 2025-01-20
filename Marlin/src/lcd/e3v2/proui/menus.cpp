@@ -490,6 +490,11 @@ void InvalidateMenu() {
   CurrentMenu = nullptr;
 }
 
+void PrepareRefreshMenu() {
+  if (CurrentMenu) CurrentMenu->topline = 0;
+  CurrentMenu = nullptr;
+}
+
 void UpdateMenu(MenuClass* &menu) {
   if (!menu) return;
   if (CurrentMenu != menu) {

@@ -28,6 +28,10 @@
 #include "../module/stepper.h"
 #include "../module/temperature.h"
 
+#if ENABLED(FAN_KICKSTART_EDITABLE)
+  #include "kickstart.h"
+#endif
+
 ControllerFan controllerFan;
 
 uint8_t ControllerFan::speed;
@@ -93,15 +97,33 @@ void ControllerFan::update() {
 
     speed = CALC_FAN_SPEED(speed);
 
-    #if FAN_KICKSTART_TIME
+    #if ENABLED(FAN_KICKSTART_EDITABLE)
+      static millis_t fan_kick_end = 0;
+      if (speed > FAN_OFF_PWM && kickstart.settings.enabled) {
+        if (!fan_kick_end) {
+          fan_kick_end = ms + kickstart.settings.duration_ms;
+          speed = map(kickstart.settings.speed, 0, 255, 0, CONTROLLERFAN_SPEED_MAX);
+          nextFanCheck = ms + 20UL; // Reduce update interval for controller fn check while Kickstart is active.
+        }
+        else if (PENDING(ms, fan_kick_end)) {
+          speed = map(kickstart.settings.speed, 0, 255, 0, CONTROLLERFAN_SPEED_MAX);
+          nextFanCheck = ms + 20UL; // Reduce update interval for controller fn check while Kickstart is active.
+        }
+      }
+      else
+        fan_kick_end = 0;
+    #elif FAN_KICKSTART_TIME
       static millis_t fan_kick_end = 0;
       if (speed > FAN_OFF_PWM) {
         if (!fan_kick_end) {
-          fan_kick_end = ms + FAN_KICKSTART_TIME; // May be longer based on slow update interval for controller fn check. Sets minimum
+          fan_kick_end = ms + FAN_KICKSTART_TIME;
           speed = FAN_KICKSTART_POWER;
+          nextFanCheck = ms + 20UL; // Reduce update interval for controller fn check while Kickstart is active.
         }
-        else if (PENDING(ms, fan_kick_end))
+        else if (PENDING(ms, fan_kick_end)) {
           speed = FAN_KICKSTART_POWER;
+          nextFanCheck = ms + 20UL; // Reduce update interval for controller fn check while Kickstart is active.
+        }
       }
       else
         fan_kick_end = 0;

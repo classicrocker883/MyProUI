@@ -941,6 +941,15 @@ namespace LanguageNarrow_en {
   LSTR MSG_BACKLASH_CORRECTION            = _UxGT("Correction");
   LSTR MSG_BACKLASH_SMOOTHING             = _UxGT("Smoothing");
 
+  LSTR MSG_FANS_SETTINGS                  = _UxGT("Fans Settings");
+  LSTR MSG_FAN_KICKSTART                  = _UxGT("Fan Kickstart");
+  LSTR MSG_FAN_KICKSTART_ENABLE           = _UxGT("Enable Kickstart");
+  LSTR MSG_FAN_KICKSTART_DURATION         = _UxGT("Kickstart Time");
+  LSTR MSG_FAN_KICKSTART_POWER            = _UxGT("Kickstart Power");
+  LSTR MSG_FAN_EXTRUDER_TEMP              = _UxGT("Extruder Fan Temp");
+  LSTR MSG_FAN_CHAMBER_TEMP               = _UxGT("Chamber Fan Temp");
+  LSTR MSG_FAN_COOLER_TEMP                = _UxGT("Cooler Fan Temp");
+
   LSTR MSG_FIXED_TIME_MOTION              = _UxGT("Fixed-Time Motion");
   LSTR MSG_FTM_CMPN_MODE                  = _UxGT("@ Comp. Mode:");
   LSTR MSG_FTM_ZV                         = _UxGT("ZV");

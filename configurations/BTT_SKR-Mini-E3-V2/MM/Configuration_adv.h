@@ -180,9 +180,10 @@
  * Thermocouple Options — for MAX6675 (-2), MAX31855 (-3), and MAX31865 (-5).
  */
 //#define TEMP_SENSOR_FORCE_HW_SPI                // Ignore SCK/MOSI/MISO pins; use CS and the default SPI bus.
-//#define MAX31865_SENSOR_WIRES_0 2               // (2-4) Number of wires for the probe connected to a MAX31865 board.
-//#define MAX31865_SENSOR_WIRES_1 2
-//#define MAX31865_SENSOR_WIRES_2 2
+//#define MAX31865_SENSOR_WIRES_0   2             // (2-4) Number of wires for the probe connected to a MAX31865 board.
+//#define MAX31865_SENSOR_WIRES_1   2
+//#define MAX31865_SENSOR_WIRES_2   2
+//#define MAX31865_SENSOR_WIRES_BED 2
 
 //#define MAX31865_50HZ_FILTER                    // Use a 50Hz filter instead of the default 60Hz.
 //#define MAX31865_USE_READ_ERROR_DETECTION       // Treat value spikes (20°C delta in under 1s) as read errors.
@@ -194,6 +195,7 @@
 //#define MAX31865_WIRE_OHMS_0              0.95f // For 2-wire, set the wire resistances for more accurate readings.
 //#define MAX31865_WIRE_OHMS_1              0.0f
 //#define MAX31865_WIRE_OHMS_2              0.0f
+//#define MAX31865_WIRE_OHMS_BED            0.0f
 
 /**
  * Hephestos 2 24V heated bed upgrade kit.
@@ -588,6 +590,7 @@
   //#define CONTROLLER_FAN_USE_Z_ONLY       // With this option only the Z axis is considered
   //#define CONTROLLER_FAN_IGNORE_Z         // Ignore Z stepper. Useful when stepper timeout is disabled.
   #define CONTROLLERFAN_SPEED_MIN         0 // (0-255) Minimum speed. (If set below this value the fan is turned off.)
+  #define CONTROLLERFAN_SPEED_MAX       127 // (0-255) Maximum speed. (Use only for a specific hardware build, or with non default PWM Scale, needs testing with other builds)
   #define CONTROLLERFAN_SPEED_ACTIVE    255 // (0-255) Active speed, used when any motor is enabled
   #define CONTROLLERFAN_SPEED_IDLE        0 // (0-255) Idle speed, used when motors are disabled
   #define CONTROLLERFAN_IDLE_TIME        60 // (seconds) Extra time to keep the fan running after disabling motors
@@ -616,6 +619,10 @@
 //#define FAN_KICKSTART_POWER 180  // 64-255
 //#define FAN_KICKSTART_LINEAR     // Set kickstart time linearly based on the speed, e.g., for 20% (51) it will be FAN_KICKSTART_TIME * 0.2.
                                    // Useful for quick speed up to low speed. Kickstart power must be set to 255.
+#define FAN_KICKSTART_EDITABLE            // Enable M711 configurable settings
+#if ENABLED(FAN_KICKSTART_EDITABLE)
+  #define FAN_KICKSTART_MENU                // Enable the Fan Kickstart submenu
+#endif
 
 // Some coolers may require a non-zero "off" state.
 //#define FAN_OFF_PWM  1
@@ -682,16 +689,20 @@
 #endif
 
 /**
- * Extruder cooling fans
+ * Cooling fans
  *
- * Extruder auto fans automatically turn on when their extruders'
- * temperatures go above EXTRUDER_AUTO_FAN_TEMPERATURE.
+ * Fans automatically turn on when their
+ * temperatures go above threshold.
  *
  * Your board's pins file specifies the recommended pins. Override those here
  * or set to -1 to disable completely.
  *
  * Multiple extruders can be assigned to the same pin in which case
  * the fan will turn on when any selected extruder is above the threshold.
+ *
+ * EXAMPLE: When 'EXTRUDER_AUTO_FAN_TEMPERATURE' >= 50
+ *          Fan spins at full speed:
+ *          EXTRUDER_AUTO_FAN_SPEED 255 == full speed
  */
 #define E0_AUTO_FAN_PIN -1
 #define E1_AUTO_FAN_PIN -1
@@ -705,11 +716,19 @@
 #define COOLER_AUTO_FAN_PIN -1
 
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
-#define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == full speed
+#define EXTRUDER_AUTO_FAN_SPEED 255
 #define CHAMBER_AUTO_FAN_TEMPERATURE 30
 #define CHAMBER_AUTO_FAN_SPEED 255
 #define COOLER_AUTO_FAN_TEMPERATURE 18
 #define COOLER_AUTO_FAN_SPEED 255
+
+/**
+ * Allow Auto Cooling Fans to be editable
+ */
+#define AUTO_FAN_EDITABLE                 // Enable M712 configurable settings
+#if ENABLED(AUTO_FAN_EDITABLE)
+  #define AUTO_FAN_MENU                     // Enable the Editable Auto Fans submenu
+#endif
 
 /**
  * Hotend Cooling Fans tachometers
@@ -2052,17 +2071,17 @@
   //#define STATUS_HEAT_PERCENT       // Show heating in a progress bar
   //#define STATUS_HEAT_POWER         // Show heater output power as a vertical bar
 
-  // Frivolous Game Options
-  //#define MARLIN_BRICKOUT
-  //#define MARLIN_INVADERS
-  //#define MARLIN_SNAKE
-  //#define GAMES_EASTER_EGG          // Add extra blank lines above the "Games" sub-menu
-
 #endif // HAS_MARLINUI_U8GLIB
 
 #if HAS_MARLINUI_U8GLIB || IS_DWIN_MARLINUI
   #define MENU_HOLLOW_FRAME           // Enable to save many cycles by drawing a hollow frame on Menu Screens
   //#define OVERLAY_GFX_REVERSE       // Swap the CW/CCW indicators in the graphics overlay
+
+  // Frivolous Game Options
+  //#define MARLIN_BRICKOUT
+  //#define MARLIN_INVADERS
+  //#define MARLIN_SNAKE
+  //#define GAMES_EASTER_EGG          // Add extra blank lines above the "Games" sub-menu
 #endif
 
 //

@@ -311,6 +311,8 @@
 #define STR_INPUT_SHAPING                   "Input Shaping"
 #define STR_HOTEND_TIMEOUT                  "Hotend Idle Timeout"
 #define STR_CONTROLLER_FAN                  "Controller Fan"
+#define STR_FAN_KICKSTART                   "Fan Kickstart"
+#define STR_AUTOFANS                        "Auto Fans"
 #define STR_STEPPER_MOTOR_CURRENTS          "Stepper motor currents"
 #define STR_RETRACT_S_F_Z                   "Retract (S<length> F<feedrate> Z<lift>)"
 #define STR_RECOVER_S_F                     "Recover (S<length> F<feedrate>)"

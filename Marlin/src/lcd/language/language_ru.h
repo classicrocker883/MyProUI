@@ -643,6 +643,15 @@ namespace LanguageNarrow_ru {
   LSTR MSG_TMC_STEPPING_MODE                = _UxGT("Режим драйвера");
   LSTR MSG_TMC_STEALTH_ENABLED              = _UxGT("Тихий режим вкл");
 
+  LSTR MSG_FANS_SETTINGS                    = _UxGT("Настройки кулеров");
+  LSTR MSG_FAN_KICKSTART                    = _UxGT("Кик-старт");
+  LSTR MSG_FAN_KICKSTART_ENABLE             = _UxGT("Кик-старт вкл");
+  LSTR MSG_FAN_KICKSTART_DURATION           = _UxGT("Длительность");
+  LSTR MSG_FAN_KICKSTART_POWER              = _UxGT("Мощность");
+  LSTR MSG_FAN_EXTRUDER_TEMP                = _UxGT("Порог кулера экстр.");
+  LSTR MSG_FAN_CHAMBER_TEMP                 = _UxGT("Порог кулера камеры");
+  LSTR MSG_FAN_COOLER_TEMP                  = _UxGT("Порог кулера лазера");
+
   LSTR MSG_SERVICE_RESET                    = _UxGT("Сброс");
   LSTR MSG_SERVICE_IN                       = _UxGT(" в:");
   LSTR MSG_BACKLASH                         = _UxGT("Люфт");

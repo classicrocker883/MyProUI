@@ -173,6 +173,9 @@ void ResetMenu(MenuClass* &menu);
 // Invalidate CurrentMenu to prepare for full menu drawing
 void InvalidateMenu();
 
+// Invalidate CurrentMenu without resetting current position
+void PrepareRefreshMenu();
+
 // Update the Menu and Draw if it is valid
 void UpdateMenu(MenuClass* &menu);
 

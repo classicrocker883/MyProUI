@@ -2728,6 +2728,11 @@
   #endif
 #endif
 
+#if !HAS_AUTO_FAN
+  #undef AUTO_FAN_MENU
+  #undef AUTO_FAN_EDITABLE
+#endif
+
 // Fans check
 #if HAS_HOTEND && PIN_EXISTS(E0_FAN_TACHO)
   #define HAS_E0_FAN_TACHO 1
@@ -2806,6 +2811,9 @@
   #else
     #undef CONTROLLER_FAN_TRIGGER_TEMP
   #endif
+#else
+  #undef CONTROLLER_FAN_MENU
+  #undef CONTROLLER_FAN_EDITABLE
 #endif
 
 /**
@@ -2922,13 +2930,17 @@
     #define FAN_MAX_PWM 255
   #endif
   #if FAN_MIN_PWM == 0 && FAN_MAX_PWM == 255
-    #define CALC_FAN_SPEED(f) (f ?: FAN_OFF_PWM)
+    #define CALC_FAN_SPEED(f) ((f) ?: FAN_OFF_PWM)
   #else
-    #define CALC_FAN_SPEED(f) (f ? map(f, 1, 255, FAN_MIN_PWM, FAN_MAX_PWM) : FAN_OFF_PWM)
+    #define CALC_FAN_SPEED(f) ((f) ? map(f, 1, 255, FAN_MIN_PWM, FAN_MAX_PWM) : FAN_OFF_PWM)
   #endif
 #endif
 
 // Fan Kickstart
+#if FAN_KICKSTART_TIME && NONE(HAS_FAN, USE_CONTROLLER_FAN)
+  #undef FAN_KICKSTART_TIME
+#endif
+
 #if FAN_KICKSTART_TIME && !defined(FAN_KICKSTART_POWER)
   #define FAN_KICKSTART_POWER TERN(FAN_KICKSTART_LINEAR, 255, 180)
 #endif

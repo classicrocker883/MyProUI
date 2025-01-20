@@ -50,7 +50,7 @@ build_all_examples [-a|--archive]         - Copy the binary to the export locati
 }
 
 # Assume the most recent configs
-BRANCH="2024-December"
+BRANCH="2025-January"
 unset FIRST_CONF
 EXIT_USAGE=
 LIMIT=1000
