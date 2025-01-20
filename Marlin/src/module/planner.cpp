@@ -1198,7 +1198,7 @@ void Planner::recalculate(const_float_t safe_exit_speed_sqr) {
     TERN_(HAS_FAN6, FAN_SET(6)); TERN_(HAS_FAN7, FAN_SET(7));
   }
 
-  #ifdef FAN_KICKSTART_TIME
+  #if FAN_KICKSTART_TIME
 
     void Planner::kickstart_fan(uint8_t (&fan_speed)[FAN_COUNT], const millis_t &ms, const uint8_t f) {
       #if ENABLED(FAN_KICKSTART_EDITABLE)
