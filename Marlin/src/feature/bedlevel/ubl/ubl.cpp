@@ -75,7 +75,7 @@ void unified_bed_leveling::report_state() {
 
 int8_t unified_bed_leveling::storage_slot;
 
-bed_mesh_t unified_bed_leveling::z_values;
+//bed_mesh_t unified_bed_leveling::z_values;
 
 #if ENABLED(DWIN_LCD_PROUI)
   float unified_bed_leveling::z_values[GRID_LIMIT][GRID_LIMIT];

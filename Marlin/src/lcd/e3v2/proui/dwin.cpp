@@ -2143,6 +2143,10 @@ void DWIN_SetDataDefaults() {
     PRO_data.z_max_pos  = DEF_Z_MAX_POS;
     #if HAS_MESH
       PRO_data.grid_max_points = DEF_GRID_MAX_POINTS;
+      PRO_data.mesh_min_x = DEF_MESH_MIN_X;
+      PRO_data.mesh_max_x = DEF_MESH_MAX_X;
+      PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
+      PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
     #endif
     #if HAS_BED_PROBE
       PRO_data.zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
@@ -4325,6 +4329,7 @@ void Draw_MaxAccel_Menu() {
 
 #if HAS_MESH
   //void CreatePlaneFromMesh() { bedLevelTools.create_plane_from_mesh(); }
+  void ResetMeshInset() { set_bed_leveling_enabled(false); OPTCODE(MESH_BED_LEVELING, bedlevel.initialize()) reset_bed_level(); }
   #if PROUI_EX
     void ApplyMeshPoints() { PRO_data.grid_max_points = MenuData.Value; ResetMeshInset(); ReDrawMenu(); }
     void LiveMeshPoints() { DrawMeshPoints(true, CurrentMenu->line(), MenuData.Value); }
