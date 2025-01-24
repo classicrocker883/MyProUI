@@ -1183,5 +1183,9 @@ float Probe::probe_at_point(
   }
 
 #endif
-
+#if ENABLED(DWIN_LCD_PROUI)
+  float probe_at_point(const_float_t rx, const_float_t ry, const bool raise_after) {
+    return probe.probe_at_point(rx, ry, raise_after ? PROBE_PT_STOW : PROBE_PT_RAISE);
+  }
+#endif
 #endif // HAS_BED_PROBE

@@ -42,8 +42,8 @@
       float mesh_bed_leveling::index_to_xpos[GRID_MAX_POINTS_X],
             mesh_bed_leveling::index_to_ypos[GRID_MAX_POINTS_Y];
     #endif
-  bed_mesh_t mesh_bed_leveling::z_values;
-
+  // bed_mesh_t mesh_bed_leveling::z_values;
+  mesh_bed_leveling::z_values[GRID_MAX_POINTS_X][GRID_MAX_POINTS_Y];
   mesh_bed_leveling::mesh_bed_leveling() { initialize(); }
 
   void mesh_bed_leveling::reset() {

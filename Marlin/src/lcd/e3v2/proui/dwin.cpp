@@ -2143,6 +2143,10 @@ void DWIN_SetDataDefaults() {
     PRO_data.z_max_pos  = DEF_Z_MAX_POS;
     #if HAS_MESH
       PRO_data.grid_max_points = DEF_GRID_MAX_POINTS;
+      PRO_data.mesh_min_x = DEF_MESH_MIN_X;
+      PRO_data.mesh_max_x = DEF_MESH_MAX_X;
+      PRO_data.mesh_min_y = DEF_MESH_MIN_Y;
+      PRO_data.mesh_max_y = DEF_MESH_MAX_Y;
     #endif
     #if HAS_BED_PROBE
       PRO_data.zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
@@ -2159,7 +2163,7 @@ void DWIN_SetDataDefaults() {
       const uint8_t _def[] = DEF_TBOPT;
       for (uint8_t i = 0; i < TBMaxOpt; ++i) PRO_data.TBopt[i] = _def[i];
     #endif
-    ProEx.SetData();
+    ProEx.SetData();///
   #else
     #if HAS_BED_PROBE
       HMI_data.zprobefeedslow = DEF_Z_PROBE_FEEDRATE_SLOW;
@@ -2189,6 +2193,8 @@ void DWIN_CopySettingsFrom(PGM_P const buff) {
   TERN_(PROUI_EX, memcpy(&PRO_data, buff + sizeof(HMI_data_t), sizeof(PRO_data_t));)
   #if PROUI_EX
     ProEx.SetData();
+    //memcpy(&PRO_data, buff + sizeof(HMI_data_t), sizeof(PRO_data_t));
+    //ProEx.LoadSettings();
   #elif ENABLED(MESH_BED_LEVELING)
     SetData();
   #endif
@@ -4323,6 +4329,7 @@ void Draw_MaxAccel_Menu() {
 
 #if HAS_MESH
   //void CreatePlaneFromMesh() { bedLevelTools.create_plane_from_mesh(); }
+  void ResetMeshInset() { set_bed_leveling_enabled(false); OPTCODE(MESH_BED_LEVELING, bedlevel.initialize()) reset_bed_level(); }
   #if PROUI_EX
     void ApplyMeshPoints() { PRO_data.grid_max_points = MenuData.Value; ResetMeshInset(); ReDrawMenu(); }
     void LiveMeshPoints() { DrawMeshPoints(true, CurrentMenu->line(), MenuData.Value); }
@@ -4330,6 +4337,24 @@ void Draw_MaxAccel_Menu() {
       SetOnClick(SetIntNoDraw, GRID_MIN, GRID_LIMIT, 0, PRO_data.grid_max_points, ApplyMeshPoints, LiveMeshPoints);
       DrawMeshPoints(true, CurrentMenu->line(), PRO_data.grid_max_points);
     }
+    // void ApplyMeshPoints() { ProEx.ApplyMeshPoints(); ReDrawMenu(); }
+    // void LiveMeshPoints() { ProEx.DrawMeshPoints(true, CurrentMenu->line(), MenuData.Value); }
+    // void SetMeshPoints() {
+    //   SetOnClick(SetIntNoDraw, GRID_MIN, GRID_LIMIT, 0, PRO_data.grid_max_points, ApplyMeshPoints, LiveMeshPoints);
+    //   ProEx.DrawMeshPoints(true, CurrentMenu->line(), PRO_data.grid_max_points);
+    // }
+// Max X Mesh Inset does not save after restart - it is limited by Probe offset. TODO: this is just a temp workaround,
+    // void SetMeshArea() {
+    //   PRO_data.mesh_min_x = meshSet.mesh_min_x;
+    //   PRO_data.mesh_max_x = meshSet.mesh_max_x;
+    //   PRO_data.mesh_min_y = meshSet.mesh_min_y;
+    //   PRO_data.mesh_max_y = meshSet.mesh_max_y;
+    //   ProEx.ApplyMeshLimits();
+    //   ReDrawMenu();
+    // }
+    // void SetXMeshInset() { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, SetMeshArea, ProEx.ApplyMeshLimits); }
+    // void SetYMeshInset() { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, SetMeshArea, ProEx.ApplyMeshLimits); }
+
   #elif PROUI_GRID_PNTS
     void ApplyMeshPoints() { HMI_data.grid_max_points = MenuData.Value; ResetMeshInset(); ReDrawMenu(); }
     void LiveMeshPoints() { DrawMeshPoints(true, CurrentMenu->line(), MenuData.Value); }
@@ -4394,15 +4419,22 @@ void Draw_MaxAccel_Menu() {
     void ResetMesh() { Goto_Popup(Popup_ResetMesh, OnClick_ResetMesh); }
 
     // Mesh Inset
-    void ResetMeshInset() { set_bed_leveling_enabled(false); OPTCODE(MESH_BED_LEVELING, bedlevel.initialize()) reset_bed_level(); }
+    #if PROUI_EX
+      void SetMeshArea() {
+        PRO_data.mesh_min_x = meshSet.mesh_min_x;
+        PRO_data.mesh_max_x = meshSet.mesh_max_x;
+        PRO_data.mesh_min_y = meshSet.mesh_min_y;
+        PRO_data.mesh_max_y = meshSet.mesh_max_y;
+      }
+    #endif
     void ApplyMeshInset() { ResetMeshInset(); ReDrawItem(); }
-    void SetXMeshInset() { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
-    void SetYMeshInset() { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, ApplyMeshInset); }
+    void SetXMeshInset() { SetPFloatOnClick(0, X_BED_SIZE, UNITFDIGITS, OPTITEM(PROUI_EX, SetMeshArea) ApplyMeshInset); }
+    void SetYMeshInset() { SetPFloatOnClick(0, Y_BED_SIZE, UNITFDIGITS, OPTITEM(PROUI_EX, SetMeshArea) ApplyMeshInset); }
     void MaxMeshArea() {
-      meshSet.mesh_min_x = 0;
-      meshSet.mesh_max_x = X_BED_SIZE;
-      meshSet.mesh_min_y = 0;
-      meshSet.mesh_max_y = Y_BED_SIZE;
+      TERN_(PROUI_EX, PRO_data.mesh_min_x =) meshSet.mesh_min_x = 0;
+      TERN_(PROUI_EX, PRO_data.mesh_max_x =) meshSet.mesh_max_x = X_BED_SIZE;
+      TERN_(PROUI_EX, PRO_data.mesh_min_y =) meshSet.mesh_min_y = 0;
+      TERN_(PROUI_EX, PRO_data.mesh_max_y =) meshSet.mesh_max_y = Y_BED_SIZE;
       ResetMeshInset();
       ReDrawMenu();
     }
@@ -4411,10 +4443,10 @@ void Draw_MaxAccel_Menu() {
       if (max < X_BED_SIZE - MESH_MAX_X) { max = X_BED_SIZE - MESH_MAX_X; }
       if (max < MESH_MIN_Y) { max = MESH_MIN_Y; }
       if (max < Y_BED_SIZE - MESH_MAX_Y) { max = Y_BED_SIZE - MESH_MAX_Y; }
-      meshSet.mesh_min_x = max;
-      meshSet.mesh_max_x = X_BED_SIZE - max;
-      meshSet.mesh_min_y = max;
-      meshSet.mesh_max_y = Y_BED_SIZE - max;
+      TERN_(PROUI_EX, PRO_data.mesh_min_x =) meshSet.mesh_min_x = max;
+      TERN_(PROUI_EX, PRO_data.mesh_max_x =) meshSet.mesh_max_x = X_BED_SIZE - max;
+      TERN_(PROUI_EX, PRO_data.mesh_min_y =) meshSet.mesh_min_y = max;
+      TERN_(PROUI_EX, PRO_data.mesh_max_y =) meshSet.mesh_max_y = Y_BED_SIZE - max;
       ResetMeshInset();
       ReDrawMenu();
     }

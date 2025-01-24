@@ -294,7 +294,10 @@ public:
 
   static constexpr float get_z_offset() { return 0.0f; }
 
-  #if ENABLED(PROUI_MESH_EDIT)
+  #if ALL(PROUI_EX, PROUI_MESH_EDIT)
+    static float get_mesh_x(const uint8_t i);
+    static float get_mesh_y(const uint8_t j);
+  #elif ENABLED(PROUI_MESH_EDIT)
     static float get_mesh_x(const uint8_t i) {
       return MESH_MIN_X + i * (MESH_X_DIST);
     }
